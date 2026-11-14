@@ -1,0 +1,253 @@
+{
+  "schema": 1,
+  "updated": "2026-11-14",
+  "family": {
+    "name": "水獭家族",
+    "en": "Otter Family",
+    "site": "https://shaoasher.github.io/otter-family-site/",
+    "members": "https://shaoasher.github.io/otter-family-site/?from={from}#members",
+    "assets": "https://otter-family-site.tos-cn-beijing.volces.com/",
+    "media": "https://otter-family-site.tos-cn-beijing.volces.com/site/{app}/",
+    "brand": "https://otter-family-site.tos-cn-beijing.volces.com/brand/",
+    "expr_manifest": "https://otter-family-site.tos-cn-beijing.volces.com/expr/manifest.json",
+    "config": [
+      "https://otter-family-site.tos-cn-beijing.volces.com/config/family.json",
+      "https://shaoasher.github.io/otter-family-site/family.json"
+    ],
+    "releases": {
+      "cn": "https://otter-family-site.tos-cn-beijing.volces.com/release/{app}/{version}/{file}",
+      "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
+      "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
+    }
+  },
+  "apps": {
+    "git": {
+      "name": "水獭 Git",
+      "en": "OtterGit",
+      "from": "ottergit",
+      "platforms": [
+        "macos",
+        "windows"
+      ],
+      "site": "https://shaoasher.github.io/otter-family-site/git/",
+      "demo": "https://shaoasher.github.io/otter-family-site/git/demo/",
+      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/brand/git/icon.png",
+      "colors": [
+        "#E89B0C",
+        "#FFD66B"
+      ],
+      "latest": "3.0.0",
+      "download": {
+        "version": "2.0.7",
+        "files": {
+          "macos": "OtterGit-macos-arm64.dmg",
+          "macos_zip": "OtterGit-macos-arm64.zip",
+          "windows": "OtterGit-windows-x64.zip"
+        }
+      },
+      "changelog": [
+        {
+          "version": "3.0.0",
+          "date": "2026-11-14",
+          "zh": "水獭家族 3.0：图标换成三端统一模板的琥珀金；小獭表情升级为家族 120 套，按提交、推送、冲突等场景编排；版本记录、官网地址等改由家族公共配置下发，关于页自动更新。",
+          "en": "Otter Family 3.0: the icon moves to the shared family template in amber gold; otter expressions upgraded to the full family set of 120, arranged by scene (commit, push, conflicts…); changelog and site links now come from the shared family config, so the About page stays current."
+        },
+        {
+          "version": "2.0.7",
+          "date": "2026-11-08",
+          "zh": "小獭表情升级为家族 HD 全量 50 套（心情 / 游戏 / 生活），动图与静帧统一路径 assets/otter/expr；应用侧使用 240 压缩包，观感更清晰、包体可控。",
+          "en": "Otter expressions upgraded to the full family HD set of 50 (mood / game / life), with a unified assets/otter/expr layout; apps ship the 240px compressed pack for clearer looks at a controlled size."
+        },
+        {
+          "version": "2.0.6",
+          "date": "2026-11-06",
+          "zh": "历史页切换提交更跟手：点下去立刻选中，提交说明和文件列表并行加载，按住方向键连续翻也不再一卡一卡。提交说明可以自由选择、整段复制，详情区新增「复制提交说明」按钮；代码预览复制时不再带上行号。下载改为国内优先走 Gitee、海外走 GitHub。macOS 不再反复弹「访问桌面文件夹」的系统授权框：允许一次后系统会记住。",
+          "en": "Switching commits in History is snappier: the selection updates immediately, the message and file list load in parallel, and holding the arrow keys no longer stutters. Commit messages can now be selected and copied freely, and the detail panel has a Copy commit message button; copying from the code preview no longer includes line numbers. Downloads now come from Gitee in mainland China and GitHub elsewhere. macOS no longer keeps asking for access to your Desktop folder: allow it once and it is remembered."
+        },
+        {
+          "version": "2.0.5",
+          "date": "2026-11-08",
+          "zh": "修复 Windows 上打不开的问题：之前给窗口设的底色会走一个未公开的合成接口，在 Windows 11 上会把整个窗口盖成一片灰，内容只剩极淡的影子，点哪里都没反应，现在改用窗口自身的底色并在首帧后重画一次。",
+          "en": "Fixed OtterGit not opening on Windows: the window background colour went through an undocumented compositor call. On Windows 11 that covered the whole window in a solid tint with only a ghost of the UI left and nothing responding. The window now uses its own background brush and repaints once after the first frame."
+        },
+        {
+          "version": "2.0.4",
+          "date": "2026-11-07",
+          "zh": "关于页只介绍水獭 Git 自己；「水獭家族」改为一个入口，点开在浏览器里看水獭家族官网，家族成员的介绍都在那里。家族成员「游时记」更名为「水獭游时」，配色同步更新。",
+          "en": "The About page now introduces OtterGit only; \"Otter Family\" is a single link that opens the Otter Family website in your browser, where every family member is introduced. Family member \"游时记\" is renamed \"Otter GameTime\" (水獭游时), with the updated palette."
+        },
+        {
+          "version": "2.0.3",
+          "date": "2026-11-07",
+          "zh": "侧栏重新整理：仓库、本地分支、远程、标签等每一类单独一张卡片，标题行带折叠箭头和数量；仓库分组和分支分组（feature/、hotfix/…）都能折叠，展开后左侧有引导线，含当前仓库或分支的分组高亮，折叠状态切换仓库后仍保留。Windows 标题栏按应用主题切换深浅，修复 Windows 10 上标题栏变黑后按钮和文字看不清的问题。",
+          "en": "Reorganized sidebar: repositories, local branches, remotes, tags and the rest each get their own card with a collapse arrow and count; repository groups and branch groups (feature/, hotfix/…) can collapse, show a guide line when expanded, highlight the group holding the current repository or branch, and keep their state when you switch repositories. The Windows title bar now follows the app theme, fixing the dark title bar on Windows 10 where buttons and text were hard to see."
+        },
+        {
+          "version": "2.0.2",
+          "date": "2026-11-07",
+          "zh": "Windows 与 macOS 能力对齐：再次打开或把文件夹拖到图标上时交给已开的窗口，不再出现第二个窗口和托盘图标；内置终端和小獭执行命令的中文输出不再乱码；标题栏跟随应用深浅主题；可读取凭据管理器里已存的账号，移出仓库时能移到回收站；快捷键提示按平台显示 Ctrl / Shift / Alt；修复全局忽略文件、凭据文件等在 Windows 上找不到家目录的问题。仓库设置可以更改本地路径：仓库挪了位置能重新接上，也能直接把仓库搬到新文件夹，小獭的对话和记忆跟着走。",
+          "en": "Windows now matches macOS: opening OtterGit again or dropping a folder on its icon goes to the running window instead of starting a second window and tray icon; Chinese output from the built-in terminal and Otter's commands is no longer garbled; the title bar follows the app theme; saved accounts are read from Credential Manager and removed repositories can go to the Recycle Bin; shortcut hints show Ctrl / Shift / Alt; the global ignore file and credential file now find your home folder on Windows. Repository settings can change the local path: reconnect a repository you moved, or move it to a new folder, with Otter's chats and memory coming along."
+        },
+        {
+          "version": "2.0.1",
+          "date": "2026-11-07",
+          "zh": "小獭回复过程看得见：进行中显示当前步骤、已用时间和进度条，随时可以停下；答完收成「做了 N 步 · 用时 X 秒」，点开回看，每一步还能单独展开看执行结果和耗时；等回复时头像播放小獭表情动画，外圈转圈；气泡、顶栏按钮和跟进芯片重新设计；Windows 上 AI 终端改用 PowerShell，变基不再依赖 chmod。",
+          "en": "See Otter at work: while replying it shows the current step, elapsed time and a progress bar, and you can stop it anytime; when done it folds into \"N steps · took X\", which you can expand, and each step opens to show its full result and duration. Otter's avatar plays animated expressions with a spinning ring while you wait. Redesigned bubbles, header buttons and follow-up chips. On Windows, the AI terminal now uses PowerShell and rebase no longer needs chmod."
+        },
+        {
+          "version": "2.0.0",
+          "date": "2026-11-06",
+          "zh": "小獭 AI 助手重做：改用 Genkit 引擎，回复带步骤卡，写操作先出确认卡并标注风险等级，会话按仓库隔离并保留记忆，支持复制与重新生成；全新首页：小獭问候、继续工作卡片，仓库卡片直接显示分支、最近提交和未推送数；小獭表情系统按场景切换动态表情；背景环境层随仓库状态换色（干净、有改动、冲突、同步中）；提交、推送、拉取的结果直接显示在进度弹窗里，提交后可一键推送；主色改为琥珀金，「修改」状态改用蓝紫色。",
+          "en": "Otter AI rebuilt on the Genkit engine: replies show step cards, write actions ask first with a confirmation card and risk level, sessions are scoped per repository with memory, plus copy and regenerate. New home: a greeting from Otter, a resume card, and repository cards showing branch, latest commit and unpushed count. Otter now reacts with animated expressions per scene. The ambient backdrop follows repository state (clean, modified, conflict, syncing). Commit, push and pull results appear inside the progress dialog, with one-click push after commit. Amber is the new accent; \"Modified\" now uses indigo."
+        },
+        {
+          "version": "1.2.0",
+          "date": "2026-10-30",
+          "zh": "整套图标重画：78 枚手绘几何图标，主轮廓 1.7 / 细节 1.2 双重量，箭头改成实心三角；全应用的图标、按钮、芯片、下拉、输入框统一到同一套笔形，键盘 Tab 有焦点环；菜单和弹窗改成单层实心卡面，不再透出背后的内容；开关、滑块改自绘；面板标题和间距按窗口宽度自适应。",
+          "en": "Icon set redrawn as one hand-drawn family (78 glyphs, 1.7 primary / 1.2 detail strokes, solid arrowheads); icons, buttons, chips, dropdowns and fields now share one geometry, with keyboard focus rings; menus and dialogs switched to single solid surfaces; hand-drawn switches and sliders; panel headers and spacing adapt to window width."
+        },
+        {
+          "version": "1.1.1",
+          "date": "2026-10-29",
+          "zh": "关于页和设置里的介绍改成 macOS / Windows 通用；Windows 预览版继续随包发布。",
+          "en": "About page and settings copy now cover both macOS and Windows; the Windows preview ships alongside."
+        },
+        {
+          "version": "1.1.0",
+          "date": "2026-10-29",
+          "zh": "UI/UE 全量重制：液态玻璃质感、可折行分支名、自绘勾选框与下拉、历史图谱呼吸波纹；AI 侧栏与对话框全面打磨。",
+          "en": "Full UI/UE overhaul: liquid-glass surfaces, wrappable branch names, hand-drawn checkboxes and dropdowns, pulsing HEAD in history graph; polished AI sidebar and dialogs."
+        },
+        {
+          "version": "1.0.0",
+          "date": "2026-10-22",
+          "zh": "首发：工作副本、历史、搜索；原生菜单栏与系统托盘状态浮窗。",
+          "en": "First release: working copy, history, search; native menu bar and system tray status."
+        }
+      ]
+    },
+    "tools": {
+      "name": "水獭工具",
+      "en": "OtterTools",
+      "from": "ottertools",
+      "platforms": [
+        "macos",
+        "windows"
+      ],
+      "site": "https://shaoasher.github.io/otter-family-site/tools/",
+      "demo": "https://shaoasher.github.io/otter-family-site/tools/#demo",
+      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/brand/tools/icon.png",
+      "colors": [
+        "#FA5A1E",
+        "#FFB04A"
+      ],
+      "latest": "3.0.0",
+      "download": {
+        "version": "2.0.7",
+        "files": {
+          "macos": "OtterTools-macos-arm64.dmg",
+          "macos_zip": "OtterTools-macos-arm64.zip",
+          "windows": "OtterTools-windows-x64-setup.exe",
+          "windows_zip": "OtterTools-windows-x64.zip"
+        }
+      },
+      "changelog": [
+        {
+          "version": "3.0.0",
+          "date": "2026-11-14",
+          "zh": "水獭家族 3.0：图标换成三端统一模板的獭橙，启动页分层动画同步更新；小獭表情升级为家族 120 套，清理、扫描、体检、问候等场景重新编排；版本记录、官网地址等改由家族公共配置下发。"
+        },
+        {
+          "version": "2.0.7",
+          "date": "2026-11-09",
+          "zh": "新增桌面小獭卡片，实时显示健康分和内存 / 磁盘水位；垃圾扫描第二次 0.8 秒出结果、检查文件 2 秒内完成、体检不再一项项排队；通知栏提醒改用自己的图标，点一下直接打开对应页面；忙碌时的小獭换成专注的样子。"
+        },
+        {
+          "version": "2.0.6",
+          "date": "2026-11-09",
+          "zh": "小獭表情升级为家族 HD 全量 50 套，资源路径统一为 assets/otter/expr；应用使用 240 压缩包。"
+        },
+        {
+          "version": "2.0.5",
+          "date": "2026-11-08",
+          "zh": "Windows 版修复：部分电脑上打开后窗口一片灰、点什么都没反应；清理垃圾扫描完，点分组展不开明细。"
+        },
+        {
+          "version": "2.0.4",
+          "date": "2026-11-08",
+          "zh": "修好中文输入法：小獭聊天时拼音打完后按数字选候选词上不了屏，在输入框里打数字还会误触发首页工具；拼音没上屏时按 Esc 不再关掉弹窗或暂停对话。首页 8 个工具的快捷键改为 ⌘⇧1–8（Windows 为 Ctrl+Shift+1–8），切页面仍是 ⌘1–7。"
+        },
+        {
+          "version": "2.0.3",
+          "date": "2026-11-07",
+          "zh": "关于页只介绍水獭工具自己，「水獭家族」改为一个入口，点开在浏览器里看水獭家族官网。家族成员「游时记」更名为「水獭游时」。"
+        },
+        {
+          "version": "2.0.2",
+          "date": "2026-11-07",
+          "zh": "Windows 版修复：浅色主题下标题栏变黑、看不见最小化和最大化按钮；托盘浮窗打开后一片空白。"
+        },
+        {
+          "version": "2.0.1",
+          "date": "2026-11-07",
+          "zh": "设置里的二级页（模型设置、权限引导等）统一样式，关掉回到原来的位置；Windows 版补齐垃圾清理、Wi‑Fi 密码、电池温度、网络测速和开机启动管理，修好托盘乱码和窗口黑框，新增安装包、桌面快捷方式和退出按钮。"
+        },
+        {
+          "version": "2.0.0",
+          "date": "2026-11-07",
+          "zh": "整体重做：首页变成一片水，水位、浑浊、波速、水温对应磁盘、垃圾、CPU、内存；小獭助手动手前先出确认卡；工具箱改成生活向，新增定时睡觉、Wi‑Fi 给客人、截图识字、擦屏幕；Windows 预览版首发；主色换成獭橙。"
+        },
+        {
+          "version": "1.2.1",
+          "date": "2026-11-01",
+          "zh": "修复菜单栏后台刷新时偶发的闪退，开着音乐、视频时更容易遇到。"
+        },
+        {
+          "version": "1.2.0",
+          "date": "2026-10-31",
+          "zh": "界面重做，暗色默认；垃圾扫描从 3 分钟降到 11 秒；浅色主题不再出现黑色卡片。"
+        },
+        {
+          "version": "1.1.0",
+          "date": "2026-10-27",
+          "zh": "首页重排，侧栏改成目录，配色过 WCAG AA。"
+        },
+        {
+          "version": "1.0.2",
+          "date": "2026-10-22",
+          "zh": "AI 助手支持多个模型配置和用量统计。"
+        },
+        {
+          "version": "1.0.0",
+          "date": "2026-10-22",
+          "zh": "首个公开版本：体检、清理、启动项、浏览器痕迹。"
+        }
+      ]
+    },
+    "gametime": {
+      "name": "水獭游时",
+      "en": "GameTime",
+      "from": "gametime",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "site": "https://shaoasher.github.io/otter-family-site/?from=gametime#gametime",
+      "demo": null,
+      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/brand/gametime/icon.png",
+      "colors": [
+        "#1FB6FF",
+        "#5CF2DE"
+      ],
+      "latest": "3.0.0",
+      "download": null,
+      "changelog": [
+        {
+          "version": "3.0.0",
+          "date": "2026-11-14",
+          "zh": "水獭家族 3.0：图标换成三端统一模板的磁青；小獭表情升级为家族 120 套，心情、标签按心情 / 社交 / 游戏 / 生活 / 学习 / 美食 / 出行分组；关于页接入家族公共配置，可以检查新版本。"
+        }
+      ]
+    }
+  }
+}

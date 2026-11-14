@@ -1,0 +1,855 @@
+{
+ "identity": "the EXACT same character as the reference full-body character sheet (first reference is the master design, match it precisely; second reference is face and hair detail). Copy every design detail faithfully, do not redesign or simplify: long straight dark navy-blue hair with side locks, round dark-brown otter ears, gold crescent moon hair clip with small sapphire and thin gold chain on her left side, large pale-gold translucent crescent halo behind head, floating icy-blue crystal shards, sapphire drop earrings, translucent icy-blue water scarf tied at the neck with a water-drop pendant, navy off-shoulder short cape with gold trim and dark swirl embroidery, white translucent puffed sleeves, navy corset vest with gold trim, a gold-framed sapphire brooch at the collar with a blue tassel and a second gold sun-shaped sapphire brooch at the waist, white translucent long gloves, same face shape, blue eyes, same anime coloring and line weight as the reference. No braids, no bows, no extra jewelry.",
+ "framing": "Chat sticker. Upper body from head to waist, character centered, face large and readable (about 35% of frame), clear silhouette with some margin. Clean cel-shaded anime illustration, crisp line art, readable at small sticker size.",
+ "background": "Background: perfectly flat solid pure chroma green #00FF00, no gradient, no floor, no scenery, no shadows on background, no text, no letters, no logo, no watermark. Only one girl in the image; small non-human companions are allowed.",
+ "spirit": "a tiny chibi translucent icy-blue water-spirit otter (her spirit companion, about the size of her head)",
+ "video": "Anime chat sticker loop, flat solid green background, locked camera, no zoom. {m} Hair, water scarf and sheer sleeves follow the motion with soft inertia and settle. Keep her face, outfit and accessories exactly unchanged. She returns to the exact starting pose at the end. The camera stays locked on the same upper-body framing as the first frame for the whole clip: never zoom out, never pull back, never reveal her legs. Effects stay small and close to her, never filling the background. No green-colored effects or light. Lively expressive anime timing, background stays flat green, no text.",
+ "items": [
+  {
+   "k": "happy",
+   "zh": "开心",
+   "tpl": "bright",
+   "s": "Expression: eyes curved into happy crescents, big open smile, light blush. Pose: head tilted, one hand making a peace sign near her cheek, other hand on hip. Symbols: small gold sparkle stars and two tiny hearts beside her head.",
+   "m": "She bounces lightly, tilts her head to the other side and back, the peace sign wiggles, her smile widens, stars twinkle and small hearts float up and fade."
+  },
+  {
+   "k": "laugh",
+   "zh": "大笑",
+   "tpl": "burst",
+   "s": "Expression: laughing out loud, mouth wide open, eyes squeezed shut, tiny tear sparkles at eye corners. Pose: one hand covering her stomach, other hand raised near open mouth, leaning back. Symbols: comic laugh burst lines around her head.",
+   "m": "She bursts out laughing, leans back and forward again, shoulders shake with laughter, she wipes a tear of laughter with a finger, burst lines pulse and laugh tears sparkle."
+  },
+  {
+   "k": "smile",
+   "zh": "微笑",
+   "tpl": "gentle",
+   "s": "Expression: soft gentle closed-mouth smile, warm half-lidded eyes, light blush. Pose: hands lightly clasped in front of chest, head slightly tilted. Symbols: soft warm glow and one small floating heart.",
+   "m": "She slowly tilts her head, blinks gently, her smile softens warmer, the small heart floats up and a soft glow breathes."
+  },
+  {
+   "k": "cheer",
+   "zh": "欢呼",
+   "tpl": "burst",
+   "s": "Expression: sparkling star-shaped eye highlights, mouth wide open shouting with joy. Pose: exactly two hands, each holding a fluffy pink-and-gold cheerleader pom-pom: her right hand raises its pom-pom up beside her head, her left hand holds its pom-pom at chest height. Elbows stay inside the frame, upper-body framing. Symbols: pink, blue and gold confetti and small gold stars. Companion: the water-spirit otter on her shoulder cheering with tiny paws up.",
+   "m": "She shakes the pom-poms rhythmically, switching which one is raised, bounces slightly on the spot, confetti and gold stars pop around her, the spirit otter cheers along."
+  },
+  {
+   "k": "great",
+   "zh": "超棒",
+   "tpl": "bright",
+   "s": "Expression: confident grin, one eyebrow raised, one eye winking. Pose: big thumbs-up thrust toward the viewer with one hand, other hand on hip. Symbols: bright gold flash sparkles around the thumb.",
+   "m": "She thrusts the thumbs-up forward with a wink, the gold flash sparkles burst, she nods proudly and pulls back."
+  },
+  {
+   "k": "proud",
+   "zh": "骄傲",
+   "tpl": "bright",
+   "s": "Expression: smug proud smile with eyes closed, chin raised high. Pose: one hand on chest, other hand on hip, chest puffed out. Symbols: a small glowing gold crown light effect above her head and sparkles.",
+   "m": "She lifts her chin higher, puffs her chest and gives a satisfied 'hmph' nod, the gold crown glow shines brighter with sparkles, then settles."
+  },
+  {
+   "k": "love",
+   "zh": "喜欢",
+   "tpl": "bright",
+   "s": "Expression: heart-shaped pupils, dreamy blushing smile. Pose: both hands forming a heart shape in front of chest. Symbols: several pink and red hearts floating around her.",
+   "m": "She sways side to side dreamily, the hand-heart pushes forward, hearts pop out and float up, her blush deepens."
+  },
+  {
+   "k": "shy",
+   "zh": "害羞",
+   "tpl": "shy",
+   "s": "Expression: deep red blush spreading across cheeks, eyes looking away to the side, small embarrassed smile. Pose: both hands half covering her cheeks, shoulders raised. Symbols: tiny hearts and a small sweat drop near her face.",
+   "m": "She peeks at the viewer, blushes deeper and hides her face behind her hands, peeks through her fingers and twists her shoulders side to side, tiny hearts pop up."
+  },
+  {
+   "k": "calm",
+   "zh": "平静",
+   "tpl": "gentle",
+   "s": "Expression: serene closed eyes, peaceful small smile. Pose: holding a warm cup of tea in both hands near her chest. Symbols: soft round bubbles and two small pale-blue petals drifting.",
+   "m": "She breathes slowly in and out, shoulders rise and fall, sips calmly, bubbles and petals drift gently."
+  },
+  {
+   "k": "relief",
+   "zh": "松口气",
+   "tpl": "gentle",
+   "s": "Expression: eyes closed, relieved exhale with puffed lips. Pose: one hand pressed on her chest, shoulders dropped. Symbols: a visible white sigh puff cloud and a small sweat drop drying away.",
+   "m": "She lets out a long relieved sigh, shoulders drop down, a sigh cloud puffs out, she pats her chest and smiles in relief."
+  },
+  {
+   "k": "sleepy",
+   "zh": "犯困",
+   "tpl": "gentle",
+   "s": "Expression: half-closed heavy eyelids, big yawn with mouth open, tiny tear at eye corner. Pose: one hand covering the yawn, other hand rubbing an eye. Symbols: floating Z letters shapes as drowsy bubbles.",
+   "m": "She yawns widely, her head droops and jerks back up, she rubs her eye sleepily, drowsy bubbles drift up and pop."
+  },
+  {
+   "k": "nap",
+   "zh": "打盹",
+   "tpl": "gentle",
+   "s": "Expression: eyes closed, peaceful sleeping, small drool sparkle. Pose: cheek resting on a small soft pillow hugged in her arms. Symbols: a sleep bubble and a tiny crescent moon. Companion: the water-spirit otter curled asleep on top of the pillow.",
+   "m": "Her head slowly nods down and up as she dozes, the sleep bubble inflates and shrinks, the spirit otter breathes and twitches its ear."
+  },
+  {
+   "k": "goodnight",
+   "zh": "晚安",
+   "tpl": "gentle",
+   "s": "Mood: atmospheric. Behind her (not covering her) is a soft-edged cloud-shaped patch of deep navy night sky with a glowing crescent moon and small warm golden stars; outside that patch the background stays flat pure green, and nothing inside the patch is green. Expression: gentle sleepy smile, eyes softly closed. Pose: holding a small star-shaped plush near her cheek, waving goodnight with fingers. Symbols: a crescent moon and twinkling small stars.",
+   "m": "She waves softly with her fingers, leans her cheek on the plush, eyes slowly close, stars twinkle and the moon glows.",
+   "bg": "the navy night-sky patch"
+  },
+  {
+   "k": "morning",
+   "zh": "早安",
+   "tpl": "bright",
+   "s": "Expression: fresh bright smile, one eye still a little sleepy. Pose: both arms stretched up above her head in a big morning stretch. Symbols: a small golden sun icon and a few tiny white sparkles near her head.",
+   "m": "Small motion: she holds the overhead stretch, yawns with eyes closed, then opens her eyes with a sleepy smile, a few small sparkles twinkle. Her arms barely move and both hands stay fully inside the frame with space around them."
+  },
+  {
+   "k": "cry",
+   "zh": "哭泣",
+   "tpl": "down",
+   "s": "Expression: crying with streams of tears, wobbly wide-open sobbing mouth, flushed nose. Pose: both hands wiping tears from her eyes. Symbols: big blue teardrops flying from her eyes. Companion: the water-spirit otter patting her shoulder in comfort.",
+   "m": "Her lips tremble, tears well up and burst out in streams, shoulders shake with sobs, she wipes tears with both hands, the spirit otter pats her shoulder."
+  },
+  {
+   "k": "sad",
+   "zh": "难过",
+   "tpl": "down",
+   "s": "Expression: sad droopy eyes, eyebrows slanted upward, mouth turned down, glistening tear at eye corner. Pose: hands clasped low in front, head lowered. Symbols: a small gray rain cloud above her head with tiny raindrops.",
+   "m": "Her head slowly droops lower, shoulders sag, a tear rolls down, the little rain cloud drizzles over her, she sighs."
+  },
+  {
+   "k": "scared",
+   "zh": "害怕",
+   "tpl": "tense",
+   "s": "Expression: terrified wide eyes with small pupils, trembling open mouth, pale face with blue shading lines on forehead. Pose: hands covering her mouth, shoulders hunched, body leaning back. Symbols: sweat drops and an exclamation mark, trembling lines.",
+   "m": "She flinches back, trembles all over, sweat drops fly, the exclamation mark pops, she shrinks smaller and shivers."
+  },
+  {
+   "k": "shock",
+   "zh": "震惊",
+   "tpl": "tense",
+   "s": "Expression: eyes extremely wide, jaw dropped open. Pose: both hands grabbing the sides of her head. Symbols: two big red exclamation marks and short white shock lines close around her head. No rays, nothing green.",
+   "m": "She flinches in place with a shocked gasp, hair flicks up, then she shakes her head. The two red exclamation marks stay beside her head the whole clip and just bounce slightly. Only short white shock lines."
+  },
+  {
+   "k": "bashful",
+   "zh": "扭捏",
+   "tpl": "shy",
+   "s": "Expression: embarrassed blush, eyes glancing down, lips pressed shyly. Pose: twiddling her index fingers together in front of her chest. Symbols: a small pink question mark and rosy blush marks.",
+   "m": "She twiddles her fingers, sways shyly side to side, glances up and away, the little question mark wobbles."
+  },
+  {
+   "k": "angry",
+   "zh": "生气",
+   "tpl": "tense",
+   "s": "Expression: furrowed angry brows, glaring eyes, cheeks flushed red, gritted teeth, no tears. Pose: both fists clenched in front of chest. Symbols: big red anime anger vein mark on her head, small solid white steam puffs from both sides of head. Companion: the water-spirit otter puffing its cheeks angrily copying her.",
+   "m": "She jolts with anger, fists shake, she glares, her cheeks puff up round with anger, then she shouts one short 'hmph' and turns her face slightly away. The small red anger mark on her hair blinks (it stays small, on her hair). Small solid white steam puffs pop from the top of her head. The spirit otter shakes its tiny fists too. When her cheeks puff, it is correct anime form: both cheeks round outward like a hamster and the face outline bulges a little at the cheeks, lips pressed into a small pout; the mouth stays small, in its normal place and visible; never a blob or balloon in front of the mouth."
+  },
+  {
+   "k": "pout",
+   "zh": "嘟嘴",
+   "tpl": "shy",
+   "s": "Expression: sulky 'hmph' pout: lips pushed forward into a small clear pout, cheeks only slightly round, half-lidded eyes glancing sideways away from the viewer. Pose: head turned to the side in three-quarter view, arms crossed over her chest (exactly two arms). Symbols: a small clean red anger cross mark near her head.",
+   "m": "She turns her head further away with a 'hmph', then peeks back once with a sulky side glance and turns away again. No cheek puffing in the clip: the mouth stays a small visible pout the whole time."
+  },
+  {
+   "k": "speechless",
+   "zh": "无语",
+   "tpl": "focus",
+   "s": "Expression: flat deadpan eyes, straight line mouth, a single big sweat drop on her head. Pose: classic facepalm: exactly two arms, both hands clearly visible in frame: her right hand pressed flat on her forehead, her left arm folded across her waist with the left gloved hand holding her right elbow. Symbols: three dots ellipsis floating beside her head and a dark gloom line.",
+   "m": "She slowly drags her hand down her face, deadpan stare, the ellipsis dots appear one by one, the sweat drop slides down, she sighs."
+  },
+  {
+   "k": "hi",
+   "zh": "打招呼",
+   "tpl": "bright",
+   "s": "Expression: cheerful open smile, bright eyes. Pose: one hand raised high waving hello toward the viewer, other hand on hip. Symbols: a round empty speech bubble and sparkles near her raised hand.",
+   "m": "She waves her raised hand side to side energetically, leans forward with a bright smile, the speech bubble pops in and sparkles twinkle."
+  },
+  {
+   "k": "bye",
+   "zh": "再见",
+   "tpl": "gentle",
+   "s": "Expression: soft wistful smile, eyes a little reluctant. Pose: her body turned three-quarters away from the viewer, looking back over her shoulder at the viewer; one hand raised waving goodbye, the other arm relaxed at her side (exactly two arms). Symbols: a small pink heart drifting away along a dotted trail. No companion.",
+   "m": "She looks back over her shoulder and slowly waves goodbye, the little heart drifts away along the dotted trail, her hair sways gently."
+  },
+  {
+   "k": "ok",
+   "zh": "好的",
+   "tpl": "bright",
+   "s": "Expression: confident nod with a cheerful smile, one eye winking. Pose: one hand making an OK sign near her face. Symbols: a big golden check mark and sparkles.",
+   "m": "She nods firmly twice, the OK sign pushes forward, the check mark pops in with sparkles."
+  },
+  {
+   "k": "please",
+   "zh": "拜托",
+   "tpl": "shy",
+   "s": "Expression: pleading puppy eyes glistening with tears, eyebrows raised, small begging mouth. Pose: hands pressed together in prayer in front of her face, slightly bowing. Symbols: tiny sparkles and a small teardrop.",
+   "m": "She rubs her pressed hands together pleadingly, leans forward with big glistening puppy eyes, bows slightly twice, sparkles shimmer."
+  },
+  {
+   "k": "thanks",
+   "zh": "谢谢",
+   "tpl": "gentle",
+   "s": "Expression: grateful warm smile, eyes closed. Pose: both hands clasped together in front of her chest in heartfelt thanks, slight forward bow. Symbols: small gold sparkles and a soft warm glow.",
+   "m": "Holding the fist-and-palm salute in front of her chest, she bows forward and pushes the clasped hands gently forward twice in thanks, eyes closed smiling, gold sparkles twinkle. Her body stays centered with no sideways tilt; the clasped hands never separate."
+  },
+  {
+   "k": "hug",
+   "zh": "拥抱",
+   "tpl": "bright",
+   "s": "Expression: affectionate happy smile, blushing. Pose: both arms open wide reaching toward the viewer for a hug. Symbols: hearts surrounding her. Companion: the water-spirit otter flying into her arms.",
+   "m": "She opens her arms wide, the spirit otter flies in and she hugs it tightly with a happy squeeze, hearts burst around, she opens her arms again."
+  },
+  {
+   "k": "friends",
+   "zh": "好友",
+   "tpl": "bright",
+   "s": "Expression: bright warm smile looking at the spirit otter. Pose: exactly two hands: one hand open palm-up in an inviting gesture, the other hand extends only its little finger in a pinky promise, and the water-spirit otter hooks that little finger with its tiny paw. Symbols: two pink hearts connected by a thin sparkling line.",
+   "m": "Big energetic motion: she and the spirit otter shake their hooked little fingers up and down vigorously in a pinky promise, she leans toward the otter laughing and bounces happily, the otter hops excitedly on her open palm, the two pink hearts swell and burst into a shower of small pink hearts. Their little fingers stay hooked; the hearts stay pink."
+  },
+  {
+   "k": "solo",
+   "zh": "独处",
+   "tpl": "gentle",
+   "s": "Mood: lonely quiet night, solitude. Behind her (not covering her) is a soft-edged cloud-shaped patch of deep navy night sky with a single lonely crescent moon and a few sparse stars, clean navy with no green haze inside or at its edges; outside that patch the background stays flat pure green. Framing (exception for this sticker): full body, sitting on the ground seen from the side, the whole seated figure fits in the frame with margin, head still clearly readable. Pose: sitting in side profile, knees pulled up to her chest, both arms wrapped around her knees (exactly two arms), chin resting on her knees, long hair flowing down her back, otter tail curled around her side. Lower body exactly as the master full-body sheet: short layered white petticoat skirt with pale-blue frills, navy and sheer pale-blue overskirt train with gold trim, bare legs, white ankle boots with gold trim and sapphire gems, fluffy brown otter tail. Expression: NO smile, quiet wistful face, eyes half lowered, gazing into the distance away from the viewer. Lighting: cool pale-blue moonlight rim light. Symbols: one tiny glowing firefly. No companion, she is completely alone.",
+   "m": "Very still and quiet: she stays hugging her knees, her hair and scarf sway gently in a night breeze, she blinks slowly and lowers her chin a little, the firefly drifts slowly past, a star twinkles."
+  },
+  {
+   "k": "coop",
+   "zh": "合作",
+   "tpl": "bright",
+   "s": "Expression: determined friendly smile. Pose: one hand extended forward palm-up inviting teamwork, other hand in a fist. Symbols: a glowing gold handshake emblem. Companion: the water-spirit otter high-fiving her open palm.",
+   "m": "The spirit otter jumps up and high-fives her open palm, the handshake emblem flashes, she pumps her fist with a determined grin."
+  },
+  {
+   "k": "wave",
+   "zh": "挥手",
+   "tpl": "bright",
+   "s": "Expression: big friendly smile. Pose: one arm raised high waving widely. Symbols: curved motion lines beside her hand.",
+   "m": "She waves her arm in big wide arcs, motion lines swoosh, she smiles bigger."
+  },
+  {
+   "k": "salute",
+   "zh": "敬礼",
+   "tpl": "bright",
+   "s": "Expression: serious confident face with a slight smile, one eye winking. Pose: right hand raised to the brow in a crisp salute, standing straight. Symbols: a gold star badge sparkle beside her head.",
+   "m": "She snaps a crisp salute, stands up straighter, winks, the star badge flashes, then she holds the salute."
+  },
+  {
+   "k": "gg",
+   "zh": "认输",
+   "tpl": "down",
+   "s": "Expression: resigned helpless smile, eyes closed, deflated. Pose: shrugging with both palms up. Symbols: a broken gray star cracking apart and a gray sigh puff.",
+   "m": "She shrugs higher with a resigned sigh, the gray star cracks and its pieces fall, her shoulders deflate."
+  },
+  {
+   "k": "welcome",
+   "zh": "欢迎",
+   "tpl": "bright",
+   "s": "Expression: warm bright welcoming smile, eyes gently curved. Pose: exactly two hands, both arms opened outward at chest height with palms up in a 'welcome!' gesture, a slight polite bow. Symbols: pink and white petals floating around her and a small pink ribbon bow with gold sparkles. Companion: the water-spirit otter beside her waving one tiny paw hello. No flowers with stems, no bouquet, nothing green.",
+   "m": "She opens her arms wider with a warm smile and a small polite bow, petals swirl out toward the viewer, the ribbon flutters, the spirit otter waves hello."
+  },
+  {
+   "k": "sorry",
+   "zh": "道歉",
+   "tpl": "shy",
+   "s": "Expression: apologetic worried eyebrows, guilty small smile, sweat drop. Pose: bowing with hands pressed together in front of face. Symbols: a small sweat drop and a soft gray apology bubble.",
+   "m": "She bows apologetically twice with pressed hands, peeks up guiltily, the sweat drop slides."
+  },
+  {
+   "k": "start",
+   "zh": "开局",
+   "tpl": "burst",
+   "s": "Expression: excited determined grin, eyes shining. Pose: gripping a white game controller with both hands, thumbs ready. Symbols: a bright start burst light and a small triangle play sparkle.",
+   "m": "She presses the controller button excitedly, leans forward, a start light burst flashes, her eyes shine."
+  },
+  {
+   "k": "loading",
+   "zh": "加载中",
+   "tpl": "focus",
+   "s": "Expression: impatient waiting face, eyes staring at a ring. Pose: holding a game controller, tapping a finger. Symbols: a clear circular loading ring made of small water droplets beside her.",
+   "m": "The droplet loading ring spins around, her eyes follow it in circles, she taps her finger impatiently and puffs her cheeks. When her cheeks puff, it is correct anime form: both cheeks round outward like a hamster and the face outline bulges a little at the cheeks, lips pressed into a small pout; the mouth stays small, in its normal place and visible; never a blob or balloon in front of the mouth."
+  },
+  {
+   "k": "victory",
+   "zh": "胜利",
+   "tpl": "burst",
+   "s": "Expression: triumphant big open smile. Pose: raising a golden trophy high with one hand, other hand making a V sign. Symbols: gold ribbons and confetti falling.",
+   "m": "She lifts the trophy higher triumphantly, jumps, gold confetti and ribbons pour down, she cheers."
+  },
+  {
+   "k": "defeat",
+   "zh": "失败",
+   "tpl": "down",
+   "s": "Expression: devastated face, hollow sad eyes, mouth open in disbelief. Pose: knees weak, arms hanging limply, holding a drooping white flag. Symbols: a cracked broken heart shards falling.",
+   "m": "Her shoulders collapse, the white flag droops lower, broken heart shards scatter and fall, she sighs heavily."
+  },
+  {
+   "k": "rank",
+   "zh": "上分",
+   "tpl": "burst",
+   "s": "Expression: fierce excited grin. Pose: one fist pumping upward, other hand holding a game controller. Symbols: a glowing rising arrow made of steps and lightning bolts.",
+   "m": "She pumps her fist up, the rising arrow climbs and flashes, lightning crackles, she grins fiercely."
+  },
+  {
+   "k": "highlight",
+   "zh": "高光",
+   "tpl": "burst",
+   "s": "Expression: cool confident smirk, one eye closed. Pose: striking a cool pose with one finger pointing up. Symbols: a spotlight beam from above and starburst flares.",
+   "m": "The spotlight flashes on her, she strikes the pointing pose with a smirk, starbursts flare."
+  },
+  {
+   "k": "gacha",
+   "zh": "抽卡",
+   "tpl": "burst",
+   "s": "Expression: ecstatic shocked joy, starry eyes. Pose: holding a smartphone up with both hands. Symbols: a glowing golden card bursting out of the phone with rainbow light.",
+   "m": "She taps the phone, a golden card bursts out with rainbow light, she gasps then squeals with joy, hugging the phone."
+  },
+  {
+   "k": "queue",
+   "zh": "排队",
+   "tpl": "focus",
+   "s": "Expression: bored waiting face, slightly puffed cheeks, half-lidded eyes. Pose: she has exactly two hands, both hands together in front of her chest holding one small blank queue ticket (no letters, no numbers). Companions: two tiny chibi translucent icy-blue water-spirit otters standing one behind the other in a short line in front of her at the bottom, she is last in line, leaning to peek ahead. Symbols: a small hourglass icon and three floating dots.",
+   "m": "She sighs and sways from side to side, leans to peek ahead over the line, the spirit otters shuffle one tiny step forward, the three dots appear one by one, the hourglass flips."
+  },
+  {
+   "k": "grind",
+   "zh": "刷本",
+   "tpl": "focus",
+   "s": "Expression: tired but determined, dark eye bags, gritting teeth. Pose: gripping a game controller, a small red potion bottle beside her. Symbols: sweat drops and a stamina bar sparkle.",
+   "m": "She mashes the controller buttons, sweats, sips the potion quickly and keeps grinding with gritted teeth."
+  },
+  {
+   "k": "focus",
+   "zh": "专注",
+   "tpl": "focus",
+   "s": "Expression: intense focused eyes, serious mouth. Pose: one hand raised to her temple, concentrating. Symbols: a glowing target crosshair and small concentration lines.",
+   "m": "Her eyes narrow intensely, the crosshair pulses and locks, concentration lines tighten, she stays still and sharp."
+  },
+  {
+   "k": "rage",
+   "zh": "暴怒",
+   "tpl": "tense",
+   "s": "Expression: furious rage, shouting with wide angry mouth, fiery eyes. Pose: raising a game controller overhead about to throw it. Symbols: flames rising behind her and multiple red anger marks.",
+   "m": "She shakes the controller overhead in rage, flames flare up, anger marks pop, she stomps and shouts."
+  },
+  {
+   "k": "win",
+   "zh": "连胜",
+   "tpl": "burst",
+   "s": "Expression: confident cocky grin, one eye winking. Pose: one hand held up showing three fingers (counting her winning streak), the other hand a fist at her chest. Symbols: three gold medals on blue ribbons hanging around her neck layered over each other, and a row of small glowing gold stars arcing above her head like a combo streak. No flames, no text.",
+   "m": "She flashes the three fingers with a wink, a new gold star pops into the streak arc with a sparkle, the gold medals swing and clink, she pumps her fist as if saying 'one more!'. Absolutely no fire, no flames, no burning ring, no orange glow around her; only small gold stars and sparkles."
+  },
+  {
+   "k": "lose",
+   "zh": "连败",
+   "tpl": "down",
+   "s": "Expression: dazed hollow eyes with faint shadows under them, mouth slightly open in defeat, NOT crying. Pose: exactly two arms hanging limp; a white game controller is slipping out of her loosened right hand. Symbols: above her head three small stars in a row fading from bright gold to dull gray, the last one cracked; a short broken gray arrow pointing down beside her. No companion.",
+   "m": "Very small motion: she slumps her shoulders and sighs, the stars above her dim one by one and the last one cracks. She keeps holding the controller loosely in her hand the whole clip; the controller and both hands never move and stay fully inside the frame."
+  },
+  {
+   "k": "pause",
+   "zh": "暂停",
+   "tpl": "focus",
+   "s": "Expression: serious calm face. Pose: one palm pushed forward toward the viewer in a stop gesture. Symbols: a big glowing pause symbol (two vertical bars) in front of her palm.",
+   "m": "She pushes her palm forward firmly, the pause symbol lights up bright and holds, she nods once."
+  },
+  {
+   "k": "retry",
+   "zh": "重试",
+   "tpl": "bright",
+   "s": "Expression: determined smile, wiping sweat. Pose: one hand pointing at a circular retry arrow, other fist clenched. Symbols: a glowing circular arrow.",
+   "m": "She points at the glowing circular retry arrow and it spins in place, she clenches her fist with renewed determination and nods. The circular arrow stays visible beside her pointing hand for the whole clip and never disappears."
+  },
+  {
+   "k": "quest",
+   "zh": "任务",
+   "tpl": "bright",
+   "s": "Expression: curious excited smile. Pose: unrolling a parchment quest scroll with both hands. Symbols: a gold check star and a small exclamation mark above her head.",
+   "m": "She unrolls the scroll, reads it, her eyes light up, the exclamation mark bounces, the check star sparkles."
+  },
+  {
+   "k": "bath",
+   "zh": "泡澡",
+   "tpl": "gentle",
+   "s": "Expression: blissful relaxed smile, eyes closed, flushed cheeks. Pose: holding a small wooden bath bucket with a yellow rubber duck. Symbols: steam bubbles and foam. Companion: a tiny yellow rubber duck on her head.",
+   "m": "She sways happily, the rubber duck on her head bobs, steam bubbles float and pop."
+  },
+  {
+   "k": "stroll",
+   "zh": "散步",
+   "tpl": "gentle",
+   "s": "Framing (exception for this sticker): full body walking, seen from the side in three-quarter view, the whole figure fits in the frame with margin. Pose: strolling leisurely mid-step, both arms swinging gently and relaxed at her sides, BOTH long white gloves and hands clearly visible beside her body (not hidden behind her or the cape), upper body relaxed, head slightly tilted, looking ahead (not at the viewer) with a calm content smile. Lower body exactly as the master full-body sheet: short layered white petticoat skirt with pale-blue frills, navy and sheer pale-blue overskirt train with gold trim, bare legs, short white ankle boots with low heels, gold trim and sapphire gems (NOT strappy sandals, NOT high heels), fluffy brown otter tail. Symbols: a few orange autumn leaves drifting in the direction she walks, soft breeze lines.",
+   "m": "She strolls in place with a relaxed easy step rhythm, arms swinging gently, hair and overskirt sway, orange leaves drift past."
+  },
+  {
+   "k": "sport",
+   "zh": "运动",
+   "tpl": "bright",
+   "s": "Expression: energetic smile, panting slightly, flushed. Pose: towel around neck, holding a water bottle. Symbols: sweat drops and energy sparkles.",
+   "m": "She wipes her face with the towel, takes a big sip of water, pants and smiles energetically, sweat drops sparkle."
+  },
+  {
+   "k": "movie",
+   "zh": "看电影",
+   "tpl": "focus",
+   "s": "Expression: absorbed excited face, mouth slightly open. Pose: holding a striped popcorn bucket, eating popcorn. Symbols: a film strip and small sparkles.",
+   "m": "She munches popcorn while staring ahead, gasps at a scene, popcorn pieces pop up, the film strip flickers."
+  },
+  {
+   "k": "music",
+   "zh": "听歌",
+   "tpl": "bright",
+   "s": "Expression: blissful smile, eyes closed enjoying music. Pose: wearing headphones over her ears, one hand pressing the earcup. Symbols: floating musical notes.",
+   "m": "She bobs her head to the beat and sways her shoulders, musical notes bounce out rhythmically."
+  },
+  {
+   "k": "story",
+   "zh": "追剧",
+   "tpl": "focus",
+   "s": "Expression: deeply moved, big glistening tears streaming down both cheeks, eyebrows raised sadly, lips trembling. Pose: leaning forward hugging a pastel-blue cushion tightly with both arms. Symbols: a small glowing tablet screen beside the cushion casting a cool blue light on her face. No leaves, no plants. No companion.",
+   "m": "She sniffles, tears roll down her cheeks, she hugs the cushion tighter, the screen light flickers on her face. No leaves, no plants, nothing green."
+  },
+  {
+   "k": "night",
+   "zh": "夜晚",
+   "tpl": "gentle",
+   "s": "Mood: quiet, dreamy night atmosphere. Behind her (not covering her) is a soft-edged cloud-shaped patch of deep navy night sky with a crescent moon and small stars; outside that patch the background stays flat pure green. Expression: soft dreamy gaze looking up at the night sky, faint gentle smile. Pose: exactly two hands: one hand holds a small warm glowing lantern at chest height, the other hand rests lightly on the lantern top. Symbols: a few tiny twinkling stars near her, the lantern's warm glow on her face.",
+   "m": "Calm night: a small shooting star streaks across the night-sky patch, her eyes follow it and she smiles softly, the lantern glow breathes brighter and dimmer, stars twinkle. Slow gentle pacing."
+  },
+  {
+   "k": "clear",
+   "zh": "天晴",
+   "tpl": "bright",
+   "s": "Expression: bright happy squint. Pose: one hand shading her eyes with the palm held flat at her brow (not a salute), the other arm opened out to the side happily. Symbols: exactly ONE bright orange-gold sun with rays and one small white cloud near the top of the frame.",
+   "m": "She shades her eyes and squints happily at the sun, the single sun's rays rotate gently, the little cloud drifts away. There is only one sun the whole time."
+  },
+  {
+   "k": "weekend",
+   "zh": "周末",
+   "tpl": "bright",
+   "s": "Expression: carefree happy grin. Pose: arms raised in a lazy happy cheer. Symbols: small colorful pennant flags and a sun-glasses sparkle.",
+   "m": "She stretches lazily and cheers 'weekend', the pennant flags flutter, she sways happily."
+  },
+  {
+   "k": "clean",
+   "zh": "打扫",
+   "tpl": "focus",
+   "s": "Expression: determined cheerful focus, small sweat drop. Pose: holding a broom with both hands, a cleaning cloth tucked on her shoulder. Symbols: dust puffs and clean sparkle marks.",
+   "m": "She sweeps briskly side to side, dust puffs fly then vanish into clean sparkles, she wipes her forehead."
+  },
+  {
+   "k": "outfit",
+   "zh": "穿搭",
+   "tpl": "bright",
+   "s": "Expression: confident pleased smile checking herself. Pose: adjusting her collar with one hand, holding a clothes hanger with the other. Symbols: sparkle stars.",
+   "m": "She adjusts her collar, turns slightly left and right admiring, sparkles flash on her outfit, she smiles satisfied."
+  },
+  {
+   "k": "sleep",
+   "zh": "入睡",
+   "tpl": "gentle",
+   "s": "Mood: atmospheric. Behind her (not covering her) is a soft-edged cloud-shaped patch of deep navy night sky with a crescent moon and a few soft stars; outside that patch the background stays flat pure green, and nothing inside the patch is green. Expression: peacefully asleep, eyes closed. Pose: wrapped in a soft blanket up to her chin, head resting on a pillow. Symbols: a crescent moon and floating Z shapes as sleep bubbles. Companion: the water-spirit otter sleeping on her shoulder.",
+   "m": "She breathes slowly in deep sleep, snuggles into the blanket, sleep bubbles drift up, the spirit otter snores softly.",
+   "bg": "the navy night-sky patch"
+  },
+  {
+   "k": "drink",
+   "zh": "喝水",
+   "tpl": "gentle",
+   "s": "Expression: refreshed satisfied face. Pose: holding a clear glass of water with both hands, sipping. Symbols: water droplets and fresh sparkles.",
+   "m": "She gulps the water, lowers the glass and lets out a refreshed 'ahh', droplets sparkle."
+  },
+  {
+   "k": "relax",
+   "zh": "放松",
+   "tpl": "gentle",
+   "s": "Expression: deeply relaxed, eyes closed, melting smile. Pose: leaning back on a big soft cushion, arms loose. Symbols: soft floating bubbles.",
+   "m": "She sinks deeper into the cushion, exhales slowly, shoulders melt, bubbles float lazily."
+  },
+  {
+   "k": "rot",
+   "zh": "躺平",
+   "tpl": "down",
+   "s": "Expression: blank lazy face, half-dead eyes, tiny drool. Pose: sprawled limp over a cushion, arms dangling. Symbols: a flat gray line symbol and a small soul wisp floating out.",
+   "m": "She sinks flatter and limper, a tiny soul wisp floats out of her mouth and back in, she doesn't move otherwise."
+  },
+  {
+   "k": "sick",
+   "zh": "生病",
+   "tpl": "down",
+   "s": "Expression: feverish weak face, flushed cheeks, droopy eyes, pale. Pose: a cold wet towel on her forehead, holding a thermometer in her mouth. Symbols: wavy fever heat lines and sweat drops.",
+   "m": "She sways weakly, sniffles, the thermometer bobs, heat lines waver, she shivers a little."
+  },
+  {
+   "k": "study",
+   "zh": "学习",
+   "tpl": "focus",
+   "s": "Expression: diligent focused eyes. Pose: holding an open textbook and a pencil, studying. Symbols: a small desk lamp glow and floating formula sparkles.",
+   "m": "She reads the textbook, taps the pencil on her lip, writes a note, sparkles of knowledge float up."
+  },
+  {
+   "k": "think",
+   "zh": "思考",
+   "tpl": "focus",
+   "s": "Expression: pondering, eyes looking up to the side, lips pursed. Pose: chin resting on her hand. Symbols: floating question marks.",
+   "m": "She taps her chin and looks up thinking, question marks appear and wobble one by one, she tilts her head."
+  },
+  {
+   "k": "write",
+   "zh": "书写",
+   "tpl": "focus",
+   "s": "Expression: careful concentration. Pose: writing with an elegant fountain pen on a sheet of formal paper. Symbols: small ink sparkles.",
+   "m": "She writes smooth flowing strokes with the pen, ink sparkles trail, she lifts the pen and checks her writing."
+  },
+  {
+   "k": "read",
+   "zh": "阅读",
+   "tpl": "gentle",
+   "s": "Expression: calm absorbed reading, soft eyes looking down. Pose: holding an open hardcover book with both hands. Symbols: glowing page sparkles.",
+   "m": "She turns a page gently, eyes follow the lines, a soft smile appears, page sparkles float up."
+  },
+  {
+   "k": "busy",
+   "zh": "忙碌",
+   "tpl": "tense",
+   "s": "Expression: frazzled stressed face, swirly eyes, sweat drops. Pose: arms full of a tall wobbly stack of documents. Symbols: flying papers and sweat drops.",
+   "m": "The paper stack wobbles, she rushes and balances it frantically, papers fly, sweat drops spray."
+  },
+  {
+   "k": "deadline",
+   "zh": "赶截止",
+   "tpl": "tense",
+   "s": "Expression: panicked wide eyes, gritted teeth. Pose: clutching a ticking alarm clock. Symbols: urgent lightning bolts and sweat.",
+   "m": "The alarm clock rings and shakes, she panics, lightning bolts flash, she clutches it tighter sweating."
+  },
+  {
+   "k": "done",
+   "zh": "完成",
+   "tpl": "burst",
+   "s": "Expression: triumphant relieved grin. Pose: snapping a book shut with one hand, fist raised with the other. Symbols: a big golden check mark and sparkles.",
+   "m": "She snaps the book shut, raises her fist, a big check mark stamps in with sparkles, she exhales happily."
+  },
+  {
+   "k": "review",
+   "zh": "复盘",
+   "tpl": "focus",
+   "s": "Expression: thoughtful reflective eyes. Pose: holding an open notebook, finger tracing back up the lines. Symbols: a circular rewind arrow.",
+   "m": "Her finger traces back up the notebook lines, the rewind arrow spins backward, she nods thoughtfully."
+  },
+  {
+   "k": "note",
+   "zh": "记笔记",
+   "tpl": "focus",
+   "s": "Expression: quick eager focus. Pose: scribbling fast with a pencil on a small spiral notepad. Symbols: small star marks and check sparkles.",
+   "m": "She scribbles rapidly, flips the page, check sparkles pop on the pad."
+  },
+  {
+   "k": "ask",
+   "zh": "提问",
+   "tpl": "bright",
+   "s": "Expression: curious eager face, eyebrows raised. Pose: one hand raised high to ask a question. Symbols: a big question mark speech bubble. Exactly two arms: her other hand rests on her chest, clearly visible.",
+   "m": "She tilts her head curiously with her raised hand waving slightly, her other hand stays on her chest. The question-mark speech bubble stays beside her head the whole clip, bobbing gently."
+  },
+  {
+   "k": "idea",
+   "zh": "灵感",
+   "tpl": "burst",
+   "s": "Expression: eureka excitement, eyes wide and sparkling, mouth open. Pose: one finger pointing up. Symbols: a glowing light bulb above her head with flash rays.",
+   "m": "Her eyes widen, the light bulb flicks on with a flash, she points up excitedly."
+  },
+  {
+   "k": "plan",
+   "zh": "计划",
+   "tpl": "focus",
+   "s": "Expression: organized confident smile. Pose: holding a clipboard checklist and a pen. Symbols: check stars lighting up one by one.",
+   "m": "She ticks items on the clipboard with the pen, check stars light up one after another, she nods."
+  },
+  {
+   "k": "meeting",
+   "zh": "开会",
+   "tpl": "focus",
+   "s": "Expression: confident professional explaining face, mouth open mid-sentence. Pose: standing beside a small presentation whiteboard on an easel that shows a simple bar chart and pie chart (no text), tapping the chart with a slim pointer stick. Companions: two tiny chibi translucent icy-blue water-spirit otters sit in front as the audience, one raising a paw, one nodding. Symbols: two small speech bubbles containing a chart icon and a lightbulb icon (no text, no ellipsis).",
+   "m": "She taps the chart with the pointer stick and turns toward the audience explaining, the speech bubbles alternate popping up, the spirit otters nod and one raises its paw, she nods back."
+  },
+  {
+   "k": "overtime",
+   "zh": "加班",
+   "tpl": "down",
+   "s": "Mood: atmospheric. Behind her (not covering her) is a soft-edged cloud-shaped patch of deep navy late-night sky with a crescent moon; outside that patch the background stays flat pure green, and nothing inside the patch is green. A warm desk-lamp glow lights her tired face from one side. Expression: exhausted, heavy eye bags, forced tired smile. Pose: holding a large coffee mug, slumped. Symbols: a small night lamp glow and a crescent moon, steam from coffee.",
+   "m": "Her head droops then jerks awake, she sips coffee wearily, the steam curls, she sighs.",
+   "bg": "the navy late-night sky patch"
+  },
+  {
+   "k": "cook",
+   "zh": "下厨",
+   "tpl": "bright",
+   "s": "Expression: cheerful focused smile. Pose: wearing a small apron, holding a wooden spatula and a frying pan. Symbols: rising steam and food sparkles.",
+   "m": "She flips food in the pan with the spatula, steam rises, she tastes it and smiles."
+  },
+  {
+   "k": "cafe",
+   "zh": "喝咖啡",
+   "tpl": "gentle",
+   "s": "Expression: cozy content smile. Pose: holding a white porcelain coffee cup with latte art on a saucer. Symbols: rising steam and a coffee bean.",
+   "m": "She blows on the coffee, sips, sighs contentedly, the steam curls up."
+  },
+  {
+   "k": "milktea",
+   "zh": "奶茶",
+   "tpl": "bright",
+   "s": "Expression: happy satisfied face sipping. Pose: holding a bubble milk tea cup with a straw. Symbols: tapioca pearls bouncing and small hearts.",
+   "m": "She sips through the straw, pearls bounce up, her cheeks puff round as she chews happily, hearts pop. When her cheeks puff, it is correct anime form: both cheeks round outward like a hamster and the face outline bulges a little at the cheeks, lips pressed into a small pout; the mouth stays small, in its normal place and visible; never a blob or balloon in front of the mouth."
+  },
+  {
+   "k": "eat",
+   "zh": "干饭",
+   "tpl": "burst",
+   "s": "Mood: ravenous 'foodie mode ON' energy. Expression: eager hungry eyes with sparkles, cheeks stuffed round like a hamster, a grain of rice on her cheek. Pose: exactly two hands: one hand holds a big bowl heaped into a tall mountain of white rice, the other hand shovels rice with chopsticks into her mouth. Symbols: rice grains flying, speed lines, small steam puffs (white) and small white rice sparkles. No fire or flames anywhere.",
+   "m": "She shovels rice super fast, cheeks puffed full like a hamster as she chews, rice grains fly, speed lines flicker, she chews happily with a satisfied hum, then dives in again. When her cheeks puff, it is correct anime form: both cheeks round outward like a hamster and the face outline bulges a little at the cheeks, lips pressed into a small pout; the mouth stays small, in its normal place and visible; never a blob or balloon in front of the mouth."
+  },
+  {
+   "k": "burger",
+   "zh": "汉堡",
+   "tpl": "bright",
+   "s": "Expression: excited big-mouth bite face. Pose: holding a big burger with both hands. Symbols: small grease sparkle stars.",
+   "m": "She opens wide and takes a big bite of the burger, chews happily, sparkles pop."
+  },
+  {
+   "k": "noodles",
+   "zh": "面条",
+   "tpl": "bright",
+   "s": "Expression: delighted slurping face. Pose: lifting noodles from a bowl with chopsticks. Symbols: steam and noodle sparkles.",
+   "m": "She lifts the noodles high, blows on them, slurps them up happily, steam rises."
+  },
+  {
+   "k": "rice",
+   "zh": "米饭",
+   "tpl": "gentle",
+   "s": "Expression: gentle content chewing face. Pose: holding a rice bowl close to her mouth with both hands. Symbols: glowing rice grain sparkles.",
+   "m": "She takes small bites from the bowl and chews contentedly, rice sparkles glow."
+  },
+  {
+   "k": "dessert",
+   "zh": "甜点",
+   "tpl": "bright",
+   "s": "Expression: delighted sweet tooth face, sparkling eyes. Pose: holding a small cake plate and a fork. Symbols: sugar sparkle stars and pink hearts.",
+   "m": "She takes a bite of cake, cups her cheek in bliss, sugar sparkles and hearts pop."
+  },
+  {
+   "k": "fruit",
+   "zh": "水果",
+   "tpl": "bright",
+   "s": "Expression: fresh happy smile. Pose: holding a small plate of fresh fruits and biting a strawberry. Symbols: fresh fruit sparkles and juice sparkles.",
+   "m": "She bites the strawberry, juice sparkles burst, she smiles freshly, fruit sparkles twirl."
+  },
+  {
+   "k": "tea",
+   "zh": "泡茶",
+   "tpl": "gentle",
+   "s": "Expression: serene elegant calm. Pose: pouring tea from a small teapot into a cup. Symbols: fragrant tea mist curling.",
+   "m": "She pours the tea gracefully, fragrant mist curls up, she smells the aroma with closed eyes."
+  },
+  {
+   "k": "feast",
+   "zh": "大餐",
+   "tpl": "burst",
+   "s": "Expression: overjoyed drooling excitement, sparkling eyes. Pose: hands clasped together in front of a large plate full of delicious dishes. Symbols: golden glow over the food and drool sparkle.",
+   "m": "She rubs her hands together excitedly, the golden glow over the food shines, she drools and grabs a bite."
+  },
+  {
+   "k": "snack",
+   "zh": "零食",
+   "tpl": "bright",
+   "s": "Expression: munching happily, cheeks puffed. Pose: hugging an open chip bag, eating a chip. Symbols: crumbs and crunch sparkles.",
+   "m": "She munches chips, crumbs fly, crunch sparkles pop, she reaches for another."
+  },
+  {
+   "k": "hungry",
+   "zh": "饿了",
+   "tpl": "down",
+   "s": "Expression: pitiful hungry face, a shiny drool drop at the corner of her mouth. Pose: one hand holding an empty bowl forward toward the viewer, the other hand on her stomach. Symbols: small orange wavy 'growl' lines in front of her stomach. No thought bubble.",
+   "m": "Her stomach growls, the orange growl lines wiggle, she holds the empty bowl out pleadingly and looks up with puppy eyes, then droops."
+  },
+  {
+   "k": "yum",
+   "zh": "好吃",
+   "tpl": "bright",
+   "s": "Expression: eyes closed in bliss, tongue licking her lips. Pose: one hand on her cheek, the other hand holding a spoon with a small bite of strawberry cake on it. Symbols: small pink food hearts and sparkles.",
+   "m": "She chews with eyes closed in bliss, hand on her cheek, small pink hearts pop. The spoon with the cake bite stays in her other hand, fully visible the whole clip."
+  },
+  {
+   "k": "travel",
+   "zh": "出行",
+   "tpl": "bright",
+   "s": "Expression: excited adventurous smile. Pose: pulling a small suitcase handle, other hand waving. Symbols: a small airplane with a trailing cloud line.",
+   "m": "She waves excitedly and steps forward with the suitcase, the little airplane flies across leaving a cloud trail."
+  },
+  {
+   "k": "hike",
+   "zh": "徒步",
+   "tpl": "focus",
+   "s": "Expression: determined slightly tired smile, sweat. Pose: holding a trekking pole, a small backpack on her shoulders. Symbols: a distant mountain silhouette icon and sweat drops.",
+   "m": "She pushes forward with the trekking pole, wipes sweat, looks up toward the mountain icon with determination."
+  },
+  {
+   "k": "beach",
+   "zh": "海边",
+   "tpl": "bright",
+   "s": "Expression: joyful summer smile. Pose: wearing a straw sun hat, holding a seashell up. Symbols: splashing water waves and droplets.",
+   "m": "She holds her hat against the breeze, raises the seashell, waves splash and droplets sparkle."
+  },
+  {
+   "k": "mountain",
+   "zh": "登山",
+   "tpl": "burst",
+   "s": "Expression: triumphant summit joy. Pose: planting a small triangle flag pole, one fist raised. Symbols: a snowy mountain peak icon and sparkles.",
+   "m": "She plants the flag firmly, raises her fist triumphantly, the flag flutters in the wind."
+  },
+  {
+   "k": "city",
+   "zh": "城市",
+   "tpl": "bright",
+   "s": "Expression: curious delighted look around. Pose: holding a small street sign arrow. Symbols: a small skyline icon of tall buildings.",
+   "m": "She looks around amazed, points along the street sign, the skyline icon lights up with tiny sparkles."
+  },
+  {
+   "k": "photo",
+   "zh": "拍照",
+   "tpl": "bright",
+   "s": "Expression: playful wink. Pose: holding a camera up to her eye. Symbols: a camera flash sparkle.",
+   "m": "She aims the camera, clicks, the flash bursts, she lowers it and smiles."
+  },
+  {
+   "k": "souvenir",
+   "zh": "纪念品",
+   "tpl": "bright",
+   "s": "Expression: proud happy grin. Pose: both hands holding up a small clear gift box tied with a gold ribbon bow; inside the box is a tiny snow globe with a miniature tower. No text. No companion.",
+   "m": "She lifts the gift box proudly toward the viewer, the snow globe inside sparkles, she grins; she never brings it to her mouth."
+  },
+  {
+   "k": "luggage",
+   "zh": "行李",
+   "tpl": "focus",
+   "s": "Expression: busy concentrated packing face. Pose: stuffing clothes into an open small suitcase. Symbols: a travel ticket and small sparkles.",
+   "m": "She stuffs clothes in, pushes the suitcase lid down, the ticket pops up, she smiles relieved."
+  },
+  {
+   "k": "sunset",
+   "zh": "日落",
+   "tpl": "gentle",
+   "s": "Mood: atmospheric. Behind her (not covering her) is a soft cloud-shaped patch with irregular fluffy edges (no hard round or arc edge) of warm orange and pink sunset sky with a red-orange sun half below a distant horizon line, no stars; outside that patch the background stays flat pure green, and nothing inside the patch is green. Expression: wistful peaceful gaze. Pose: chin resting on one hand, the other arm relaxed (exactly two arms), looking into the distance.",
+   "m": "She gazes at the sunset, the breeze moves her hair, the sun glows warmer and sinks a little.",
+   "bg": "the orange-pink sunset sky patch"
+  },
+  {
+   "k": "camping",
+   "zh": "露营",
+   "tpl": "gentle",
+   "s": "Expression: cozy happy smile. Pose: both hands holding a white mug of cocoa. Beside her (clearly separated from her hair) a small warm-orange and cream triangle tent and a small orange-yellow campfire; a few stars. Nothing green.",
+   "m": "The campfire beside her flickers, she sips the cocoa warmly, small sparks float up; the tent and campfire stay visible the whole time and the flames never touch her hair."
+  },
+  {
+   "k": "map",
+   "zh": "看地图",
+   "tpl": "focus",
+   "s": "Expression: curious searching look. Pose: holding an unfolded paper map with both hands. Symbols: a red location pin bouncing.",
+   "m": "She scans the map, the location pin drops and bounces, she points at it with a smile."
+  },
+  {
+   "k": "arrive",
+   "zh": "抵达",
+   "tpl": "burst",
+   "s": "Expression: wide happy eyes, mouth open in a cheerful 'we're here!' grin. Pose: exactly two hands: her left hand holds up a big glossy red map location pin beside her shoulder, her right hand raises a small orange triangular finish flag (blank, no text). Symbols: three small white footprints in a row that stop next to the pin, a burst of small gold stars. No arrows, no signboards. No companion.",
+   "m": "She plants the red pin down with a little bounce and waves the orange finish flag, gold stars burst, she beams proudly."
+  },
+  {
+   "k": "jog",
+   "zh": "跑步",
+   "tpl": "bright",
+   "s": "Expression: energetic determined face, slightly flushed, panting with a small open-mouth smile, a few sweat drops. Pose: exactly two arms bent at the elbows in a running arm swing, one forearm forward and one back, both hands loosely closed, elbows inside the frame; a pink sporty headband on her forehead (keep all her usual hair accessories). Symbols: horizontal speed lines streaming behind her and small dust puffs (white). Upper-body framing only, no legs.",
+   "m": "She swings her arms in a jogging rhythm, her body bobs up and down slightly, hair and scarf bounce behind her, speed lines stream past, she pants with a determined smile."
+  },
+  {
+   "k": "stretch",
+   "zh": "拉伸",
+   "tpl": "gentle",
+   "s": "Expression: relaxed comfortable stretch face. Pose: one arm stretched overhead and leaning to the side. Symbols: soft flowing curved lines.",
+   "m": "She stretches long to one side, holds it, breathes, then straightens back."
+  },
+  {
+   "k": "yoga",
+   "zh": "瑜伽",
+   "tpl": "gentle",
+   "s": "Expression: serene, eyes closed, calm smile. Pose: palms pressed together in front of her chest. Symbols: an opaque pink-and-gold lotus flower behind her head with a soft pale-pink glow only around the lotus; small floating petals. No rays, nothing green.",
+   "m": "She breathes slowly in and out, the lotus behind her glows softly pale pink, petals drift; the lotus stays visible the whole time."
+  },
+  {
+   "k": "ball",
+   "zh": "球类",
+   "tpl": "bright",
+   "s": "Expression: sporty excited grin. Pose: spinning a basketball on one finger. Symbols: motion sparkles around the ball. Exactly two arms: her other hand rests on her hip, clearly visible.",
+   "m": "The ball spins on her finger, she tosses it up and catches it, sparkles fly."
+  },
+  {
+   "k": "sweat",
+   "zh": "流汗",
+   "tpl": "tense",
+   "s": "Expression: overheated, face flushed red, panting with mouth open and tongue slightly out, big clear sweat drops on her forehead and cheeks, NO tears, not sad. Pose: exactly two hands, one on each side of her body: her right hand holds a round paper hand-fan fanning her face, her left hand tugs at her collar to let air in. Symbols: a small hot orange sun icon above her head, wavy ORANGE-RED heat lines, sweat drops flying off.",
+   "m": "She fans herself frantically with the paper fan, tugs her collar, pants, big sweat drops fly off, the orange heat lines wobble, the little sun pulses hot."
+  },
+  {
+   "k": "heal",
+   "zh": "康复",
+   "tpl": "gentle",
+   "s": "Expression: recovering gentle smile, still slightly pale. Pose: wrapped in a light blanket, a small bandage on her cheek, holding a warm mug. Symbols: a soft glowing healing cross and warm light.",
+   "m": "She sips the warm drink, the healing cross glows warmer, her cheeks regain color, she smiles."
+  },
+  {
+   "k": "rain",
+   "zh": "下雨",
+   "tpl": "down",
+   "s": "Mood: atmospheric. Behind her (not covering her) is a soft-edged cloud-shaped patch of gloomy blue-gray rain clouds with slanted silver rain streaks; outside that patch the background stays flat pure green, and nothing inside the patch is green. Expression: flustered soaked face, wet hair strands. Pose: both hands over her head shielding from rain, shoulders hunched. Symbols: slanted rain lines and water splashes.",
+   "m": "Rain pours on her, she hunches and shields her head, splashes bounce, she shivers.",
+   "bg": "the blue-gray rain-cloud patch"
+  },
+  {
+   "k": "snow",
+   "zh": "下雪",
+   "tpl": "bright",
+   "s": "Mood: atmospheric. Behind her (not covering her) is a soft-edged cloud-shaped patch of soft pale blue-gray winter sky with falling white snowflakes; outside that patch the background stays flat pure green, and nothing inside the patch is green. Expression: delighted wonder, mouth open. Pose: holding out her gloved palms to catch snowflakes. Symbols: falling white snowflakes.",
+   "m": "Snowflakes drift down, she catches one on her palm and gasps happily, looks up as more fall.",
+   "bg": "the pale winter-sky patch"
+  },
+  {
+   "k": "wind",
+   "zh": "吹风",
+   "tpl": "tense",
+   "s": "Expression: squinting against the wind. Pose: holding her hair back with one hand, body leaning into the wind. Symbols: wind streak lines and a few flying orange autumn leaves and pink petals.",
+   "m": "A strong gust blows, her hair and scarf whip sideways, she leans and holds her hair, orange leaves and pink petals fly past."
+  },
+  {
+   "k": "birthday",
+   "zh": "生日",
+   "tpl": "burst",
+   "s": "Expression: joyful birthday smile. Pose: holding a small birthday cake with lit candles. Symbols: confetti and ribbons.",
+   "m": "She blows out the candles, confetti pops, she cheers happily."
+  },
+  {
+   "k": "celebrate",
+   "zh": "庆祝",
+   "tpl": "burst",
+   "s": "Expression: cheering celebration. Pose: raising a glass of sparkling juice in a toast. Symbols: fireworks and gold stars.",
+   "m": "She raises the glass in a toast, fireworks burst, gold stars shower, she cheers."
+  },
+  {
+   "k": "lucky",
+   "zh": "好运",
+   "tpl": "bright",
+   "s": "Expression: hopeful happy smile with a wink. Pose: holding up a shiny golden four-leaf-clover charm near her face. Symbols: golden lucky light sparkles.",
+   "m": "She holds up the golden clover charm, golden lucky sparkles burst around it, she winks and smiles."
+  }
+ ]
+}

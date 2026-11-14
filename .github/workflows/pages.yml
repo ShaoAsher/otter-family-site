@@ -1,0 +1,51 @@
+# 推 main 后把网页部署到 GitHub Pages。只发网页目录，素材库与发布脚本不上 Pages。
+# 加了新成员官网（如 gametime/）要加进下面的 WEB 和 sparse-checkout。
+# 仓库 Settings → Pages → Source 选「GitHub Actions」。
+
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      WEB: index.html family.json shared git tools
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /index.html
+            /family.json
+            /shared/
+            /git/
+            /tools/
+
+      - name: 收集网页
+        run: |
+          mkdir _site
+          cp -R $WEB _site/
+          du -sh _site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
