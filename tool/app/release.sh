@@ -48,6 +48,7 @@ while [[ $# -gt 0 ]]; do
     --no-notarize) NOTARIZE=0; shift ;;
     --zip-only) ZIP_ONLY=1; PACKAGE_ARGS+=(--zip-only); shift ;;
     --use-dist) USE_DIST=1; shift ;;
+    --no-push-release) shift ;;
     -h|--help)
       sed -n '2,10p' "$0"
       exit 0

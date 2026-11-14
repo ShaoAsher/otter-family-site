@@ -107,7 +107,7 @@ python3 source/sync_tos.py --pull     # 反过来，TOS → 本地
 | `config/` | `family.json` 家族公共配置（= 仓库根目录 `family.json`，见上级 README「公共配置」）；三个 App 写死这个地址，**不要再改路径** | `sync_tos.py config`、`tool/release/release.py` 切换下载版本时 | 公开读，不缓存 |
 | `release/<app>/v<版本>/` | 安装包 | `./tool/otter publish` / `mirror`（`tool/release/release.py`） | 公开读，长缓存（不可变） |
 | `site/<app>/` | 官网素材：`promo.mp4`、`poster.jpg`、`og.jpg`、`shots/`、`build.json`（出处） | `tool/release/release.py site`（App 的 `./tool/otter site`） | 公开读，缓存 1 小时 |
-| `brand/` | `index.json` 目录说明 + `common/` + `master/` 母版 + `git`/`tools`/`gametime/` 成品 | `sync_tos.py brand` | 公开读 |
+| `brand/` | 公开层：`common/` + `master/` + 各 App 的 `icon`/`mark`/`logo_badge`（平台 AppIcon 套件不上传） | `sync_tos.py brand` | 公开读 |
 | `expr/<版本>/` | App 与官网共用的 270 档表情包：`anim_270/`、`still_270/` + `manifest.json`，版本 `v1`、`v2`…（当前 `v3`）；同一版本发布后不再改，换代加新版本 | `sync_tos.py expr`（版本见 `EXPR_VERSION`） | 公开读 |
 | `backup/expr/` | 表情成品全档位备份（= 本地 `expr/`） | `sync_tos.py backup` | 私有，低频存储 |
 | `backup/source/` | 母版备份（= 本地 `source/still_1024/`、`source/video_720/`；git 里有的脚本、提示词不备份） | `sync_tos.py backup` | 私有，低频存储 |

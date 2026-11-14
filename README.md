@@ -82,7 +82,7 @@ TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分�
 4. 跑 `./tool/otter mirror git <版本>`（App 里、本仓里都行），把 Windows 包补到 TOS。两处、全平台都齐了，脚本才把 `download.version` 切到这一版并把 `family.json` 推到 TOS。
 5. 提交 `family.json`，按「分支与上线」推 `main`。
 
-第 2～5 步可以一条命令，在 App 仓库里：`./tool/otter ship --push`（先检查 changelog，跑 `release`，等 Windows CI 传完再 `mirror`，提交并推 `family.json`；`--no-wait` 不等 CI，`--use-dist` 用 dist 里已有的包）。
+第 2～5 步可以一条命令：App 里 `./tool/otter ship --push`，或家族仓 `./tool/otter launch git --push` / `launch all --push`（预检、自动 push `release` 触发 Windows CI，见 [`tool/RELEASE.md`](tool/RELEASE.md)）。
 
 `./tool/otter status` 查看各 App 当前下载版本在两处是否齐全。脚本需要 `gh auth login` 和 `source ~/.config/devkeys/env.sh`（TOS_*）。
 

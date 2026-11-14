@@ -13,7 +13,7 @@
 
 远端布局（桶根目录，无前缀；release/、site/ 由 tool/release/release.py 管，这里不碰）：
   config/        公开读、不缓存，family.json = 仓库根目录的家族公共配置（版本记录、官网地址等，三端与官网共用）
-  brand/         公开读，图标母版与各 App 成品（App 家族入口、官网直接引用）
+  brand/         公开读，common/ + master/ + 各 App 的 icon/mark/logo_badge（平台图标套件不上传）
   expr/<版本>/   公开读，App 与官网共用的 270 档表情包（明文）：anim_270/<key>.webp 动图 + still_270/<key>.webp 静帧
                  + manifest.json（md5）。App 构建前由 tool/app/assets.py 按 otter.json 的 expr.version 拉取，官网页面与在线试用直接引用；
                  版本号 v1、v2…，同一版本发布后不再改，表情集换代就加新版本（EXPR_VERSION），旧版本留着给老版本构建。
@@ -37,6 +37,20 @@ import tos  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKIP = {".DS_Store", "__pycache__"}
 SKIP_DIRS = {"__pycache__", "master._bak"}
+# TOS brand/ 只放官网与 family.json 引用的公开图；macos/ios/android/windows 平台套件只在本机 brand/<app>/，不进 TOS
+BRAND_PUBLIC = {"index.json", "icon.png", "mark.png", "logo_badge.png"}
+BRAND_PUBLIC_PREFIX = ("common/", "master/")
+
+
+def brand_public(rel: str) -> bool:
+    if rel in ("index.json",) or rel.startswith(BRAND_PUBLIC_PREFIX):
+        return True
+    if "/" not in rel:
+        return False
+    app, name = rel.split("/", 1)
+    if app in ("git", "tools", "gametime") and "/" not in name and name in BRAND_PUBLIC:
+        return True
+    return False
 # 远端目录 -> (本地目录, 是否公开, 存储类型)
 PARTS = {
     "config": ("../family.json", True, tos.StorageClassType.Storage_Class_Standard),
@@ -86,6 +100,8 @@ def local_items(part):
             path = f"{d}/{name}"
             rel = os.path.relpath(path, f"{ROOT}/{src}")
             if os.path.relpath(path, ROOT) in TRACKED:
+                continue
+            if part == "brand" and not brand_public(rel):
                 continue
             yield f"{part}/{rel}", path, lambda p=path: open(p, "rb").read()
 

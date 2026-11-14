@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """一条命令发版：在 App 的 release 分支上，从检查到切换下载版本、写回 family.json。
 
-  ./tool/otter ship [--skip-build] [--use-dist] [--no-wait] [--push]      （在 App 根目录）
+  ./tool/otter ship [--skip-build] [--use-dist] [--no-wait] [--push]
+                    [--no-notarize] [--zip-only] [--no-push-release]     （在 App 根目录）
   python3 tool/release/ship.py <App 根目录> [同上]                        （直接调用）
 
-1. 检查：App 的 otter.json、pubspec 版本；family.json 的 changelog 最前面是这一版（没写就停）。
+1. 检查：版本、changelog、gh/TOS；可选先 push origin release（触发 Windows CI）。
 2. tool/app/release.sh（release 分支检查、打包公证、release.py publish 传 TOS + GitHub）。
 3. 等 Windows CI 把包传到 GitHub Release（每 30 秒查一次，最多 60 分钟；--no-wait 跳过，之后自己跑 mirror）。
 4. release.py mirror：Windows 包补到 TOS；全平台两处齐了就切换 download.version，family.json 推到 TOS。
@@ -14,6 +15,7 @@
 """
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -36,10 +38,16 @@ def gh_assets(tag):
     return {a["name"] for a in json.loads(r.stdout)["assets"]} if r.returncode == 0 else set()
 
 
+ALLOWED = {
+    "--skip-build", "--use-dist", "--no-wait", "--push",
+    "--no-notarize", "--zip-only", "--no-push-release",
+}
+
+
 def main(argv):
     flags = {a for a in argv if a.startswith("--")}
     args = [a for a in argv if not a.startswith("--")]
-    if len(args) != 1 or flags - {"--skip-build", "--use-dist", "--no-wait", "--push"}:
+    if len(args) != 1 or flags - ALLOWED:
         sys.exit(__doc__)
     app_root = Path(args[0]).resolve()
     app = json.loads((app_root / "otter.json").read_text(encoding="utf-8"))["id"]
@@ -53,7 +61,21 @@ def main(argv):
         sys.exit(f"family.json 的 apps.{app}.changelog 最前面不是 {version}，先写好这一版的更新说明")
     print(f"发版 {a['name']} {version}（{app_root}）")
 
-    run("bash", ROOT / "tool/app/release.sh", *sorted(flags & {"--skip-build", "--use-dist"}), cwd=app_root)
+    if subprocess.run(["gh", "auth", "status", "-h", "github.com"], capture_output=True).returncode:
+        sys.exit("请先 gh auth login")
+    if not os.environ.get("TOS_BUCKET"):
+        sys.exit("请先 source ~/.config/devkeys/env.sh（TOS_*）")
+
+    release_flags = sorted(flags & {"--skip-build", "--use-dist", "--no-notarize", "--zip-only"})
+    if "--no-push-release" not in flags:
+        ahead = subprocess.run(
+            ["git", "rev-list", "--count", "origin/release..HEAD"],
+            cwd=app_root, capture_output=True, text=True,
+        )
+        if ahead.returncode == 0 and ahead.stdout.strip() not in ("", "0"):
+            run("git", "push", "origin", "release", cwd=app_root)
+
+    run("bash", ROOT / "tool/app/release.sh", *release_flags, cwd=app_root)
 
     tag = f"{app}-v{version}"
     win = {n for k, n in a["download"]["files"].items() if k.startswith("windows")}
@@ -75,6 +97,8 @@ def main(argv):
             run("git", "push", "origin", "main", cwd=ROOT)
         else:
             print("family.json 已提交，推 main 后 Pages 才更新：git push origin main")
+
+    run(sys.executable, ROOT / "tool/release/release.py", "status", app, cwd=ROOT)
 
 
 if __name__ == "__main__":

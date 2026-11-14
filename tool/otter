@@ -7,7 +7,8 @@
 #   notarize <.app|.dmg>              Developer ID 签名并公证（--sign-only 只签名）
 #   release [参数]                    发版：release 分支上打包公证，上传 TOS + GitHub（--use-dist --skip-build --no-notarize --zip-only）
 #   site <demo|shots|art|promo|all>   更新产品官网素材
-#   ship [参数]                       一条命令发版：release → 等 Windows CI → mirror → 提交 family.json（--use-dist --skip-build --no-wait --push）
+#   ship [参数]                       一条命令发版（--push --no-wait --use-dist --no-push-release …）
+#   launch scan|sync|git|tools|all    预检 / 品牌 TOS / 一键 ship（见 tool/RELEASE.md）
 #
 # 在家族仓里用（tool/otter <命令>）：
 #   publish <app> <版本> <文件>…      安装包上传到 TOS + GitHub Release，两处齐了切换下载版本
@@ -25,6 +26,7 @@ case "$cmd" in
   release)   exec bash "$T/app/release.sh" "$@" ;;
   site)      exec python3 "$T/app/site.py" "$@" ;;
   ship)      exec python3 "$T/release/ship.py" . "$@" ;;
+  launch)    exec python3 "$T/release/launch.py" "$@" ;;
   publish|mirror|status)
              exec python3 "$T/release/release.py" "$cmd" "$@" ;;
   ci-upload) exec python3 "$T/release/ci_upload.py" "$@" ;;
