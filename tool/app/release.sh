@@ -11,8 +11,8 @@
 #
 # 需已 gh auth login，并先 source ~/.config/devkeys/env.sh（TOS_*）。
 #
-# 只能在 git-flow 的发布分支 release 上运行：工作区干净、已与 origin/release 同步、
-# 当前提交已打 v<版本> 标签（git flow release finish 会打）。自测可设 OTTER_RELEASE_ANY_BRANCH=1 跳过。
+# 只能在 App 仓库 main 上运行：工作区干净、已与 origin/main 同步、
+# 当前提交已打 v<版本> 标签。自测可设 OTTER_RELEASE_ANY_BRANCH=1 跳过。
 #
 # dist 里取本版本最新的包：<file>-<版本>-macos-<架构>[-<年月日-时分>].dmg/.zip、<file>-<版本>-windows-x64[-…].zip/-setup.exe，
 # 同版本打了多次时按修改时间取最新那份；上传时改成固定名 <file>-macos-<架构>.dmg 等。
@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
     --no-notarize) NOTARIZE=0; shift ;;
     --zip-only) ZIP_ONLY=1; PACKAGE_ARGS+=(--zip-only); shift ;;
     --use-dist) USE_DIST=1; shift ;;
-    --no-push-release) shift ;;
+    --no-push-release|--no-push-main) shift ;;
     -h|--help)
       sed -n '2,10p' "$0"
       exit 0
@@ -77,21 +77,21 @@ need python3
 
 if [[ "${OTTER_RELEASE_ANY_BRANCH:-0}" != "1" ]]; then
   BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-  [[ "$BRANCH" == "release" ]] || {
-    echo "只能在 release 分支发布（当前 ${BRANCH}）。先 git flow release finish，再 git checkout release" >&2
+  [[ "$BRANCH" == "main" ]] || {
+    echo "只能在 main 分支发布（当前 ${BRANCH}）。先 git checkout main" >&2
     exit 1
   }
   [[ -z "$(git status --porcelain)" ]] || {
     echo "工作区有未提交改动，先提交或还原" >&2
     exit 1
   }
-  git fetch -q origin release
-  [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/release)" ]] || {
-    echo "release 与 origin/release 不一致，先 git push origin release（或 git pull）" >&2
+  git fetch -q origin main
+  [[ "$(git rev-parse HEAD)" == "$(git rev-parse origin/main)" ]] || {
+    echo "main 与 origin/main 不一致，先 git push origin main（或 git pull）" >&2
     exit 1
   }
   [[ "$(git rev-parse -q --verify "refs/tags/$TAG^{commit}" || true)" == "$(git rev-parse HEAD)" ]] || {
-    echo "当前提交没有 $TAG 标签。git flow release finish 会打；版本号见 pubspec.yaml" >&2
+    echo "当前提交没有 $TAG 标签。在 main 上 git tag $TAG；版本号见 pubspec.yaml" >&2
     exit 1
   }
 fi

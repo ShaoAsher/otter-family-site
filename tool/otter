@@ -5,9 +5,9 @@
 #   assets [pull|check]               小獭表情：按 otter.json 从 TOS expr/<版本>/ 拉到本地 / 只校验
 #   package [参数]                    macOS 打包 DMG + ZIP 到 dist/（--notarize --skip-build --zip-only --keep-old）
 #   notarize <.app|.dmg>              Developer ID 签名并公证（--sign-only 只签名）
-#   release [参数]                    发版：release 分支上打包公证，上传 TOS + GitHub（--use-dist --skip-build --no-notarize --zip-only）
+#   release [参数]                    发版：main 分支上打包公证，上传 TOS + GitHub（--use-dist --skip-build --no-notarize --zip-only）
 #   site <demo|shots|art|promo|all>   更新产品官网素材
-#   ship [参数]                       一条命令发版（--push --no-wait --use-dist --no-push-release …）
+#   ship [参数]                       一条命令发版（--push --no-wait --use-dist --no-push-main …）
 #   launch scan|sync|git|tools|all    预检 / 品牌 TOS / 一键 ship（见 tool/RELEASE.md）
 #
 # 在家族仓里用（tool/otter <命令>）：

@@ -5,7 +5,7 @@
 | 对象 | 格式 | 示例 |
 | --- | --- | --- |
 | App `pubspec` 版本 | `<major>.<minor>.<patch>+<build>` | `3.0.0+19` |
-| App 仓库 git 标签 | `v<版本>`（须落在 `release` 分支 HEAD，除非 `OTTER_RELEASE_ANY_BRANCH=1`） | `v3.0.0` |
+| App 仓库 git 标签 | `v<版本>`（须落在 `main` 分支 HEAD，除非 `OTTER_RELEASE_ANY_BRANCH=1`） | `v3.0.0` |
 | 家族仓 GitHub Release | `<app>-v<版本>` | `git-v3.0.0` |
 | TOS 安装包 | `release/<app>/v<版本>/<固定文件名>` | `release/git/v3.0.0/OtterGit-macos-arm64.dmg` |
 | 本地 dist（带时间戳） | `<file>-<版本>-<平台>-<YYYYMMDD-HHMM>.<ext>` | `OtterGit-3.0.0-macos-arm64-20261115-0105.dmg` |
@@ -38,8 +38,8 @@ export OTTER_APPS='git=/path/otter-git:tools=/path/otter-tools'
 1. `family.json`：`changelog` 首条 = `pubspec` 版本；必要时改 `latest`。
 2. 图标 / 表情：`brand_build` → `sync_tos brand`；App 内 `./tool/otter assets pull`。
 3. `./tool/otter site all`（各 App）→ 官网素材上 TOS `site/<app>/`。
-4. App 在 **`release`** 分支提交；`git tag v<版本>` 指向当前提交（或 `OTTER_RELEASE_ANY_BRANCH=1` 自测）。
-5. **`./tool/otter launch git --push`**：`release` 若领先则先 `push origin release`（触发 Windows CI）→ mac 打包公证 → `publish` → 等 CI → `mirror` → 切换 `download.version` → 提交并推 `family.json`。
+4. App 在 **`main`** 提交；`git tag v<版本>` 指向当前提交（或 `OTTER_RELEASE_ANY_BRANCH=1` 自测）。
+5. **`./tool/otter launch git --push`**：`main` 若领先则先 `push origin main`（触发 Windows CI）→ mac 打包公证 → `publish` → 等 CI → `mirror` → 切换 `download.version` → 提交并推 `family.json`。
 
 ## 仓库与 TOS 减重约定
 

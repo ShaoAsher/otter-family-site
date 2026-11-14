@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""一条命令发版：在 App 的 release 分支上，从检查到切换下载版本、写回 family.json。
+"""一条命令发版：在 App 的 main 分支上，从检查到切换下载版本、写回 family.json。
 
   ./tool/otter ship [--skip-build] [--use-dist] [--no-wait] [--push]
-                    [--no-notarize] [--zip-only] [--no-push-release]     （在 App 根目录）
+                    [--no-notarize] [--zip-only] [--no-push-main]     （在 App 根目录）
   python3 tool/release/ship.py <App 根目录> [同上]                        （直接调用）
 
-1. 检查：版本、changelog、gh/TOS；可选先 push origin release（触发 Windows CI）。
-2. tool/app/release.sh（release 分支检查、打包公证、release.py publish 传 TOS + GitHub）。
+1. 检查：版本、changelog、gh/TOS；可选先 push origin main（触发 Windows CI）。
+2. tool/app/release.sh（main 分支检查、打包公证、release.py publish 传 TOS + GitHub）。
 3. 等 Windows CI 把包传到 GitHub Release（每 30 秒查一次，最多 60 分钟；--no-wait 跳过，之后自己跑 mirror）。
 4. release.py mirror：Windows 包补到 TOS；全平台两处齐了就切换 download.version，family.json 推到 TOS。
 5. 本仓提交 family.json；带 --push 时推 main（Pages 上的 family.json 与产品官网随之更新）。
@@ -40,7 +40,7 @@ def gh_assets(tag):
 
 ALLOWED = {
     "--skip-build", "--use-dist", "--no-wait", "--push",
-    "--no-notarize", "--zip-only", "--no-push-release",
+    "--no-notarize", "--zip-only", "--no-push-main", "--no-push-release",
 }
 
 
@@ -67,13 +67,13 @@ def main(argv):
         sys.exit("请先 source ~/.config/devkeys/env.sh（TOS_*）")
 
     release_flags = sorted(flags & {"--skip-build", "--use-dist", "--no-notarize", "--zip-only"})
-    if "--no-push-release" not in flags:
+    if "--no-push-main" not in flags and "--no-push-release" not in flags:
         ahead = subprocess.run(
-            ["git", "rev-list", "--count", "origin/release..HEAD"],
+            ["git", "rev-list", "--count", "origin/main..HEAD"],
             cwd=app_root, capture_output=True, text=True,
         )
         if ahead.returncode == 0 and ahead.stdout.strip() not in ("", "0"):
-            run("git", "push", "origin", "release", cwd=app_root)
+            run("git", "push", "origin", "main", cwd=app_root)
 
     run("bash", ROOT / "tool/app/release.sh", *release_flags, cwd=app_root)
 

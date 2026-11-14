@@ -78,8 +78,8 @@ def preflight_app(app: str, root: Path) -> list[str]:
     if r.stdout.strip():
         issues.append("工作区有未提交改动")
     br = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=root, capture_output=True, text=True)
-    if br.stdout.strip() != "release" and os.environ.get("OTTER_RELEASE_ANY_BRANCH") != "1":
-        issues.append(f"不在 release 分支（当前 {br.stdout.strip()}）")
+    if br.stdout.strip() != "main" and os.environ.get("OTTER_RELEASE_ANY_BRANCH") != "1":
+        issues.append(f"不在 main 分支（当前 {br.stdout.strip()}）")
     tag = f"v{ver}"
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True).stdout.strip()
     tag_sha = subprocess.run(
@@ -118,15 +118,15 @@ def ship_one(app: str, flags: list[str]):
         print(f"预检：{line}")
     if any("无 download" in x for x in issues):
         return
-    push_release = "--no-push-release" not in flags
-    ship_flags = [f for f in flags if f not in {"--no-push-release"}]
-    if push_release:
+    push_main = "--no-push-main" not in flags and "--no-push-release" not in flags
+    ship_flags = [f for f in flags if f not in {"--no-push-main", "--no-push-release"}]
+    if push_main:
         ahead = subprocess.run(
-            ["git", "rev-list", "--count", f"origin/release..HEAD"],
+            ["git", "rev-list", "--count", "origin/main..HEAD"],
             cwd=root, capture_output=True, text=True,
         )
         if ahead.stdout.strip() not in ("", "0"):
-            run("git", "push", "origin", "release", cwd=root)
+            run("git", "push", "origin", "main", cwd=root)
     run(sys.executable, SHIP_PY, str(root), *ship_flags, cwd=ROOT)
 
 
