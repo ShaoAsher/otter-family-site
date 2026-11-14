@@ -1638,7 +1638,7 @@
     <section class="hero" id="top" data-tone="dawn" aria-labelledby="hero-title">
       <div class="wrap">
         <button type="button" class="greet" id="greet" data-in aria-label="小獭的问候，点一下换一句">
-          <img data-media="demo/expr/hi.webp" alt="" width="30" height="30" />
+          <img data-expr="anim_270/hi.webp" alt="" width="30" height="30" />
           <span id="greet-text">你好，我是小獭</span>
           <span class="v">v3.0.0</span>
         </button>
@@ -1676,7 +1676,7 @@
         <div class="stage" data-in-stage>
           <button type="button" class="peek" id="peek" aria-label="小獭，点一下换个表情">
             <span class="bubble" id="bubble" hidden></span>
-            <img data-media="demo/expr/cheer.webp" alt="" width="150" height="150" />
+            <img data-expr="anim_270/cheer.webp" alt="" width="150" height="150" />
           </button>
           <figure class="frame" id="hero-frame" style="margin: 0">
             <img data-media="shots/home-dark.webp" width="2560" height="1600" fetchpriority="high"
@@ -1704,25 +1704,25 @@
 
         <div class="states">
           <ol class="steps">
-            <li class="step on" data-tone="warm" data-shot="0" data-otter="focus" style="--c: var(--amber)">
+            <li class="step on" data-tone="warm" data-shot="0" data-otter="anim_270/focus" style="--c: var(--amber)">
               <span class="tag"><i></i>有改动</span>
               <h3>改了 12 个文件，先看清再提交</h3>
               <p>待提交的文件按目录列出，选中一个，右边就是左右对齐的对比。只想先交其中一处？点改动块上的「暂存此块」。</p>
               <img class="inline frame" data-media="shots/files-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="alert" data-shot="1" data-otter="shock" style="--c: var(--coral)">
+            <li class="step" data-tone="alert" data-shot="1" data-otter="anim_270/shock" style="--c: var(--coral)">
               <span class="tag"><i></i>合并冲突</span>
               <h3>撞上冲突，横幅会一直提醒</h3>
               <p>冲突文件排在最前面并标红。只有一边改过的块可以自动解决，两边都改过的逐块挑选，也能打开三方合并对照着改。</p>
               <img class="inline frame" data-media="shots/conflict-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="busy" data-shot="2" data-otter="think" style="--c: var(--violet)">
+            <li class="step" data-tone="busy" data-shot="2" data-otter="anim_270/think" style="--c: var(--violet)">
               <span class="tag"><i></i>小獭协助</span>
               <h3>交给小獭，它先列出步骤</h3>
               <p>「帮我写提交说明并提交」：小獭暂存、起草说明，到推送这一步先停下，出一张确认卡，写清会改动什么、风险等级多高。</p>
               <img class="inline frame" data-media="shots/ai-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="calm" data-shot="3" data-otter="proud" style="--c: var(--sky)">
+            <li class="step" data-tone="calm" data-shot="3" data-otter="anim_270/proud" style="--c: var(--sky)">
               <span class="tag"><i></i>已同步</span>
               <h3>推送完成，历史里记得清清楚楚</h3>
               <p>每个分支一条泳道，本地和远程停在哪一目了然。顶部统计栏记录这个仓库一共提交了多少次、今天提交了几次。</p>
@@ -1737,7 +1737,7 @@
               <img data-media="shots/ai-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
               <img data-media="shots/history-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </div>
-            <span class="peek" style="pointer-events: none"><img id="state-otter" data-media="demo/expr/focus.webp" alt="" width="116" height="116" /></span>
+            <span class="peek" style="pointer-events: none"><img id="state-otter" data-expr="anim_270/focus.webp" alt="" width="116" height="116" /></span>
           </div>
         </div>
       </div>
@@ -1766,13 +1766,13 @@
         <div class="oc-stage rise" id="oc-stage" aria-label="结果页示意：进度条完成后切换为「里程碑 · 第 1300 次提交」，下方是推送、撤销提交、知道了三个按钮" role="img">
           <div class="oc" id="oc">
             <div class="busy">
-              <img data-media="demo/expr/focus.webp" alt="" width="84" height="84" loading="lazy" />
+              <img data-expr="anim_270/focus.webp" alt="" width="84" height="84" loading="lazy" />
               <h4>正在提交…</h4>
               <p>feat(home): 首页与继续工作卡片</p>
               <div class="bar"><i></i></div>
             </div>
             <div class="done">
-              <img data-media="demo/expr/highlight.webp" alt="" width="84" height="84" loading="lazy" />
+              <img data-expr="anim_270/highlight.webp" alt="" width="84" height="84" loading="lazy" />
               <h4>里程碑 · 第 1300 次提交</h4>
               <p>小獭替你记下了这一次 · feat(home): 首页与继续工作卡片</p>
               <div class="btns"><span>推送</span><span>撤销提交</span><span>知道了</span></div>

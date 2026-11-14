@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""表情导出：source/still/*.jpg + source/video/*.mp4（绿幕）→ webp/ 下透明 WebP
+"""表情导出：source/still_1024/*.jpg + source/video_720/*.mp4（绿幕）→ expr/ 下透明 WebP
 
   expr/still_{1080,540,270}/、expr/anim_{540,270}/ + expr/manifest.json
 
@@ -16,8 +16,8 @@ from PIL import Image, ImageFilter
 
 SRC = os.path.dirname(os.path.abspath(__file__))
 WEBP = f"{os.path.dirname(SRC)}/expr"
-RAW_STILL = f"{SRC}/still"
-RAW_ANIM = f"{SRC}/video"
+RAW_STILL = f"{SRC}/still_1024"
+RAW_ANIM = f"{SRC}/video_720"
 STILL_DIRS = {s: f"{WEBP}/still_{s}" for s in (1080, 540, 270)}
 ANIM_DIRS = {s: f"{WEBP}/anim_{s}" for s in (540, 270)}
 ANIM_FPS = 12

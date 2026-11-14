@@ -7,7 +7,7 @@
 
 otter.json：
   "expr": {"version": "v3", "dir": "assets/otter/expr"}
-    → 从 TOS expr/<version>/ 取 manifest.json，按 md5 落到 <dir>（该目录 gitignore，不进 App 仓库）。
+    → 从 TOS expr/<version>/ 取 manifest.json，anim_270/<key>.webp、still_270/<key>.webp 原样落到 <dir>/ 下，按 md5 落到 <dir>（该目录 gitignore，不进 App 仓库）。
 
 下载先进本机缓存 ~/.cache/otter-family/（OTTER_CACHE 可改），几个 App 用同一表情版本只下一次。
 包由素材库的 otter_family/source/sync_tos.py expr 发布。
@@ -55,7 +55,7 @@ def expr(app_root, pull):
     dest = app_root / cfg["dir"]
     cache = CACHE / "expr" / cfg["version"]
     wrong = [n for n, m in files.items() if not (dest / n).is_file() or md5(dest / n) != m["md5"]]
-    extra = sorted(p.name for p in dest.glob("*.webp") if p.name not in files) if dest.is_dir() else []
+    extra = sorted(n for n in (p.relative_to(dest).as_posix() for p in dest.rglob("*.webp")) if n not in files) if dest.is_dir() else []
     label = f"表情包 {cfg['version']} → {cfg['dir']}"
     if not pull:
         if wrong or extra:
@@ -64,11 +64,10 @@ def expr(app_root, pull):
         print(f"{label}：{len(files)} 个，一致")
         return True
 
-    dest.mkdir(parents=True, exist_ok=True)
-    cache.mkdir(parents=True, exist_ok=True)
-
     def get(name):
         c = cache / name
+        c.parent.mkdir(parents=True, exist_ok=True)
+        (dest / name).parent.mkdir(parents=True, exist_ok=True)
         if not c.is_file() or md5(c) != files[name]["md5"]:
             data = fetch(remote + name)
             if hashlib.md5(data).hexdigest() != files[name]["md5"]:

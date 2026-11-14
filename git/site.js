@@ -8,7 +8,7 @@
   "use strict";
   var root = document.documentElement;
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var EXPR = window.otterMedia("demo/expr/");
+  var EXPR = window.otterExpr("");
   var $ = function (s, el) { return (el || document).querySelector(s); };
   var $$ = function (s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); };
 
@@ -149,7 +149,7 @@
     var k;
     do { k = PET[Math.random() * PET.length | 0]; } while (k === lastPet);
     lastPet = k;
-    peekImg.src = EXPR + k + ".webp";
+    peekImg.src = EXPR + "anim_270/" + k + ".webp";
     say(LINES[li++ % LINES.length]);
     if (window.gsap && !reduced) gsap.fromTo(peekImg, { scale: .82, rotate: -8 }, { scale: 1, rotate: 0, duration: .5, ease: "back.out(2.4)" });
   });

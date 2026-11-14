@@ -13,13 +13,13 @@ otter_family/
 │   │   └── <app>.png                  三端图标母版（深底方块，同一模板）
 │   ├── common/   三端共用成品：otter_black / otter_white 剪影、logo_otter 分层水獭层
 │   └── <app>/    git / tools / gametime 各自成品，见「品牌成品」
-├── expr/      表情成品（透明 WebP，文件名 <key>.webp）
+├── expr/      表情成品（透明 WebP，<类型>_<尺寸>/<key>.webp；App 与官网都用其中 270 档，经 TOS 表情包分发）
 │   ├── still_1080/  still_540/  still_270/     静图
 │   ├── anim_540/  anim_270/                    动图（12 帧/秒，4 秒循环）
 │   └── manifest.json                           anim_540 清单
 ├── source/    原文件与脚本
-│   ├── still/       绿幕静图母版 <key>.jpg（约 1024）
-│   ├── video/       绿幕循环视频母版 <key>.mp4（720p，4 秒，首尾帧 = 静图）
+│   ├── still_1024/  绿幕静图母版 <key>.jpg（1024×1024）
+│   ├── video_720/   绿幕循环视频母版 <key>.mp4（720×720，4 秒，首尾帧 = 静图）
 │   ├── prompt/      实际使用的静图 / 视频提示词 <key>.json
 │   ├── v3_plan.json 生成规格：身份锚点、构图、每枚静图设计 s 与动作 m
 │   ├── expr_keys.md 120 个 key 与中文名
@@ -31,7 +31,7 @@ otter_family/
 
 每个资源只存一份。App 只拷贝成品，不在 App 仓库里放生成脚本：表情由 `sync_tos.py expr` 打成表情包、App 用 `./tool/otter assets` 拉，图标从 `brand/<app>/` 拷。
 
-git 里只有脚本、文档、`prompt/` 与 `v3_plan.json`；`brand/`、`expr/`、`source/still/`、`source/video/` 只在 TOS（`brand/`、`backup/expr/`、`backup/source/`），被 `.gitignore` 忽略。新克隆或换电脑后先拉下来，改完再推上去：
+git 里只有脚本、文档、`prompt/` 与 `v3_plan.json`；`brand/`、`expr/`、`source/still_1024/`、`source/video_720/` 只在 TOS（`brand/`、`backup/expr/`、`backup/source/`），被 `.gitignore` 忽略。新克隆或换电脑后先拉下来，改完再推上去：
 
 ```bash
 source ~/.config/devkeys/env.sh
@@ -74,12 +74,12 @@ rsync -a $LIB/brand/gametime/android/res/ android/app/src/main/res/
 | 目录 | 格式 | 建议用途 |
 | --- | --- | --- |
 | `expr/still_1080/` | 透明 WebP q90 | 高清存档 / 物料 |
-| `expr/still_540/` | 透明 WebP q90 | App 大图静帧（内置） |
-| `expr/still_270/` | 透明 WebP q90 | App 列表静帧（内置） |
-| `expr/anim_270/` | 透明动态 WebP，12fps，q70 | App 列表动图（内置） |
-| `expr/anim_540/` | 透明动态 WebP，12fps，q70 | 官网托管，App 按 `manifest.json` 按需下载缓存 |
+| `expr/still_540/` | 透明 WebP q90 | 物料、大图（不进 App） |
+| `expr/still_270/` | 透明 WebP q90 | App 与官网的静帧（表情包） |
+| `expr/anim_270/` | 透明动态 WebP，12fps，q70 | App 与官网的动图（表情包） |
+| `expr/anim_540/` | 透明动态 WebP，12fps，q70 | 宣传片、物料（不进 App） |
 
-`expr/manifest.json`：`{version, size, fps, items: [{key, zh, path, bytes, sha256}]}`，`path` 相对 `expr/`；App 以 `version` 判断是否更新，以 `sha256` 校验缓存。
+`expr/manifest.json`：`{version, size, fps, items: [{key, zh, path, bytes, sha256}]}`，`path` 相对 `expr/`（export.py 生成，物料用；App 用的是 TOS 表情包里的 manifest.json）。
 
 ## 导出
 
@@ -108,14 +108,14 @@ python3 source/sync_tos.py --pull     # 反过来，TOS → 本地
 | `release/<app>/v<版本>/` | 安装包 | `./tool/otter publish` / `mirror`（`tool/release/release.py`） | 公开读，长缓存（不可变） |
 | `site/<app>/` | 官网素材：`promo.mp4`、`poster.jpg`、`og.jpg`、`shots/`、`build.json`（出处） | `tool/release/release.py site`（App 的 `./tool/otter site`） | 公开读，缓存 1 小时 |
 | `brand/` | 图标母版与各 App 成品 | `sync_tos.py brand` | 公开读 |
-| `expr/<版本>/` | App 内置的 270 档表情包（明文）+ `manifest.json`，版本 `v1`、`v2`…（当前 `v3`）；同一版本发布后不再改，换代加新版本 | `sync_tos.py expr`（版本见 `EXPR_VERSION`） | 公开读 |
+| `expr/<版本>/` | App 与官网共用的 270 档表情包：`anim_270/`、`still_270/` + `manifest.json`，版本 `v1`、`v2`…（当前 `v3`）；同一版本发布后不再改，换代加新版本 | `sync_tos.py expr`（版本见 `EXPR_VERSION`） | 公开读 |
 | `backup/expr/` | 表情成品全档位备份（= 本地 `expr/`） | `sync_tos.py backup` | 私有，低频存储 |
-| `backup/source/` | 母版备份（= 本地 `source/still/`、`source/video/`；git 里有的脚本、提示词不备份） | `sync_tos.py backup` | 私有，低频存储 |
+| `backup/source/` | 母版备份（= 本地 `source/still_1024/`、`source/video_720/`；git 里有的脚本、提示词不备份） | `sync_tos.py backup` | 私有，低频存储 |
 
 公开地址前缀 `https://otter-family-site.tos-cn-beijing.volces.com/`：
 
 - 品牌图：`brand/<app>/icon.png`、`brand/<app>/mark.png`、`brand/common/otter_white.png` 等（App 的家族入口、官网直接引用，不用把兄弟 App 的图标打进包）
-- 表情：`expr/<版本>/<名>.webp`（动图）、`<名>_s.webp`（静帧）、`manifest.json`（每个文件的 md5 与大小）。明文、不加密；三个 App 构建前用 `./tool/otter assets`（上级仓 `tool/app/assets.py`）按各自 `otter.json` 拉进包里，官网在线试用直接引用。全档位（含 540、1080）只在私有的 `backup/expr/`。
+- 表情：`expr/<版本>/anim_270/<名>.webp`（动图）、`still_270/<名>.webp`（静帧）、`manifest.json`（每个文件的 md5 与大小）。三个 App 构建前用 `./tool/otter assets`（上级仓 `tool/app/assets.py`）按各自 `otter.json` 原样拉到 `assets/otter/expr/anim_270/`、`still_270/`；官网页面（`data-expr`）与在线试用直接引用这一份。全档位（含 540、1080）只在私有的 `backup/expr/`。
 
 ## 三端与配色
 

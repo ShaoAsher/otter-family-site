@@ -4,7 +4,7 @@
 
 **仓库只放代码和文本，图片、视频、安装包都在 TOS，覆盖即生效。**
 
-- 页面里的截图、表情、封面、宣传片写成 `data-media="shots/home-dark.webp"`，由 `shared/family.js` 拼上 `family.json` 的 `family.media`（TOS `site/<app>/`）。换素材 = 覆盖 TOS 上的文件，不用改页面、不用提交。
+- 页面里的截图、封面、宣传片写成 `data-media="shots/home-dark.webp"`，由 `shared/family.js` 拼上 `family.json` 的 `family.media`（TOS `site/<app>/`）；小獭表情写成 `data-expr="anim_270/hi.webp"`，拼上 `family.expr`（和 App 同一份表情包 `expr/<版本>/`）。换素材 = 覆盖 TOS 上的文件，不用改页面、不用提交。
 - 这些素材由 App 仓库的 `./tool/otter site` 生产并上传，在线试用的页面代码由它写进 `<app>/demo/`；安装包由 App 的 `./tool/otter release` 发到 TOS + GitHub Release。
 - 素材库的大文件（图标、表情、母版视频）只在 TOS，新克隆后用 `python3 otter_family/source/sync_tos.py --pull` 拉到本地。
 
@@ -23,7 +23,6 @@
 | `index.html` | 家族首页（手写，样式、脚本内联） |
 | `family.json` | **公共配置**（手写；发布脚本会切换下载版本）：版本号、版本记录、官网地址、下载版本与文件名、配色，见「公共配置」 |
 | `shared/icons/` | 各成员 App 图标 + 家族剪影（= `otter_family/brand/<app>/icon.png`、`common/otter_white.png`），各页面共用 |
-| `shared/otter/hi.webp` | 家族首页招呼动图（= `otter_family/expr/anim_270/hi.webp`） |
 | `shared/vendor/` | GSAP 3.15.1 与 ScrollTrigger，产品官网共用（本地托管，不依赖 CDN） |
 | `shared/family.js` | 产品官网共用脚本：素材地址（`data-media`）、版本号、版本记录与下载链接，国内 / 海外选下载源 |
 | `<app>/index.html`、`<app>/site.js` | 产品官网页面与它自己的动效、交互（手写） |
@@ -147,13 +146,13 @@ Windows 包在各 App 的 `.github/workflows/windows.yml` 出：先浅检出本�
 
 ## 表情包
 
-小獭表情不进 App 的 git。素材库按版本（`v1`、`v2`…）把 270 尺寸的动图、静帧发到 TOS 公开目录 `expr/<版本>/`（`<名>.webp` 动图、`<名>_s.webp` 静帧，`manifest.json` 记每个文件的 md5 与大小）：
+小獭表情不进 App 的 git。素材库按版本（`v1`、`v2`…）把 270 尺寸的动图、静帧发到 TOS 公开目录 `expr/<版本>/`（`anim_270/<名>.webp` 动图、`still_270/<名>.webp` 静帧，`manifest.json` 记每个文件的 md5 与大小）。App 和官网都用这一份，目录名就是尺寸：
 
 ```bash
 cd otter_family && python3 source/sync_tos.py expr   # 素材库 → TOS expr/<版本>/（版本见 sync_tos.py 的 EXPR_VERSION）
 ```
 
-App 按 `otter.json` 的 `expr.version` 拉到 `expr.dir`（`./tool/otter assets`）：先进本机缓存 `~/.cache/otter-family/`（`OTTER_CACHE` 可改），按 md5 校验后复制，目标目录里多出来的 webp 会删掉。换表情 = 素材库出新版本、App 改 `expr.version`，旧版本留在 TOS，老版本 App 照样能构建。
+App 按 `otter.json` 的 `expr.version` 拉到 `expr.dir`（`./tool/otter assets`）：先进本机缓存 `~/.cache/otter-family/`（`OTTER_CACHE` 可改），按 md5 校验后复制，子目录原样保留（App 里是 `assets/otter/expr/anim_270/`、`still_270/`），目标目录里多出来的 webp 会删掉。换表情 = 素材库出新版本、App 改 `expr.version`，旧版本留在 TOS，老版本 App 照样能构建。
 
 ## 共用代码
 

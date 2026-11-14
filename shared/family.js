@@ -4,6 +4,8 @@
  *
  * - `[data-media]`：素材在 TOS（family.json 的 `family.media`，`{app}` 换成 data-app），值是相对路径；
  *   img / source 填 src，a 填 href，`[data-media-poster]` 填 video 的 poster。页面脚本用 `otterMedia(路径)` 拼地址
+ * - `[data-expr]`：小獭表情，和 App 用同一份 TOS 表情包（family.json 的 `family.expr`），值如 `anim_270/hi.webp`、
+ *   `still_270/hi.webp`；页面脚本用 `otterExpr(路径)` 拼地址
  * - `.v` / `.ver`：能下载到的版本（`download.version`，没有安装包时是 `latest`）；导航「下载 X.Y」同
  * - `.vlist`：版本记录（全部条目，新的在前）
  * - `[data-dl]`：值是 family.json 里 `download.files` 的键（macos / windows / …），空串 = 发布页
@@ -17,6 +19,7 @@
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
   var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/site/{app}/"; // 与 family.json 的 family.media 一致，先用它出图
+  var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/"; // 与 family.json 的 family.expr 一致
 
   function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
 
@@ -31,6 +34,13 @@
     $$("video source[data-media]").forEach(function (s) { s.parentNode.load(); });
   }
   media(MEDIA);
+
+  function expr(base) {
+    if (window.otterExpr && window.otterExpr("") === base) return;
+    window.otterExpr = function (p) { return base + p; };
+    $$("[data-expr]").forEach(function (el) { el.src = base + el.dataset.expr; });
+  }
+  expr(EXPR);
   if (!window.fetch) return;
   function fill(tpl, v) { return tpl.replace(/\{(\w+)\}/g, function (_, k) { return v[k] == null ? "" : v[k]; }); }
 
@@ -95,6 +105,7 @@
       var app = cfg && cfg.schema === 1 && cfg.apps && cfg.apps[id];
       if (!app) return;
       if (cfg.family && cfg.family.media) media(cfg.family.media);
+      if (cfg.family && cfg.family.expr) expr(cfg.family.expr);
       if (app.latest) versions(app);
       links(cfg, app, "cn");
       where().then(function (w) { if (w !== "cn") links(cfg, app, w); });

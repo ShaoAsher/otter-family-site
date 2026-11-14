@@ -1077,7 +1077,7 @@
     <section class="hero" id="top" data-tone="dawn" aria-labelledby="hero-title">
       <div class="wrap">
         <button type="button" class="greet" id="greet" data-in aria-label="小獭的问候，点一下换一句">
-          <img data-media="demo/expr/hi.webp" alt="" width="30" height="30" />
+          <img data-expr="anim_270/hi.webp" alt="" width="30" height="30" />
           <span id="greet-text">你好，我是小獭</span>
           <span class="v">v3.0.0</span>
         </button>
@@ -1116,7 +1116,7 @@
         <div class="stage" data-in-stage>
           <button type="button" class="peek" id="peek" aria-label="小獭，点一下换个表情">
             <span class="bubble" id="bubble" hidden></span>
-            <img data-media="demo/expr/cheer.webp" alt="" width="150" height="150" />
+            <img data-expr="anim_270/cheer.webp" alt="" width="150" height="150" />
           </button>
           <figure class="frame" id="hero-frame" style="margin: 0">
             <img data-media="shots/home-dark.webp" width="2560" height="1600" fetchpriority="high"
@@ -1171,25 +1171,25 @@
 
         <div class="states">
           <ol class="steps">
-            <li class="step on" data-tone="calm" data-shot="0" data-otter="calm" style="--c: var(--calm)">
+            <li class="step on" data-tone="calm" data-shot="0" data-otter="anim_270/calm" style="--c: var(--calm)">
               <span class="tag"><i></i>平静 · 一切正常</span>
               <h3>水挺清的，顺手清掉 12.4 GB</h3>
               <p>健康分 86，内存平稳。「接下来可以做」按影响从大到小排好，最上面那条通常点一下就完事。</p>
               <img class="inline frame" data-media="shots/home-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="busy" data-shot="1" data-otter="focus" style="--c: var(--busy)">
+            <li class="step" data-tone="busy" data-shot="1" data-otter="anim_270/focus" style="--c: var(--busy)">
               <span class="tag"><i></i>忙碌 · CPU 78%</span>
               <h3>Xcode 在编译，波浪跟着变急</h3>
               <p>CPU 一高，水面的波浪就快起来，水色偏暖，小獭换成埋头干活的样子。只是忙不是坏事，它不会催你去关东西。</p>
               <img class="inline frame" data-media="shots/home-busy.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="alarm" data-shot="2" data-otter="scared" style="--c: var(--alarm)">
+            <li class="step" data-tone="alarm" data-shot="2" data-otter="anim_270/scared" style="--c: var(--alarm)">
               <span class="tag"><i></i>告急 · 内存紧张</span>
               <h3>内存快撑不住，先释放一下</h3>
               <p>内存压力到了红线，水变红，首页的主按钮换成「释放内存」。只回收不活跃的缓存，不会关掉你正在用的应用。</p>
               <img class="inline frame" data-media="shots/home-alarm.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="full" data-shot="3" data-otter="shock_s" style="--c: var(--busy)">
+            <li class="step" data-tone="full" data-shot="3" data-otter="still_270/shock" style="--c: var(--busy)">
               <span class="tag"><i></i>注意 · 磁盘仅剩 34 GB</span>
               <h3>水要漫出来了，磁盘快满</h3>
               <p>水位就是磁盘占用。快满的时候，小獭把能腾地方的大头列出来：垃圾、大文件、半年没开过的虚拟机，一项一项给你看。</p>
@@ -1204,7 +1204,7 @@
               <img data-media="shots/home-alarm.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
               <img data-media="shots/home-full.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </div>
-            <span class="peek" style="pointer-events: none"><img id="state-otter" data-media="demo/expr/calm.webp" alt="" width="116" height="116" /></span>
+            <span class="peek" style="pointer-events: none"><img id="state-otter" data-expr="anim_270/calm.webp" alt="" width="116" height="116" /></span>
           </div>
         </div>
 
@@ -1240,13 +1240,13 @@
         <div class="oc-stage rise" id="oc-stage" aria-label="一键养护示意：进度条走完后切换为「水清了 · 腾出 6.3 GB」，下方是好的、撤销两个按钮" role="img">
           <div class="oc" id="oc">
             <div class="busy">
-              <img data-media="demo/expr/focus.webp" alt="" width="84" height="84" loading="lazy" />
+              <img data-expr="anim_270/focus.webp" alt="" width="84" height="84" loading="lazy" />
               <h4>正在养护…</h4>
               <p>清理缓存与日志 · 释放内存</p>
               <div class="bar"><i></i></div>
             </div>
             <div class="done">
-              <img data-media="demo/expr/highlight.webp" alt="" width="84" height="84" loading="lazy" />
+              <img data-expr="anim_270/highlight.webp" alt="" width="84" height="84" loading="lazy" />
               <h4>水清了 · 腾出 6.3 GB</h4>
               <p>文件都在废纸篓里 · 石头罐 +1，现在 22 颗</p>
               <div class="btns"><span>好的</span><span>撤销</span></div>

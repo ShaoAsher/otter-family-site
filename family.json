@@ -9,7 +9,7 @@
     "assets": "https://otter-family-site.tos-cn-beijing.volces.com/",
     "media": "https://otter-family-site.tos-cn-beijing.volces.com/site/{app}/",
     "brand": "https://otter-family-site.tos-cn-beijing.volces.com/brand/",
-    "expr_manifest": "https://otter-family-site.tos-cn-beijing.volces.com/expr/manifest.json",
+    "expr": "https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/",
     "config": [
       "https://otter-family-site.tos-cn-beijing.volces.com/config/family.json",
       "https://shaoasher.github.io/otter-family-site/family.json"

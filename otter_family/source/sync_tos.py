@@ -9,16 +9,16 @@
   python3 source/sync_tos.py --reset-acl  # 按当前规则重设远端已有对象的读写权限
   python3 source/sync_tos.py --pull       # 反过来：把 brand/、backup/ 拉到本地（新克隆后先跑这个）
 
-大文件（brand/、webp/、source/still、source/video）不进 git，只在 TOS；git 里只有脚本、文档与提示词。
+大文件（brand/、expr/、source/still_1024、source/video_720）不进 git，只在 TOS；git 里只有脚本、文档与提示词。
 
 远端布局（桶根目录，无前缀；release/、site/ 由 tool/release/release.py 管，这里不碰）：
   config/        公开读、不缓存，family.json = 仓库根目录的家族公共配置（版本记录、官网地址等，三端与官网共用）
   brand/         公开读，图标母版与各 App 成品（App 家族入口、官网直接引用）
-  expr/<版本>/   公开读，App 内置的 270 档表情包（明文，不加密）：<key>.webp 动图 + <key>_s.webp 静帧
-                 + manifest.json（md5）。App 构建前由 tool/app/assets.py 按 otter.json 的 expr.version 拉取，官网在线试用直接引用；
+  expr/<版本>/   公开读，App 与官网共用的 270 档表情包（明文）：anim_270/<key>.webp 动图 + still_270/<key>.webp 静帧
+                 + manifest.json（md5）。App 构建前由 tool/app/assets.py 按 otter.json 的 expr.version 拉取，官网页面与在线试用直接引用；
                  版本号 v1、v2…，同一版本发布后不再改，表情集换代就加新版本（EXPR_VERSION），旧版本留着给老版本构建。
   backup/expr/   私有，低频存储（本地 expr/：表情成品全档位）
-  backup/source/ 私有，低频存储（本地 source/ 里不在 git 的：still/、video/ 母版）
+  backup/source/ 私有，低频存储（本地 source/ 里不在 git 的：still_1024/、video_720/ 母版）
 
 按 MD5 与远端 ETag 比对，未变化的文件不重复上传。
 """
@@ -44,8 +44,8 @@ PARTS = {
     "backup/source": ("source", False, tos.StorageClassType.Storage_Class_Ia),
 }
 EXPR_VERSION = "v3"
-# 表情包：远端目录 -> [(本地目录, 文件名后缀)]，与 App 里 assets/otter/expr 的命名一致
-BUNDLES = {f"expr/{EXPR_VERSION}": [("expr/anim_270", ""), ("expr/still_270", "_s")]}
+# 表情包：远端目录 -> 带进包里的本地 expr/ 子目录（按 类型_尺寸 命名，App 里 assets/otter/expr/ 下同名）
+BUNDLES = {f"expr/{EXPR_VERSION}": ["anim_270", "still_270"]}
 PARTS.update({k: (None, True, tos.StorageClassType.Storage_Class_Standard) for k in BUNDLES})
 
 mimetypes.add_type("image/webp", ".webp")
@@ -54,10 +54,10 @@ mimetypes.add_type("application/json", ".json")
 
 def bundle_items(part):
     files = {}
-    for src, suffix in BUNDLES[part]:
-        for name in sorted(os.listdir(f"{ROOT}/{src}")):
+    for sub in BUNDLES[part]:
+        for name in sorted(os.listdir(f"{ROOT}/expr/{sub}")):
             if name.endswith(".webp"):
-                files[name[:-5] + suffix + ".webp"] = f"{ROOT}/{src}/{name}"
+                files[f"{sub}/{name}"] = f"{ROOT}/expr/{sub}/{name}"
     manifest = {"version": part.rsplit("/", 1)[1], "files": {}}
     for name, path in sorted(files.items()):
         data = open(path, "rb").read()
