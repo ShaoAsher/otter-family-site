@@ -667,32 +667,46 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 const EXPR='https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/anim_270/';
 /* 水獭家族 120 表情：按 Git 动作语义挑——推送 = 拖箱出门、拉取 = 抵达、标签 = 纪念品、拣选 = 抽卡、变基整理 = 打扫 */
 const POOL={
-  greetNight:['night','sleepy','goodnight','overtime'],greetMorning:['morning','hi','cafe','stretch'],greetDay:['happy','smile','focus','cafe','tea'],
-  greetEvening:['hi','sunset','relax','milktea'],greetWeekend:['weekend','relax','music','milktea'],noRepo:['hi','welcome','map'],
-  clean:['clean','calm','relax','smile'],dirty:['focus','write','note','study'],dirtyMany:['busy','sweat','deadline'],
-  conflict:['scared','sweat','please'],conflictMany:['angry','shock','speechless'],inProgress:['focus','plan','loading'],
-  unpushed:['luggage','travel'],behind:['map','read','think'],busy:['loading','queue'],detached:['map','shock','speechless'],
-  aiIdle:['hi','smile','welcome','tea'],aiThinking:['think','idea'],aiError:['sorry','sad','cry'],aiNoModel:['please','bashful','shy'],aiDone:['ok','done','smile'],
-  settings:['outfit','plan','calm'],about:['love','hug','thanks','friends'],
-  pet:['laugh','shy','happy','love','hug','smile','bashful','pout','yum','lucky','wave'],
-  commit:['done','ok','proud','note'],commitNight:['overtime','night','goodnight'],commitNoon:['eat','rice','noodles'],
-  commitWeekend:['weekend','cafe','overtime'],commitFirstToday:['morning','start','cheer'],commitMilestone:['victory','celebrate','highlight'],
-  push:['travel','great','cheer'],pull:['arrive','relief'],merge:['coop','friends','hug'],resolved:['relief','clear','done'],
-  tag:['souvenir','photo','highlight'],stash:['luggage','nap'],undo:['retry','relief'],cherryPick:['gacha','lucky'],revert:['retry','review'],
-  rebaseDone:['clean','done'],clone:['welcome','arrive','hi'],branch:['map','hike','plan'],info:['ok','smile','hi'],
-  fail:['sad','defeat','cry'],failNetwork:['rain','wind','gg'],failAuth:['bashful','ask','sorry'],
-  ask:['ask','think','please'],askDanger:['pause','scared','shock'],emptySearch:['speechless','bashful','map'],
-  emptyHistory:['read','plan','calm'],pickCommit:['review','read','think'],emptyTerminal:['focus','write'],
+  greetNight:['night','sleepy','goodnight','overtime','tea'],greetDawn:['sleepy','nap','drink','sick','goodnight'],
+  greetMorning:['morning','hi','cafe','stretch','jog','drink'],greetDay:['happy','smile','focus','cafe','tea','study','plan'],
+  greetEvening:['hi','sunset','relax','milktea','stroll','music'],greetFriday:['weekend','celebrate','milktea','sunset','music'],
+  greetWeekend:['weekend','relax','music','milktea','story','snack','stroll'],noRepo:['hi','welcome','map','wave'],
+  clean:['clean','calm','relax','smile','clear','tea'],dirty:['focus','write','note','study','plan'],
+  dirtyMany:['busy','sweat','deadline','grind','mountain'],conflict:['scared','sweat','please','bashful'],
+  conflictMany:['angry','shock','speechless','rage','sick'],inProgress:['focus','plan','loading','grind'],unpushed:['luggage','travel','plan'],
+  behind:['map','read','think','queue'],busy:['loading','queue','focus','grind'],detached:['map','shock','speechless','think'],
+  fetching:['map','read','queue','think'],pulling:['queue','loading','map','travel'],pushing:['luggage','travel','loading','sweat'],
+  pushingForce:['focus','sweat','scared','please'],cloning:['luggage','map','loading','queue'],aiIdle:['hi','smile','welcome','tea','wave','cafe'],
+  aiThinking:['think','idea','focus','read'],aiWaiting:['think','focus','read','note','write','loading','idea','plan'],
+  aiError:['sorry','sad','cry','gg','bashful'],aiNoModel:['please','bashful','shy','ask'],aiDone:['ok','done','smile','great','thanks'],
+  settings:['outfit','plan','calm','think','clean'],about:['love','hug','thanks','friends','smile','wave'],
+  pet:['laugh','shy','happy','love','hug','smile','bashful','pout','yum','lucky','wave','cheer','great','snack','music','dessert'],
+  commit:['done','ok','proud','note','great','write'],commitNight:['overtime','night','goodnight','sleepy'],commitDawn:['sleepy','sick','drink','nap'],
+  commitNoon:['eat','rice','noodles','hungry','burger','yum'],commitWeekend:['weekend','cafe','overtime','relax','music'],
+  commitFriday:['weekend','sunset','celebrate','milktea'],commitFirstToday:['morning','start','cheer','quest','cafe'],
+  commitMilestone:['victory','celebrate','highlight','proud','cheer'],amend:['write','retry','outfit','note'],
+  push:['travel','great','cheer','wave','salute'],pushFirst:['start','wave','travel','cheer'],pushMany:['mountain','rank','win','victory'],
+  pushNight:['goodnight','overtime','night','sleepy'],pushFriday:['lucky','please','weekend','sunset'],pushForce:['relief','sweat','salute'],
+  pull:['arrive','relief','read','ok'],pullMany:['feast','read','shock','busy'],merge:['coop','friends','hug','ok','done'],
+  resolved:['relief','clear','done','ok','heal'],tag:['souvenir','photo','highlight','proud'],stash:['luggage','nap','note','pause'],
+  stashRestore:['arrive','ok','relief'],undo:['retry','relief','sorry','review'],cherryPick:['gacha','lucky','highlight','fruit'],
+  revert:['retry','review','sorry'],rebaseDone:['clean','done','clear','great'],clone:['welcome','arrive','hi','cheer'],
+  branch:['map','hike','plan','stroll'],info:['ok','smile','hi','note'],fail:['sad','defeat','cry','lose','speechless'],
+  failNetwork:['rain','wind','gg','snow','queue'],failAuth:['bashful','ask','sorry','please'],failRejected:['queue','retry','map','bashful'],
+  ask:['ask','think','please','bashful'],askDanger:['pause','scared','shock','sweat'],emptySearch:['speechless','bashful','map','think'],
+  emptyHistory:['read','plan','calm','write','start'],pickCommit:['review','read','think','note'],emptyTerminal:['focus','write','study','idea'],
+  emptyAiLog:['note','calm','read'],
   /* 原型独有的位置 */
   memory:['note','read','highlight'],commitHint:['idea','ok','think']
 };
 const ALIAS={alert:'conflict',milestone:'commitMilestone',night:'greetNight'};
-/* 与 App 的 greetSceneAt / commitSceneAt 同一裁决：时段 + 周末 */
+/* 与 App 的 greetSceneAt / commitSceneAt / pushSceneAt 同一裁决：凌晨 + 时段 + 周五 + 周末 */
 function dayPart(h){return h<5||h>=23?'night':h<11?'morning':h<13?'noon':h<18?'afternoon':'evening'}
 function resolveScene(scene){
-  const now=new Date(),part=dayPart(now.getHours()),weekend=now.getDay()===0||now.getDay()===6;
-  if(scene==='greet'){if(part==='night')return'greetNight';if(weekend)return'greetWeekend';return{morning:'greetMorning',noon:'greetDay',afternoon:'greetDay',evening:'greetEvening'}[part]}
-  if(scene==='commit'){if(part==='night')return'commitNight';if(typeof todayCount!=='undefined'&&todayCount===1)return'commitFirstToday';if(weekend)return'commitWeekend';if(part==='noon')return'commitNoon';return'commit'}
+  const now=new Date(),h=now.getHours(),part=dayPart(h),dow=now.getDay(),weekend=dow===0||dow===6,dawn=h>=2&&h<5,fri=n=>dow===5&&h>=n;
+  if(scene==='greet'){if(dawn)return'greetDawn';if(part==='night')return'greetNight';if(fri(13))return'greetFriday';if(weekend)return'greetWeekend';return{morning:'greetMorning',noon:'greetDay',afternoon:'greetDay',evening:'greetEvening'}[part]}
+  if(scene==='commit'){if(dawn)return'commitDawn';if(part==='night')return'commitNight';if(typeof todayCount!=='undefined'&&todayCount===1)return'commitFirstToday';if(weekend)return'commitWeekend';if(fri(17))return'commitFriday';if(part==='noon')return'commitNoon';return'commit'}
+  if(scene==='push'){if(part==='night')return'pushNight';if(fri(15))return'pushFriday';return'push'}
   return ALIAS[scene]||scene;
 }
 const last={};
