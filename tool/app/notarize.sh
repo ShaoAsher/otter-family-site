@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # 水獭家族 macOS App 共用：对 .app / .dmg 做 Developer ID 签名 + Apple 公证 + stapler。
-# 在 App 根目录执行（App 的 tool/notarize.sh 会转到这里）。
+# 在 App 根目录执行 ./tool/otter notarize（package.sh --notarize 也会调用）。
 #
 # 用法：
-#   ./tool/notarize.sh /path/to/<App>.app
-#   ./tool/notarize.sh /path/to/<App>.dmg
-#   ./tool/notarize.sh --sign-only /path/to/<App>.app
+#   ./tool/otter notarize /path/to/<App>.app
+#   ./tool/otter notarize /path/to/<App>.dmg
+#   ./tool/otter notarize --sign-only /path/to/<App>.app
 #
 # 环境变量（可选）：
 #   SIGN_IDENTITY   默认 Developer ID Application: ShaoXiao Zhao (N7VA78G2EU)
@@ -89,9 +89,9 @@ clear_proxy_for_notary() {
 # HTTP_PROXY 环境变量。本机系统代理会把 Apple TSA 掐掉，报
 # "The timestamp service is not available"；而 curl 直连是通的。
 # 解法：127.0.0.1 在代理例外列表里，所以让 codesign 打本地中继
-# （水獭家族仓 tool/mac/tsa_relay.py），由中继直连 Apple TSA 代取时间戳。
+# （水獭家族仓 tool/app/tsa_relay.py），由中继直连 Apple TSA 代取时间戳。
 #   python3 "$HERE/tsa_relay.py" 8899 &
-#   CODESIGN_TIMESTAMP_URL=http://127.0.0.1:8899/ts01 ./tool/release.sh
+#   CODESIGN_TIMESTAMP_URL=http://127.0.0.1:8899/ts01 ./tool/otter release
 if [[ -n "${CODESIGN_TIMESTAMP_URL:-}" ]]; then
   TS_FLAG="--timestamp=${CODESIGN_TIMESTAMP_URL}"
   echo "==> 时间戳走中继: ${CODESIGN_TIMESTAMP_URL}"

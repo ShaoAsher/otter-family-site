@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# 水獭家族统一入口。App 里执行 ./tool/otter <命令>（转到这里，工作目录是 App 根目录，配置读它的 otter.json）。
+#
+# 在 App 里用：
+#   assets [pull|check]               小獭表情：按 otter.json 从 TOS expr/<版本>/ 拉到本地 / 只校验
+#   package [参数]                    macOS 打包 DMG + ZIP 到 dist/（--notarize --skip-build --zip-only --keep-old）
+#   notarize <.app|.dmg>              Developer ID 签名并公证（--sign-only 只签名）
+#   release [参数]                    发版：release 分支上打包公证，上传 TOS + GitHub（--use-dist --skip-build --no-notarize --zip-only）
+#   site <demo|shots|art|promo|all>   更新产品官网素材
+#   ship [参数]                       一条命令发版：release → 等 Windows CI → mirror → 提交 family.json（--use-dist --skip-build --no-wait --push）
+#
+# 在家族仓里用（tool/otter <命令>）：
+#   publish <app> <版本> <文件>…      安装包上传到 TOS + GitHub Release，两处齐了切换下载版本
+#   mirror <app> <版本>               GitHub 上的包（Windows CI 传的）补到 TOS
+#   status [app]                      各 App 当前下载版本在两处是否齐全
+#   ci-upload <app> <版本> <文件>…    CI 把 Windows 包传到 GitHub Release
+set -euo pipefail
+T="$(cd "$(dirname "$0")" && pwd)"
+cmd="${1:-}"
+[[ $# -gt 0 ]] && shift
+case "$cmd" in
+  assets)    exec python3 "$T/app/assets.py" "${1:-pull}" . ;;
+  package)   exec bash "$T/app/package.sh" "$@" ;;
+  notarize)  exec bash "$T/app/notarize.sh" "$@" ;;
+  release)   exec bash "$T/app/release.sh" "$@" ;;
+  site)      exec python3 "$T/app/site.py" "$@" ;;
+  ship)      exec python3 "$T/release/ship.py" . "$@" ;;
+  publish|mirror|status)
+             exec python3 "$T/release/release.py" "$cmd" "$@" ;;
+  ci-upload) exec python3 "$T/release/ci_upload.py" "$@" ;;
+  ""|help|-h|--help)
+             sed -n '2,17p' "$0" ;;
+  *)         echo "未知命令：${cmd}（./tool/otter help 看全部）" >&2; exit 1 ;;
+esac

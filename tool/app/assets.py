@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """按 App 根目录的 otter.json 拉取家族共用的二进制素材（只读公开地址，不要密钥，CI 也能跑）。
 
-  python3 tool/assets.py pull  [App 根目录]   # 缺的、内容不对的才下载；目录里多出来的 .webp 删掉
-  python3 tool/assets.py check [App 根目录]   # 只校验，不下载；不一致时退出码 1
+  ./tool/otter assets [pull]   # 缺的、内容不对的才下载；目录里多出来的 .webp 删掉
+  ./tool/otter assets check    # 只校验，不下载；不一致时退出码 1
+  （CI 里直接 python3 <家族仓>/tool/app/assets.py pull|check <App 根目录>）
 
 otter.json：
-  "expr": {"pack": "3", "dir": "assets/otter/expr"}
-    → 从 TOS expr/<pack>/ 取 manifest.json，按 md5 落到 <dir>（该目录 gitignore，不进 App 仓库）。
+  "expr": {"version": "v3", "dir": "assets/otter/expr"}
+    → 从 TOS expr/<version>/ 取 manifest.json，按 md5 落到 <dir>（该目录 gitignore，不进 App 仓库）。
 
-下载先进本机缓存 ~/.cache/otter-family/（OTTER_CACHE 可改），几个 App 用同一包版本只下一次。
+下载先进本机缓存 ~/.cache/otter-family/（OTTER_CACHE 可改），几个 App 用同一表情版本只下一次。
 包由素材库的 otter_family/source/sync_tos.py expr 发布。
 """
 
@@ -21,7 +22,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 CACHE = Path(os.environ.get("OTTER_CACHE") or Path.home() / ".cache" / "otter-family")
 
 
@@ -49,16 +50,16 @@ def md5(path):
 
 def expr(app_root, pull):
     cfg = json.loads((app_root / "otter.json").read_text(encoding="utf-8"))["expr"]
-    remote = f"{base_url()}expr/{cfg['pack']}/"
+    remote = f"{base_url()}expr/{cfg['version']}/"
     files = json.loads(fetch(remote + "manifest.json"))["files"]
     dest = app_root / cfg["dir"]
-    cache = CACHE / "expr" / cfg["pack"]
+    cache = CACHE / "expr" / cfg["version"]
     wrong = [n for n, m in files.items() if not (dest / n).is_file() or md5(dest / n) != m["md5"]]
     extra = sorted(p.name for p in dest.glob("*.webp") if p.name not in files) if dest.is_dir() else []
-    label = f"表情包 {cfg['pack']} → {cfg['dir']}"
+    label = f"表情包 {cfg['version']} → {cfg['dir']}"
     if not pull:
         if wrong or extra:
-            print(f"{label}：缺或不一致 {len(wrong)} 个，多余 {len(extra)} 个；先跑 python3 tool/assets.py pull", file=sys.stderr)
+            print(f"{label}：缺或不一致 {len(wrong)} 个，多余 {len(extra)} 个；先跑 ./tool/otter assets", file=sys.stderr)
             return False
         print(f"{label}：{len(files)} 个，一致")
         return True

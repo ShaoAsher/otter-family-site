@@ -6,7 +6,7 @@ CFNetwork 用同一个代理时会报 "The timestamp service is not available"�
 127.0.0.1 在代理例外列表里，所以让 codesign 打本地端口，由我们代为转发。
 
 用法：
-    python3 <水獭家族仓>/tool/mac/tsa_relay.py 8899 &
+    python3 <水獭家族仓>/tool/app/tsa_relay.py 8899 &
     codesign --timestamp=http://127.0.0.1:8899/ts01 ...
 """
 

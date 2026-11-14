@@ -3,7 +3,7 @@
 
   source ~/.config/devkeys/env.sh   # 提供 TOS_AK / TOS_SK / TOS_BUCKET / TOS_REGION / TOS_ENDPOINT
   python3 source/sync_tos.py              # 全部同步
-  python3 source/sync_tos.py expr         # 只同步指定部分：config / brand / expr / backup（= backup/webp + backup/source）
+  python3 source/sync_tos.py expr         # 只同步指定部分：config / brand / expr / backup（= backup/expr + backup/source）
   python3 source/sync_tos.py --dry-run    # 只列出将要上传/删除的文件
   python3 source/sync_tos.py --delete     # 同时删除远端多余文件
   python3 source/sync_tos.py --reset-acl  # 按当前规则重设远端已有对象的读写权限
@@ -11,14 +11,14 @@
 
 大文件（brand/、webp/、source/still、source/video）不进 git，只在 TOS；git 里只有脚本、文档与提示词。
 
-远端布局（桶根目录，无前缀；release/、site/ 由 tool/release.py 管，这里不碰）：
+远端布局（桶根目录，无前缀；release/、site/ 由 tool/release/release.py 管，这里不碰）：
   config/        公开读、不缓存，family.json = 仓库根目录的家族公共配置（版本记录、官网地址等，三端与官网共用）
   brand/         公开读，图标母版与各 App 成品（App 家族入口、官网直接引用）
-  expr/<包版本>/ 公开读，App 内置的 270 档表情包（明文，不加密）：<key>.webp 动图 + <key>_s.webp 静帧
-                 + manifest.json（md5）。App 构建前由 tool/assets.py 按 otter.json 拉取，官网在线试用直接引用；
-                 同一包版本发布后不再改，表情集换代就加新的包版本（EXPR_PACK），旧包版本留着给老版本构建。
-  backup/webp/   私有，低频存储（表情原文件备份）
-  backup/source/ 私有，低频存储（母版备份）
+  expr/<版本>/   公开读，App 内置的 270 档表情包（明文，不加密）：<key>.webp 动图 + <key>_s.webp 静帧
+                 + manifest.json（md5）。App 构建前由 tool/app/assets.py 按 otter.json 的 expr.version 拉取，官网在线试用直接引用；
+                 版本号 v1、v2…，同一版本发布后不再改，表情集换代就加新版本（EXPR_VERSION），旧版本留着给老版本构建。
+  backup/expr/   私有，低频存储（本地 expr/：表情成品全档位）
+  backup/source/ 私有，低频存储（本地 source/ 里不在 git 的：still/、video/ 母版）
 
 按 MD5 与远端 ETag 比对，未变化的文件不重复上传。
 """
@@ -40,12 +40,12 @@ SKIP = {".DS_Store", "__pycache__"}
 PARTS = {
     "config": ("../family.json", True, tos.StorageClassType.Storage_Class_Standard),
     "brand": ("brand", True, tos.StorageClassType.Storage_Class_Standard),
-    "backup/webp": ("webp", False, tos.StorageClassType.Storage_Class_Ia),
+    "backup/expr": ("expr", False, tos.StorageClassType.Storage_Class_Ia),
     "backup/source": ("source", False, tos.StorageClassType.Storage_Class_Ia),
 }
-EXPR_PACK = "3"
+EXPR_VERSION = "v3"
 # 表情包：远端目录 -> [(本地目录, 文件名后缀)]，与 App 里 assets/otter/expr 的命名一致
-BUNDLES = {f"expr/{EXPR_PACK}": [("webp/anim_270", ""), ("webp/still_270", "_s")]}
+BUNDLES = {f"expr/{EXPR_VERSION}": [("expr/anim_270", ""), ("expr/still_270", "_s")]}
 PARTS.update({k: (None, True, tos.StorageClassType.Storage_Class_Standard) for k in BUNDLES})
 
 mimetypes.add_type("image/webp", ".webp")
@@ -58,7 +58,7 @@ def bundle_items(part):
         for name in sorted(os.listdir(f"{ROOT}/{src}")):
             if name.endswith(".webp"):
                 files[name[:-5] + suffix + ".webp"] = f"{ROOT}/{src}/{name}"
-    manifest = {"pack": part.rsplit("/", 1)[1], "files": {}}
+    manifest = {"version": part.rsplit("/", 1)[1], "files": {}}
     for name, path in sorted(files.items()):
         data = open(path, "rb").read()
         manifest["files"][name] = {"md5": hashlib.md5(data).hexdigest(), "bytes": len(data)}
@@ -68,7 +68,7 @@ def bundle_items(part):
 
 
 def local_items(part):
-    """产出 (远端 key, 本地路径, 取内容函数)。"""
+    """产出 (远端 key, 本地路径, 取内容函数)。git 里跟踪的文件（脚本、文档、提示词）不传。"""
     if part in BUNDLES:
         yield from bundle_items(part)
         return
@@ -84,7 +84,12 @@ def local_items(part):
                 continue
             path = f"{d}/{name}"
             rel = os.path.relpath(path, f"{ROOT}/{src}")
+            if os.path.relpath(path, ROOT) in TRACKED:
+                continue
             yield f"{part}/{rel}", path, lambda p=path: open(p, "rb").read()
+
+
+TRACKED = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split())
 
 
 def remote_etags(client, bucket, part):
@@ -100,7 +105,6 @@ def remote_etags(client, bucket, part):
 
 def pull(client, bucket, parts):
     """TOS → 本地：只拉缺的或内容不同的；git 里跟踪的文件（脚本、文档）以本地为准，不覆盖。"""
-    tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split())
     todo = []
     for part in parts:
         src = PARTS[part][0]
@@ -109,7 +113,7 @@ def pull(client, bucket, parts):
         for k, etag in remote_etags(client, bucket, part).items():
             rel = os.path.join(src, k[len(part) + 1:])
             path = f"{ROOT}/{rel}"
-            if rel in tracked:
+            if rel in TRACKED:
                 continue
             if os.path.isfile(path) and hashlib.md5(open(path, "rb").read()).hexdigest() == etag:
                 continue
@@ -208,7 +212,7 @@ def main():
     elif extra:
         print("远端多余文件未删除，需要时加 --delete")
 
-    print(f"表情包清单：https://{bucket}.{env['TOS_ENDPOINT']}/expr/{EXPR_PACK}/manifest.json")
+    print(f"表情包清单：https://{bucket}.{env['TOS_ENDPOINT']}/expr/{EXPR_VERSION}/manifest.json")
 
 
 if __name__ == "__main__":

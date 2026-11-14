@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""记下官网素材是从 App 的哪个提交出的：BUILD.json，随素材一起传到 TOS site/<app>/BUILD.json。
+"""记下官网素材是从 App 的哪个提交出的：build.json，随素材一起传到 TOS site/<app>/build.json。
 
-  python3 tool/stamp.py <app> <part> <App 仓库路径> <输出目录> [键=值 ...]
+  python3 tool/site/stamp.py <app> <part> <App 仓库路径> <输出目录> [键=值 ...]
 
-<part> 是 demo / shots / art / promo；先读 TOS 上现有的那份，只覆盖这一个 part，写到 <输出目录>/BUILD.json。
-App 仓库的 `tool/site.sh` 每步结束时调用。
+<part> 是 demo / shots / art / promo；先读 TOS 上现有的那份，只覆盖这一个 part，写到 <输出目录>/build.json。
+`./tool/otter site` 每步结束时调用。
 """
 
 import json
@@ -15,7 +15,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 PARTS = ("demo", "shots", "art", "promo")
 
 
@@ -35,7 +35,7 @@ def version(repo):
 def remote(app):
     media = json.loads((ROOT / "family.json").read_text())["family"]["media"].replace("{app}", app)
     try:
-        with urllib.request.urlopen(media + "BUILD.json", timeout=10) as r:
+        with urllib.request.urlopen(media + "build.json", timeout=10) as r:
             return json.loads(r.read())
     except Exception:
         return {"app": app, "parts": {}}
@@ -44,7 +44,7 @@ def remote(app):
 def main():
     if len(sys.argv) < 5 or sys.argv[2] not in PARTS:
         sys.exit(__doc__)
-    app, part, repo, out = sys.argv[1], sys.argv[2], Path(sys.argv[3]).resolve(), Path(sys.argv[4]) / "BUILD.json"
+    app, part, repo, out = sys.argv[1], sys.argv[2], Path(sys.argv[3]).resolve(), Path(sys.argv[4]) / "build.json"
     data = remote(app)
     entry = {
         "version": version(repo),
@@ -60,7 +60,7 @@ def main():
     data["parts"] = {k: data["parts"][k] for k in PARTS if k in data["parts"]}
     out.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     flag = "（有未提交改动）" if entry["dirty"] else ""
-    print(f"==> BUILD.json  {part} ← {entry['branch']}@{entry['commit']} v{entry['version']}{flag}")
+    print(f"==> build.json  {part} ← {entry['branch']}@{entry['commit']} v{entry['version']}{flag}")
 
 
 if __name__ == "__main__":

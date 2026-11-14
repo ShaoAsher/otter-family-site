@@ -38,7 +38,7 @@ const I = (n, cls = 'i') => `<svg class="${cls}" viewBox="0 0 24 24">${P[n]}</sv
 
 /* ── 表情（家族 120；全量动图，减弱动效时用 _s 静帧） ───────── */
 const ANIM = new Set('happy laugh smile cheer great proud love shy calm relief sleepy nap goodnight morning cry sad scared shock bashful angry pout speechless hi bye ok please thanks hug friends solo coop wave salute gg welcome sorry start loading victory defeat rank highlight gacha queue grind focus rage win lose pause retry quest bath stroll sport movie music story night clear weekend clean outfit sleep drink relax rot sick study think write read busy deadline done review note ask idea plan meeting overtime cook cafe milktea eat burger noodles rice dessert fruit tea feast snack hungry yum travel hike beach mountain city photo souvenir luggage sunset camping map arrive jog stretch yoga ball sweat heal rain snow wind birthday celebrate lucky'.split(' '));
-const ex = (n, still) => (ANIM.has(n) && !still && !RM() ? `https://otter-family-site.tos-cn-beijing.volces.com/expr/3/${n}.webp` : `https://otter-family-site.tos-cn-beijing.volces.com/expr/3/${n}_s.webp`);
+const ex = (n, still) => (ANIM.has(n) && !still && !RM() ? `https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/${n}.webp` : `https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/${n}_s.webp`);
 
 /* ── 状态 ─────────────────────────────────────────────── */
 const PRESETS = {

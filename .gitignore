@@ -1,7 +1,7 @@
 .DS_Store
 __pycache__/
-# 素材库大文件只在 TOS（brand/、backup/），本地用 otter_family/source/sync_tos.py --pull 拉
+# 素材库大文件只在 TOS（brand/、backup/expr/、backup/source/），本地用 otter_family/source/sync_tos.py --pull 拉
 otter_family/brand/
-otter_family/webp/
+otter_family/expr/
 otter_family/source/still/
 otter_family/source/video/

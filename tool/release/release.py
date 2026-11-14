@@ -2,14 +2,14 @@
 """水獭家族统一发布安装包：国内 TOS + 海外 GitHub Release，两处齐了再切换官网与 App 的下载版本。
 
   source ~/.config/devkeys/env.sh        # 提供 TOS_AK / TOS_SK / TOS_BUCKET / TOS_REGION / TOS_ENDPOINT
-  python3 tool/release.py publish <app> <版本> 文件...   # 上传到两处；全平台齐了就切换
-  python3 tool/release.py mirror  <app> <版本>           # 把 GitHub 上已有的包（Windows CI 传的）补到 TOS，齐了就切换
-  python3 tool/release.py status  [app]                  # 各 App 当前下载版本，以及该版本各平台在两处是否都在
-  python3 tool/release.py site    <app> <目录>           # 官网素材同步到 TOS site/<app>/（App 的 tool/site.sh 调用）
+  ./tool/otter publish <app> <版本> 文件...   # 上传到两处；全平台齐了就切换
+  ./tool/otter mirror  <app> <版本>           # 把 GitHub 上已有的包（Windows CI 传的）补到 TOS，齐了就切换
+  ./tool/otter status  [app]                  # 各 App 当前下载版本，以及该版本各平台在两处是否都在
+  python3 tool/release/release.py site <app> <目录>     # 官网素材同步到 TOS site/<app>/（./tool/otter site 调用）
 
 <app> 是 family.json 里 apps 的键（git / tools / …）；文件名必须是该 App `download.files` 里的某个值。
 GitHub Release 建在本仓（ShaoAsher/otter-family-site），标签 `<app>-v<版本>`，不标记为 latest。
-TOS 路径 `release/<app>/<版本>/<文件名>`，公共读。
+TOS 路径 `release/<app>/v<版本>/<文件名>`，公共读。
 「切换」= 改 family.json 的 `download.version`（必要时同步 `latest`），并把 family.json 推到 TOS；
 之后提交 family.json 并推 main（README「分支与上线」），Pages 上的那份才会更新。
 
@@ -35,7 +35,7 @@ import tos  # noqa: E402
 mimetypes.add_type("image/webp", ".webp")
 mimetypes.add_type("text/vtt", ".vtt")
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "family.json"
 REPO = "ShaoAsher/otter-family-site"
 
@@ -72,7 +72,7 @@ def tos_client():
 
 
 def tos_key(app, version, name):
-    return f"release/{app}/{version}/{name}"
+    return f"release/{app}/v{version}/{name}"
 
 
 def tos_has(client, bucket, key):
@@ -143,7 +143,7 @@ def switch(cfg, app, version, client, bucket):
         print(f"还缺 {len(lack)} 个，暂不切换下载版本：")
         for n, w in lack:
             print(f"  {w:6} {n}")
-        print(f"补齐后再跑：python3 tool/release.py mirror {app} {version}")
+        print(f"补齐后再跑：./tool/otter mirror {app} {version}")
         return
     if a["download"].get("version") == version:
         print(f"下载版本已是 {version}")

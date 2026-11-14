@@ -4,7 +4,7 @@
   python3 source/brand_build.py
 
 母版 brand/master/（只改这里）：
-  icon_<app>.png     三端图标母版（深底方块 + 圆盘 + 水獭 + 徽章）。三张共用同一模板：深底、圆盘大小、
+  <app>.png          三端图标母版（深底方块 + 圆盘 + 水獭 + 徽章）。三张共用同一模板：深底、圆盘大小、
                      水獭、光晕、徽章位置与大小完全一致，只换圆盘渐变（配色见 README）与徽章图形
   silhouette.png     透明底水獭剪影
   ip_full.png、ip_half.png   立绘（造型参考，不参与生成）
@@ -264,7 +264,7 @@ def main() -> None:
 
     for app, kind in APPS.items():
         out = f"{BRAND}/{app}"
-        tile = full_bleed(Image.open(f"{MASTER}/icon_{app}.png"))
+        tile = full_bleed(Image.open(f"{MASTER}/{app}.png"))
         mark, otter_layer, badge_layer = mark_and_layers(tile)
         write(rounded(tile.resize((512, 512), Image.LANCZOS), 512 * RADIUS), f"{out}/icon.png")
         write(mark, f"{out}/mark.png", 512)

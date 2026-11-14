@@ -15,7 +15,7 @@
       "https://shaoasher.github.io/otter-family-site/family.json"
     ],
     "releases": {
-      "cn": "https://otter-family-site.tos-cn-beijing.volces.com/release/{app}/{version}/{file}",
+      "cn": "https://otter-family-site.tos-cn-beijing.volces.com/release/{app}/v{version}/{file}",
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     }

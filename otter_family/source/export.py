@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """表情导出：source/still/*.jpg + source/video/*.mp4（绿幕）→ webp/ 下透明 WebP
 
-  webp/still_{1080,540,270}/、webp/anim_{540,270}/ + webp/manifest.json
+  expr/still_{1080,540,270}/、expr/anim_{540,270}/ + expr/manifest.json
 
 用法：python3 source/export.py [key ...]   # 不带参数则处理全部；已存在且比源新的会跳过；结束后刷新 manifest
 """
@@ -15,7 +15,7 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 SRC = os.path.dirname(os.path.abspath(__file__))
-WEBP = f"{os.path.dirname(SRC)}/webp"
+WEBP = f"{os.path.dirname(SRC)}/expr"
 RAW_STILL = f"{SRC}/still"
 RAW_ANIM = f"{SRC}/video"
 STILL_DIRS = {s: f"{WEBP}/still_{s}" for s in (1080, 540, 270)}

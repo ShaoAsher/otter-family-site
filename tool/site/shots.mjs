@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // 官网截图：无头 Chrome 打开 App 的交互原型（?embed&nosplash），按 #win 窗口区域截图，cwebp 转 WebP。
-// 视口 1282×802、DPR 2，窗口 1280×800 → 2560×1600。各 App 的 tool/site.sh shots 调用。
+// 视口 1282×802、DPR 2，窗口 1280×800 → 2560×1600。./tool/otter site shots 调用。
 //
-//   node tool/shots.mjs <原型 index.html> <清单.json> <输出目录>
+//   node tool/site/shots.mjs <原型 index.html> <清单.json> <输出目录>
 //
 // 清单：[[文件名, 查询参数, 载入后执行的脚本?, 额外等待毫秒?], …]，文件名不带扩展名。
 // 需要 Google Chrome 与 cwebp。
@@ -13,7 +13,7 @@ import { join, resolve } from 'node:path';
 
 const [page, list, out] = process.argv.slice(2);
 if (!page || !list || !out) {
-  console.error('用法：node tool/shots.mjs <原型 index.html> <清单.json> <输出目录>');
+  console.error('用法：node tool/site/shots.mjs <原型 index.html> <清单.json> <输出目录>');
   process.exit(1);
 }
 const PAGE = 'file://' + resolve(page);

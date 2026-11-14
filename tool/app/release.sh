@@ -1,36 +1,39 @@
 #!/usr/bin/env bash
-# 水獭家族 macOS App 共用发版：打包（默认公证）后交给 tool/release.py 上传（国内 TOS + 海外 GitHub Release）。
-# 在 App 根目录执行（App 的 tool/release.sh 会转到这里），App 标识与产物名读 otter.json。
+# 水獭家族 macOS App 共用发版：打包（默认公证）后交给 tool/release/release.py 上传（国内 TOS + 海外 GitHub Release）。
+# 在 App 根目录执行 ./tool/otter release，App 标识与产物名读 otter.json 的 id、package.file。
 #
 # 用法：
-#   ./tool/release.sh                  # 编译 + 打包 + 上传（默认公证）
-#   ./tool/release.sh --skip-build     # 跳过编译，用已有 Release 产物
-#   ./tool/release.sh --no-notarize    # 不签名公证（仅自测）
-#   ./tool/release.sh --zip-only       # 只上传 ZIP
-#   ./tool/release.sh --use-dist       # 不再打包，直接上传 dist 里最新的已公证产物（含 Windows 包）
+#   ./tool/otter release                  # 编译 + 打包 + 上传（默认公证）
+#   ./tool/otter release --skip-build     # 跳过编译，用已有 Release 产物
+#   ./tool/otter release --no-notarize    # 不签名公证（仅自测）
+#   ./tool/otter release --zip-only       # 只上传 ZIP
+#   ./tool/otter release --use-dist       # 不再打包，直接上传 dist 里本版本的已公证产物（含 Windows 包）
 #
 # 需已 gh auth login，并先 source ~/.config/devkeys/env.sh（TOS_*）。
 #
 # 只能在 git-flow 的发布分支 release 上运行：工作区干净、已与 origin/release 同步、
 # 当前提交已打 v<版本> 标签（git flow release finish 会打）。自测可设 OTTER_RELEASE_ANY_BRANCH=1 跳过。
 #
-# 上传、校验与切换下载版本都在 tool/release.py：两处都齐了才会把 family.json 的 download.version
-# 切到这一版。Windows 包由 CI 传到 GitHub（标签 <app>-v<版本>），之后 release.py mirror 补到 TOS；
-# 一条龙见 tool/ship.py。
+# dist 里按名字取本版本的包：<file>-<版本>-macos-<架构>.dmg/.zip、<file>-<版本>-windows-x64.zip/-setup.exe，
+# 上传时改成固定名 <file>-macos-<架构>.dmg 等。
+#
+# 上传、校验与切换下载版本都在 tool/release/release.py：两处都齐了才会把 family.json 的 download.version
+# 切到这一版。Windows 包由 CI 传到 GitHub（标签 <app>-v<版本>），之后 otter mirror 补到 TOS；
+# 一条龙见 ./tool/otter ship。
 
 set -euo pipefail
 
 ROOT="$PWD"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 FAMILY="$(cd "$HERE/../.." && pwd)"
-RELEASE_PY="$FAMILY/tool/release.py"
+RELEASE_PY="$FAMILY/tool/release/release.py"
 PACKAGE_SH="$HERE/package.sh"
 [[ -f "$ROOT/otter.json" && -f "$ROOT/pubspec.yaml" ]] || {
   echo "要在 App 根目录执行（需要 otter.json 与 pubspec.yaml）：$ROOT" >&2
   exit 1
 }
-APP="$(python3 -c 'import json; print(json.load(open("otter.json"))["app"])')"
-ARTIFACT="$(python3 -c 'import json; print(json.load(open("otter.json"))["mac"]["artifact"])')"
+APP="$(python3 -c 'import json; print(json.load(open("otter.json"))["id"])')"
+FILE="$(python3 -c 'import json; print(json.load(open("otter.json"))["package"]["file"])')"
 VERSION="$(awk '/^version:/ {print $2; exit}' pubspec.yaml | tr -d '"' | cut -d+ -f1)"
 TAG="v${VERSION}"
 
@@ -104,10 +107,10 @@ case "$HOST_ARCH" in
   *) ARCH_LABEL="$HOST_ARCH" ;;
 esac
 
-STABLE_DMG="${ARTIFACT}-macos-${ARCH_LABEL}.dmg"
-STABLE_ZIP="${ARTIFACT}-macos-${ARCH_LABEL}.zip"
-STABLE_WIN="${ARTIFACT}-windows-x64.zip"
-STABLE_WIN_SETUP="${ARTIFACT}-windows-x64-setup.exe"
+STABLE_DMG="${FILE}-macos-${ARCH_LABEL}.dmg"
+STABLE_ZIP="${FILE}-macos-${ARCH_LABEL}.zip"
+STABLE_WIN="${FILE}-windows-x64.zip"
+STABLE_WIN_SETUP="${FILE}-windows-x64-setup.exe"
 
 if [[ "$USE_DIST" -eq 1 ]]; then
   echo "==> 使用 dist 现有产物 v${VERSION} → ${APP}-v${VERSION}"
@@ -117,20 +120,20 @@ else
 fi
 
 DIST_DIR="$ROOT/dist"
-# 取本次最新产物（按修改时间）
-DMG_SRC="$(ls -t "$DIST_DIR"/*-macos-*.dmg 2>/dev/null | head -1 || true)"
-ZIP_SRC="$(ls -t "$DIST_DIR"/*-macos-*.zip 2>/dev/null | head -1 || true)"
-WIN_SRC="$(ls -t "$DIST_DIR"/*-windows-x64-*.zip 2>/dev/null | head -1 || true)"
-WIN_SETUP_SRC="$(ls -t "$DIST_DIR"/*-windows-x64-*-setup.exe 2>/dev/null | head -1 || true)"
+exists() { [[ -f "$1" ]] && echo "$1" || true; }
+DMG_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.dmg")"
+ZIP_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.zip")"
+WIN_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-windows-x64.zip")"
+WIN_SETUP_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-windows-x64-setup.exe")"
 
 if [[ "$ZIP_ONLY" -eq 0 ]]; then
   [[ -n "$DMG_SRC" && -f "$DMG_SRC" ]] || {
-    echo "找不到 DMG 产物（$DIST_DIR）" >&2
+    echo "找不到 DMG：$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.dmg" >&2
     exit 1
   }
 fi
 [[ -n "$ZIP_SRC" && -f "$ZIP_SRC" ]] || {
-  echo "找不到 ZIP 产物（$DIST_DIR）" >&2
+  echo "找不到 ZIP：$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.zip" >&2
   exit 1
 }
 
@@ -178,4 +181,4 @@ shopt -u nullglob
 rm -rf "$DIST_DIR/stage-macos" "$DIST_DIR/dmg-root"
 
 echo ""
-echo "发布完成。两处是否齐全：python3 \"$RELEASE_PY\" status ${APP}"
+echo "发布完成。两处是否齐全：./tool/otter status ${APP}"
