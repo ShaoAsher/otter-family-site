@@ -32,13 +32,16 @@ def base_url():
 
 
 def fetch(url):
-    for i in range(3):
+    for i in range(5):
         try:
-            with urllib.request.urlopen(url, timeout=60) as r:
+            with urllib.request.urlopen(url, timeout=120) as r:
                 return r.read()
         except OSError:
-            if i == 2:
+            if i == 4:
                 raise
+            import time
+
+            time.sleep(3 * (i + 1))
 
 
 def md5(path):
