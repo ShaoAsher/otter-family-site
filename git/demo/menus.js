@@ -264,13 +264,13 @@ document.addEventListener('click',e=>{
 const GROUPS=[['水獭家族','#FFC23D'],['工作','#6CC9FF'],['个人','#B8A8FF']];
 /* [名称, 路径, 分支, 分组, 颜色, 未提交, 领先, 落后, 最近提交, 时间, 最近打开, 置顶, 路径OK] */
 const RLIST=[
-  ['OtterGitApp','~/Desktop/code/OtterGit/OtterGitApp','dev','水獭家族','var(--accent)',12,1,0,'feat(home): 首页与继续工作卡片','刚刚','刚刚',1,1],
-  ['GameTime','~/Desktop/code/GameTime','feat/local-only','水獭家族','#5CD6E6',4,0,0,'fix(profile): 去掉重复头像','3 天前','1 小时前',1,1],
-  ['MacToolsApp','~/Desktop/code/MacToolsApp','dev','水獭家族','#FFB04A',0,0,0,'fix(macos): 菜单栏后台刷新','3 天前','昨天',0,0],
-  ['ottergit-site','~/Desktop/code/OtterGit/ottergit-site','main','水獭家族','#FFD66B',0,0,3,'docs: 下载页','1 周前','3 天前',0,1],
-  ['shawWeb','~/Desktop/code/shawWeb','main','个人','#4FD79A',0,0,0,'添加人格图片','2026-04-10','上周',0,1],
+  ['OtterGitApp','~/code/OtterGit/OtterGitApp','dev','水獭家族','var(--accent)',12,1,0,'feat(home): 首页与继续工作卡片','刚刚','刚刚',1,1],
+  ['GameTime','~/code/GameTime','feat/local-only','水獭家族','#5CD6E6',4,0,0,'fix(profile): 去掉重复头像','3 天前','1 小时前',1,1],
+  ['MacToolsApp','~/code/MacToolsApp','dev','水獭家族','#FFB04A',0,0,0,'fix(macos): 菜单栏后台刷新','3 天前','昨天',0,0],
+  ['ottergit-site','~/code/OtterGit/ottergit-site','main','水獭家族','#FFD66B',0,0,3,'docs: 下载页','1 周前','3 天前',0,1],
+  ['homepage','~/code/homepage','main','个人','#4FD79A',0,0,0,'添加人格图片','2026-04-10','上周',0,1],
   ['dotfiles','~/dotfiles','main','个人','#FF8AB8',2,0,0,'zsh: 换提示符','2 周前','2 周前',0,1],
-  ['otter_icons','~/Desktop/code/otter_icons','main','个人','#B8A8FF',0,0,0,'表情 v3','5 天前','5 天前',0,1],
+  ['icons','~/code/icons','main','个人','#B8A8FF',0,0,0,'表情 v3','5 天前','5 天前',0,1],
   ['ark-console','~/work/ark-console','release/3.2','工作','#6CC9FF',7,2,1,'feat(billing): 拆分账单','昨天','今天',0,1],
   ['ark-sdk-go','~/work/ark-sdk-go','main','工作','#78C8FF',0,0,0,'chore: v1.8.0','4 天前','4 天前',0,1],
   ['design-tokens','~/work/design-tokens','feat/amber','工作','#FFC23D',1,0,0,'tokens: 琥珀金','2 小时前','2 小时前',0,1]
@@ -375,7 +375,7 @@ function form(icon,color,title,sub,body,acts,w=480){openDlg(`<div class="dh"><di
 const selBtn=(id,v,ic='branch')=>`<button class="sel" data-sel="${id}">${svg(ic)}<span class="v">${v}</span>${svg('chev','cv2')}</button>`;
 const ck=(l,on,sm='')=>`<label class="ckr"><span class="chk ${on?'on':''}"></span>${l}${sm?`<small>${sm}</small>`:''}</label>`;
 const rcards=(name,list,on)=>`<div class="rcards" data-rc="${name}">${list.map(([k,b,s,code,dz])=>`<div class="rcard ${k===on?'on':''} ${dz?'dz':''}" data-k="${k}"><span class="rd"></span><div><b>${b}${code?`<code>${code}</code>`:''}</b><span>${s}</span></div></div>`).join('')}</div>`;
-const OPTS={branch:['dev','main','release','feat/windows','origin/main','origin/feat/tray'],remote:['origin','upstream'],path:['~/Desktop/code','~/work','~/Documents/GitHub']};
+const OPTS={branch:['dev','main','release','feat/windows','origin/main','origin/feat/tray'],remote:['origin','upstream'],path:['~/code','~/work','~/Documents/GitHub']};
 function wireForm(){
   scrim.querySelectorAll('.ckr').forEach(l=>l.onclick=()=>l.querySelector('.chk').classList.toggle('on'));
   scrim.querySelectorAll('[data-rc]').forEach(g=>g.querySelectorAll('.rcard').forEach(c=>c.onclick=()=>{g.querySelectorAll('.rcard').forEach(x=>x.classList.toggle('on',x===c));g.dispatchEvent(new CustomEvent('pick',{detail:c.dataset.k}))}));
@@ -395,15 +395,15 @@ function progress(stepsList,onEnd){const body=scrim.querySelector('.db');const a
 Object.assign(DLG,{
   repos:()=>go('repos'),
   new:()=>menuAt(document.querySelector('[data-dlg=new]'),M.add()),
-  clone:()=>{form('clone','var(--memory)','克隆远程仓库','支持 HTTPS / SSH',`<div class="field"><label>仓库地址</label><input id="cUrl" value="https://github.com/shaw/otter-notes.git"></div>
-    <div class="row2"><div class="field"><label>保存到</label>${selBtn('path','~/Desktop/code','folder')}</div><div class="field"><label>文件夹名</label><input id="cName" value="otter-notes"></div></div>
+  clone:()=>{form('clone','var(--memory)','克隆远程仓库','支持 HTTPS / SSH',`<div class="field"><label>仓库地址</label><input id="cUrl" value="https://github.com/shaw/notes.git"></div>
+    <div class="row2"><div class="field"><label>保存到</label>${selBtn('path','~/code','folder')}</div><div class="field"><label>文件夹名</label><input id="cName" value="notes"></div></div>
     ${ck('递归克隆子模块',true,'--recurse-submodules')}${ck('浅克隆，只取最近 1 个提交',false,'--depth 1')}${ck('克隆后立即打开',true)}`,
     `<button class="ghost rp" data-close>取消</button><button class="slab rp" id="cGo">克隆</button>`);
     document.getElementById('cUrl').oninput=e=>{document.getElementById('cName').value=(e.target.value.split('/').pop()||'').replace(/\.git$/,'')};
-    document.getElementById('cGo').onclick=()=>{const cn=document.getElementById('cName').value||'otter-notes';progress(['连接远端','接收对象 1,284 / 1,284','解析差异','检出 main'],()=>{const n=cn;RLIST.unshift([n,'~/Desktop/code/'+n,'main','个人','#4FD79A',0,0,0,'Initial commit','刚刚','刚刚',0]);done('克隆完成',n+' 已添加到「仓库」','great');if(S.page==='repos')go('repos')})}},
-  scan:()=>{form('scan','var(--alt)','扫描文件夹','找出目录里所有的 Git 仓库',`<div class="field"><label>扫描目录</label>${selBtn('path','~/Desktop/code','folder')}</div><div class="row2"><div class="field"><label>最大深度</label>${seg(['2','3','5'],'3')}</div><div class="field"><label>跳过</label>${ck('node_modules / build',true)}</div></div>`,
+    document.getElementById('cGo').onclick=()=>{const cn=document.getElementById('cName').value||'notes';progress(['连接远端','接收对象 1,284 / 1,284','解析差异','检出 main'],()=>{const n=cn;RLIST.unshift([n,'~/code/'+n,'main','个人','#4FD79A',0,0,0,'Initial commit','刚刚','刚刚',0]);done('克隆完成',n+' 已添加到「仓库」','great');if(S.page==='repos')go('repos')})}},
+  scan:()=>{form('scan','var(--alt)','扫描文件夹','找出目录里所有的 Git 仓库',`<div class="field"><label>扫描目录</label>${selBtn('path','~/code','folder')}</div><div class="row2"><div class="field"><label>最大深度</label>${seg(['2','3','5'],'3')}</div><div class="field"><label>跳过</label>${ck('node_modules / build',true)}</div></div>`,
     `<button class="ghost rp" data-close>取消</button><button class="slab rp" id="sGo">开始扫描</button>`);
-    document.getElementById('sGo').onclick=()=>progress(['遍历目录','识别 .git','读取分支与状态'],()=>{const body=scrim.querySelector('.db');body.innerHTML=`<div class="note">${svg('check')}找到 7 个仓库，其中 5 个还没添加</div><div class="found">${[['otter-notes','~/Desktop/code/otter-notes',1],['Game','~/Desktop/code/Game',1],['Apple','~/Desktop/code/Apple',1],['_gen_raw','~/Desktop/code/_gen_raw',0],['legacy-site','~/Desktop/code/old/legacy-site',1],['OtterGitApp','已在列表中',-1],['GameTime','已在列表中',-1]].map(([n,p,s])=>`<label class="ckr" style="${s<0?'opacity:.45;pointer-events:none':''}"><span class="chk ${s>0?'on':''}"></span><b style="color:var(--hi);font-weight:600">${n}</b><small style="margin-left:auto;font-family:var(--mono)">${p}</small></label>`).join('')}</div>`;
+    document.getElementById('sGo').onclick=()=>progress(['遍历目录','识别 .git','读取分支与状态'],()=>{const body=scrim.querySelector('.db');body.innerHTML=`<div class="note">${svg('check')}找到 7 个仓库，其中 5 个还没添加</div><div class="found">${[['notes','~/code/notes',1],['Game','~/code/Game',1],['Apple','~/code/Apple',1],['scratch','~/code/scratch',0],['blog','~/code/old/blog',1],['OtterGitApp','已在列表中',-1],['GameTime','已在列表中',-1]].map(([n,p,s])=>`<label class="ckr" style="${s<0?'opacity:.45;pointer-events:none':''}"><span class="chk ${s>0?'on':''}"></span><b style="color:var(--hi);font-weight:600">${n}</b><small style="margin-left:auto;font-family:var(--mono)">${p}</small></label>`).join('')}</div>`;
       scrim.querySelector('.da').innerHTML='<button class="ghost rp" data-close>取消</button><button class="slab rp" id="sAdd">添加 4 个仓库</button>';wireForm();scrim.querySelector('.da [data-close]').onclick=closeDlg;document.getElementById('sAdd').onclick=()=>done('已添加 4 个仓库','可以在「仓库」里给它们分组','great')})},
   merge:()=>{form('merge','var(--alt)','合并分支','把另一个分支的提交合进当前分支',`<div class="row2"><div class="field"><label>合并</label>${selBtn('branch','feat/windows')}</div><div class="field"><label>到当前分支</label><button class="sel" disabled style="opacity:.7">${svg('branch')}<span class="v">dev</span></button></div></div>
     <div class="note">${svg('info')}将合入 3 个提交 · 5 个文件 · 无冲突（已预演）</div>

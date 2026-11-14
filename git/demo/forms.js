@@ -133,7 +133,7 @@ function clone(){
   const S={sub:true,shallow:false,open:true};
   const api=opShell({icon:'clone',color:'var(--memory)',title:'克隆远程仓库',sub:'粘贴地址就行，HTTPS 和 SSH 都可以',go:'克隆',idle:'粘贴一个仓库地址',
     body:`<div class="slabel" style="margin-top:2px">仓库地址</div><div class="egroup pad">${efield('地址',ein('',{id:'clUrl',ph:'https://github.com/owner/repo.git'}))}<div class="op-msg" id="clMsg"></div></div>
-      <div class="slabel">保存到</div><div class="egroup pad"><div class="erow2">${efield('位置',selBtn('path','~/Desktop/code','folder'))}${efield('文件夹名',ein('',{id:'clName',ph:'repo'}))}</div><div class="op-msg" id="clPath"></div></div>
+      <div class="slabel">保存到</div><div class="egroup pad"><div class="erow2">${efield('位置',selBtn('path','~/code','folder'))}${efield('文件夹名',ein('',{id:'clName',ph:'repo'}))}</div><div class="op-msg" id="clPath"></div></div>
       <div class="slabel">选项</div><div class="egroup" id="clTg">${tg('sub',1,'同时克隆子模块','仓库里引用的其它仓库一起拉下来 · <code>--recurse-submodules</code>')}${tg('shallow',0,'浅克隆','只取最近 1 个提交，大仓库更快 · <code>--depth 1</code>')}${tg('open',1,'克隆后立即打开','完成后直接进入这个仓库')}</div>${cmdBar('clCmd')}`,
     done:()=>({scene:'clone',title:'克隆完成',sub:(document.getElementById('clName').value||'repo')+' 已添加到「仓库」'})});
   const url=document.getElementById('clUrl'),nm=document.getElementById('clName');let touched=false;
@@ -145,26 +145,26 @@ function clone(){
     else if(!p)msg(m,'err','看起来不像仓库地址，应该类似 <b>https://github.com/owner/repo.git</b>');
     else{const [hn,hc]=HOST[p.host]||[p.host,'var(--accent)'];msg(m,'ok',`<span class="op-host" style="--c:${hc}">${hn}</span><span class="op-host">${p.proto}</span><b>${esc(p.owner)}/${esc(p.repo)}</b>${p.proto==='SSH'?'<span style="color:var(--lo)">· 需要已配置 SSH 密钥</span>':''}`)}
     if(p&&!touched)nm.value=p.repo;
-    const n=nm.value.trim(),dir=selVal('path'),pm=document.getElementById('clPath'),exists=['otter-notes','OtterGitApp'].includes(n);
+    const n=nm.value.trim(),dir=selVal('path'),pm=document.getElementById('clPath'),exists=['notes','OtterGitApp'].includes(n);
     if(!n)msg(pm,'','');else if(exists)msg(pm,'err',`<b>${dir}/${esc(n)}</b> 已经存在，换个文件夹名`);else msg(pm,'',`会放在 <b>${dir}/${esc(n)}</b>`);
     const ok=!!p&&!!n&&!exists;api.set(ok,ok?`${p.owner}/${p.repo} → ${dir}/${n}`:'');
     setCmd('clCmd',[`git clone${S.sub?' --recurse-submodules':''}${S.shallow?' --depth 1':''} ${url.value.trim()||'<地址>'} ${dir}/${n||'<文件夹>'}`])};
   url.oninput=refresh;nm.oninput=()=>{touched=!!nm.value;refresh()};wireTgs(document.getElementById('clTg'),S,refresh);watchSel(refresh);refresh();setTimeout(()=>url.focus(),60);
-  const old=api.save.onclick;api.save.onclick=()=>{const n=nm.value.trim();progress(['连接远端','接收对象 1,284 / 1,284','解析差异','检出 main'],()=>{if(typeof RLIST!=='undefined')RLIST.unshift([n,'~/Desktop/code/'+n,'main','个人','#4FD79A',0,0,0,'Initial commit','刚刚','刚刚',0]);old()})};
+  const old=api.save.onclick;api.save.onclick=()=>{const n=nm.value.trim();progress(['连接远端','接收对象 1,284 / 1,284','解析差异','检出 main'],()=>{if(typeof RLIST!=='undefined')RLIST.unshift([n,'~/code/'+n,'main','个人','#4FD79A',0,0,0,'Initial commit','刚刚','刚刚',0]);old()})};
 }
 
 /* 扫描文件夹 */
 function scan(){
   const S={skip:true};let depth='3';
   const api=opShell({icon:'scan',color:'var(--alt)',title:'扫描文件夹',sub:'找出目录里所有的 Git 仓库，一次加进来',go:'开始扫描',idle:'选好目录就能开始',
-    body:`<div class="slabel" style="margin-top:2px">范围</div><div class="egroup pad">${efield('扫描目录',selBtn('path','~/Desktop/code','folder'))}${efield('最大深度',`<div class="tmode" id="scDepth">${['2','3','5'].map(d=>`<button class="${d===depth?'on':''}" data-d="${d}">${d} 层</button>`).join('')}</div>`,{small:'层数越多越慢'})}</div>
+    body:`<div class="slabel" style="margin-top:2px">范围</div><div class="egroup pad">${efield('扫描目录',selBtn('path','~/code','folder'))}${efield('最大深度',`<div class="tmode" id="scDepth">${['2','3','5'].map(d=>`<button class="${d===depth?'on':''}" data-d="${d}">${d} 层</button>`).join('')}</div>`,{small:'层数越多越慢'})}</div>
       <div class="egroup" id="scTg" style="margin-top:12px">${tg('skip',1,'跳过依赖和构建目录','node_modules、build、.dart_tool 里不会有你的仓库')}</div>`,
     done:()=>({scene:'clone',title:'已添加仓库',sub:'可以在「仓库」里给它们分组'})});
   const upd=()=>api.set(true,`扫描 ${selVal('path')} · 最多 ${depth} 层${S.skip?' · 跳过依赖目录':''}`);
   document.querySelectorAll('#scDepth button').forEach(b=>b.onclick=()=>{depth=b.dataset.d;document.querySelectorAll('#scDepth button').forEach(x=>x.classList.toggle('on',x===b));upd()});
   wireTgs(document.getElementById('scTg'),S,upd);watchSel(upd);upd();
   api.save.onclick=()=>progress(['遍历目录','识别 .git','读取分支与状态'],()=>{
-    const F=[['otter-notes','~/Desktop/code/otter-notes',1],['Game','~/Desktop/code/Game',1],['Apple','~/Desktop/code/Apple',1],['_gen_raw','~/Desktop/code/_gen_raw',0],['legacy-site','~/Desktop/code/old/legacy-site',1],['OtterGitApp','已在列表中',-1],['GameTime','已在列表中',-1]];
+    const F=[['notes','~/code/notes',1],['Game','~/code/Game',1],['Apple','~/code/Apple',1],['scratch','~/code/scratch',0],['blog','~/code/old/blog',1],['OtterGitApp','已在列表中',-1],['GameTime','已在列表中',-1]];
     const Sel={};F.forEach(([n,,s])=>Sel[n]=s>0);
     scrim.querySelector('.ebody').innerHTML=`<div class="fl-ok" style="margin-top:4px">${svg('check')}<span>找到 ${F.length} 个仓库，其中 ${F.filter(f=>f[2]>=0).length} 个还没添加</span></div>
       <div class="slabel">要添加的<span class="lk" id="scAll">全选</span></div><div class="egroup op-found" id="scF">${F.map(([n,p,s])=>tg(n,s>0,n,p,s<0)).join('')}</div>`;
@@ -278,7 +278,7 @@ function rebaseI(){
 }
 
 /* 重命名仓库 / 新建分组：小表单也走同一套 */
-function rename(){const r=typeof RLIST!=='undefined'?RLIST[RV.sel]:['otter-notes','~/Desktop/code/otter-notes'];
+function rename(){const r=typeof RLIST!=='undefined'?RLIST[RV.sel]:['notes','~/code/notes'];
   const api=opShell({icon:'edit',color:'var(--accent)',title:'重命名仓库',sub:'只改列表里显示的名字，不动文件夹',go:'保存',idle:'',w:480,
     body:`<div class="egroup pad" style="margin-top:4px">${efield('显示名称',ein(r[0],{id:'rnName',mono:0}))}${efield('文件夹',`<div class="op-fixed">${svg('folder')}${esc(r[1])}</div>`,{small:'不会改动'})}</div>`,
     done:()=>({scene:'info',title:'已重命名',sub:document.getElementById('rnName').value.trim()})});
@@ -295,7 +295,7 @@ function newGroup(){const C=['#FFC23D','#6CC9FF','#B8A8FF','#4FD79A','#FF8AB8','
 function initRepo(){
   const S={readme:true,ign:true,commit:true},ST=new Set(['macOS']);let br='main';
   const api=opShell({icon:'plus',color:'var(--accent)',title:'新建本地仓库',sub:'在电脑上建一个新的 Git 仓库',go:'创建仓库',idle:'选好位置、起个名字',
-    body:`<div class="slabel" style="margin-top:2px">放在哪里</div><div class="egroup pad"><div class="erow2">${efield('位置',selBtn('path','~/Desktop/code','folder'))}${efield('仓库名',ein('',{id:'irName',ph:'my-project'}))}</div><div class="op-msg" id="irMsg"></div></div>
+    body:`<div class="slabel" style="margin-top:2px">放在哪里</div><div class="egroup pad"><div class="erow2">${efield('位置',selBtn('path','~/code','folder'))}${efield('仓库名',ein('',{id:'irName',ph:'my-project'}))}</div><div class="op-msg" id="irMsg"></div></div>
       <div class="slabel">默认分支</div><div class="egroup pad">${ein('main',{id:'irBr'})}<div class="op-chips" style="margin-top:10px" id="irBrs">${['main','master','develop'].map(b=>`<span class="op-chip" data-b="${b}">${b}</span>`).join('')}</div></div>
       <div class="slabel">初始内容</div><div class="egroup" id="irTg">${tg('readme',1,'添加 README.md','写上仓库名，首页一眼认出')}${tg('ign',1,'添加 .gitignore','按项目类型忽略依赖和构建产物')}
       <div class="op-fold" id="irSt" style="padding:0 14px 10px"><div class="op-chips" style="margin:0">${['macOS','Flutter','Node','Python','Java','Go','Rust','IDE'].map(x=>`<span class="op-chip" data-s="${x}" style="font-family:-apple-system">${x}</span>`).join('')}</div></div>${tg('commit',1,'创建首个提交','把上面的文件提交为 Initial commit')}</div>${cmdBar('irCmd')}`,
@@ -316,7 +316,7 @@ function initRepo(){
 
 /* 添加本地仓库：选文件夹后自动识别（分支 / 远程 / 子目录 / 不是仓库可顺手初始化），可选分组 */
 function addLocal(){
-  const S={init:true};let g='';const PICK=['~/Desktop/code/otter-notes','~/Desktop/code/OtterGitApp/lib','~/Downloads/demo'];let i=-1;
+  const S={init:true};let g='';const PICK=['~/code/notes','~/code/OtterGitApp/lib','~/Downloads/demo'];let i=-1;
   const api=opShell({icon:'folder',color:'var(--accent)',title:'添加本地仓库',sub:'把电脑上已有的仓库加到列表',go:'添加',idle:'选一个文件夹',
     body:`<div class="slabel" style="margin-top:2px">文件夹</div><div class="egroup pad"><div class="op-fixed" id="alPick" style="cursor:pointer;border-style:solid;background:var(--field)">${svg('folder')}<span id="alPath" style="flex:1">点这里选择文件夹</span><b style="font:600 12px -apple-system;color:var(--mid)">选择…</b></div><div id="alSt"></div></div>
       <div id="alInit" class="op-fold off"><div class="egroup" style="margin-top:12px" id="alTg">${tg('init',1,'初始化为 Git 仓库','在这里执行 git init，再加到列表')}</div></div>
@@ -327,7 +327,7 @@ function addLocal(){
     document.getElementById('alInit').classList.toggle('off',i!==2);
     if(i<0){st.innerHTML='<div class="op-msg" style="margin:10px 0 0">点「选择…」找到仓库所在的文件夹（每点一次换一个示例）</div>'}
     else if(i===0){ok=true;st.innerHTML=`<div class="fl-ok" style="margin-top:12px">${svg('branch')}<span>Git 仓库 · 当前分支 <b>main</b> · 远程 <b>origin</b></span></div>`;cmd=[`git -C ${p} status`]}
-    else if(i===1){ok=true;st.innerHTML=`<div class="fl-ok" style="margin-top:12px">${svg('branch')}<span>Git 仓库 · 当前分支 <b>dev</b><br>这是仓库里的子文件夹，将添加整个仓库 <b>~/Desktop/code/OtterGitApp</b></span></div>`;cmd=['git -C ~/Desktop/code/OtterGitApp status']}
+    else if(i===1){ok=true;st.innerHTML=`<div class="fl-ok" style="margin-top:12px">${svg('branch')}<span>Git 仓库 · 当前分支 <b>dev</b><br>这是仓库里的子文件夹，将添加整个仓库 <b>~/code/OtterGitApp</b></span></div>`;cmd=['git -C ~/code/OtterGitApp status']}
     else{ok=S.init;go='初始化并添加';st.innerHTML=`<div class="fl-ok w" style="margin-top:12px">${svg('info')}<span>这个文件夹还不是 Git 仓库</span></div>`;cmd=[S.init&&`git init ${p}`,`git -C ${p} status`]}
     if(i>=0)document.getElementById('alPath').textContent=p;
     api.set(ok,ok?p.split('/').pop()+(g?` · ${g}`:''):'',{label:go});setCmd('alCmd',cmd.length?cmd:['git -C <文件夹> status'])};
@@ -380,7 +380,7 @@ function worktree(){
   let how='new';let touched=false;
   const api=opShell({icon:'work',color:'var(--accent)',title:'添加工作树',sub:'同一个仓库再检出一份，两个分支同时开着',go:'添加',idle:'填好分支和文件夹',
     body:`<div class="slabel" style="margin-top:2px">用哪个分支</div><div class="egroup" id="wtHow">${opt('new',1,'新建分支','从 dev 开出一个新分支放进去')}<div class="op-fold" id="wtNew" style="padding:0 14px 12px 44px">${ein('',{id:'wtBr',ph:'feat/hotfix'})}</div>${opt('old',0,'已有分支','检出一个现成的分支（不能是已经开着的）')}<div class="op-fold off" id="wtOld" style="padding:0 14px 12px 44px">${selBtn('branch','release')}</div></div>
-      <div class="slabel">放在哪里</div><div class="egroup pad"><div class="erow2">${efield('位置',selBtn('path','~/Desktop/code','folder'))}${efield('文件夹名',ein('',{id:'wtDir',ph:'OtterGitApp-hotfix'}))}</div><div class="op-msg" id="wtMsg"></div></div>${cmdBar('wtCmd')}`,
+      <div class="slabel">放在哪里</div><div class="egroup pad"><div class="erow2">${efield('位置',selBtn('path','~/code','folder'))}${efield('文件夹名',ein('',{id:'wtDir',ph:'OtterGitApp-hotfix'}))}</div><div class="op-msg" id="wtMsg"></div></div>${cmdBar('wtCmd')}`,
     done:()=>({scene:'branch',title:'工作树已添加',sub:document.getElementById('wtDir').value.trim()})});
   const br=document.getElementById('wtBr'),dir=document.getElementById('wtDir');
   const refresh=()=>{const b=how==='new'?br.value.trim():selVal('branch'),m=document.getElementById('wtMsg');

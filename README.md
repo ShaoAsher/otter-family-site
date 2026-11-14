@@ -1,6 +1,6 @@
 # 水獭官网
 
-水獭家族的全部官网都在这一个仓库：家族首页、各成员的产品官网与在线试用的页面代码、三端共用的公共配置 `family.json`、发布脚本，以及家族素材库 `otter_family/` 的脚本与文档。
+水獭家族的全部官网都在这一个仓库：家族首页、各成员的产品官网与在线试用的页面代码、三端共用的公共配置 `family.json`、三端共用的工具链（`tool/`）与 Dart 代码（`packages/otter_kit`），以及家族素材库 `otter_family/` 的脚本与文档。
 
 **仓库只放代码和文本，图片、视频、安装包都在 TOS，覆盖即生效。**
 
@@ -29,11 +29,17 @@
 | `<app>/index.html`、`<app>/site.js` | 产品官网页面与它自己的动效、交互（手写） |
 | `<app>/demo/`、`<app>/promo.zh.vtt` | **产物**：在线试用的页面代码、宣传片字幕（字幕要和页面同域），App 仓库 `./tool/site.sh` 写入 |
 | `tool/release.py` | 发布：安装包（TOS + GitHub Release）、官网素材同步到 TOS（`site`），见「安装包」「产品官网素材」 |
-| `tool/shots.mjs`、`tool/stamp.py` | 截图引擎、写 `BUILD.json`，供各 App 的 `site.sh` 调用 |
+| `tool/ship.py` | 一条命令发版：检查 changelog → App 的 `release.sh` → 等 Windows CI → `mirror`，见「安装包」 |
+| `tool/site.py` | 产品官网素材（demo / shots / art / promo），App 的 `tool/site.sh` 转到这里 |
+| `tool/mac/` | macOS 打包、公证、发版（`package.sh`、`notarize.sh`、`release.sh`、`tsa_relay.py`），App 的同名脚本转到这里 |
+| `tool/assets.py` | 小獭表情包：按 App 的 `otter.json` 从 TOS 拉 / 校验，见「表情包」 |
+| `tool/ci_upload.py` | Windows CI 把包传到本仓 GitHub Release |
+| `tool/shots.mjs`、`tool/stamp.py` | 截图引擎、写 `BUILD.json`，供 `site.py` 调用 |
+| `packages/otter_kit/` | 三端共用 Dart 包（家族公共配置 `FamilyConfig`），见「共用代码」 |
 | `.github/workflows/pages.yml` | 推 `main` 后把网页目录部署到 Pages |
 | `otter_family/` | 家族素材库的脚本、文档、提示词（大文件在 TOS），见 [`otter_family/README.md`](otter_family/README.md) |
 
-TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分享图、`shots/` 截图、`demo/expr/` 表情、`BUILD.json`（每类素材由 App 的哪个分支、提交、版本出的）。
+TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分享图、`shots/` 截图、`BUILD.json`（每类素材由 App 的哪个分支、提交、版本出的）。在线试用的表情直接用公开表情包 `bundle/expr/<包版本>/`，不另存。
 
 ## 分支与上线
 
@@ -80,23 +86,71 @@ TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分�
 4. 在本仓跑 `python3 tool/release.py mirror git <版本>`，把 Windows 包补到 TOS。两处、全平台都齐了，脚本才把 `download.version` 切到这一版并把 `family.json` 推到 TOS。
 5. 提交 `family.json`，按「分支与上线」推 `main`。
 
+第 2～5 步可以一条命令：`python3 tool/ship.py ../OtterGit/OtterGitApp --push`（先检查 changelog，跑 App 的 `release.sh`，等 Windows CI 传完再 `mirror`，提交并推 `family.json`；`--no-wait` 不等 CI，`--use-dist` 用 dist 里已有的包）。
+
 `python3 tool/release.py status` 查看各 App 当前下载版本在两处是否齐全。脚本需要 `gh auth login` 和 `source ~/.config/devkeys/env.sh`（TOS_*）。
 
 ## 产品官网素材
 
-都在 App 仓库里出，一个命令，各 App 同名同参数（先 `source ~/.config/devkeys/env.sh`）：
+都在 App 仓库里出，一个命令，各 App 同名同参数（先 `source ~/.config/devkeys/env.sh`）。App 的 `tool/site.sh` 转到本仓 `tool/site.py`，App 的差异写在它的 `otter.json` 的 `site` 段：
 
 ```bash
-./tool/site.sh demo      # 在线试用：页面代码 → 本仓 <app>/demo/，表情 → TOS demo/expr/
+./tool/site.sh demo      # 在线试用：原型（除 *.md）→ 本仓 <app>/demo/，表情改指 TOS 表情包
 ./tool/site.sh shots     # 截图：原型按 App 的 site/shots.json 截 → TOS shots/（tool/shots.mjs，需 Chrome、cwebp）
-./tool/site.sh art       # 素材图：App 的 site/og.jpg、poster.jpg → TOS；字幕 promo.zh.vtt → 本仓 <app>/
-./tool/site.sh promo …   # 宣传片：压成 H.264 → TOS promo.mp4，字幕、封面更新到 App 的 site/ 再出 art
-./tool/site.sh all       # demo + shots + art（水獭 Git 有默认成片时再加 promo）
+./tool/site.sh art       # 素材图：制作工厂 <app>/out/ 的 og.jpg、poster.jpg → TOS；字幕 promo.zh.vtt → 本仓 <app>/
+./tool/site.sh promo …   # 宣传片：压成 H.264 → TOS promo.mp4，字幕、封面更新到工厂 <app>/out/ 再出 art
+./tool/site.sh all       # demo + shots + art（otter.json 配了默认成片且在时再加 promo）
 ```
 
 上传走 `tool/release.py site <app> <目录>`：按 MD5 只传变化的，子目录（`shots/`、`demo/`）里远端多出来的会删掉。只有 `demo` 和字幕会改本仓文件，要提交推 `main`；其余传完即生效。
 
-App 仓库的 `site/` 放这些素材的源：分享图 `og.jpg`（1200×630）、播放器封面 `poster.jpg`、字幕 `promo.zh.vtt`、截图清单 `shots.json`。宣传片工程各在 App 仓库（水獭 Git `promo-site/`，渲染后 `site.sh promo` 默认取 `promo-site/renders/`）。
+宣传片工程与成品（分享图 `og.jpg` 1200×630、播放器封面 `poster.jpg`、字幕 `promo.zh.vtt`）在本机的制作工厂 `otter-factory/<app>/`（与本仓同级，`OTTER_FACTORY` 可改，自己的本地 git，不推远端），App 仓库只留截图清单 `site/shots.json`。
+
+## 共用工具链
+
+App 仓库根目录的 `otter.json` 写这个 App 和别人不一样的地方，`tool/*.sh` 只是几行转发（本仓默认在 App 的 `../../otter-family-site`，`FAMILY_SITE` 可改）：
+
+```json
+{"app": "git",
+ "expr": {"pack": "3", "dir": "assets/otter/expr"},
+ "mac":  {"bundle": "水獭Git", "bundle_id": "…", "title": "…", "artifact": "OtterGit", "requires": "可选，安装说明多一行"},
+ "site": {"mockup": "docs/mockup", "shots": "site/shots.json", "promo": {"film": "…", "vtt": "…", "poster": "…"}}}
+```
+
+| App 里 | 转到本仓 | 做什么 |
+| --- | --- | --- |
+| `tool/assets.sh [pull\|check]` | `tool/assets.py` | 拉 / 校验小獭表情 |
+| `tool/package.sh` | `tool/mac/package.sh` | 拉表情 → `flutter build macos` → DMG + ZIP（`--notarize` 签名公证） |
+| `tool/notarize.sh` | `tool/mac/notarize.sh` | Developer ID 签名 + 公证（时间戳走 `tool/mac/tsa_relay.py` 中继） |
+| `tool/release.sh` | `tool/mac/release.sh` | 在 `release` 分支打包公证，交给 `tool/release.py publish` |
+| `tool/site.sh` | `tool/site.py` | 产品官网素材 |
+
+Windows 包在各 App 的 `.github/workflows/windows.yml` 出：先浅检出本仓的 `family.json` 与 `tool/`，用 `tool/assets.py` 拉表情、`tool/ci_upload.py` 传 Release。冒烟、安装器这些各 App 不同的步骤留在 App 自己的 workflow 里。
+
+## 表情包
+
+小獭表情不进 App 的 git。素材库按包版本把 270 尺寸的动图、静帧发到 TOS 公开目录 `bundle/expr/<包版本>/`（`<名>.webp` 动图、`<名>_s.webp` 静帧，`manifest.json` 记每个文件的 md5 与大小）：
+
+```bash
+cd otter_family && python3 source/sync_tos.py bundle   # 素材库 → TOS bundle/expr/<包版本>/（包版本见 sync_tos.py 的 EXPR_PACK）
+```
+
+App 按 `otter.json` 的 `expr.pack` 拉到 `expr.dir`：先进本机缓存 `~/.cache/otter-family/`（`OTTER_CACHE` 可改），按 md5 校验后复制，目标目录里多出来的 webp 会删掉。换表情 = 素材库出新包版本、App 改 `expr.pack`，旧包版本留在 TOS，老版本 App 照样能构建。
+
+## 共用代码
+
+`packages/otter_kit` 是三端共用的 Dart 包，目前是家族公共配置 `FamilyConfig`（读 `family.json`、版本比较）。App 用 git 依赖，钉在标签上：
+
+```yaml
+dependencies:
+  otter_kit:
+    git:
+      url: https://github.com/ShaoAsher/otter-family-site.git
+      path: packages/otter_kit
+      ref: kit-v1.0.0
+```
+
+改包：在 `packages/otter_kit` 里改、`flutter test`，升 `pubspec.yaml` 的版本，提交推 `main` 后打标签 `kit-v<版本>` 推上去，各 App 把 `ref` 改成新标签再 `flutter pub get`。本地联调可在 App 里临时加 `dependency_overrides: {otter_kit: {path: ../../otter-family-site/packages/otter_kit}}`，别提交。
 
 在线试用由官网用 iframe 嵌入，通过 `postMessage({type:'otter-demo', action, value})` 控制，演示回传 `{type:'otter-demo-state', …}`。参数：`?embed` 隐藏控制台并按 iframe 缩放，`&theme=day` 浅色，`&page=…` 起始页，`&nosplash` 跳过启动动画。
 
@@ -105,7 +159,7 @@ App 仓库的 `site/` 放这些素材的源：分享图 `og.jpg`（1200×630）�
 1. 在素材库生成该 App 的图标（`otter_family/source/brand_build.py`，生成后 `sync_tos.py brand` 传 TOS），拷 `brand/<app>/icon.png` 到 `shared/icons/<app>.png`。
 2. 在 `index.html` 的 `.members` 里复制一张 `<article class="member">`，`id` / `data-app` 填 `<app>`，配一个 `.m-<app>` 定义 `--c` / `--c2`（圆盘渐变，见素材库「三端与配色」）。
 3. 在 `family.json` 的 `apps` 里加一项；有安装包就写 `download`。
-4. 要独立官网就建 `<app>/`（`index.html`、`site.js`），引用 `../shared/vendor/`、`../shared/icons/`，页尾在 `site.js` 前挂 `<script src="../shared/family.js" data-app="<app>" defer>`，图片视频用 `data-media`；把目录加进 `pages.yml`；App 仓库照水獭工具的 `tool/site.sh` 与 `site/` 配一套。
+4. 要独立官网就建 `<app>/`（`index.html`、`site.js`），引用 `../shared/vendor/`、`../shared/icons/`，页尾在 `site.js` 前挂 `<script src="../shared/family.js" data-app="<app>" defer>`，图片视频用 `data-media`；把目录加进 `pages.yml`；App 仓库照水獭工具配 `otter.json`、`tool/*.sh` 转发与 `site/shots.json`。
 5. 首屏、标题、页脚都不写成员个数、不排成员图标，不用改。
 
 ## 从 App 跳进来

@@ -3,7 +3,7 @@
 
   source ~/.config/devkeys/env.sh   # 提供 TOS_AK / TOS_SK / TOS_BUCKET / TOS_REGION / TOS_ENDPOINT / TOS_CONTENT_KEY
   python3 source/sync_tos.py              # 全部同步
-  python3 source/sync_tos.py expr         # 只同步指定部分：config / brand / expr / backup（= backup/webp + backup/source）
+  python3 source/sync_tos.py expr         # 只同步指定部分：config / brand / expr / bundle / backup（= backup/webp + backup/source）
   python3 source/sync_tos.py --dry-run    # 只列出将要上传/删除的文件
   python3 source/sync_tos.py --delete     # 同时删除远端多余文件
   python3 source/sync_tos.py --reset-acl  # 按当前规则重设远端已有对象的读写权限
@@ -17,6 +17,10 @@
   expr/          公开读，webp/ 的 AES-256-GCM 加密副本，App 下载后用内置密钥解密
                  文件 = b"OTE1" + nonce(12) + 密文与 tag；nonce 由内容 HMAC 派生，同一文件每次加密结果一致
                  expr/manifest.json 为明文，path 指向 .bin
+  bundle/expr/<包版本>/
+                 公开读，App 内置的 270 档表情明文包：<key>.webp 动图 + <key>_s.webp 静帧 + manifest.json（md5）。
+                 App 构建前由 tool/assets.py 按 otter.json 拉取，官网在线试用直接引用；同一包版本发布后不再改，
+                 表情集换代就加新的包版本（EXPR_PACK）。
   backup/webp/   私有，低频存储（表情原文件备份）
   backup/source/ 私有，低频存储（母版备份）
 
@@ -48,6 +52,10 @@ PARTS = {
     "backup/webp": ("webp", False, False, tos.StorageClassType.Storage_Class_Ia),
     "backup/source": ("source", False, False, tos.StorageClassType.Storage_Class_Ia),
 }
+EXPR_PACK = "3"
+# 内置包：远端目录 -> [(本地目录, 文件名后缀)]，与 App 里 assets/otter/expr 的命名一致
+BUNDLES = {f"bundle/expr/{EXPR_PACK}": [("webp/anim_270", ""), ("webp/still_270", "_s")]}
+PARTS.update({k: (None, False, True, tos.StorageClassType.Storage_Class_Standard) for k in BUNDLES})
 
 mimetypes.add_type("image/webp", ".webp")
 mimetypes.add_type("application/json", ".json")
@@ -71,8 +79,26 @@ def enc_manifest(data):
     return json.dumps(m, ensure_ascii=False, indent=1).encode()
 
 
+def bundle_items(part):
+    files = {}
+    for src, suffix in BUNDLES[part]:
+        for name in sorted(os.listdir(f"{ROOT}/{src}")):
+            if name.endswith(".webp"):
+                files[name[:-5] + suffix + ".webp"] = f"{ROOT}/{src}/{name}"
+    manifest = {"pack": part.rsplit("/", 1)[1], "files": {}}
+    for name, path in sorted(files.items()):
+        data = open(path, "rb").read()
+        manifest["files"][name] = {"md5": hashlib.md5(data).hexdigest(), "bytes": len(data)}
+        yield f"{part}/{name}", path, lambda p=path: open(p, "rb").read()
+    body = json.dumps(manifest, ensure_ascii=False, indent=1).encode()
+    yield f"{part}/manifest.json", None, lambda: body
+
+
 def local_items(part, key):
     """产出 (远端 key, 本地路径, 取内容函数)。"""
+    if part in BUNDLES:
+        yield from bundle_items(part)
+        return
     src, encrypted, _, _ = PARTS[part]
     if os.path.isfile(f"{ROOT}/{src}"):
         path = os.path.normpath(f"{ROOT}/{src}")
@@ -110,7 +136,7 @@ def pull(client, bucket, parts):
     todo = []
     for part in parts:
         src, encrypted, _, _ = PARTS[part]
-        if encrypted or os.path.isfile(f"{ROOT}/{src}"):
+        if encrypted or src is None or os.path.isfile(f"{ROOT}/{src}"):
             continue
         for k, etag in remote_etags(client, bucket, part).items():
             rel = os.path.join(src, k[len(part) + 1:])

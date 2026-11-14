@@ -664,7 +664,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 <script>
 /* ═══ 小獭表情：场景池，不连续重复（与 App 的 OtterScene 同表） ═══ */
-const EXPR='https://otter-family-site.tos-cn-beijing.volces.com/site/git/demo/expr/';
+const EXPR='https://otter-family-site.tos-cn-beijing.volces.com/bundle/expr/3/';
 /* 水獭家族 120 表情：按 Git 动作语义挑——推送 = 拖箱出门、拉取 = 抵达、标签 = 纪念品、拣选 = 抽卡、变基整理 = 打扫 */
 const POOL={
   greetNight:['night','sleepy','goodnight','overtime'],greetMorning:['morning','hi','cafe','stretch'],greetDay:['happy','smile','focus','cafe','tea'],
@@ -766,10 +766,10 @@ const MOOD={
   busy:['busy','var(--memory)','正在与远程同步…']
 };
 const SIDE_REPOS=[
-  {name:'OtterGitApp',path:'~/Desktop/code/OtterGit/OtterGitApp',ok:1,cur:1,group:'工作',dirty:12,ahead:1},
-  {name:'GameTime',path:'~/Desktop/code/GameTime',ok:1,cur:0,group:'工作',dirty:4,ahead:0},
-  {name:'MacToolsApp',path:'~/Desktop/code/MacToolsApp',ok:0,cur:0,group:'工作',dirty:0,ahead:0},
-  {name:'shawWeb',path:'~/Sites/shawWeb',ok:1,cur:0,group:'个人',dirty:0,ahead:0}
+  {name:'OtterGitApp',path:'~/code/OtterGit/OtterGitApp',ok:1,cur:1,group:'工作',dirty:12,ahead:1},
+  {name:'GameTime',path:'~/code/GameTime',ok:1,cur:0,group:'工作',dirty:4,ahead:0},
+  {name:'MacToolsApp',path:'~/code/MacToolsApp',ok:0,cur:0,group:'工作',dirty:0,ahead:0},
+  {name:'homepage',path:'~/Sites/homepage',ok:1,cur:0,group:'个人',dirty:0,ahead:0}
 ];
 let sideFold={repos:0,local:0,remote:0,tags:0,stash:0,feat:0,g工作:0,g个人:0,origin:0};
 let sideQ='';
@@ -1039,7 +1039,7 @@ document.getElementById('bottomPane').addEventListener('click',e=>{
 document.getElementById('bottomPane').addEventListener('dblclick',e=>{const r=e.target.closest('[data-hf]');if(r)openViewer(CFILES[hsel],+r.dataset.hf,COMMITS[hsel][0])});
 
 /* ═══ 首页 ═══ */
-const REPOS=[['OtterGitApp','dev','刚刚 · feat(home): 首页与继续工作卡片','#FF8A3D',[['w','12 个未提交'],['u','↑1']],1],['GameTime','feat/local-only','3 天前 · fix(profile): 去掉重复头像','#6CC9FF',[['w','4 个未提交']],1],['MacToolsApp','dev','本地路径找不到了 · ~/Desktop/code/MacToolsApp','#B8A8FF',[['w','路径丢失']],0],['shawWeb','main','2026-04-10 · 添加人格图片','#4FD79A',[],1]];
+const REPOS=[['OtterGitApp','dev','刚刚 · feat(home): 首页与继续工作卡片','#FF8A3D',[['w','12 个未提交'],['u','↑1']],1],['GameTime','feat/local-only','3 天前 · fix(profile): 去掉重复头像','#6CC9FF',[['w','4 个未提交']],1],['MacToolsApp','dev','本地路径找不到了 · ~/code/MacToolsApp','#B8A8FF',[['w','路径丢失']],0],['homepage','main','2026-04-10 · 添加人格图片','#4FD79A',[],1]];
 document.getElementById('repoGrid').innerHTML=REPOS.map((r,i)=>`<div class="repo cardp rp ${r[5]?'':'miss'}" data-${r[5]?'go="files"':'relocate="'+r[0]+'"'} style="animation-delay:${.2+i*.06}s"><div class="hd"><div class="mg" style="background:${r[3]}">${r[0][0]}</div><div><div class="nm">${r[0]}</div><div class="bra">⎇ ${r[1]}</div></div></div><div class="last" style="position:relative">${r[2]}</div><div style="position:relative">${r[4].map(p=>`<span class="pill ${p[0]}">${p[1]}</span>`).join('')||'<span class="pill u" style="opacity:.7">工作区干净</span>'}${r[5]?'':`<button class="ghost rp sm" style="margin-top:8px;height:28px" data-relocate="${r[0]}">改路径关联…</button>`}</div></div>`).join('');
 document.getElementById('startGrid').innerHTML=[['clone','克隆仓库','从 GitHub / GitLab / Gitee 克隆远程仓库','var(--memory)'],['folder','添加本地仓库','添加电脑上已有的 Git 仓库','var(--accent)'],['scan','扫描文件夹','在目录中批量查找 Git 仓库','var(--alt)'],['plus','新建仓库','在空文件夹中执行 git init','var(--ok)']].map(([ic,b,s,c],i)=>`<div class="st4 cardp rp" style="animation:rise .62s var(--rise) ${.45+i*.06}s both"><div class="ib" style="background:color-mix(in srgb,${c} 16%,transparent);color:color-mix(in srgb,${c} var(--tt),var(--hi));position:relative">${svg(ic)}</div><b style="position:relative">${b}</b><span style="position:relative">${s}</span></div>`).join('');
 function renderHome(){
@@ -1061,7 +1061,7 @@ const DLG={
   branch:()=>openDlg(`<div class="dh"><div class="blk" style="background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)">${svg('branch')}</div><h3>新建分支<small>基于 dev 创建</small></h3><button class="ib" data-close>${svg('x')}</button></div><div class="db" style="width:440px"><div class="field"><label>分支名</label><input value="feat/ambient-backdrop" autofocus></div><div class="field"><label>起点</label><input value="dev · a1f3c9e feat(home): 首页"></div><label style="display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mid)"><span class="chk on"></span>创建后切换过去</label></div><div class="da"><button class="ghost rp" data-close>取消</button><button class="slab rp" data-close>创建分支</button></div>`),
   repos:()=>DLG.branch(),new:()=>DLG.branch(),
   relocate:(name='MacToolsApp')=>{
-    openDlg(`<div class="dh"><div class="blk" style="background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger)">${svg('folder')}</div><h3>重新关联本地路径<small>${name} 的文件夹找不到了</small></h3><button class="ib" data-close>${svg('x')}</button></div><div class="db" style="width:480px"><p style="font-size:13px;color:var(--mid);line-height:1.55;margin-bottom:12px">仓库可能被移走或重命名了。选一个仍是 Git 仓库的文件夹接上；对话和记忆会跟着走。如果选的不是仓库，也可以把整个文件夹搬过去。</p><div class="field"><label>原来的路径</label><input value="~/Desktop/code/${name}" disabled style="opacity:.7"></div><div class="field"><label>新的本地路径</label><input id="relPath" value="~/Documents/code/${name}" autofocus></div><button class="ghost rp" style="height:32px;margin-bottom:8px">选择文件夹…</button></div><div class="da"><button class="ghost rp" data-close>取消</button><button class="slab rp" id="relocateOk">关联到这里</button></div>`);
+    openDlg(`<div class="dh"><div class="blk" style="background:color-mix(in srgb,var(--danger) 16%,transparent);color:var(--danger)">${svg('folder')}</div><h3>重新关联本地路径<small>${name} 的文件夹找不到了</small></h3><button class="ib" data-close>${svg('x')}</button></div><div class="db" style="width:480px"><p style="font-size:13px;color:var(--mid);line-height:1.55;margin-bottom:12px">仓库可能被移走或重命名了。选一个仍是 Git 仓库的文件夹接上；对话和记忆会跟着走。如果选的不是仓库，也可以把整个文件夹搬过去。</p><div class="field"><label>原来的路径</label><input value="~/code/${name}" disabled style="opacity:.7"></div><div class="field"><label>新的本地路径</label><input id="relPath" value="~/Documents/code/${name}" autofocus></div><button class="ghost rp" style="height:32px;margin-bottom:8px">选择文件夹…</button></div><div class="da"><button class="ghost rp" data-close>取消</button><button class="slab rp" id="relocateOk">关联到这里</button></div>`);
     document.getElementById('relocateOk').onclick=()=>{
       const path=document.getElementById('relPath').value;
       const r=SIDE_REPOS.find(x=>x.name===name);if(r){r.ok=1;r.path=path}

@@ -173,7 +173,7 @@ function repoSettings(){
   const remoteRows=()=>RMT.map(([n,u],i)=>`<div class="erow" data-r="${i}"><div class="b" style="${tint('var(--memory)')}">${svg('cloud')}</div><div class="tx"><b>${n}</b><span>${u}</span></div><div class="ops">${eib('copy','复制地址')}${eib('edit','编辑地址','','data-ed')}${eib('trash','移除远程','dz','data-rm')}</div></div>`).join('')+`<div class="eadd" id="rAdd"><span class="pl">${svg('plus')}</span>添加远程仓库</div>`;
   edShell('folder','var(--accent)','仓库设置','OtterGitApp',`
     <div class="slabel">位置</div>
-    <div class="egroup"><div class="erow"><div class="b" style="${tint('var(--accent)')}">${svg('folder')}</div><div class="tx"><b>本地路径</b><span>~/Desktop/code/OtterGit/OtterGitApp</span></div><div class="ops keep">${eib('copy','复制路径')}${eib('finder','在访达中显示')}</div></div></div>
+    <div class="egroup"><div class="erow"><div class="b" style="${tint('var(--accent)')}">${svg('folder')}</div><div class="tx"><b>本地路径</b><span>~/code/OtterGit/OtterGitApp</span></div><div class="ops keep">${eib('copy','复制路径')}${eib('finder','在访达中显示')}</div></div></div>
     <div class="slabel">远程仓库<span class="c">${RMT.length} 个</span></div>
     <div class="egroup" id="rList">${remoteRows()}</div>
     <div class="slabel">提交身份<span class="c">只对本仓库生效</span></div>
