@@ -418,7 +418,7 @@ def fit_template(im: Image.Image, px: int) -> Image.Image:
     return status_bar_glyph(im, px)
 
 
-def desktop(out: str, hero: Image.Image, badge_layer: Image.Image) -> None:
+def desktop(out: str, hero: Image.Image, badge_layer: Image.Image, tray_rgb: tuple[int, int, int]) -> None:
     icons = f"{out}/macos/AppIcon.appiconset"
     big = hero
     for n in (16, 32, 64, 128, 256, 512, 1024):
@@ -432,7 +432,10 @@ def desktop(out: str, hero: Image.Image, badge_layer: Image.Image) -> None:
     }, f"{icons}/Contents.json")
 
     # 菜单栏 / 托盘：角标剪影专用（18pt 加粗），与 Dock 图标水獭区分。
+    # Windows 托盘不做模板着色，墨色在深色任务栏上看不见，改用品牌主色。
     status_tpl = status_bar_glyph(badge_layer, 256)
+    tray = Image.new("RGBA", status_tpl.size, tray_rgb + (0,))
+    tray.putalpha(status_tpl.getchannel("A"))
     menubar = f"{out}/macos/MenuBarIcon.imageset"
     for sc in (1, 2):
         write(status_bar_glyph(badge_layer, 18 * sc), f"{menubar}/menubar_{18 * sc}.png")
@@ -445,7 +448,7 @@ def desktop(out: str, hero: Image.Image, badge_layer: Image.Image) -> None:
     os.makedirs(f"{out}/windows", exist_ok=True)
     hero.resize((256, 256), Image.LANCZOS).save(
         f"{out}/windows/app_icon.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64, 128, 256)])
-    status_tpl.save(
+    tray.save(
         f"{out}/windows/tray_icon.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64)])
 
 
@@ -514,7 +517,7 @@ def main() -> None:
         write(mark, f"{out}/mark.png", 512)
         write(logo_badge_plate(badge, 512, app=app), f"{out}/logo_badge.png", 512)
         if kind == "desktop":
-            desktop(out, hero, badge)
+            desktop(out, hero, badge, colors[app][0])
         else:
             mobile(out, hero, mark, colors[app][0])
         print(app, "ok")
