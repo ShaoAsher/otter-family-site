@@ -3,7 +3,7 @@
 
   source ~/.config/devkeys/env.sh        # 提供 TOS_AK / TOS_SK / TOS_BUCKET / TOS_REGION / TOS_ENDPOINT
   ./tool/otter publish <app> <版本> 文件...   # 上传到两处；全平台齐了就切换
-  ./tool/otter mirror  <app> <版本>           # 把 GitHub 上已有的包（Windows CI 传的）补到 TOS，齐了就切换
+  ./tool/otter mirror  <app> <版本> [--force] # 把 GitHub 上已有的包（Windows CI 传的）补到 TOS，齐了就切换；--force 覆盖同版本旧 Windows 包
   ./tool/otter status  [app]                  # 各 App 当前下载版本，以及该版本各平台在两处是否都在
   python3 tool/release/release.py site <app> <目录>     # 官网素材同步到 TOS site/<app>/（./tool/otter site 调用）
 
@@ -189,14 +189,16 @@ def publish(app, version, paths):
     switch(cfg, app, version, client, bucket)
 
 
-def mirror(app, version):
+def mirror(app, version, force=False):
     cfg = load()
     client, bucket = tos_client()
     on_gh = gh_assets(app, version)
     if on_gh is None:
         sys.exit(f"GitHub 上没有 Release {tag(app, version)}")
-    todo = [n for n in app_of(cfg, app)["download"]["files"].values()
-            if n in on_gh and not tos_has(client, bucket, tos_key(app, version, n))]
+    # --force：同版本重出了 Windows 包时，覆盖 TOS 上的旧包（macOS 包由 publish 直传，不在这里）
+    todo = [n for k, n in app_of(cfg, app)["download"]["files"].items()
+            if n in on_gh and (force and k.startswith("windows")
+                               or not tos_has(client, bucket, tos_key(app, version, n)))]
     with tempfile.TemporaryDirectory() as tmp:
         for n in todo:
             print(f"==> GitHub → TOS  {n}")
@@ -266,8 +268,8 @@ def main():
     argv = sys.argv[1:]
     if len(argv) >= 4 and argv[0] == "publish":
         publish(argv[1], argv[2], argv[3:])
-    elif len(argv) == 3 and argv[0] == "mirror":
-        mirror(argv[1], argv[2])
+    elif len(argv) in (3, 4) and argv[0] == "mirror" and argv[3:] in ([], ["--force"]):
+        mirror(argv[1], argv[2], force=argv[3:] == ["--force"])
     elif len(argv) == 3 and argv[0] == "site":
         site(argv[1], argv[2])
     elif argv[:1] == ["status"] and len(argv) <= 2:
