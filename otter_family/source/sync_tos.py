@@ -36,6 +36,8 @@ import tos  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKIP = {".DS_Store", "__pycache__"}
+# 只本地保留、不上传 TOS（例如 patch 前的母版快照）
+SKIP_DIRS = {"__pycache__", "master._bak"}
 # 远端目录 -> (本地目录, 是否公开, 存储类型)
 PARTS = {
     "config": ("../family.json", True, tos.StorageClassType.Storage_Class_Standard),
@@ -78,7 +80,7 @@ def local_items(part):
         yield f"{part}/{os.path.basename(path)}", path, lambda: open(path, "rb").read()
         return
     for d, dirs, files in os.walk(f"{ROOT}/{src}"):
-        dirs[:] = [x for x in dirs if x not in SKIP]
+        dirs[:] = [x for x in dirs if x not in SKIP and x not in SKIP_DIRS]
         for name in files:
             if name in SKIP or name.startswith("."):
                 continue
