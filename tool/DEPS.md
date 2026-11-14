@@ -11,6 +11,8 @@ otter-family-site/          family.json、tool/、packages/otter_kit、官网 HT
          ├── TOS site/        官网媒体
          └── TOS release/     安装包
 
+App 分支约定：[`tool/BRANCHES.md`](BRANCHES.md)（统一 `main`）。
+
 ../otter-git | otter-tools    otter.json → 家族 tool/otter（otter_proxy.sh）
          │
          ├── assets/brand/    本产品图标 + common 剪影（构建需要）
