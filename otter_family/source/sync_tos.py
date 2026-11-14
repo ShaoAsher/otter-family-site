@@ -36,7 +36,6 @@ import tos  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SKIP = {".DS_Store", "__pycache__"}
-# 只本地保留、不上传 TOS（例如 patch 前的母版快照）
 SKIP_DIRS = {"__pycache__", "master._bak"}
 # 远端目录 -> (本地目录, 是否公开, 存储类型)
 PARTS = {
