@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>水獭工具 2.0 · 看看水面，就懂电脑｜macOS 和 Windows 上的电脑管家</title>
+  <title>水獭工具 3.0｜会陪你照顾电脑的电脑管家 · macOS / Windows</title>
   <meta name="description"
-    content="水獭工具（OtterTools）2.0：macOS 和 Windows 上的电脑管家。首页是一片水，水位是磁盘、浑浊是垃圾、波速是 CPU、水温是内存；体检、清理、加速、隐私和生活向小工具都在一个窗口里，删东西之前小獭一定先问你。免费，不用注册，官网可直接试用。" />
+    content="水獭工具（OtterTools）3.0：macOS 和 Windows 上的电脑管家。系统垃圾清理、内存压力、启动项、应用卸载、隐私权限、截图 OCR，专业功能一样不少；首页是一片水，水位是磁盘、浑浊是垃圾、波速是 CPU、水温是内存。早安、饭点、内存告急、深夜加班，小獭都用表情回应你，删东西之前一定先问你。免费，不用注册，官网可直接试用。" />
   <meta name="theme-color" content="#0B0A14" />
-  <meta property="og:title" content="水獭工具 2.0 · 看看水面，就懂电脑" />
-  <meta property="og:description" content="macOS 和 Windows 上的电脑管家。水位是磁盘、浑浊是垃圾、波速是 CPU、水温是内存；清理都进废纸篓，小獭动手之前先问你。免费，不用注册。" />
+  <meta property="og:title" content="水獭工具 3.0 · 会陪你照顾电脑的电脑管家" />
+  <meta property="og:description" content="专业的电脑管家，也是一只替你看着电脑的小水獭。系统垃圾、内存压力、启动项、隐私权限一眼看清；清理都进废纸篓，小獭动手之前先问你。免费，不用注册。" />
   <meta property="og:image" content="https://otter-family-site.tos-cn-beijing.volces.com/site/tools/og.jpg" />
   <meta property="og:url" content="https://shaoasher.github.io/otter-family-site/tools/" />
   <meta property="og:type" content="website" />
@@ -30,7 +30,7 @@
     }
 
     /* ==================================================================
-       水獭工具 2.0 官网
+       水獭工具 3.0 官网
        画布与 App 深色主题同源（#0B0A14 + 獭橙 #FA5A1E → #FFB04A），水面状态色与 App 一致：
        平静 水蓝 · 忙碌 暖橙 · 告急 珊瑚 · 正常 薄荷。
        间距 4/8/12/16/24/32/48/64/96/128 · 字号 12/14/16/18/22/28/40/56/76
@@ -1008,8 +1008,67 @@
 
     .foot p { margin: 0 0 0 auto; font-size: 13px; color: var(--mute); text-align: right; }
 
+    /* ── 陪伴：一天里的小獭 ── */
+    .day { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: stretch; }
+    .day-list { position: relative; display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .day-list::before { content: ""; position: absolute; left: 55px; top: 14px; bottom: 14px; width: 1px; background: var(--line); }
+    .day-list button {
+      position: relative; display: grid; grid-template-columns: 44px 22px 1fr; align-items: center;
+      width: 100%; padding: 10px 12px 10px 0; border: 0; border-radius: var(--r-sm);
+      background: none; text-align: left; cursor: pointer; color: var(--mute); transition: background-color .2s, color .2s;
+    }
+    .day-list time { font: 600 12px/1 var(--mono); text-align: right; padding-right: 6px; }
+    .day-list i {
+      justify-self: center; width: 9px; height: 9px; border-radius: 50%; background: var(--bg);
+      border: 2px solid var(--line-2); transition: border-color .2s, background-color .2s, transform .2s;
+    }
+    .day-list b { font-weight: 600; font-size: 15px; }
+    .day-list button[aria-selected="true"] { background: var(--card-2); color: var(--ink); }
+    .day-list button[aria-selected="true"] i { border-color: var(--c, var(--accent)); background: var(--c, var(--accent)); transform: scale(1.25); }
+    @media (hover: hover) { .day-list button:hover { color: var(--ink); } }
+    .day-card {
+      position: relative; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); align-items: center;
+      padding: clamp(24px, 3.4vw, 44px); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
+      background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--c, var(--accent)) 16%, transparent), transparent 60%), var(--card);
+    }
+    .day-face {
+      display: grid; place-items: center; aspect-ratio: 1; border-radius: 50%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--c, var(--accent)) 22%, transparent), transparent);
+    }
+    .day-face img { width: 100%; height: auto; }
+    .day-cmd {
+      display: inline-flex; margin: 0 0 14px; padding: 5px 10px; border-radius: 999px; background: rgba(0, 0, 0, .28);
+      border: 1px solid var(--line); font: 500 12.5px/1.2 var(--mono); color: var(--c, var(--accent));
+    }
+    .day-card h3 { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.25; }
+    .day-card .say { margin: 12px 0 0; font-size: 16.5px; color: var(--body); }
+    .day-pool { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 0; padding: 0; list-style: none; }
+    .day-pool li { padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); font: 500 12px/1.4 var(--mono); color: var(--mute); transition: color .2s, border-color .2s; }
+    .day-pool li.on { color: var(--ink); border-color: var(--c, var(--accent)); }
+    .day-note { margin: 18px 0 0; font-size: 13.5px; color: var(--mute); }
+
+    /* ── 专业功能：术语 + 讲解 + 小獭一句 ── */
+    .terms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .term { display: flex; flex-direction: column; padding: 22px 24px 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--card); transition: border-color .2s, background-color .2s; }
+    @media (hover: hover) { .term:hover { border-color: var(--line-2); background: var(--card-2); } }
+    .term .k { font: 600 12px/1.2 var(--mono); letter-spacing: .04em; color: var(--accent); }
+    .term h3 { margin-top: 8px; font-size: 18px; }
+    .term p { margin: 8px 0 0; font-size: 14.5px; color: var(--body); }
+    .otter-say { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--mute); }
+    .term .otter-say { margin-top: auto; padding-top: 16px; font-size: 13.5px; color: var(--mute); }
+    .term .otter-say img { flex: none; width: 34px; height: 34px; }
+    .feat .otter-say { margin: 18px 0 0; }
+    .feat .otter-say img { flex: none; width: 40px; height: 40px; }
+
     /* ── 响应式 ── */
     @media (max-width: 960px) {
+      .day, .day-card { grid-template-columns: 1fr; }
+      .day-list { grid-template-columns: repeat(5, 1fr); }
+      .day-list::before, .day-list i { display: none; }
+      .day-list button { grid-template-columns: 1fr; gap: 4px; padding: 10px; text-align: center; }
+      .day-list time { text-align: center; padding: 0; }
+      .day-face { max-width: 180px; margin: 0 auto; }
+      .terms { grid-template-columns: 1fr 1fr; }
       .states { grid-template-columns: 1fr; }
       .sticky { display: none; }
       .step { min-height: 0; opacity: 1; padding: 0 0 56px; }
@@ -1026,7 +1085,8 @@
       .wrap { width: calc(100% - 32px); }
       .nav-links a:not(.btn) { display: none; }
       .stats { grid-template-columns: 1fr 1fr; }
-      .grid-3, .dl { grid-template-columns: 1fr; }
+      .grid-3, .terms, .dl { grid-template-columns: 1fr; }
+      .day-list { grid-template-columns: repeat(2, 1fr); }
       .chapters { grid-template-columns: 1fr 1fr; }
       .vlist a { grid-template-columns: 64px 1fr; }
       .vlist .vt { grid-column: 1 / -1; }
@@ -1060,12 +1120,12 @@
         水獭工具 <small>OTTERTOOLS</small>
       </a>
       <nav class="nav-links" aria-label="站内导航">
-        <a href="#film">短片</a>
+        <a href="#companion">陪伴</a>
         <a href="#states">水面</a>
+        <a href="#features">功能</a>
         <a href="#otter">小獭</a>
         <a href="#demo">在线试用</a>
-        <a href="#features">功能</a>
-        <a href="#vlog">版本</a>
+        <a href="#film">短片</a>
         <a class="btn btn-accent btn-sm" href="#download">下载 3.0</a>
       </nav>
     </div>
@@ -1084,7 +1144,7 @@
 
         <h1 id="hero-title"><span class="w" data-in>看看水面，</span><span class="w" data-in><em>就懂电脑</em>。</span></h1>
         <p class="lede" data-in>
-          macOS 和 Windows 上的电脑管家。首页是一片水：水位是磁盘，浑浊是能清的垃圾，波浪快慢是 CPU，水温是内存压力。体检、清理、加速、隐私和一组顺手的小工具都在一个窗口里，删东西之前小獭一定先问你。
+          会陪你照顾电脑的电脑管家。系统垃圾清理、内存压力、启动项、应用卸载、隐私权限、截图 OCR，专业功能一样不少；首页是一片水，水位是磁盘，浑浊是垃圾，波速是 CPU，水温是内存。早安、饭点、内存告急、深夜加班，小獭都用表情回应你，删东西之前一定先问你。
         </p>
         <div class="hero-act" data-in>
           <a class="btn btn-accent" id="cta-main" data-dl="macos"
@@ -1120,43 +1180,41 @@
           </button>
           <figure class="frame" id="hero-frame" style="margin: 0">
             <img data-media="shots/home-dark.webp" width="2560" height="1600" fetchpriority="high"
-              alt="水獭工具 2.0 首页（深色）：健康分 86「状态良好」，背后是一片水面；下方是按影响排序的「接下来可以做」和记录累计腾出空间的石头罐" />
+              alt="水獭工具首页（深色）：健康分 86「状态良好」，背后是一片水面；下方是按影响排序的「接下来可以做」和记录累计腾出空间的石头罐" />
           </figure>
         </div>
 
         <div class="stats rise-group">
           <div class="stat rise"><b><span data-count="4">4</span><small>种</small></b><span>水面读数：水位、浑浊、波速、水温</span></div>
           <div class="stat rise"><b><span data-count="30">30</span><small>天</small></b><span>清掉的文件都在废纸篓，随时能放回来</span></div>
-          <div class="stat rise"><b><span data-count="9">9</span><small>个</small></b><span>生活向快捷操作，定时睡觉、Wi‑Fi 给客人</span></div>
+          <div class="stat rise"><b><span data-count="120">120</span><small>套</small></b><span>小獭表情，早安、饭点、告急、深夜各有各的样子</span></div>
           <div class="stat rise"><b>0</b><span>不用注册账号，没有订阅，也没有广告</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ============ 短片 ============ -->
-    <section class="sec" id="film" data-tone="dawn" aria-labelledby="film-title">
+    <!-- ============ 00 陪伴 ============ -->
+    <section class="sec" id="companion" data-tone="dawn" aria-labelledby="companion-title">
       <div class="wrap">
         <div class="sec-head rise">
-          <p class="eyebrow">短片 · 2 分钟</p>
-          <h2 id="film-title">电脑也会累，<br />只是它不会说。</h2>
-          <p class="lede">我自己讲一遍水獭工具：首页那片水怎么看、一键养护清了什么、问小獭能帮你查什么，还有工具箱里的几件小事。中文配音，画面里有字幕，点章节可以直接跳过去。</p>
+          <p class="eyebrow">00 · 陪伴</p>
+          <h2 id="companion-title">电脑忙的每一刻，<br /><span class="hl">它都替你看着</span>。</h2>
+          <p class="lede">早上打招呼，中午提醒吃饭，内存紧了跟你一起紧张，清完垃圾松一口气，深夜陪你加班。小獭的表情读的是真实的机器状态和时间，不是装饰。</p>
         </div>
-        <div class="frame film rise">
-          <video id="promo" controls playsinline preload="none" data-media-poster="poster.jpg" width="1920" height="1080"
-            aria-label="水獭工具 2.0 宣传片，2 分 22 秒，中文配音">
-            <source data-media="promo.mp4" type="video/mp4" />
-            <track kind="captions" srclang="zh" label="中文" src="promo.zh.vtt" />
-            你的浏览器放不了内嵌视频，可以<a data-media="promo.mp4">直接下载</a>观看。
-          </video>
+
+        <div class="day rise" id="day">
+          <ol class="day-list" role="tablist" aria-label="一天里的小獭"></ol>
+          <article class="day-card" id="day-card" role="tabpanel" aria-live="polite">
+            <div class="day-face"><img id="day-face" data-expr="anim_270/morning.webp" alt="" width="200" height="200" loading="lazy" /></div>
+            <div>
+              <p class="day-cmd" id="day-cmd">greet · 早上</p>
+              <h3 id="day-title">早～今天也一起把电脑收拾清爽</h3>
+              <p class="say" id="day-say">每天第一次打开，小獭先跟你打招呼。</p>
+              <ul class="day-pool" id="day-pool" aria-label="这个场景的候选表情"></ul>
+            </div>
+          </article>
         </div>
-        <ol class="chapters rise" aria-label="短片章节">
-          <li><a href="#film" data-t="0"><span>00:00</span>水獭工具是什么</a></li>
-          <li><a href="#film" data-t="13.5"><span>00:13</span>看水面</a></li>
-          <li><a href="#film" data-t="52"><span>00:52</span>一键养护</a></li>
-          <li><a href="#film" data-t="78.5"><span>01:18</span>问小獭</a></li>
-          <li><a href="#film" data-t="100"><span>01:40</span>工具箱</a></li>
-          <li><a href="#film" data-t="121"><span>02:01</span>菜单栏与下载</a></li>
-        </ol>
+        <p class="day-note rise">右边一排是这个场景里可能出现的表情，标题和台词取自 App 里小獭真实会说的话。系统开了「减弱动态效果」时，小獭换成静帧。</p>
       </div>
     </section>
 
@@ -1256,11 +1314,194 @@
       </div>
     </section>
 
-    <!-- ============ 03 小獭 ============ -->
+    <!-- ============ 03 功能 ============ -->
+    <section class="sec" id="features" data-tone="calm" aria-labelledby="feat-title">
+      <div class="wrap">
+        <div class="sec-head rise">
+          <p class="eyebrow">03 · 专业功能</p>
+          <h2 id="feat-title">专业功能，<br /><span class="hl">用它们本来的名字</span>。</h2>
+          <p class="lede">系统垃圾、内存压力、启动项、完全磁盘访问……每个功能都标着它在系统里的叫法，再用一句大白话讲清楚它管什么。五个板块，一个窗口。</p>
+        </div>
+
+        <div class="feats">
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">01 · 清理 · System Junk · Uninstaller</span>
+              <h3>看看水底沉了多少东西</h3>
+              <p>扫描系统缓存、应用缓存、日志、Xcode 派生数据和旧安装包。只看不动，删之前先给你一张清单。</p>
+              <ul class="bullets">
+                <li>大文件、重复文件、应用卸载在同一页，切换分段就到</li>
+                <li>卸载应用时，设置和缓存这些残留一起移进废纸篓</li>
+                <li>重复文件每组自动留下最新的一份</li>
+              </ul>
+              <p class="otter-say"><img data-expr="anim_270/bath.webp" alt="" width="40" height="40" loading="lazy" />清理的时候我在洗澡，洗完告诉你腾出了多少。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1360">
+                <img data-media="shots/junk-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="清理页：顶部分段为垃圾、大文件、重复文件、应用卸载；中间是开始扫描卡片，下面是石头罐 21 颗、一共帮你清掉 128.4 GB，以及最近几次清理记录" />
+              </div>
+            </figure>
+          </article>
+
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">02 · 加速 · Memory Pressure · Login Items</span>
+              <h3>谁占着内存，一眼看清</h3>
+              <p>内存压力环、最近一分钟的曲线、占得最多的应用排成一列。「立即释放」只清不活跃的缓存，不会关掉任何应用。</p>
+              <ul class="bullets">
+                <li>进程列表里能结束卡死的应用，结束前先确认</li>
+                <li>启动项写明拖慢开机几秒，挨个关掉就行</li>
+              </ul>
+              <p class="otter-say"><img data-expr="anim_270/sweat.webp" alt="" width="40" height="40" loading="lazy" />内存一下子紧了，我盯着呢。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1360">
+                <img data-media="shots/mem-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="加速页的内存分段：9.9 / 16 GB 的内存压力环，「立即释放 · 约 1.6 GB」按钮，右边是最近 1 分钟的曲线，下方按占用列出 Xcode、Google Chrome、Figma 等应用" />
+              </div>
+            </figure>
+          </article>
+
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">03 · 隐私 · Privacy &amp; Security</span>
+              <h3>哪些应用能看你的屏幕</h3>
+              <p>按类别列出完全磁盘访问、辅助功能、屏幕录制、摄像头、麦克风、定位等权限，谁拿到了、谁申请过没给，一目了然。</p>
+              <ul class="bullets">
+                <li>macOS 不允许别的应用替你改权限，小獭帮你直接跳到系统设置那一页</li>
+                <li>「痕迹」里可以清掉浏览器历史和最近使用记录</li>
+              </ul>
+              <p class="otter-say"><img data-expr="anim_270/think.webp" alt="" width="40" height="40" loading="lazy" />谁拿着摄像头权限，我帮你记着。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1180">
+                <img data-media="shots/perm-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="隐私页的应用权限：左侧是权限类别，选中完全磁盘访问，右侧列出水獭工具、终端、Docker 已允许，Parallels Desktop 申请过但没有允许" />
+              </div>
+            </figure>
+          </article>
+
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">04 · 工具箱 · Quick Actions</span>
+              <h3>生活里的小事，也顺手</h3>
+              <p>看剧睡着了到点自己睡，下载、开会时不让电脑睡，客人来了扫码连 Wi‑Fi，擦屏幕时先让屏幕变黑。都是一张卡片、一下点击。</p>
+              <ul class="bullets">
+                <li>截图识字：框一块屏幕，不让复制的网页、图片里的字也能拿出来</li>
+                <li>显示隐藏文件、锁定屏幕这类开关，在 <kbd>⌘</kbd> <kbd>K</kbd> 里搜得到</li>
+              </ul>
+              <p class="otter-say"><img data-expr="anim_270/nap.webp" alt="" width="40" height="40" loading="lazy" />看剧睡着了也没事，到点我帮你让电脑睡。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1180">
+                <img data-media="shots/quick-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="工具箱的快捷操作：不让电脑睡、定时睡觉、Wi‑Fi 给客人、截图识字、截图到剪切板、擦屏幕、收起桌面图标、网页打不开、清空废纸篓九张卡片" />
+              </div>
+            </figure>
+          </article>
+
+          <article class="feat tall">
+            <div class="feat-copy rise">
+              <span class="num">05 · 菜单栏 · Menu Bar Extra</span>
+              <h3>不开主窗口，也看着</h3>
+              <p>菜单栏里显示 CPU 或内存占用，点开就是小獭浮窗：一键养护、释放内存、清空废纸篓、刷新 DNS、防止休眠都在这儿，占内存最多的几个应用也列着。</p>
+              <ul class="bullets">
+                <li>关掉主窗口，小獭照样在菜单栏值班</li>
+              </ul>
+              <p class="otter-say"><img data-expr="anim_270/relax.webp" alt="" width="40" height="40" loading="lazy" />窗口关了我也在，菜单栏里看着呢。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 1640; --y: 64; --w: 680; --h: 1150">
+                <img data-media="shots/tray-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="菜单栏浮窗：小獭在看看，可清理 12.4 GB；一键养护和释放内存按钮，下面是清理垃圾、清空废纸篓、刷新 DNS、防止休眠、锁定屏幕、压缩图片六个快捷入口，以及占内存最多的应用" />
+              </div>
+            </figure>
+          </article>
+        </div>
+
+        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
+          <p class="eyebrow">浅色 / 深色</p>
+          <h2>白天一片浅水，<br />夜里一片深水。</h2>
+          <p class="lede">跟随系统，或者手动指定，切换不用重启。小獭的问候也跟着早上、下午、晚上换。</p>
+        </div>
+        <figure class="frame compare rise" id="compare" style="margin: 0">
+          <img data-media="shots/home-light.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="浅色主题的首页" />
+          <img class="top" data-media="shots/home-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="深色主题的首页" />
+          <span class="handle" aria-hidden="true"><span class="knob"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 4 2 8l4 4M10 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span></span>
+          <span class="lab l" aria-hidden="true">浅色</span>
+          <span class="lab d" aria-hidden="true">深色</span>
+          <input type="range" min="0" max="100" value="50" step="1" aria-label="左右拖动，对比浅色和深色主题" />
+        </figure>
+
+        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
+          <p class="eyebrow">还有这些</p>
+          <h2>零碎的事，也都有一页。</h2>
+        </div>
+        <div class="terms rise-group">
+          <article class="term rise">
+            <span class="k">Screenshot OCR</span>
+            <h3>截图识字</h3>
+            <p>框一块屏幕，把字认出来放进剪切板。识别在本机完成，截图不上传。</p>
+            <p class="otter-say"><img data-expr="anim_270/ok.webp" alt="" width="34" height="34" loading="lazy" />不让复制的字，我帮你抄下来。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Wi‑Fi QR Code</span>
+            <h3>Wi‑Fi 给客人</h3>
+            <p>生成当前网络的二维码，手机扫一下就连上，不用再念一遍密码。</p>
+            <p class="otter-say"><img data-expr="anim_270/wave.webp" alt="" width="34" height="34" loading="lazy" />客人来了？扫这个就行。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Clipboard History</span>
+            <h3>剪切板</h3>
+            <p>最近复制过的文字和图片都留着，点一下再复制一次。</p>
+            <p class="otter-say"><img data-expr="anim_270/think.webp" alt="" width="34" height="34" loading="lazy" />刚才复制的那段，我还留着。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Image Compression</span>
+            <h3>图片压缩</h3>
+            <p>拖进来批量压小，发消息、传网页不再超过大小限制。</p>
+            <p class="otter-say"><img data-expr="anim_270/clean.webp" alt="" width="34" height="34" loading="lazy" />压小一点，发得出去了。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Battery Health</span>
+            <h3>电池</h3>
+            <p>健康度、循环次数、谁最耗电，笔记本用了几年心里有数。</p>
+            <p class="otter-say"><img data-expr="anim_270/relief.webp" alt="" width="34" height="34" loading="lazy" />电池还挺健康，放心用。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Storage</span>
+            <h3>存储</h3>
+            <p>磁盘按应用、开发者、文稿、系统数据分开，点一类直接去清理。</p>
+            <p class="otter-say"><img data-expr="anim_270/shock.webp" alt="" width="34" height="34" loading="lazy" />系统数据怎么这么大？我去看看。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Network · DNS</span>
+            <h3>网络</h3>
+            <p>测一下网速，看 Wi‑Fi 信号；网页打不开时先刷新 DNS。</p>
+            <p class="otter-say"><img data-expr="anim_270/focus.webp" alt="" width="34" height="34" loading="lazy" />网页打不开？先刷一下 DNS。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Hardware</span>
+            <h3>硬件</h3>
+            <p>芯片、内存、序列号、保修状态，卖二手、报修前看一眼。</p>
+            <p class="otter-say"><img data-expr="anim_270/ok.webp" alt="" width="34" height="34" loading="lazy" />序列号和保修，我都抄好了。</p>
+          </article>
+          <article class="term rise">
+            <span class="k">Command Palette ⌘K</span>
+            <h3>搜一下就能用</h3>
+            <p>任何功能和开关都能用名字搜到，回车直接执行。</p>
+            <p class="otter-say"><img data-expr="anim_270/happy.webp" alt="" width="34" height="34" loading="lazy" />想做什么，打个字就行。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 04 小獭 ============ -->
     <section class="sec" id="otter" data-tone="calm" aria-labelledby="otter-title">
       <div class="wrap">
         <div class="sec-head rise">
-          <p class="eyebrow">03 · 小獭助手</p>
+          <p class="eyebrow">04 · 小獭助手</p>
           <h2 id="otter-title">有事问小獭，<br /><span class="hl">动手前先问你</span>。</h2>
           <p class="lede">小獭在窗口右侧。问它「电脑为什么卡」「哪些文件可以删」，它先去看内存、进程和启动项，再用大白话告诉你原因。要结束进程、清理文件，先出一张确认卡。</p>
         </div>
@@ -1298,13 +1539,13 @@
       </div>
     </section>
 
-    <!-- ============ 04 在线试用 ============ -->
+    <!-- ============ 05 在线试用 ============ -->
     <section class="sec" id="demo" data-tone="dawn" aria-labelledby="demo-title">
       <div class="wrap">
         <div class="sec-head rise">
-          <p class="eyebrow">04 · 在线试用</p>
+          <p class="eyebrow">05 · 在线试用</p>
           <h2 id="demo-title">不用安装，<br />先在这里点一点。</h2>
-          <p class="lede">下面是一个能操作的交互演示，界面和 App 2.0 一致，数据都是演示数据，不会读你的电脑。可以直接在窗口里点，也可以用右边的按钮切换场景。</p>
+          <p class="lede">下面是一个能操作的交互演示，界面和 App 一致，数据都是演示数据，不会读你的电脑。可以直接在窗口里点，也可以用右边的按钮切换场景。</p>
         </div>
 
         <div class="demo">
@@ -1366,143 +1607,38 @@
       </div>
     </section>
 
-    <!-- ============ 05 功能 ============ -->
-    <section class="sec" id="features" data-tone="calm" aria-labelledby="feat-title">
+    <!-- ============ 06 短片 ============ -->
+    <section class="sec" id="film" data-tone="dawn" aria-labelledby="film-title">
       <div class="wrap">
         <div class="sec-head rise">
-          <p class="eyebrow">05 · 五个板块</p>
-          <h2 id="feat-title">清理、加速、隐私，<br />还有生活里的小事。</h2>
+          <p class="eyebrow">06 · 产品短片</p>
+          <h2 id="film-title">电脑也会累，<br />只是它不会说。</h2>
+          <p class="lede">我自己讲一遍水獭工具：首页那片水怎么看、一键养护清了什么、问小獭能帮你查什么，还有工具箱里的几件小事。中文配音，画面里有字幕，点章节可以直接跳过去。</p>
         </div>
-
-        <div class="feats">
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">01 · 清理</span>
-              <h3>看看水底沉了多少东西</h3>
-              <p>扫描系统缓存、应用缓存、日志、Xcode 派生数据和旧安装包。只看不动，删之前先给你一张清单。</p>
-              <ul class="bullets">
-                <li>大文件、重复文件、应用卸载在同一页，切换分段就到</li>
-                <li>卸载应用时，设置和缓存这些残留一起移进废纸篓</li>
-                <li>重复文件每组自动留下最新的一份</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1360">
-                <img data-media="shots/junk-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="清理页：顶部分段为垃圾、大文件、重复文件、应用卸载；中间是开始扫描卡片，下面是石头罐 21 颗、一共帮你清掉 128.4 GB，以及最近几次清理记录" />
-              </div>
-            </figure>
-          </article>
-
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">02 · 加速</span>
-              <h3>谁占着内存，一眼看清</h3>
-              <p>内存压力环、最近一分钟的曲线、占得最多的应用排成一列。「立即释放」只清不活跃的缓存，不会关掉任何应用。</p>
-              <ul class="bullets">
-                <li>进程列表里能结束卡死的应用，结束前先确认</li>
-                <li>启动项写明拖慢开机几秒，挨个关掉就行</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1360">
-                <img data-media="shots/mem-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="加速页的内存分段：9.9 / 16 GB 的内存压力环，「立即释放 · 约 1.6 GB」按钮，右边是最近 1 分钟的曲线，下方按占用列出 Xcode、Google Chrome、Figma 等应用" />
-              </div>
-            </figure>
-          </article>
-
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">03 · 隐私</span>
-              <h3>哪些应用能看你的屏幕</h3>
-              <p>按类别列出完全磁盘访问、辅助功能、屏幕录制、摄像头、麦克风、定位等权限，谁拿到了、谁申请过没给，一目了然。</p>
-              <ul class="bullets">
-                <li>macOS 不允许别的应用替你改权限，小獭帮你直接跳到系统设置那一页</li>
-                <li>「痕迹」里可以清掉浏览器历史和最近使用记录</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1180">
-                <img data-media="shots/perm-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="隐私页的应用权限：左侧是权限类别，选中完全磁盘访问，右侧列出水獭工具、终端、Docker 已允许，Parallels Desktop 申请过但没有允许" />
-              </div>
-            </figure>
-          </article>
-
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">04 · 工具箱</span>
-              <h3>生活里的小事，也顺手</h3>
-              <p>看剧睡着了到点自己睡，下载、开会时不让电脑睡，客人来了扫码连 Wi‑Fi，擦屏幕时先让屏幕变黑。都是一张卡片、一下点击。</p>
-              <ul class="bullets">
-                <li>截图识字：框一块屏幕，不让复制的网页、图片里的字也能拿出来</li>
-                <li>显示隐藏文件、锁定屏幕这类开关，在 <kbd>⌘</kbd> <kbd>K</kbd> 里搜得到</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1180">
-                <img data-media="shots/quick-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="工具箱的快捷操作：不让电脑睡、定时睡觉、Wi‑Fi 给客人、截图识字、截图到剪切板、擦屏幕、收起桌面图标、网页打不开、清空废纸篓九张卡片" />
-              </div>
-            </figure>
-          </article>
-
-          <article class="feat tall">
-            <div class="feat-copy rise">
-              <span class="num">05 · 菜单栏</span>
-              <h3>不开主窗口，也看着</h3>
-              <p>菜单栏里显示 CPU 或内存占用，点开就是小獭浮窗：一键养护、释放内存、清空废纸篓、刷新 DNS、防止休眠都在这儿，占内存最多的几个应用也列着。</p>
-              <ul class="bullets">
-                <li>关掉主窗口，小獭照样在菜单栏值班</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 1640; --y: 64; --w: 680; --h: 1150">
-                <img data-media="shots/tray-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="菜单栏浮窗：小獭在看看，可清理 12.4 GB；一键养护和释放内存按钮，下面是清理垃圾、清空废纸篓、刷新 DNS、防止休眠、锁定屏幕、压缩图片六个快捷入口，以及占内存最多的应用" />
-              </div>
-            </figure>
-          </article>
+        <div class="frame film rise">
+          <video id="promo" controls playsinline preload="none" data-media-poster="poster.jpg" width="1920" height="1080"
+            aria-label="水獭工具宣传片，2 分 22 秒，中文配音">
+            <source data-media="promo.mp4" type="video/mp4" />
+            <track kind="captions" srclang="zh" label="中文" src="promo.zh.vtt" />
+            你的浏览器放不了内嵌视频，可以<a data-media="promo.mp4">直接下载</a>观看。
+          </video>
         </div>
-
-        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
-          <p class="eyebrow">浅色 / 深色</p>
-          <h2>白天一片浅水，<br />夜里一片深水。</h2>
-          <p class="lede">跟随系统，或者手动指定，切换不用重启。小獭的问候也跟着早上、下午、晚上换。</p>
-        </div>
-        <figure class="frame compare rise" id="compare" style="margin: 0">
-          <img data-media="shots/home-light.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="浅色主题的首页" />
-          <img class="top" data-media="shots/home-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="深色主题的首页" />
-          <span class="handle" aria-hidden="true"><span class="knob"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 4 2 8l4 4M10 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span></span>
-          <span class="lab l" aria-hidden="true">浅色</span>
-          <span class="lab d" aria-hidden="true">深色</span>
-          <input type="range" min="0" max="100" value="50" step="1" aria-label="左右拖动，对比浅色和深色主题" />
-        </figure>
-
-        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
-          <p class="eyebrow">还有这些</p>
-          <h2>零碎的事，也都有一页。</h2>
-        </div>
-        <div class="grid-3 rise-group">
-          <article class="card rise"><span class="k">OCR</span><h3>截图识字</h3><p>框一块屏幕，把字认出来放进剪切板。识别在本机完成，截图不上传。</p></article>
-          <article class="card rise"><span class="k">Wi‑Fi</span><h3>Wi‑Fi 给客人</h3><p>生成当前网络的二维码，手机扫一下就连上，不用再念一遍密码。</p></article>
-          <article class="card rise"><span class="k">Clipboard</span><h3>剪切板</h3><p>最近复制过的文字和图片都留着，点一下再复制一次。</p></article>
-          <article class="card rise"><span class="k">Image</span><h3>图片压缩</h3><p>拖进来批量压小，发消息、传网页不再超过大小限制。</p></article>
-          <article class="card rise"><span class="k">Battery</span><h3>电池</h3><p>健康度、循环次数、谁最耗电，笔记本用了几年心里有数。</p></article>
-          <article class="card rise"><span class="k">Storage</span><h3>存储</h3><p>磁盘按应用、开发者、文稿、系统数据分开，点一类直接去清理。</p></article>
-          <article class="card rise"><span class="k">Network</span><h3>网络</h3><p>测一下网速，看 Wi‑Fi 信号；网页打不开时先刷新 DNS。</p></article>
-          <article class="card rise"><span class="k">Hardware</span><h3>硬件</h3><p>芯片、内存、序列号、保修状态，卖二手、报修前看一眼。</p></article>
-          <article class="card rise"><span class="k">⌘K</span><h3>搜一下就能用</h3><p>任何功能和开关都能用名字搜到，回车直接执行。</p></article>
-        </div>
+        <ol class="chapters rise" aria-label="短片章节">
+          <li><a href="#film" data-t="0"><span>00:00</span>水獭工具是什么</a></li>
+          <li><a href="#film" data-t="13.5"><span>00:13</span>看水面</a></li>
+          <li><a href="#film" data-t="52"><span>00:52</span>一键养护</a></li>
+          <li><a href="#film" data-t="78.5"><span>01:18</span>问小獭</a></li>
+          <li><a href="#film" data-t="100"><span>01:40</span>工具箱</a></li>
+          <li><a href="#film" data-t="121"><span>02:01</span>菜单栏与下载</a></li>
+        </ol>
       </div>
     </section>
 
-    <!-- ============ 06 下载 ============ -->
+    <!-- ============ 07 下载 ============ -->
     <section class="sec" id="download" data-tone="dawn" aria-labelledby="dl-title">
       <div class="wrap">
         <div class="sec-head center rise">
-          <p class="eyebrow">06 · 下载</p>
+          <p class="eyebrow">07 · 下载</p>
           <h2 id="dl-title">免费下载，不用注册。</h2>
         </div>
         <div class="dl">
@@ -1548,11 +1684,11 @@
       </div>
     </section>
 
-    <!-- ============ 07 问题 ============ -->
+    <!-- ============ 08 问题 ============ -->
     <section class="sec" id="faq" aria-labelledby="faq-title">
       <div class="wrap">
         <div class="sec-head center rise">
-          <p class="eyebrow">07 · 常见问题</p>
+          <p class="eyebrow">08 · 常见问题</p>
           <h2 id="faq-title">你可能想问的</h2>
         </div>
         <div class="faq rise">
@@ -1567,6 +1703,10 @@
           <details>
             <summary>小獭会擅自动我的电脑吗？</summary>
             <div class="a"><p>不会。查看类的事情它直接做；结束进程、清理文件这类会改动电脑的操作，一定先出确认卡，你点了允许才执行。</p></div>
+          </details>
+          <details>
+            <summary>小獭会不会太吵？</summary>
+            <div class="a"><p>它只在你自己做的事有结果时回应一声，系统事件一律不出声。设置里可以关掉「小獭的声音」，也可以只显示状态文字、不显示小獭；「夜间不打扰」默认开着，23:00 到 08:00 不弹通知。</p></div>
           </details>
           <details>
             <summary>我的数据会上传吗？</summary>
@@ -1588,7 +1728,7 @@
       </div>
     </section>
 
-    <!-- ============ 08 水獭家族 ============ -->
+    <!-- ============ 09 水獭家族 ============ -->
     <section class="sec" id="more" aria-labelledby="more-title" style="padding-top: 0">
       <div class="wrap">
         <h2 id="more-title" class="rise" style="font-size: 22px; margin-bottom: 20px">水獭家族</h2>

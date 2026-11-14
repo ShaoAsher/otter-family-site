@@ -192,6 +192,102 @@
     $("#dl-mac").classList.add("mine");
   }
 
+  /* ── 陪伴：一天里的小獭（表情与台词同 App 的 OtterLife / derive.otterEx） ── */
+  var DAY = [
+    { t: "08:30", n: "早安", c: "var(--accent)", cmd: "greet · 当日首次打开", title: "早～今天也一起把电脑收拾清爽",
+      say: "每天第一次打开，小獭先打招呼。第一次见面它会自我介绍，隔了好几天回来它说一直把水看得好好的，周末早上让你慢慢来。",
+      pool: ["morning", "welcome", "arrive", "hug", "stroll"] },
+    { t: "10:00", n: "编译中", c: "var(--busy)", cmd: "CPU 78% · 忙碌", title: "有点忙，我帮你盯着",
+      say: "Xcode 一编译，水面的波浪变急，小獭抱起一摞文件。只是忙不是坏事，它不会催你去关东西。",
+      pool: ["busy", "focus"] },
+    { t: "12:20", n: "饭点", c: "var(--accent)", cmd: "greet · 中午", title: "中午好，记得吃饭",
+      say: "中午打开，小獭在吃饭；周末换成一桌大餐，下午换成一杯水或一杯奶茶。",
+      pool: ["eat", "feast", "drink", "milktea"] },
+    { t: "13:30", n: "午休", c: "var(--calm)", cmd: "闲置 · 有事戳我", title: "眯一会儿……有事戳我",
+      say: "你一阵子没动，小獭在旁边安静待着，再久一点就打个盹。你一回来它就醒：醒啦！刚才梦到一池清水。",
+      pool: ["relax", "nap", "stretch"] },
+    { t: "14:30", n: "内存告急", c: "var(--alarm)", cmd: "Memory Pressure · 红线", title: "内存一下子紧了，我盯着呢",
+      say: "内存压力过线，水变红，首页主按钮换成「释放内存」；缓过来以后，小獭会松一口气告诉你。",
+      pool: ["sweat", "scared", "relief"] },
+    { t: "15:10", n: "磁盘将满", c: "var(--busy)", cmd: "Disk 93% · 只剩 34 GB", title: "磁盘快满了！腾点地方吧？",
+      say: "水位就是磁盘占用。快漫出来的时候，小獭把垃圾、大文件、半年没开过的虚拟机按大小排好给你。",
+      pool: ["shock", "please"] },
+    { t: "16:00", n: "一键养护", c: "var(--calm)", cmd: "System Junk · 6.3 GB → 废纸篓", title: "洗干净了，腾出 6.3 GB",
+      say: "扫描时小獭埋头翻找，清理时它在洗澡；做完随机说一句「呼～清爽了」「水清了」，文件都在废纸篓，随时能放回来。",
+      pool: ["bath", "focus", "great", "relief", "clear", "clean"] },
+    { t: "17:30", n: "戳一下", c: "var(--accent)", cmd: "点一下侧栏的小獭", title: "嘿，在呢～",
+      say: "侧栏的小獭可以戳：它会害羞、偷吃小鱼干、劝你去点「一键养护」；一天戳太多次，它先生气，最后认输。",
+      pool: ["happy", "laugh", "shy", "yum", "lucky", "pout", "gg"] },
+    { t: "23:30", n: "深夜", c: "#9b8cff", cmd: "greet · 23:00 以后", title: "这么晚还在呀，我陪你一会儿",
+      say: "深夜打开，小獭陪你加班；水面平静时它会犯困。夜间勿扰默认开着，23:00 到 08:00 不弹通知。",
+      pool: ["overtime", "sleepy", "nap"] },
+    { t: "100G", n: "石头罐", c: "var(--ok)", cmd: "累计腾出 100 GB", title: "累计帮你腾出 100 GB 啦！",
+      say: "每清理一次，小獭往石头罐里放一颗石子；累计腾出的空间跨过一个关口，它会庆祝一下，石头罐又满一格。",
+      pool: ["celebrate", "great", "proud"] }
+  ];
+  var dayList = $("#day .day-list"), dayCard = $("#day-card"), dayFace = $("#day-face");
+  var dayCur = 0, dayPick = 0, dayAuto = 0, dayCycle = 0;
+  DAY.forEach(function (d, i) {
+    var item = document.createElement("li");
+    item.innerHTML = '<button type="button" role="tab" id="day-' + i + '" aria-controls="day-card" style="--c:' + d.c +
+      '"><time>' + d.t + '</time><i></i><b>' + d.n + '</b></button>';
+    dayList.appendChild(item);
+  });
+  var dayBtns = $$("button", dayList);
+  function dayFaceTo(k) {
+    $$("#day-pool li").forEach(function (el) { el.classList.toggle("on", el.textContent === k); });
+    dayFace.src = EXPR + (reduced ? "still_270/" : "anim_270/") + k + ".webp";
+    if (window.gsap && !reduced) gsap.fromTo(dayFace, { scale: .86, y: 6 }, { scale: 1, y: 0, duration: .45, ease: "back.out(2)" });
+  }
+  function dayShow(i) {
+    var d = DAY[i];
+    dayCur = i;
+    dayBtns.forEach(function (b, j) { b.setAttribute("aria-selected", String(j === i)); b.tabIndex = j === i ? 0 : -1; });
+    dayCard.style.setProperty("--c", d.c);
+    dayCard.setAttribute("aria-labelledby", "day-" + i);
+    $("#day-cmd").textContent = d.cmd;
+    $("#day-title").textContent = d.title;
+    $("#day-say").textContent = d.say;
+    $("#day-pool").innerHTML = d.pool.map(function (k) { return "<li>" + k + "</li>"; }).join("");
+    dayPick = 0;
+    dayFaceTo(d.pool[0]);
+  }
+  function dayStop() { clearInterval(dayAuto); dayAuto = 0; }
+  dayList.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    dayStop();
+    dayShow(dayBtns.indexOf(b));
+  });
+  dayList.addEventListener("keydown", function (e) {
+    var step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    dayStop();
+    dayShow((dayCur + step + DAY.length) % DAY.length);
+    dayBtns[dayCur].focus();
+  });
+  dayShow(0);
+  if (!reduced) {
+    var dayIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        clearInterval(dayCycle);
+        if (!e.isIntersecting) { clearInterval(dayAuto); return; }
+        dayCycle = setInterval(function () {
+          var pool = DAY[dayCur].pool, k;
+          if (pool.length < 2) return;
+          do { k = pool[Math.random() * pool.length | 0]; } while (k === pool[dayPick]);
+          dayPick = pool.indexOf(k);
+          dayFaceTo(k);
+        }, 2600);
+        if (dayAuto !== 0 || e.target.dataset.touched) return;
+        e.target.dataset.touched = "1";
+        dayAuto = setInterval(function () { dayShow((dayCur + 1) % DAY.length); }, 5200);
+      });
+    }, { threshold: .4 });
+    dayIO.observe($("#day"));
+  }
+
   /* ── 水面章节 ── */
   var steps = $$(".step");
   var screens = $$("#screens img");

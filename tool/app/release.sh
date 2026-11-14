@@ -14,8 +14,8 @@
 # 只能在 git-flow 的发布分支 release 上运行：工作区干净、已与 origin/release 同步、
 # 当前提交已打 v<版本> 标签（git flow release finish 会打）。自测可设 OTTER_RELEASE_ANY_BRANCH=1 跳过。
 #
-# dist 里按名字取本版本的包：<file>-<版本>-macos-<架构>.dmg/.zip、<file>-<版本>-windows-x64.zip/-setup.exe，
-# 上传时改成固定名 <file>-macos-<架构>.dmg 等。
+# dist 里取本版本最新的包：<file>-<版本>-macos-<架构>[-<年月日-时分>].dmg/.zip、<file>-<版本>-windows-x64[-…].zip/-setup.exe，
+# 同版本打了多次时按修改时间取最新那份；上传时改成固定名 <file>-macos-<架构>.dmg 等。
 #
 # 上传、校验与切换下载版本都在 tool/release/release.py：两处都齐了才会把 family.json 的 download.version
 # 切到这一版。Windows 包由 CI 传到 GitHub（标签 <app>-v<版本>），之后 otter mirror 补到 TOS；
@@ -120,20 +120,27 @@ else
 fi
 
 DIST_DIR="$ROOT/dist"
-exists() { [[ -f "$1" ]] && echo "$1" || true; }
-DMG_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.dmg")"
-ZIP_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.zip")"
-WIN_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-windows-x64.zip")"
-WIN_SETUP_SRC="$(exists "$DIST_DIR/${FILE}-${VERSION}-windows-x64-setup.exe")"
+latest() { # 前缀 后缀：<前缀>.<后缀> 或 <前缀>-<时间>.<后缀>，取最新
+  local f best=""
+  for f in "$DIST_DIR/$1.$2" "$DIST_DIR/$1"-[0-9]*."$2"; do
+    [[ -f "$f" ]] || continue
+    [[ -z "$best" || "$f" -nt "$best" ]] && best="$f"
+  done
+  echo "$best"
+}
+DMG_SRC="$(latest "${FILE}-${VERSION}-macos-${ARCH_LABEL}" dmg)"
+ZIP_SRC="$(latest "${FILE}-${VERSION}-macos-${ARCH_LABEL}" zip)"
+WIN_SRC="$(latest "${FILE}-${VERSION}-windows-x64" zip)"
+WIN_SETUP_SRC="$(latest "${FILE}-${VERSION}-windows-x64-setup" exe)"
 
 if [[ "$ZIP_ONLY" -eq 0 ]]; then
   [[ -n "$DMG_SRC" && -f "$DMG_SRC" ]] || {
-    echo "找不到 DMG：$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.dmg" >&2
+    echo "找不到 DMG：$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}[-时间].dmg" >&2
     exit 1
   }
 fi
 [[ -n "$ZIP_SRC" && -f "$ZIP_SRC" ]] || {
-  echo "找不到 ZIP：$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}.zip" >&2
+  echo "找不到 ZIP：$DIST_DIR/${FILE}-${VERSION}-macos-${ARCH_LABEL}[-时间].zip" >&2
   exit 1
 }
 

@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>水獭家族 · 同一只小獭，在不同的地方陪你</title>
   <meta name="description"
-    content="水獭家族：水獭游时（游戏时间记录）、水獭工具（电脑管家）、水獭 Git（Git 客户端）。同一只小獭，同一套设计语言；免费，不用注册，数据只在你自己的设备上。" />
+    content="水獭家族：水獭游时（游戏时间记录）、水獭工具（电脑管家）、水獭 Git（Git 客户端）。专业功能用它们本来的名字，情绪交给同一只小獭：120 个表情跟着真实的场景走。免费，不用注册，数据只在你自己的设备上。" />
   <meta name="theme-color" content="#0E0C16" />
   <meta property="og:title" content="水獭家族 · 同一只小獭，在不同的地方陪你" />
   <meta property="og:description" content="水獭游时 · 水獭工具 · 水獭 Git。免费，不用注册，数据只在你自己的设备上。" />
@@ -159,6 +159,22 @@
     .m-tl { --c: var(--tl); --c2: var(--tl-2); }
     .m-git { --c: var(--git); --c2: var(--git-2); }
 
+    /* ── 小獭的一天：三个 App 里的真实时刻 ── */
+    .moments { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
+    .mo {
+      position: relative; display: flex; flex-direction: column; padding: 18px 18px 20px; border-radius: var(--r);
+      background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--c) 14%, transparent), transparent 62%), var(--card);
+      border: 1px solid var(--line); transition: border-color .3s var(--ease), transform .3s var(--ease);
+    }
+    @media (hover: hover) { .mo:hover { border-color: color-mix(in srgb, var(--c) 45%, transparent); transform: translateY(-3px); } }
+    .mo .top { display: flex; justify-content: space-between; align-items: center; font: 600 12px/1 var(--mono); color: var(--mute); }
+    .mo .app { padding: 4px 8px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); font-family: var(--sans); }
+    .mo img { width: 112px; height: 112px; margin: 10px auto 6px; }
+    .mo b { color: var(--ink); font-size: 15.5px; line-height: 1.4; }
+    .mo p { margin: 6px 0 0; font-size: 13.5px; color: var(--mute); }
+    .say { display: flex; gap: 10px; align-items: center; margin: 16px 0 0; font-size: 14px; color: var(--mute); }
+    .say img { flex: none; width: 40px; height: 40px; }
+
     /* ── 共同点 ── */
     .traits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .trait { padding: 24px; border-radius: var(--r); background: var(--card); border: 1px solid var(--line); }
@@ -180,6 +196,7 @@
       .member .face img { width: 88px; height: 88px; border-radius: 20px; }
       .member ul.pts { grid-template-columns: 1fr; }
       .traits { grid-template-columns: 1fr; }
+      .moments { grid-template-columns: 1fr 1fr; }
       .hello { width: 112px; height: 112px; }
       .nav-links { display: none; }
     }
@@ -193,6 +210,7 @@
     <div class="wrap nav-in">
       <a class="brand" href="#top"><img src="shared/icons/otter_white.png" alt="" width="28" height="28" />水獭家族<small>OTTER FAMILY</small></a>
       <nav class="nav-links" aria-label="页面导航">
+        <a href="#day">小獭的一天</a>
         <a href="#members">成员</a>
         <a href="#traits">一家人的约定</a>
       </nav>
@@ -204,11 +222,71 @@
       <div class="wrap">
         <div class="eyebrow rise">Otter Family</div>
         <h1 class="rise" style="--i:1">同一只小獭，<br /><em>在不同的地方陪你</em>。</h1>
-        <p class="rise" style="--i:2">水獭家族是一组安静、好看、不打扰的小软件，每一个只做好一件事。全部免费，不用注册，数据只在你自己的设备上。</p>
+        <p class="rise" style="--i:2">水獭家族是一组安静、好看、不打扰的小软件，每一个只做好一件事。专业功能用它们本来的名字，情绪交给同一只小獭。全部免费，不用注册，数据只在你自己的设备上。</p>
         <a class="pond rise" style="--i:3" href="#members" aria-label="看看家族成员">
           <img class="hello" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/anim_270/hi.webp" alt="" width="148" height="148" />
           <span class="btn">看看家族成员<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6" /></svg></span>
         </a>
+      </div>
+    </section>
+
+    <section id="day" aria-labelledby="day-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <div class="eyebrow rise">A Day with Otter</div>
+          <h2 id="day-title" class="rise" style="--i:1">一只小獭，陪你一整天。</h2>
+          <p class="rise" style="--i:2">电脑卡了它替你着急，清完垃圾它松一口气，凌晨提交代码它劝你去睡。三个 App 里是同一只小獭，120 个表情跟着真实的场景走。</p>
+        </div>
+        <ol class="moments" aria-label="小獭的一天">
+          <li class="mo m-tl rise" style="--i:0">
+            <div class="top"><time>08:30</time><span class="app">水獭工具</span></div>
+            <img data-face="morning" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/morning.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>早～今天也一起把电脑收拾清爽。</b>
+            <p>每天第一次打开，先打个招呼。</p>
+          </li>
+          <li class="mo m-git rise" style="--i:1">
+            <div class="top"><time>10:20</time><span class="app">水獭 Git</span></div>
+            <img data-face="cheer" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/cheer.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>今天的第一次提交。</b>
+            <p>结果页的主按钮就是「推送」。</p>
+          </li>
+          <li class="mo m-git rise" style="--i:2">
+            <div class="top"><time>12:30</time><span class="app">水獭 Git</span></div>
+            <img data-face="eat" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/eat.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>提交成功，记得吃饭。</b>
+            <p>代码不会跑，饭要按时吃。</p>
+          </li>
+          <li class="mo m-tl rise" style="--i:3">
+            <div class="top"><time>14:30</time><span class="app">水獭工具</span></div>
+            <img data-face="sweat" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/sweat.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>内存一下子紧了，我盯着呢。</b>
+            <p>水变红，主按钮换成「释放内存」。</p>
+          </li>
+          <li class="mo m-tl rise" style="--i:0">
+            <div class="top"><time>16:00</time><span class="app">水獭工具</span></div>
+            <img data-face="bath" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/bath.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>洗干净了，腾出 6.3 GB。</b>
+            <p>文件都在废纸篓，随时能放回来。</p>
+          </li>
+          <li class="mo m-gt rise" style="--i:1">
+            <div class="top"><time>21:00</time><span class="app">水獭游时</span></div>
+            <img data-face="grind" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/grind.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>开一局吧，我帮你看着时间。</b>
+            <p>接近上限时，它会温柔提醒。</p>
+          </li>
+          <li class="mo m-git rise" style="--i:2">
+            <div class="top"><time>23:40</time><span class="app">水獭 Git</span></div>
+            <img data-face="overtime" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/overtime.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>这么晚还在写？</b>
+            <p>陪你写完最后一行，再催你去睡。</p>
+          </li>
+          <li class="mo m-git rise" style="--i:3">
+            <div class="top"><time>02:30</time><span class="app">水獭 Git</span></div>
+            <img data-face="sleepy" src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/sleepy.webp" alt="" width="112" height="112" loading="lazy" />
+            <b>都这个点了，提交完快去睡。</b>
+            <p>凌晨两点以后，劝睡升级。</p>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -239,9 +317,10 @@
               <ul class="pts">
                 <li>开战计时，接近上限时温柔提醒</li>
                 <li>藏品：截图、实况、一句话的回忆</li>
-                <li>50 个小獭表情，就是心情和标签</li>
+                <li>120 个小獭表情，就是心情和标签</li>
                 <li>不需要账号，数据只存在这台手机</li>
               </ul>
+              <p class="say"><img src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/grind.webp" data-face="grind" alt="" width="40" height="40" loading="lazy" />这局打完就歇会儿吧，我帮你看着时间。</p>
               <div class="acts">
                 <span class="btn" aria-disabled="true">即将上架</span>
               </div>
@@ -257,17 +336,19 @@
               <h3>水獭工具<small>OtterTools</small></h3>
               <p class="slogan">看看水面，就懂电脑。</p>
               <ul class="meta">
+                <li class="st">3.0</li>
                 <li>macOS</li>
                 <li>Windows</li>
                 <li>免费</li>
               </ul>
-              <p class="desc">macOS 和 Windows 上的电脑管家。水位是磁盘、浑浊是垃圾、波速是 CPU、水温是内存，看一眼水面就知道电脑现在怎么样。</p>
+              <p class="desc">macOS 和 Windows 上的电脑管家。系统垃圾、内存压力、启动项、隐私权限一眼看清；首页是一片水，水位是磁盘、浑浊是垃圾、波速是 CPU、水温是内存。</p>
               <ul class="pts">
-                <li>体检、清理，都先进废纸篓</li>
-                <li>管理启动项，清除浏览器痕迹</li>
-                <li>有事问小獭，动手之前先问你</li>
-                <li>白天浅水、夜里深水，两套主题</li>
+                <li>系统垃圾清理、应用卸载，都先进废纸篓</li>
+                <li>内存压力、启动项、进程一页看清</li>
+                <li>隐私权限、浏览器痕迹、截图 OCR</li>
+                <li>小獭助手先看再说，动手之前先问你</li>
               </ul>
+              <p class="say"><img src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/sweat.webp" data-face="sweat" alt="" width="40" height="40" loading="lazy" />内存一下子紧了，我盯着呢。</p>
               <div class="acts">
                 <a class="btn btn-solid" href="tools/">访问官网</a>
                 <a class="btn" href="tools/#demo">在线试用</a>
@@ -282,19 +363,21 @@
             </div>
             <div class="body">
               <h3>水獭 Git<small>OtterGit</small></h3>
-              <p class="slogan">Git 桌面客户端，Mac 和 Windows 都能用。</p>
+              <p class="slogan">会陪你写代码的 Git 客户端。</p>
               <ul class="meta">
+                <li class="st">3.0</li>
                 <li>macOS</li>
                 <li>Windows</li>
                 <li>免费</li>
               </ul>
-              <p class="desc">macOS 和 Windows 上的 Git 客户端。分支、历史、改动和冲突在同一个窗口里看清楚，背景的颜色告诉你仓库现在处在什么状态。</p>
+              <p class="desc">macOS 和 Windows 上的 Git 客户端。Commit Graph、并排 Diff、按块暂存、三方合并，专业功能用它们本来的名字；提交、推送、冲突、深夜加班，小獭都用表情回应你。</p>
               <ul class="pts">
-                <li>泳道历史，左右对齐的对比</li>
-                <li>逐块解决合并冲突</li>
-                <li>图片、视频、PDF 也能对比</li>
-                <li>小獭 AI 助手先说明、再确认、后执行</li>
+                <li>Commit Graph 泳道历史，并排 Diff</li>
+                <li>按块暂存，三方合并逐块解冲突</li>
+                <li>Stash、Rebase、Cherry-pick、Reflog</li>
+                <li>74 个场景的表情编排，小獭 AI 先确认再执行</li>
               </ul>
+              <p class="say"><img src="https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/still_270/overtime.webp" data-face="overtime" alt="" width="40" height="40" loading="lazy" />这么晚还在写？提交完早点睡。</p>
               <div class="acts">
                 <a class="btn btn-solid" href="git/">访问官网</a>
                 <a class="btn" href="git/demo/">在线试用</a>
@@ -317,7 +400,7 @@
           <div class="trait rise" style="--i:2"><b>数据留在本机</b><p>记录、设置都存在你自己的设备上。AI 是可选的，用你自己的 Key，只在你点了才调用。</p></div>
           <div class="trait rise"><b>动手之前先问你</b><p>删除、清理、推送这类改不回来的事，小獭一定先弹确认。</p></div>
           <div class="trait rise" style="--i:1"><b>同一套设计语言</b><p>同样的圆角、同样的五条动效曲线、同样的日夜两套主题，换一款也不用重新适应。</p></div>
-          <div class="trait rise" style="--i:2"><b>同一只小獭</b><p>50 个表情，按场景和时间轮换。界面保持克制，情绪交给它。</p></div>
+          <div class="trait rise" style="--i:2"><b>同一只小獭</b><p>120 个表情，按场景和时间编排。界面保持克制，情绪交给它。</p></div>
         </div>
       </div>
     </section>
@@ -328,6 +411,7 @@
       <a class="brand" href="#top"><img src="shared/icons/otter_white.png" alt="" width="28" height="28" />水獭家族</a>
       <span>© 2026 水獭家族 · Asher_Shao</span>
       <nav aria-label="页面导航">
+        <a href="#day">小獭的一天</a>
         <a href="#members">成员</a>
         <a href="#traits">一家人的约定</a>
       </nav>
@@ -345,6 +429,19 @@
       var from = new URLSearchParams(location.search).get("from");
       var card = from && document.querySelector('.member[data-app="' + from + '"]');
       if (card) card.classList.add("from");
+
+      /* 表情先放静帧，进入视口再换动图；减弱动态效果时一直是静帧 */
+      var faces = document.querySelectorAll("img[data-face]");
+      if (document.documentElement.classList.contains("motion") && "IntersectionObserver" in window) {
+        var fio = new IntersectionObserver(function (es) {
+          es.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            e.target.src = e.target.src.replace("/still_270/", "/anim_270/");
+            fio.unobserve(e.target);
+          });
+        }, { rootMargin: "120px 0px" });
+        faces.forEach(function (el) { fio.observe(el); });
+      }
 
       var items = document.querySelectorAll(".rise");
       if (!document.documentElement.classList.contains("motion") || !("IntersectionObserver" in window)) {

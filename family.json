@@ -49,8 +49,8 @@
         {
           "version": "3.0.0",
           "date": "2026-11-14",
-          "zh": "水獭家族 3.0：图标换成三端统一模板的琥珀金；小獭表情升级为家族 120 套，按提交、推送、冲突等场景编排；版本记录、官网地址等改由家族公共配置下发，关于页自动更新。",
-          "en": "Otter Family 3.0: the icon moves to the shared family template in amber gold; otter expressions upgraded to the full family set of 120, arranged by scene (commit, push, conflicts…); changelog and site links now come from the shared family config, so the About page stays current."
+"zh": "水獭家族 3.0：图标换成三端统一模板的琥珀金；小獭表情升级为家族 120 套，编排扩到 74 个场景：凌晨和周五的提交、第一次推送、一次推上一大批、强制推送、拉到很多新提交、取回贮藏、被远程拒绝都有专属表情和标题，拉取、推送、克隆时小獭陪你等；版本记录、官网地址等改由家族公共配置下发，关于页自动更新。",
+        "en": "Otter Family 3.0: the icon moves to the shared family template in amber gold; otter expressions upgraded to the full family set of 120, now choreographed across 74 scenes — dawn and Friday commits, first push, big pushes, force pushes, pulling many commits, stash restore and rejected pushes each get their own face and headline, and the otter keeps you company while fetching, pulling, pushing and cloning; changelog and site links now come from the shared family config, so the About page stays current."
         },
         {
           "version": "2.0.7",

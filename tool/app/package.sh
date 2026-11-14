@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 水獭家族 macOS App 共用打包：出 DMG（.app + Applications 快捷方式）与 ZIP。
 # 在 App 根目录执行 ./tool/otter package，名称、包标识等读 App 的 otter.json 的 package 段。
-# 产物：dist/<file>-<版本>-macos-<架构>.dmg / .zip（同版本重打会覆盖）。
+# 产物：dist/<file>-<版本>-macos-<架构>-<年月日-时分>.dmg / .zip（时间后缀区分同版本的多次打包；上传时由 release.sh 改成固定名）。
 #
 # 用法：
 #   ./tool/otter package                # 打 macOS release DMG + ZIP
@@ -30,6 +30,7 @@ NOTE="$(cfg note)"
 FILE="$(cfg file)"
 SLUG="$(tr '[:upper:]' '[:lower:]' <<<"$FILE")"
 VERSION="$(awk '/^version:/ {print $2; exit}' pubspec.yaml | tr -d '"' | cut -d+ -f1)"
+STAMP="$(date +%Y%m%d-%H%M)"
 DIST_DIR="$ROOT/dist"
 SKIP_BUILD=0
 ZIP_ONLY=0
@@ -184,7 +185,7 @@ Apple Silicon 包请在 M 系列 Mac 上打开；Intel 包请在 Intel Mac 上�
 EOF
 fi
 
-ZIP_NAME="${FILE}-${VERSION}-macos-${BUILD_ARCH}.zip"
+ZIP_NAME="${FILE}-${VERSION}-macos-${BUILD_ARCH}-${STAMP}.zip"
 ZIP_PATH="$DIST_DIR/$ZIP_NAME"
 echo "==> 生成 ZIP: $ZIP_PATH"
 rm -f "$ZIP_PATH"
@@ -195,7 +196,7 @@ rm -f "$ZIP_PATH"
 
 DMG_PATH=""
 if [[ "$ZIP_ONLY" -eq 0 ]]; then
-  DMG_NAME="${FILE}-${VERSION}-macos-${BUILD_ARCH}.dmg"
+  DMG_NAME="${FILE}-${VERSION}-macos-${BUILD_ARCH}-${STAMP}.dmg"
   DMG_PATH="$DIST_DIR/$DMG_NAME"
   VOL_NAME="${APP_NAME} ${VERSION}"
   echo "==> 生成 DMG: $DMG_PATH"

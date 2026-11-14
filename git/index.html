@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>水獭 Git 2.0｜macOS 和 Windows 上的 Git 客户端</title>
+  <title>水獭 Git 3.0｜会陪你写代码的 Git 客户端 · macOS / Windows</title>
   <meta name="description"
-    content="水獭 Git（OtterGit）2.0：macOS 和 Windows 上的 Git 客户端。分支、历史、改动和冲突在同一个窗口里看清楚；小獭 AI 助手先说明、再确认、后执行。免费，不用注册，可在官网直接试用交互演示。" />
+    content="水獭 Git（OtterGit）3.0：会陪你写代码的 Git 客户端，macOS 与 Windows。提交图谱、并排对比、按块暂存、三方合并、交互式变基都有界面；120 个小獭表情在 74 个场景里回应你的每一次提交和推送。免费，不用注册。" />
   <meta name="theme-color" content="#0E0C16" />
-  <meta property="og:title" content="水獭 Git 2.0 · macOS 和 Windows 上的 Git 客户端" />
-  <meta property="og:description" content="macOS 和 Windows 上的 Git 客户端。泳道历史、左右对齐的对比、逐块解决冲突；小獭 AI 助手动手之前先确认。免费，不用注册。" />
+  <meta property="og:title" content="水獭 Git 3.0 · 会陪你写代码的 Git 客户端" />
+  <meta property="og:description" content="专业的 Git 客户端，也是一只陪你写代码的小水獭。提交图谱、并排对比、三方合并；提交、推送、冲突、深夜加班，它都有回应。免费，不用注册。" />
   <meta property="og:image" content="https://otter-family-site.tos-cn-beijing.volces.com/site/git/og.jpg" />
   <meta property="og:url" content="https://shaoasher.github.io/otter-family-site/git/" />
   <meta property="og:type" content="website" />
@@ -1191,7 +1191,7 @@
 
     .chapters {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
       margin: 16px 0 0;
       padding: 0;
@@ -1500,8 +1500,283 @@
       text-align: right;
     }
 
+    /* ── 陪伴：一天里的小獭 ── */
+    .day {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: clamp(20px, 3vw, 40px);
+      align-items: stretch;
+    }
+
+    .day-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      position: relative;
+    }
+
+    .day-list::before {
+      content: "";
+      position: absolute;
+      left: 55px;
+      top: 14px;
+      bottom: 14px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .day-list button {
+      position: relative;
+      display: grid;
+      grid-template-columns: 44px 22px 1fr;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      padding: 10px 12px 10px 0;
+      border: 0;
+      border-radius: var(--r-sm);
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      color: var(--mute);
+      transition: background-color .2s, color .2s;
+    }
+
+    .day-list time {
+      font: 600 12px/1 var(--mono);
+      text-align: right;
+      padding-right: 6px;
+    }
+
+    .day-list i {
+      justify-self: center;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--line-2);
+      transition: border-color .2s, background-color .2s, transform .2s;
+    }
+
+    .day-list b {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .day-list button[aria-selected="true"] {
+      background: var(--card-2);
+      color: var(--ink);
+    }
+
+    .day-list button[aria-selected="true"] i {
+      border-color: var(--c, var(--amber));
+      background: var(--c, var(--amber));
+      transform: scale(1.25);
+    }
+
+    @media (hover: hover) {
+      .day-list button:hover {
+        color: var(--ink);
+      }
+    }
+
+    .day-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 200px minmax(0, 1fr);
+      gap: clamp(20px, 3vw, 36px);
+      align-items: center;
+      padding: clamp(24px, 3.4vw, 44px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      background:
+        radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--c, var(--amber)) 16%, transparent), transparent 60%),
+        var(--card);
+      overflow: hidden;
+      transition: background .5s;
+    }
+
+    .day-face {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--c, var(--amber)) 22%, transparent), transparent);
+    }
+
+    .day-face img {
+      width: 100%;
+      height: auto;
+    }
+
+    .day-cmd {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 14px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, .28);
+      border: 1px solid var(--line);
+      font: 500 12.5px/1.2 var(--mono);
+      color: var(--c, var(--amber));
+    }
+
+    .day-card h3 {
+      font-size: clamp(22px, 2.6vw, 30px);
+      line-height: 1.25;
+    }
+
+    .day-card .say {
+      margin: 12px 0 0;
+      font-size: 16.5px;
+      color: var(--body);
+    }
+
+    .day-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .day-pool li {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font: 500 12px/1.4 var(--mono);
+      color: var(--mute);
+      transition: color .2s, border-color .2s;
+    }
+
+    .day-pool li.on {
+      color: var(--ink);
+      border-color: var(--c, var(--amber));
+    }
+
+    .day-note {
+      margin: 18px 0 0;
+      font-size: 13.5px;
+      color: var(--mute);
+    }
+
+    /* ── 专业功能：术语 + 讲解 + 小獭一句 ── */
+    .terms {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .term {
+      display: flex;
+      flex-direction: column;
+      padding: 22px 24px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      background: var(--card);
+      transition: border-color .2s, background-color .2s;
+    }
+
+    @media (hover: hover) {
+      .term:hover {
+        border-color: var(--line-2);
+        background: var(--card-2);
+      }
+    }
+
+    .term .k {
+      font: 600 12px/1.2 var(--mono);
+      letter-spacing: .04em;
+      color: var(--amber);
+    }
+
+    .term h3 {
+      margin-top: 8px;
+      font-size: 18px;
+    }
+
+    .term p {
+      margin: 8px 0 0;
+      font-size: 14.5px;
+      color: var(--body);
+    }
+
+    .term .otter-say {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 16px;
+      font-size: 13.5px;
+      color: var(--mute);
+    }
+
+    .term .otter-say img {
+      flex: none;
+      width: 34px;
+      height: 34px;
+    }
+
+    .feat .otter-say {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: var(--mute);
+    }
+
+    .feat .otter-say img {
+      flex: none;
+      width: 40px;
+      height: 40px;
+    }
+
     /* ── 响应式 ── */
     @media (max-width: 960px) {
+      .day,
+      .day-card {
+        grid-template-columns: 1fr;
+      }
+
+      .day-list {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .day-list::before {
+        display: none;
+      }
+
+      .day-list button {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .day-list time {
+        text-align: center;
+        padding: 0;
+      }
+
+      .day-list i {
+        display: none;
+      }
+
+      .day-face {
+        max-width: 180px;
+        margin: 0 auto;
+      }
+
+      .terms {
+        grid-template-columns: 1fr 1fr;
+      }
+
       .states {
         grid-template-columns: 1fr;
       }
@@ -1555,9 +1830,14 @@
       }
 
       .grid-3,
+      .terms,
       .tiers,
       .dl {
         grid-template-columns: 1fr;
+      }
+
+      .day-list {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .chapters {
@@ -1622,11 +1902,11 @@
         水獭 Git <small>OTTERGIT</small>
       </a>
       <nav class="nav-links" aria-label="站内导航">
-        <a href="#states">状态</a>
+        <a href="#companion">陪伴</a>
+        <a href="#features">功能</a>
         <a href="#otter">小獭 AI</a>
         <a href="#demo">在线试用</a>
-        <a href="#features">功能</a>
-        <a href="#vlog">版本</a>
+        <a href="#film">短片</a>
         <a class="btn btn-amber btn-sm" href="#download">下载 3.0</a>
       </nav>
     </div>
@@ -1645,7 +1925,7 @@
 
         <h1 id="hero-title"><span class="w" data-in>水獭</span> <span class="w" data-in><em>Git</em></span></h1>
         <p class="lede" data-in>
-          macOS 和 Windows 上的 Git 客户端。侧栏直接写着 <b class="mono hl">↑2 ↓3</b>，历史按分支排成泳道，改动左右对齐，冲突逐块解决。2.0 起，小獭 AI 助手先说明、再确认、后执行。
+          会陪你写代码的 Git 客户端。<b class="mono hl">Commit Graph</b>、并排 Diff、按块暂存、三方合并，专业功能一样不少；提交、推送、冲突、深夜加班，小獭都用表情回应你。
         </p>
         <div class="hero-act" data-in>
           <a class="btn btn-amber" id="cta-main"
@@ -1680,16 +1960,41 @@
           </button>
           <figure class="frame" id="hero-frame" style="margin: 0">
             <img data-media="shots/home-dark.webp" width="2560" height="1600" fetchpriority="high"
-              alt="水獭 Git 2.0 首页（深色）：小獭的问候、继续工作卡片，以及四个仓库卡片，分别显示分支、最近提交、未提交数和未推送数" />
+              alt="水獭 Git 3.0 首页（深色）：小獭的问候、继续工作卡片，以及四个仓库卡片，分别显示分支、最近提交、未提交数和未推送数" />
           </figure>
         </div>
 
         <div class="stats rise-group">
-          <div class="stat rise"><b><span data-count="3">3</span><small>档</small></b><span>小獭的权限深度，出厂是中间那档</span></div>
-          <div class="stat rise"><b><span data-count="120">120</span><small>个</small></b><span>小獭可调用的 Git 工具</span></div>
-          <div class="stat rise"><b><span data-count="36">36</span><small>种</small></b><span>小獭的动态表情，按场景切换</span></div>
+          <div class="stat rise"><b><span data-count="74">74</span><small>个</small></b><span>小獭会回应的场景：问候、提交、推送、冲突、深夜…</span></div>
+          <div class="stat rise"><b><span data-count="120">120</span><small>个</small></b><span>水獭家族动态表情，同一场景不连着重复</span></div>
+          <div class="stat rise"><b><span data-count="3">3</span><small>档</small></b><span>小獭 AI 的权限深度，出厂是中间那档</span></div>
           <div class="stat rise"><b>0</b><span>不用注册账号，没有订阅，也没有广告</span></div>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ 00 陪伴 ============ -->
+    <section class="sec" id="companion" data-tone="warm" aria-labelledby="companion-title">
+      <div class="wrap">
+        <div class="sec-head rise">
+          <p class="eyebrow">00 · 陪伴</p>
+          <h2 id="companion-title">你写代码的每一刻，<br /><span class="hl">它都在</span>。</h2>
+          <p class="lede">早上说早安，饭点提醒吃饭，周五下午祝你推送顺利，凌晨两点劝你去睡。小獭的表情读的是真实的仓库状态和时间，不是装饰。</p>
+        </div>
+
+        <div class="day rise" id="day">
+          <ol class="day-list" role="tablist" aria-label="一天里的小獭"></ol>
+          <article class="day-card" id="day-card" role="tabpanel" aria-live="polite">
+            <div class="day-face"><img id="day-face" data-expr="anim_270/morning.webp" alt="" width="200" height="200" loading="lazy" /></div>
+            <div>
+              <p class="day-cmd" id="day-cmd">greet · 09:00</p>
+              <h3 id="day-title">早上好，先拉一下远程再开工吧</h3>
+              <p class="say" id="day-say">打开 App，首页先跟你打招呼；继续工作卡片一点就回到昨天停下的地方。</p>
+              <ul class="day-pool" id="day-pool" aria-label="这个场景的候选表情"></ul>
+            </div>
+          </article>
+        </div>
+        <p class="day-note rise">右边一排是这个场景的候选表情：每次随机抽一张，同一场景不会连着两次一样。系统开了「减弱动态效果」时，小獭换成静帧。</p>
       </div>
     </section>
 
@@ -1698,32 +2003,32 @@
       <div class="wrap">
         <div class="sec-head rise">
           <p class="eyebrow">01 · 仓库状态</p>
-          <h2 id="states-title">仓库处在什么状态，<br />窗口一眼告诉你。</h2>
-          <p class="lede">背景环境层的颜色、小獭的表情、状态栏的提示都读同一份仓库状态。往下滚动，本页背景也会跟着变。</p>
+          <h2 id="states-title">仓库处在什么状态，<br />小獭的脸上就写着。</h2>
+          <p class="lede">工作区（Working Tree）有改动时它专注，撞上合并冲突（Merge Conflict）它紧张，同步完成它放松。背景环境层、小獭表情、状态栏读的是同一份状态；往下滚动，本页背景也会跟着变。</p>
         </div>
 
         <div class="states">
           <ol class="steps">
             <li class="step on" data-tone="warm" data-shot="0" data-otter="anim_270/focus" style="--c: var(--amber)">
-              <span class="tag"><i></i>有改动</span>
+              <span class="tag"><i></i>Working Tree · 有改动</span>
               <h3>改了 12 个文件，先看清再提交</h3>
               <p>待提交的文件按目录列出，选中一个，右边就是左右对齐的对比。只想先交其中一处？点改动块上的「暂存此块」。</p>
               <img class="inline frame" data-media="shots/files-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
             <li class="step" data-tone="alert" data-shot="1" data-otter="anim_270/shock" style="--c: var(--coral)">
-              <span class="tag"><i></i>合并冲突</span>
+              <span class="tag"><i></i>Merge Conflict · 冲突</span>
               <h3>撞上冲突，横幅会一直提醒</h3>
               <p>冲突文件排在最前面并标红。只有一边改过的块可以自动解决，两边都改过的逐块挑选，也能打开三方合并对照着改。</p>
               <img class="inline frame" data-media="shots/conflict-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
             <li class="step" data-tone="busy" data-shot="2" data-otter="anim_270/think" style="--c: var(--violet)">
-              <span class="tag"><i></i>小獭协助</span>
+              <span class="tag"><i></i>AI Agent · 小獭协助</span>
               <h3>交给小獭，它先列出步骤</h3>
               <p>「帮我写提交说明并提交」：小獭暂存、起草说明，到推送这一步先停下，出一张确认卡，写清会改动什么、风险等级多高。</p>
               <img class="inline frame" data-media="shots/ai-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
             <li class="step" data-tone="calm" data-shot="3" data-otter="anim_270/proud" style="--c: var(--sky)">
-              <span class="tag"><i></i>已同步</span>
+              <span class="tag"><i></i>In Sync · 已同步</span>
               <h3>推送完成，历史里记得清清楚楚</h3>
               <p>每个分支一条泳道，本地和远程停在哪一目了然。顶部统计栏记录这个仓库一共提交了多少次、今天提交了几次。</p>
               <img class="inline frame" data-media="shots/history-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
@@ -1748,17 +2053,17 @@
       <div class="wrap moment">
         <div class="rise">
           <p class="eyebrow">02 · 结果反馈</p>
-          <h2 id="moment-title">提交完成，<br />下一步就在弹窗里。</h2>
-          <p class="lede">提交、推送、拉取的进度弹窗在完成后原地切换成结果页，不用再去工具栏找按钮。</p>
+          <h2 id="moment-title">每一次提交，<br />都有人替你记着。</h2>
+          <p class="lede">提交、推送、拉取的进度弹窗在完成后原地切换成结果页：进行中是拖着行李出门，完成了是抵达和欢呼，下一步按钮就在手边。</p>
           <ul class="points">
             <li><span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M4 7l4-4 4 4" /></svg></span>
               <div><b>提交后一键推送</b><span>有上游分支时，结果页的主按钮就是「推送」；没有上游时可以直接撤销这次提交。</span></div>
             </li>
             <li><span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5l1.7 3.5 3.8.5-2.8 2.6.7 3.8L8 11.1 4.6 12.9l.7-3.8L2.5 6.5l3.8-.5z" /></svg></span>
-              <div><b>里程碑会被记住</b><span>第 1 次、每第 100 次提交，小獭会换上庆祝的表情，记下这一次。</span></div>
+              <div><b>里程碑会被记住</b><span>第 1 次、每第 100 次提交，小獭会换上庆祝的表情；新分支首次推送、一次推上 10 个以上提交，也各有专属的一刻。</span></div>
             </li>
             <li><span class="ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7" /></svg></span>
-              <div><b>小事不打断你</b><span>「已是最新」「已暂存」这类结果只在状态栏提示一句，几秒后自动消失。</span></div>
+              <div><b>小事不打断你</b><span>「已是最新」「已暂存」这类结果只在状态栏提示一句，几秒后自动消失；拉取前自动贮藏、拉完放回，也不会多弹一个窗。</span></div>
             </li>
           </ul>
         </div>
@@ -1782,11 +2087,115 @@
       </div>
     </section>
 
-    <!-- ============ 03 小獭 AI ============ -->
+    <!-- ============ 03 功能 ============ -->
+    <section class="sec" id="features" data-tone="calm" aria-labelledby="feat-title">
+      <div class="wrap">
+        <div class="sec-head rise">
+          <p class="eyebrow">03 · 专业功能</p>
+          <h2 id="feat-title">专业功能，<br />用它们本来的名字。</h2>
+          <p class="lede">界面里写的就是 Git 的术语：Commit、Stash、Rebase、Cherry-pick……学到的每个词都能在别处用上。每个功能旁边，小獭都有一句话。</p>
+        </div>
+
+        <div class="feats">
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">01 · Commit Graph · 提交图谱</span>
+              <h3>按泳道看清分叉与合并</h3>
+              <p>每个分支一条泳道。本地 HEAD 停在哪、远程（origin）走到哪、谁合进了谁，图上都标着。点开一条提交，右侧就是这次改了哪些文件。</p>
+              <ul class="bullets">
+                <li>按提交说明、作者或哈希搜索，<code>⌘3</code> 直接打开</li>
+                <li>右键提交：拣选、回滚、变基到这里、创建补丁、打标签</li>
+              </ul>
+              <p class="otter-say"><img data-expr="still_270/review.webp" alt="" width="40" height="40" loading="lazy" />第 1,299 次提交，每一次我都记着。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 400; --y: 150; --w: 2160; --h: 1100">
+                <img data-media="shots/history-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="提交历史：左侧是分支泳道，顶部统计栏显示 1,299 次提交，右侧是选中提交的说明与改动文件列表" />
+              </div>
+            </figure>
+          </article>
+
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">02 · Side-by-side Diff · Hunk Staging</span>
+              <h3>删除标<span class="del">红</span>，新增标<span class="add">绿</span>，按块暂存</h3>
+              <p>新旧两栏按行对齐，一边多出几行，另一边就空出几行，后面的代码不会整段错位。一个文件改了三处，可以只暂存（stage）其中一块（hunk）。</p>
+              <ul class="bullets">
+                <li>暂存文件、暂存此块、丢弃此块，按钮都在改动块的标题栏上</li>
+                <li>图片、视频、PDF 也能全屏对比；也可以换成外部 diff 工具</li>
+              </ul>
+              <p class="otter-say"><img data-expr="still_270/focus.webp" alt="" width="40" height="40" loading="lazy" />只交这一块？没问题，其他的先留着。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 960; --y: 150; --w: 1600; --h: 760">
+                <img data-media="shots/files-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="home_view.dart 的对比：删除的两行标红，新增的两行标绿，行号对齐" />
+              </div>
+            </figure>
+          </article>
+
+          <article class="feat">
+            <div class="feat-copy rise">
+              <span class="num">03 · 3-way Merge · 三方合并</span>
+              <h3>冲突逐块解决，不再对着 &lt;&lt;&lt;&lt;&lt;&lt;&lt; 发呆</h3>
+              <p>拉取或合并撞上冲突，冲突文件排在列表最前面。只有一边改过的块点「自动解决」，两边都改过的「逐块解决」，想看全貌就打开三方合并：base、ours、theirs 并排对照。</p>
+              <ul class="bullets">
+                <li>合并没完成时，顶部横幅一直提醒，改完点「去提交」</li>
+                <li>「中止合并」回到合并前；也可以让小獭先出一版方案</li>
+              </ul>
+              <p class="otter-say"><img data-expr="still_270/sweat.webp" alt="" width="40" height="40" loading="lazy" />别慌……其实我比你还紧张。我们一块一块来。</p>
+            </div>
+            <figure class="frame rise" style="margin: 0">
+              <div class="crop" style="--x: 400; --y: 150; --w: 2160; --h: 1100">
+                <img data-media="shots/conflict-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
+                  alt="合并冲突：顶部横幅写着「合并冲突 · 2 个文件」和「全部解决」按钮，冲突文件标红排在最前" />
+              </div>
+            </figure>
+          </article>
+        </div>
+
+        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
+          <p class="eyebrow">更多 Git 操作</p>
+          <h2>命令行能做的，<br />这里都有界面。</h2>
+          <p class="lede">每个操作执行前都能看到将要运行的 git 命令；危险的那几个（强制推送、硬重置、丢弃改动）每次单独确认。</p>
+        </div>
+        <div class="terms">
+          <article class="term rise"><span class="k">Stash</span><h3>贮藏</h3><p>改到一半要切分支？先把工作区收进贮藏，回来再取（apply / pop）。拉取被未提交改动挡住时，会自动贮藏、拉完放回。</p><p class="otter-say"><img data-expr="still_270/luggage.webp" alt="" width="34" height="34" loading="lazy" />先帮你收进小箱子，拉完再放回来。</p></article>
+          <article class="term rise"><span class="k">Interactive Rebase</span><h3>交互式变基</h3><p>把一串零碎提交整理干净：重排、合并（squash）、改说明、丢弃，拖动列表即可，执行前能看到将运行的命令。</p><p class="otter-say"><img data-expr="still_270/clean.webp" alt="" width="34" height="34" loading="lazy" />历史整理好了，干干净净。</p></article>
+          <article class="term rise"><span class="k">Cherry-pick</span><h3>拣选</h3><p>只想要别的分支上的某一次提交？右键它，拣到当前分支；冲突时可以继续、跳过或中止。</p><p class="otter-say"><img data-expr="still_270/gacha.webp" alt="" width="34" height="34" loading="lazy" />这一抽，正好是你要的那张。</p></article>
+          <article class="term rise"><span class="k">Revert · Reset</span><h3>回滚与重置</h3><p>Revert 生成一次反向提交，安全撤回已推送的改动；Reset 回到指定提交，软、混合、硬三种模式写清后果。</p><p class="otter-say"><img data-expr="still_270/retry.webp" alt="" width="34" height="34" loading="lazy" />硬重置之前，我会再问你一次。</p></article>
+          <article class="term rise"><span class="k">Reflog</span><h3>引用日志</h3><p>HEAD 去过的每一个位置都在这里。误删分支、重置过头，从 reflog 找回那次提交，一键恢复。</p><p class="otter-say"><img data-expr="still_270/relief.webp" alt="" width="34" height="34" loading="lazy" />丢了的提交，多半还能找回来。</p></article>
+          <article class="term rise"><span class="k">Bisect</span><h3>二分查错</h3><p>标一个正常的提交、一个出错的提交，git bisect 对半缩小范围，几步定位引入问题的那一次。</p><p class="otter-say"><img data-expr="still_270/think.webp" alt="" width="34" height="34" loading="lazy" />让我想想……就是这一次！</p></article>
+          <article class="term rise"><span class="k">Tag</span><h3>标签</h3><p>给发版的提交打上轻量或附注标签，推送时可以带上全部标签。</p><p class="otter-say"><img data-expr="still_270/souvenir.webp" alt="" width="34" height="34" loading="lazy" />打个标签，留个纪念。</p></article>
+          <article class="term rise"><span class="k">File History</span><h3>文件历史</h3><p>一个文件被谁、在哪次提交里改过，按时间排开，点开任意一次就是当时的对比。</p><p class="otter-say"><img data-expr="still_270/read.webp" alt="" width="34" height="34" loading="lazy" />这一行是三周前改的，我翻到了。</p></article>
+          <article class="term rise"><span class="k">Worktree · Submodule</span><h3>工作树与子模块</h3><p>同一个仓库同时检出多个分支；子模块的添加、更新、移除都在一处管理。</p><p class="otter-say"><img data-expr="still_270/map.webp" alt="" width="34" height="34" loading="lazy" />两个分支并排放着，互不打扰。</p></article>
+          <article class="term rise"><span class="k">Git-flow · LFS</span><h3>分支流程与大文件</h3><p>功能、发布、热修复分支的名字和起点自动填好；大文件交给 Git LFS 跟踪。</p><p class="otter-say"><img data-expr="still_270/plan.webp" alt="" width="34" height="34" loading="lazy" />功能分支从 develop 出发，我替你填好了。</p></article>
+          <article class="term rise"><span class="k">Pull Request</span><h3>拉取请求</h3><p>分支推送后直接创建 PR，支持 GitHub、Gitee、GitLab、Bitbucket。</p><p class="otter-say"><img data-expr="still_270/coop.webp" alt="" width="34" height="34" loading="lazy" />推上去了，叫上队友一起看看。</p></article>
+          <article class="term rise"><span class="k">Auto Fetch · Tray</span><h3>后台获取与菜单栏</h3><p>按设定间隔在后台 fetch；不开主窗口，菜单栏也能看到可拉取、未推送的数量并一键同步。</p><p class="otter-say"><img data-expr="still_270/queue.webp" alt="" width="34" height="34" loading="lazy" />远程有 3 个新提交，排好队了。</p></article>
+        </div>
+
+        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
+          <p class="eyebrow">浅色 / 深色</p>
+          <h2>两套主题，各自精修。</h2>
+          <p class="lede">跟随系统，或者手动指定，切换不用重启。界面语言支持中文和 English。</p>
+        </div>
+        <figure class="frame compare rise" id="compare" style="margin: 0">
+          <img data-media="shots/history-light.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="浅色主题的提交历史" />
+          <img class="top" data-media="shots/history-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="深色主题的提交历史" />
+          <span class="handle" aria-hidden="true"><span class="knob"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 4 2 8l4 4M10 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span></span>
+          <span class="lab l" aria-hidden="true">浅色</span>
+          <span class="lab d" aria-hidden="true">深色</span>
+          <input type="range" min="0" max="100" value="50" step="1" aria-label="左右拖动，对比浅色和深色主题" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ 04 小獭 AI ============ -->
     <section class="sec" id="otter" data-tone="busy" aria-labelledby="otter-title">
       <div class="wrap">
         <div class="sec-head rise">
-          <p class="eyebrow">03 · 小獭 AI 助手 2.0</p>
+          <p class="eyebrow">04 · 小獭 AI 助手</p>
           <h2 id="otter-title">动手之前，<span class="hl">先确认</span>。</h2>
           <p class="lede">小獭在窗口右侧。看状态、拉取、推送、暂存这些短指令不配模型也能用；配上模型后，写提交说明、起草 PR 描述、把「提交并推送」拆成几步完成，都可以交给它。</p>
         </div>
@@ -1831,13 +2240,13 @@
       </div>
     </section>
 
-    <!-- ============ 04 在线试用 ============ -->
+    <!-- ============ 05 在线试用 ============ -->
     <section class="sec" id="demo" data-tone="dawn" aria-labelledby="demo-title">
       <div class="wrap">
         <div class="sec-head rise">
-          <p class="eyebrow">04 · 在线试用</p>
+          <p class="eyebrow">05 · 在线试用</p>
           <h2 id="demo-title">不用安装，<br />先在这里点一点。</h2>
-          <p class="lede">下面是一个可以操作的交互演示，界面与 App 2.0 一致，数据均为演示数据。可以直接在窗口里点击，也可以用右侧的按钮触发场景。</p>
+          <p class="lede">下面是一个可以操作的交互演示，界面与 App 3.0 一致，数据均为演示数据。可以直接在窗口里点击，也可以用右侧的按钮触发场景。</p>
         </div>
 
         <div class="demo">
@@ -1887,127 +2296,33 @@
       </div>
     </section>
 
-    <!-- ============ 05 功能 ============ -->
-    <section class="sec" id="features" data-tone="calm" aria-labelledby="feat-title">
-      <div class="wrap">
-        <div class="sec-head rise">
-          <p class="eyebrow">05 · 每天都要用的</p>
-          <h2 id="feat-title">历史、对比、冲突，<br />各自都做到位。</h2>
-        </div>
-
-        <div class="feats">
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">01 · 提交历史</span>
-              <h3>按泳道看清分叉</h3>
-              <p>每个分支一条泳道。本地停在哪、远程走到哪、谁合进了谁，图上都标着。点开一条提交，右侧就是这次改了哪些文件。</p>
-              <ul class="bullets">
-                <li>按提交说明、作者或哈希搜索，<code>⌘3</code> 直接打开</li>
-                <li>右键提交可以遴选、变基、创建补丁</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 400; --y: 150; --w: 2160; --h: 1100">
-                <img data-media="shots/history-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="提交历史：左侧是分支泳道，顶部统计栏显示 1,299 次提交，右侧是选中提交的说明与改动文件列表" />
-              </div>
-            </figure>
-          </article>
-
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">02 · 逐行对比</span>
-              <h3>删除标<span class="del">红</span>，新增标<span class="add">绿</span></h3>
-              <p>新旧两栏按行对齐，一边多出几行，另一边就空出几行，后面的代码不会整段错位。一个文件改了三处，可以只暂存其中一处。</p>
-              <ul class="bullets">
-                <li>暂存文件、暂存此块、丢弃此块，按钮都在改动块的标题栏上</li>
-                <li>也可以换成外部差异比对工具</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 960; --y: 150; --w: 1600; --h: 760">
-                <img data-media="shots/files-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="home_view.dart 的对比：删除的两行标红，新增的两行标绿，行号对齐" />
-              </div>
-            </figure>
-          </article>
-
-          <article class="feat">
-            <div class="feat-copy rise">
-              <span class="num">03 · 合并冲突</span>
-              <h3>冲突逐块解决</h3>
-              <p>拉取时撞上冲突，冲突文件排在列表最前面。只有一边改过的块点「自动解决」，两边都改过的用「逐块解决」，想看全貌就打开「三方合并」。</p>
-              <ul class="bullets">
-                <li>合并没完成时，顶部横幅一直提醒，改完点「去提交」</li>
-                <li>点「中止合并」回到合并前的状态</li>
-              </ul>
-            </div>
-            <figure class="frame rise" style="margin: 0">
-              <div class="crop" style="--x: 400; --y: 150; --w: 2160; --h: 1100">
-                <img data-media="shots/conflict-dark.webp" width="2560" height="1600" loading="lazy" decoding="async"
-                  alt="合并冲突：顶部横幅写着「合并冲突 · 2 个文件」和「全部解决」按钮，冲突文件标红排在最前" />
-              </div>
-            </figure>
-          </article>
-        </div>
-
-        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
-          <p class="eyebrow">浅色 / 深色</p>
-          <h2>两套主题，各自精修。</h2>
-          <p class="lede">跟随系统，或者手动指定，切换不用重启。界面语言支持中文和 English。</p>
-        </div>
-        <figure class="frame compare rise" id="compare" style="margin: 0">
-          <img data-media="shots/history-light.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="浅色主题的提交历史" />
-          <img class="top" data-media="shots/history-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="深色主题的提交历史" />
-          <span class="handle" aria-hidden="true"><span class="knob"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 4 2 8l4 4M10 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span></span>
-          <span class="lab l" aria-hidden="true">浅色</span>
-          <span class="lab d" aria-hidden="true">深色</span>
-          <input type="range" min="0" max="100" value="50" step="1" aria-label="左右拖动，对比浅色和深色主题" />
-        </figure>
-
-        <div class="sec-head rise" style="margin-top: clamp(96px, 12vw, 144px)">
-          <p class="eyebrow">工具箱</p>
-          <h2>零碎的活，也都有界面。</h2>
-        </div>
-        <div class="grid-3 rise-group">
-          <article class="card rise"><span class="k">Stash</span><h3>暂存架</h3><p>改到一半要切去别的分支，先把改动放进暂存架，回来再取。</p></article>
-          <article class="card rise"><span class="k">Bisect</span><h3>二分查错</h3><p>标一个正常的提交和一个出错的提交，<code>git bisect</code> 对半查找引入问题的那一次。</p></article>
-          <article class="card rise"><span class="k">Patch</span><h3>补丁</h3><p>提交落错了分支，创建补丁带走，到正确的分支上再应用。</p></article>
-          <article class="card rise"><span class="k">Worktree · Submodule</span><h3>工作树和子模块</h3><p><code>worktree</code> 和 <code>submodule</code> 都有管理界面，添加、更新、移除都在一处。</p></article>
-          <article class="card rise"><span class="k">LFS · Git-flow</span><h3>LFS 与 Git-flow</h3><p>工具栏「更多」里有大文件和 Git-flow 分支流程的入口。</p></article>
-          <article class="card rise"><span class="k">Pull Request</span><h3>拉取请求</h3><p>分支推送后直接创建拉取请求，支持 GitHub、Gitee、GitLab、Bitbucket。</p></article>
-          <article class="card rise"><span class="k">Tray</span><h3>菜单栏托盘</h3><p>不打开主窗口，也能看到可拉取、未推送的数量，并一键同步。</p></article>
-          <article class="card rise"><span class="k">Auto Fetch</span><h3>自动刷新</h3><p>改动即时刷新，远程按设定的间隔在后台获取，也可以关闭。</p></article>
-          <article class="card rise"><span class="k">Keychain</span><h3>钥匙串</h3><p>远程账号保存在系统钥匙串中，推送私有仓库不必每次输入密码。</p></article>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ 06 短片 ============ -->
     <section class="sec" id="film" data-tone="dawn" aria-labelledby="film-title">
       <div class="wrap">
         <div class="sec-head rise">
           <p class="eyebrow">06 · 产品短片</p>
-          <h2 id="film-title">四分钟，把水獭 Git 讲清楚。</h2>
-          <p class="lede">分四段：去哪下载、产品特色、功能细讲、总结。画面来自真实界面与官网，中文配音，画面内带字幕，点章节可以直接跳转。</p>
+          <h2 id="film-title">三分钟，跟着小獭上手 Git。</h2>
+          <p class="lede">提交、分支、冲突、AI，一段一个操作，全程真实界面。小獭第一人称讲解，从凌晨一点的报错讲到「明天见」。中文配音，画面内带字幕，点章节直接跳转。</p>
         </div>
         <div class="frame film rise">
           <video id="promo" controls playsinline preload="none" data-media-poster="poster.jpg" width="1920" height="1080"
-            aria-label="水獭 Git 讲解片，四分二十三秒，中文配音">
+            aria-label="水獭 Git 上手全攻略，三分零三秒，中文配音">
             <source data-media="promo.mp4" type="video/mp4" />
             <track kind="captions" srclang="zh" label="中文" src="promo.zh.vtt" />
             你的浏览器无法播放内嵌视频，可以<a data-media="promo.mp4">直接下载</a>观看。
           </video>
         </div>
         <ol class="chapters rise" aria-label="短片章节">
-          <li><a href="#film" data-t="17"><span>00:17</span>官网和下载</a></li>
-          <li><a href="#film" data-t="56"><span>00:56</span>产品特色</a></li>
-          <li><a href="#film" data-t="99.5"><span>01:39</span>首页</a></li>
-          <li><a href="#film" data-t="121"><span>02:01</span>看改动与提交</a></li>
-          <li><a href="#film" data-t="140"><span>02:20</span>历史与冲突</a></li>
-          <li><a href="#film" data-t="169"><span>02:49</span>常用操作</a></li>
-          <li><a href="#film" data-t="198.5"><span>03:18</span>小獭助手</a></li>
-          <li><a href="#film" data-t="229.5"><span>03:49</span>总结与留言</a></li>
+          <li><a href="#film" data-t="0"><span>00:00</span>开场：凌晨一点的报错</a></li>
+          <li><a href="#film" data-t="12.7"><span>00:12</span>首页与仓库</a></li>
+          <li><a href="#film" data-t="33.29"><span>00:33</span>勾选、对比、提交</a></li>
+          <li><a href="#film" data-t="57.53"><span>00:57</span>拉取与推送</a></li>
+          <li><a href="#film" data-t="73"><span>01:13</span>分支与历史</a></li>
+          <li><a href="#film" data-t="92.27"><span>01:32</span>合并冲突</a></li>
+          <li><a href="#film" data-t="108.42"><span>01:48</span>小獭 AI</a></li>
+          <li><a href="#film" data-t="127.95"><span>02:07</span>心情与细节</a></li>
+          <li><a href="#film" data-t="153.91"><span>02:33</span>夜深了</a></li>
+          <li><a href="#film" data-t="167.71"><span>02:47</span>下载与结尾</a></li>
         </ol>
       </div>
     </section>
@@ -2091,7 +2406,15 @@
           </details>
           <details>
             <summary>官网的在线试用和 App 一样吗？</summary>
-            <div class="a"><p>界面、交互和动效与 App 2.0 一致，用来快速了解操作方式；数据是演示数据，不会读取你的仓库。完整功能请下载 App 使用。</p></div>
+            <div class="a"><p>界面、交互和动效与 App 3.0 一致，用来快速了解操作方式；数据是演示数据，不会读取你的仓库。完整功能请下载 App 使用。</p></div>
+          </details>
+          <details>
+            <summary>小獭的表情会不会打扰我干活？</summary>
+            <div class="a"><p>不会。只有提交、推送、拉取、合并这类值得记住的时刻才会弹结果页，几秒后自己收起；「已是最新」「已暂存」这类小事只在状态栏说一句。系统开了「减弱动态效果」时，小獭换成静帧。</p></div>
+          </details>
+          <details>
+            <summary>我对 Git 不熟，能用吗？</summary>
+            <div class="a"><p>能。界面上写的是 Git 的标准术语，按钮旁边有说明，执行前能看到将要运行的命令；不会的操作可以直接用大白话问小獭，它会先列出步骤再请你确认。</p></div>
           </details>
           <details>
             <summary>为什么叫水獭？</summary>
