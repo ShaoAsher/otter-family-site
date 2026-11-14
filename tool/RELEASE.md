@@ -38,7 +38,7 @@ export OTTER_APPS='git=/path/otter-git:tools=/path/otter-tools'
 ## 标准发版顺序（桌面端）
 
 1. `family.json`：`changelog` 首条 = `pubspec` 版本；必要时改 `latest`。
-2. 图标 / 表情：`brand_build` → `sync_tos brand`；发版打包自动 `assets pull bundle`（仅 still 进安装包，anim 运行时从 TOS 拉）。
+2. 图标 / 表情：`brand_build` → `source/brand_apply.sh` → `sync_tos brand`；发版打包自动 `assets pull bundle`（仅 still 进安装包，anim 运行时从 TOS 拉）。
 3. `./tool/otter site all`（各 App）→ 官网素材上 TOS `site/<app>/`。
 4. App 在 **`main`** 提交；`git tag v<版本>` 指向当前提交（或 `OTTER_RELEASE_ANY_BRANCH=1` 自测）。
 5. **`./tool/otter launch git --push`**：`main` 若领先则先 `push origin main`（触发 Windows CI）→ mac 打包公证 → `publish` → 等 CI → `mirror` → 切换 `download.version` → 提交并推 `family.json`。

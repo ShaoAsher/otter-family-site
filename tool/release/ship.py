@@ -7,7 +7,7 @@
 
 1. 检查：版本、changelog、gh/TOS；可选先 push origin main（触发 Windows CI）。
 2. tool/app/release.sh（main 分支检查、打包公证、release.py publish 传 TOS + GitHub）。
-3. 等 Windows CI 把包传到 GitHub Release（每 30 秒查一次，最多 60 分钟；--no-wait 跳过，之后自己跑 mirror）。
+3. 等 Windows CI 把包传到 GitHub Release（每 12 秒查一次，最多 35 分钟；main 快车道 CI 通常约 15 分钟；--no-wait 跳过）。
 4. release.py mirror：Windows 包补到 TOS；全平台两处齐了就切换 download.version，family.json 推到 TOS。
 5. 本仓提交 family.json；带 --push 时推 main（Pages 上的 family.json 与产品官网随之更新）。
 
@@ -25,7 +25,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "family.json"
 REPO = "ShaoAsher/otter-family-site"
-WAIT_MIN = 60
+WAIT_MIN = 35
+POLL_SEC = 12
 
 
 def run(*cmd, cwd=None):
@@ -85,7 +86,7 @@ def main(argv):
         while not win <= gh_assets(tag):
             if time.time() > deadline:
                 sys.exit(f"等不到 Windows 包；CI 好了以后跑：./tool/otter mirror {app} {version}")
-            time.sleep(30)
+            time.sleep(POLL_SEC)
     if win and "--no-wait" in flags:
         print(f"跳过等待；Windows 包传完后跑：./tool/otter mirror {app} {version}")
     else:

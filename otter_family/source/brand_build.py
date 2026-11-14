@@ -170,22 +170,66 @@ def mark_and_layers(tile: Image.Image) -> tuple[Image.Image, Image.Image, Image.
     return mark.crop(box), otter.crop(disc_box), badge_layer.crop(disc_box)
 
 
-def mac_canvas(tile: Image.Image) -> Image.Image:
-    body = 824
-    face = rounded(tile.resize((body, body), Image.LANCZOS), body * RADIUS)
-    canvas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
-    shadow = Image.new("L", (1024, 1024), 0)
-    ImageDraw.Draw(shadow).rounded_rectangle((100, 112, 924, 936), radius=body * RADIUS, fill=90)
-    layer = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
-    layer.putalpha(shadow.filter(ImageFilter.GaussianBlur(14)))
-    canvas.alpha_composite(layer)
-    canvas.alpha_composite(face, (100, 100))
+def hero_tile(tile: Image.Image, mark: Image.Image, side: int = 1024) -> Image.Image:
+    """圆盘 + 徽章撑满圆角方图，去掉外侧黑边留白；水獭随整体放大。"""
+    tile = full_bleed(tile)
+    bbox = mark.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
+    if not bbox:
+        return rounded(tile.resize((side, side), Image.LANCZOS), side * RADIUS)
+    x0, y0, x1, y1 = bbox
+    pad = max(2, int(0.015 * max(x1 - x0, y1 - y0)))
+    x0, y0 = max(0, x0 - pad), max(0, y0 - pad)
+    x1, y1 = min(tile.width, x1 + pad), min(tile.height, y1 + pad)
+    crop = tile.crop((x0, y0, x1, y1)).convert("RGBA")
+    cw, ch = crop.size
+    s = max(cw, ch)
+    sq = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    sq.alpha_composite(crop, ((s - cw) // 2, (s - ch) // 2))
+    up = sq.resize((side, side), Image.LANCZOS)
+    return rounded(up, side * RADIUS)
+
+
+def template_rgb(im: Image.Image) -> Image.Image:
+    """菜单栏 / 托盘用的单色模板图（形状来自 alpha）。"""
+    im = im.convert("RGBA")
+    a = im.getchannel("A")
+    bbox = a.point(lambda v: 255 if v > 8 else 0).getbbox()
+    if not bbox:
+        return im
+    crop = im.crop(bbox)
+    a = crop.getchannel("A")
+    lum = crop.convert("L")
+    mask = ImageChops.multiply(a, lum.point(lambda v: 255 if v > 24 else 0))
+    out = Image.new("RGBA", crop.size, (0, 0, 0, 255))
+    out.putalpha(mask)
+    return out
+
+
+def fit_template(im: Image.Image, px: int) -> Image.Image:
+    im = template_rgb(im)
+    bbox = im.getchannel("A").getbbox()
+    if not bbox:
+        return Image.new("RGBA", (px, px), (0, 0, 0, 0))
+    crop = im.crop(bbox)
+    pad = max(1, round(px * 0.08))
+    inner = px - 2 * pad
+    cw, ch = crop.size
+    sc = min(inner / cw, inner / ch)
+    nw, nh = max(1, round(cw * sc)), max(1, round(ch * sc))
+    small = crop.resize((nw, nh), Image.LANCZOS)
+    canvas = Image.new("RGBA", (px, px), (0, 0, 0, 0))
+    canvas.alpha_composite(small, ((px - nw) // 2, (px - nh) // 2))
     return canvas
 
 
-def desktop(out: str, tile: Image.Image, mark: Image.Image, black: Image.Image) -> None:
+def mac_canvas(tile: Image.Image, mark: Image.Image) -> Image.Image:
+    return hero_tile(tile, mark, 1024)
+
+
+def desktop(out: str, tile: Image.Image, mark: Image.Image, badge_layer: Image.Image) -> None:
+    hero = hero_tile(tile, mark, 1024)
     icons = f"{out}/macos/AppIcon.appiconset"
-    big = mac_canvas(tile)
+    big = hero
     for n in (16, 32, 64, 128, 256, 512, 1024):
         write(big, f"{icons}/app_icon_{n}.png", n)
     write_json({
@@ -196,9 +240,11 @@ def desktop(out: str, tile: Image.Image, mark: Image.Image, black: Image.Image) 
         "info": {"version": 1, "author": "xcode"},
     }, f"{icons}/Contents.json")
 
+    # 菜单栏 / 托盘：各 App 只用自家徽章图形，Git 与 Tools 可区分（不再共用家族剪影）。
+    status_tpl = fit_template(badge_layer, 256)
     menubar = f"{out}/macos/MenuBarIcon.imageset"
     for sc in (1, 2):
-        write(black, f"{menubar}/menubar_{18 * sc}.png", 18 * sc)
+        write(fit_template(badge_layer, 18 * sc), f"{menubar}/menubar_{18 * sc}.png")
     write_json({
         "images": [{"idiom": "mac", "filename": f"menubar_{18 * sc}.png", "scale": f"{sc}x"} for sc in (1, 2)],
         "info": {"version": 1, "author": "xcode"},
@@ -206,9 +252,9 @@ def desktop(out: str, tile: Image.Image, mark: Image.Image, black: Image.Image) 
     }, f"{menubar}/Contents.json")
 
     os.makedirs(f"{out}/windows", exist_ok=True)
-    rounded(tile.resize((256, 256), Image.LANCZOS), 256 * RADIUS).save(
+    hero.resize((256, 256), Image.LANCZOS).save(
         f"{out}/windows/app_icon.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64, 128, 256)])
-    mark.resize((256, 256), Image.LANCZOS).save(
+    status_tpl.save(
         f"{out}/windows/tray_icon.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64)])
 
 
@@ -222,19 +268,20 @@ ANDROID_DENSITY = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4
 
 
 def mobile(out: str, tile: Image.Image, mark: Image.Image) -> None:
+    hero = hero_tile(tile, mark, 1024)
     icons = f"{out}/ios/AppIcon.appiconset"
     images = []
     for idiom, pt, scales in IOS_ICONS:
         label = f"{pt:g}x{pt:g}"
         for sc in scales:
             name = f"Icon-App-{label}@{sc}x.png"
-            write(tile, f"{icons}/{name}", round(pt * sc))
+            write(hero, f"{icons}/{name}", round(pt * sc))
             images.append({"size": label, "idiom": idiom, "filename": name, "scale": f"{sc}x"})
     write_json({"images": images, "info": {"version": 1, "author": "xcode"}}, f"{icons}/Contents.json")
 
     res = f"{out}/android/res"
     for name, k in ANDROID_DENSITY.items():
-        write(tile, f"{res}/mipmap-{name}/ic_launcher.png", round(48 * k))
+        write(hero, f"{res}/mipmap-{name}/ic_launcher.png", round(48 * k))
         write(mark, f"{res}/drawable-{name}/ic_launcher_foreground.png", round(108 * k))
     os.makedirs(f"{res}/mipmap-anydpi-v26", exist_ok=True)
     with open(f"{res}/mipmap-anydpi-v26/ic_launcher.xml", "w") as f:
@@ -248,7 +295,8 @@ def mobile(out: str, tile: Image.Image, mark: Image.Image) -> None:
             '          android:inset="16%" />\n'
             "  </foreground>\n"
             "</adaptive-icon>\n")
-    ground = "#%02X%02X%02X" % tile.getpixel((tile.width // 2, round(tile.height * 0.03)))
+    cx, cy = hero.size[0] // 2, hero.size[1] // 2
+    ground = "#%02X%02X%02X" % hero.getpixel((cx, max(0, cy - hero.size[0] // 2 + 8)))[:3]
     os.makedirs(f"{res}/values", exist_ok=True)
     with open(f"{res}/values/colors.xml", "w") as f:
         f.write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
@@ -256,7 +304,7 @@ def mobile(out: str, tile: Image.Image, mark: Image.Image) -> None:
 
 
 def main() -> None:
-    black = square(Image.open(f"{MASTER}/silhouette.png").convert("RGBA"), 0.04)
+    black = square(Image.open(f"{MASTER}/silhouette.png").convert("RGBA"), 0.02)
     white = Image.new("RGBA", black.size, (255, 255, 255, 0))
     white.putalpha(black.getchannel("A"))
     write(black, f"{BRAND}/common/otter_black.png", 512)
@@ -266,13 +314,14 @@ def main() -> None:
         out = f"{BRAND}/{app}"
         tile = full_bleed(Image.open(f"{MASTER}/{app}.png"))
         mark, otter_layer, badge_layer = mark_and_layers(tile)
-        write(rounded(tile.resize((512, 512), Image.LANCZOS), 512 * RADIUS), f"{out}/icon.png")
+        hero = hero_tile(tile, mark, 1024)
+        write(hero.resize((512, 512), Image.LANCZOS), f"{out}/icon.png")
         write(mark, f"{out}/mark.png", 512)
         write(badge_layer, f"{out}/logo_badge.png", 512)
         if app == "git":
             write(otter_layer, f"{BRAND}/common/logo_otter.png", 512)
         if kind == "desktop":
-            desktop(out, tile, mark, black)
+            desktop(out, tile, mark, badge_layer)
         else:
             mobile(out, tile, mark)
         print(app, "ok")
