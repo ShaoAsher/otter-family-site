@@ -27,7 +27,7 @@
 | `shared/family.js` | 产品官网共用脚本：素材地址（`data-media`）、版本号、版本记录与下载链接，国内 / 海外选下载源 |
 | `<app>/index.html`、`<app>/site.js` | 产品官网页面与它自己的动效、交互（手写） |
 | `<app>/demo/`、`<app>/promo.zh.vtt` | **产物**：在线试用的页面代码、宣传片字幕（字幕要和页面同域），App 仓库 `./tool/otter site` 写入 |
-| `tool/otter` | 工具链统一入口，App 的 `./tool/otter <命令>` 转到这里，见「共用工具链」 |
+| `tool/otter` | 工具链统一入口，App 的 `./tool/otter` 经 `tool/app/otter_proxy.sh` 转到这里，见 [`tool/DEPS.md`](tool/DEPS.md)、[`tool/RELEASE.md`](tool/RELEASE.md) |
 | `tool/app/` | 在 App 根目录跑的：表情（`assets.py`）、macOS 打包公证发版（`package.sh`、`notarize.sh`、`release.sh`、`tsa_relay.py`）、产品官网素材（`site.py`） |
 | `tool/release/` | 安装包发布：上传与切换下载版本（`release.py`）、一条命令发版（`ship.py`）、Windows CI 上传（`ci_upload.py`） |
 | `tool/site/` | 官网素材的引擎：截图（`shots.mjs`）、写 `build.json`（`stamp.py`） |
