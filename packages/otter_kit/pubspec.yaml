@@ -1,5 +1,5 @@
 name: otter_kit
-description: 水獭家族三个 App 共用的 Dart 代码（家族公共配置等）。
+description: Shared Dart library for Otter Family desktop apps (family config, etc.).
 version: 1.0.0
 publish_to: none
 
