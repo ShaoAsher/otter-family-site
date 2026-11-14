@@ -6,10 +6,10 @@
 
 otter.json：
   "expr": {"pack": "3", "dir": "assets/otter/expr"}
-    → 从 TOS bundle/expr/<pack>/ 取 manifest.json，按 md5 落到 <dir>（该目录 gitignore，不进 App 仓库）。
+    → 从 TOS expr/<pack>/ 取 manifest.json，按 md5 落到 <dir>（该目录 gitignore，不进 App 仓库）。
 
 下载先进本机缓存 ~/.cache/otter-family/（OTTER_CACHE 可改），几个 App 用同一包版本只下一次。
-包由素材库的 otter_family/source/sync_tos.py bundle 发布。
+包由素材库的 otter_family/source/sync_tos.py expr 发布。
 """
 
 import hashlib
@@ -49,10 +49,10 @@ def md5(path):
 
 def expr(app_root, pull):
     cfg = json.loads((app_root / "otter.json").read_text(encoding="utf-8"))["expr"]
-    remote = f"{base_url()}bundle/expr/{cfg['pack']}/"
+    remote = f"{base_url()}expr/{cfg['pack']}/"
     files = json.loads(fetch(remote + "manifest.json"))["files"]
     dest = app_root / cfg["dir"]
-    cache = CACHE / "bundle" / "expr" / cfg["pack"]
+    cache = CACHE / "expr" / cfg["pack"]
     wrong = [n for n, m in files.items() if not (dest / n).is_file() or md5(dest / n) != m["md5"]]
     extra = sorted(p.name for p in dest.glob("*.webp") if p.name not in files) if dest.is_dir() else []
     label = f"表情包 {cfg['pack']} → {cfg['dir']}"

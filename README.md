@@ -39,7 +39,7 @@
 | `.github/workflows/pages.yml` | 推 `main` 后把网页目录部署到 Pages |
 | `otter_family/` | 家族素材库的脚本、文档、提示词（大文件在 TOS），见 [`otter_family/README.md`](otter_family/README.md) |
 
-TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分享图、`shots/` 截图、`BUILD.json`（每类素材由 App 的哪个分支、提交、版本出的）。在线试用的表情直接用公开表情包 `bundle/expr/<包版本>/`，不另存。
+TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分享图、`shots/` 截图、`BUILD.json`（每类素材由 App 的哪个分支、提交、版本出的）。在线试用的表情直接用公开表情包 `expr/<包版本>/`，不另存。
 
 ## 分支与上线
 
@@ -129,10 +129,10 @@ Windows 包在各 App 的 `.github/workflows/windows.yml` 出：先浅检出本�
 
 ## 表情包
 
-小獭表情不进 App 的 git。素材库按包版本把 270 尺寸的动图、静帧发到 TOS 公开目录 `bundle/expr/<包版本>/`（`<名>.webp` 动图、`<名>_s.webp` 静帧，`manifest.json` 记每个文件的 md5 与大小）：
+小獭表情不进 App 的 git。素材库按包版本把 270 尺寸的动图、静帧发到 TOS 公开目录 `expr/<包版本>/`（`<名>.webp` 动图、`<名>_s.webp` 静帧，`manifest.json` 记每个文件的 md5 与大小）：
 
 ```bash
-cd otter_family && python3 source/sync_tos.py bundle   # 素材库 → TOS bundle/expr/<包版本>/（包版本见 sync_tos.py 的 EXPR_PACK）
+cd otter_family && python3 source/sync_tos.py expr   # 素材库 → TOS expr/<包版本>/（包版本见 sync_tos.py 的 EXPR_PACK）
 ```
 
 App 按 `otter.json` 的 `expr.pack` 拉到 `expr.dir`：先进本机缓存 `~/.cache/otter-family/`（`OTTER_CACHE` 可改），按 md5 校验后复制，目标目录里多出来的 webp 会删掉。换表情 = 素材库出新包版本、App 改 `expr.pack`，旧包版本留在 TOS，老版本 App 照样能构建。

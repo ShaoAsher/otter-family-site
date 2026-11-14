@@ -96,7 +96,7 @@ JOBS=6 python3 source/export.py      # 多进程（沙箱内需放开权限）
 ## 云端托管（火山引擎 TOS）
 
 ```bash
-source ~/.config/devkeys/env.sh       # TOS_* 与内容密钥 TOS_CONTENT_KEY
+source ~/.config/devkeys/env.sh       # TOS_*
 python3 source/sync_tos.py            # 增量同步（按 MD5 比对，未变化的跳过）
 python3 source/sync_tos.py expr       # 只同步指定部分：config / brand / expr / backup（= backup/webp + backup/source）
 python3 source/sync_tos.py --dry-run  # 只看差异；--delete 删除远端多余文件；--reset-acl 重设已有对象权限
@@ -111,24 +111,14 @@ python3 source/sync_tos.py --pull     # 反过来，TOS → 本地
 | `release/<app>/<版本>/` | 安装包 | `tool/release.py publish` / `mirror` | 公开读，长缓存（不可变） |
 | `site/<app>/` | 官网大文件（宣传片） | `tool/release.py media`（App 的 `tool/site.sh promo`） | 公开读，缓存 1 小时 |
 | `brand/` | 图标母版与各 App 成品 | `sync_tos.py brand` | 公开读 |
-| `expr/` | 表情加密副本（`.bin`）+ 明文 `manifest.json` | `sync_tos.py expr` | 公开读 |
+| `expr/<包版本>/` | App 内置的 270 档表情包（明文）+ `manifest.json`；同一包版本发布后不再改，换代加新包版本 | `sync_tos.py expr`（包版本见 `EXPR_PACK`） | 公开读 |
 | `backup/webp/` | 表情原文件备份 | `sync_tos.py backup` | 私有，低频存储 |
 | `backup/source/` | 母版备份 | `sync_tos.py backup` | 私有，低频存储 |
 
 公开地址前缀 `https://otter-family-site.tos-cn-beijing.volces.com/`：
 
 - 品牌图：`brand/<app>/icon.png`、`brand/<app>/mark.png`、`brand/common/otter_white.png` 等（App 的家族入口、官网直接引用，不用把兄弟 App 的图标打进包）
-- 表情：`expr/manifest.json`（`path` 相对 `expr/`），文件为加密 `.bin`，App 用内置密钥解密；App 自身用到的表情全量内置，这里给以后的按需高清与外部引用
-
-加密格式：AES-256-GCM，文件 = `OTE1`（4 字节）+ nonce（12 字节）+ 密文 + tag（16 字节）。解密后按 `sha256` 校验，缓存保存密文，显示时在内存解密。内容密钥在 `~/.config/devkeys/config.json` 的 `volc_tos.content_key`，App 内置同一把（勿明文写进仓库）；轮换密钥需重新上传 `expr/` 并发版 App。
-
-```dart
-// package:cryptography
-final blob = await http.readBytes(url);
-final box = SecretBox(blob.sublist(16, blob.length - 16),
-    nonce: blob.sublist(4, 16), mac: Mac(blob.sublist(blob.length - 16)));
-final webp = await AesGcm.with256bits().decrypt(box, secretKey: SecretKey(contentKey));
-```
+- 表情：`expr/<包版本>/<名>.webp`（动图）、`<名>_s.webp`（静帧）、`manifest.json`（每个文件的 md5 与大小）。明文、不加密；三个 App 构建前用上级仓 `tool/assets.py` 按各自 `otter.json` 拉进包里，官网在线试用直接引用。原文件（含 540 档）只在私有的 `backup/webp/`。
 
 ## 三端与配色
 

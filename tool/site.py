@@ -9,7 +9,7 @@
                                                      不给参数时用 otter.json site.promo（相对工厂 <app>/）
   python3 <家族仓>/tool/site.py all                  demo + shots + art；默认成片在时再加 promo
 
-在线试用里原型的 ../../assets/otter/expr/ 改指 TOS 的公开表情包 bundle/expr/<包版本>/（不再另传），
+在线试用里原型的 ../../assets/otter/expr/ 改指 TOS 的公开表情包 expr/<包版本>/（不再另传），
 其它 ../../assets/… 复制进 demo/assets/；TOS 上 site/<app>/demo/ 只留空目录语义（旧的表情副本会被清掉）。
 
 制作工厂（宣传片工程与成品）默认在家族仓旁边的 otter-factory/，可用 OTTER_FACTORY 改。
@@ -35,7 +35,7 @@ SITE = CFG["site"]
 OUT = FAMILY / APP
 FACTORY = Path(os.environ.get("OTTER_FACTORY") or FAMILY.parent / "otter-factory") / APP
 ASSETS = json.loads((FAMILY / "family.json").read_text())["family"]["assets"]
-EXPR_URL = f"{ASSETS}bundle/expr/{CFG['expr']['pack']}/"
+EXPR_URL = f"{ASSETS}expr/{CFG['expr']['pack']}/"
 VER = re.search(r"^version:\s*([0-9.]+)", (APP_ROOT / "pubspec.yaml").read_text(), re.M).group(1)
 MOCKUP = APP_ROOT / SITE["mockup"]
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """把 otter_family 增量同步到火山引擎 TOS。
 
-  source ~/.config/devkeys/env.sh   # 提供 TOS_AK / TOS_SK / TOS_BUCKET / TOS_REGION / TOS_ENDPOINT / TOS_CONTENT_KEY
+  source ~/.config/devkeys/env.sh   # 提供 TOS_AK / TOS_SK / TOS_BUCKET / TOS_REGION / TOS_ENDPOINT
   python3 source/sync_tos.py              # 全部同步
-  python3 source/sync_tos.py expr         # 只同步指定部分：config / brand / expr / bundle / backup（= backup/webp + backup/source）
+  python3 source/sync_tos.py expr         # 只同步指定部分：config / brand / expr / backup（= backup/webp + backup/source）
   python3 source/sync_tos.py --dry-run    # 只列出将要上传/删除的文件
   python3 source/sync_tos.py --delete     # 同时删除远端多余文件
   python3 source/sync_tos.py --reset-acl  # 按当前规则重设远端已有对象的读写权限
@@ -14,21 +14,15 @@
 远端布局（桶根目录，无前缀；release/、site/ 由 tool/release.py 管，这里不碰）：
   config/        公开读、不缓存，family.json = 仓库根目录的家族公共配置（版本记录、官网地址等，三端与官网共用）
   brand/         公开读，图标母版与各 App 成品（App 家族入口、官网直接引用）
-  expr/          公开读，webp/ 的 AES-256-GCM 加密副本，App 下载后用内置密钥解密
-                 文件 = b"OTE1" + nonce(12) + 密文与 tag；nonce 由内容 HMAC 派生，同一文件每次加密结果一致
-                 expr/manifest.json 为明文，path 指向 .bin
-  bundle/expr/<包版本>/
-                 公开读，App 内置的 270 档表情明文包：<key>.webp 动图 + <key>_s.webp 静帧 + manifest.json（md5）。
-                 App 构建前由 tool/assets.py 按 otter.json 拉取，官网在线试用直接引用；同一包版本发布后不再改，
-                 表情集换代就加新的包版本（EXPR_PACK）。
+  expr/<包版本>/ 公开读，App 内置的 270 档表情包（明文，不加密）：<key>.webp 动图 + <key>_s.webp 静帧
+                 + manifest.json（md5）。App 构建前由 tool/assets.py 按 otter.json 拉取，官网在线试用直接引用；
+                 同一包版本发布后不再改，表情集换代就加新的包版本（EXPR_PACK），旧包版本留着给老版本构建。
   backup/webp/   私有，低频存储（表情原文件备份）
   backup/source/ 私有，低频存储（母版备份）
 
 按 MD5 与远端 ETag 比对，未变化的文件不重复上传。
 """
-import base64
 import hashlib
-import hmac
 import json
 import mimetypes
 import os
@@ -39,44 +33,23 @@ from concurrent.futures import ThreadPoolExecutor
 
 warnings.filterwarnings("ignore")
 import tos  # noqa: E402
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAGIC = b"OTE1"
 SKIP = {".DS_Store", "__pycache__"}
-# 远端目录 -> (本地目录, 是否加密, 是否公开, 存储类型)
+# 远端目录 -> (本地目录, 是否公开, 存储类型)
 PARTS = {
-    "config": ("../family.json", False, True, tos.StorageClassType.Storage_Class_Standard),
-    "brand": ("brand", False, True, tos.StorageClassType.Storage_Class_Standard),
-    "expr": ("webp", True, True, tos.StorageClassType.Storage_Class_Standard),
-    "backup/webp": ("webp", False, False, tos.StorageClassType.Storage_Class_Ia),
-    "backup/source": ("source", False, False, tos.StorageClassType.Storage_Class_Ia),
+    "config": ("../family.json", True, tos.StorageClassType.Storage_Class_Standard),
+    "brand": ("brand", True, tos.StorageClassType.Storage_Class_Standard),
+    "backup/webp": ("webp", False, tos.StorageClassType.Storage_Class_Ia),
+    "backup/source": ("source", False, tos.StorageClassType.Storage_Class_Ia),
 }
 EXPR_PACK = "3"
-# 内置包：远端目录 -> [(本地目录, 文件名后缀)]，与 App 里 assets/otter/expr 的命名一致
-BUNDLES = {f"bundle/expr/{EXPR_PACK}": [("webp/anim_270", ""), ("webp/still_270", "_s")]}
-PARTS.update({k: (None, False, True, tos.StorageClassType.Storage_Class_Standard) for k in BUNDLES})
+# 表情包：远端目录 -> [(本地目录, 文件名后缀)]，与 App 里 assets/otter/expr 的命名一致
+BUNDLES = {f"expr/{EXPR_PACK}": [("webp/anim_270", ""), ("webp/still_270", "_s")]}
+PARTS.update({k: (None, True, tos.StorageClassType.Storage_Class_Standard) for k in BUNDLES})
 
 mimetypes.add_type("image/webp", ".webp")
 mimetypes.add_type("application/json", ".json")
-
-
-def encrypt(key, data):
-    nonce = hmac.new(key, data, hashlib.sha256).digest()[:12]
-    return MAGIC + nonce + AESGCM(key).encrypt(nonce, data, None)
-
-
-def enc_name(rel):
-    return rel if rel.endswith("manifest.json") else os.path.splitext(rel)[0] + ".bin"
-
-
-def enc_manifest(data):
-    m = json.loads(data)
-    m["cipher"] = "AES-256-GCM"
-    m["layout"] = "OTE1 | nonce(12) | ciphertext+tag(16)"
-    for item in m["items"]:
-        item["path"] = enc_name(item["path"])
-    return json.dumps(m, ensure_ascii=False, indent=1).encode()
 
 
 def bundle_items(part):
@@ -94,12 +67,12 @@ def bundle_items(part):
     yield f"{part}/manifest.json", None, lambda: body
 
 
-def local_items(part, key):
+def local_items(part):
     """产出 (远端 key, 本地路径, 取内容函数)。"""
     if part in BUNDLES:
         yield from bundle_items(part)
         return
-    src, encrypted, _, _ = PARTS[part]
+    src = PARTS[part][0]
     if os.path.isfile(f"{ROOT}/{src}"):
         path = os.path.normpath(f"{ROOT}/{src}")
         yield f"{part}/{os.path.basename(path)}", path, lambda: open(path, "rb").read()
@@ -111,12 +84,7 @@ def local_items(part, key):
                 continue
             path = f"{d}/{name}"
             rel = os.path.relpath(path, f"{ROOT}/{src}")
-            if not encrypted:
-                yield f"{part}/{rel}", path, lambda p=path: open(p, "rb").read()
-            elif rel == "manifest.json":
-                yield f"{part}/{rel}", path, lambda p=path: enc_manifest(open(p, "rb").read())
-            else:
-                yield f"{part}/{enc_name(rel)}", path, lambda p=path: encrypt(key, open(p, "rb").read())
+            yield f"{part}/{rel}", path, lambda p=path: open(p, "rb").read()
 
 
 def remote_etags(client, bucket, part):
@@ -135,8 +103,8 @@ def pull(client, bucket, parts):
     tracked = set(subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split())
     todo = []
     for part in parts:
-        src, encrypted, _, _ = PARTS[part]
-        if encrypted or src is None or os.path.isfile(f"{ROOT}/{src}"):
+        src = PARTS[part][0]
+        if src is None or os.path.isfile(f"{ROOT}/{src}"):
             continue
         for k, etag in remote_etags(client, bucket, part).items():
             rel = os.path.join(src, k[len(part) + 1:])
@@ -159,11 +127,9 @@ def pull(client, bucket, parts):
 
 
 def put_args(part, key):
-    _, encrypted, public, storage = PARTS[part]
+    _, public, storage = PARTS[part]
     if key.endswith(".json"):
         ctype = "application/json"
-    elif encrypted:
-        ctype = "application/octet-stream"
     else:
         ctype = mimetypes.guess_type(key)[0] or "application/octet-stream"
     args = {
@@ -184,11 +150,10 @@ def main():
     bad = [a for a in picks if not any(p == a or p.startswith(a + "/") for p in PARTS)]
     if bad:
         sys.exit(f"未知目录 {bad}，可选：{list(PARTS)} 或 backup")
-    names = ("TOS_AK", "TOS_SK", "TOS_BUCKET", "TOS_REGION", "TOS_ENDPOINT", "TOS_CONTENT_KEY")
+    names = ("TOS_AK", "TOS_SK", "TOS_BUCKET", "TOS_REGION", "TOS_ENDPOINT")
     env = {k: os.environ.get(k) for k in names}
     if not all(env.values()):
         sys.exit("缺少 TOS_* 环境变量，先执行 source ~/.config/devkeys/env.sh")
-    key = base64.b64decode(env["TOS_CONTENT_KEY"])
     client = tos.TosClientV2(env["TOS_AK"], env["TOS_SK"], env["TOS_ENDPOINT"], env["TOS_REGION"])
     bucket = env["TOS_BUCKET"]
     if "--pull" in argv:
@@ -198,7 +163,7 @@ def main():
     for part in parts:
         remote = remote_etags(client, bucket, part)
         seen = set()
-        for k, path, load in local_items(part, key):
+        for k, path, load in local_items(part):
             seen.add(k)
             data = load()
             if remote.get(k) != hashlib.md5(data).hexdigest():
@@ -243,7 +208,7 @@ def main():
     elif extra:
         print("远端多余文件未删除，需要时加 --delete")
 
-    print(f"App 清单：https://{bucket}.{env['TOS_ENDPOINT']}/expr/manifest.json")
+    print(f"表情包清单：https://{bucket}.{env['TOS_ENDPOINT']}/expr/{EXPR_PACK}/manifest.json")
 
 
 if __name__ == "__main__":
