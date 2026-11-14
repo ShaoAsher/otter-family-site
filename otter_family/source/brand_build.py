@@ -14,7 +14,7 @@
     otter_black.png、otter_white.png   512 剪影（贴边裁切后居中，四周留 4%）
     logo_otter.png                     512 分层 logo 的水獭层（画布 = 圆盘外接正方形，墨色 #0B0A14）
   brand/<app>/
-    icon.png         512 正方深底（不额外切圆角）
+    icon.png         512 圆角图标（22.5%）
     mark.png         512 产品标：抠掉深底，只留圆盘 + 徽章
     logo_badge.png   512 分层 logo 的徽章层（与 logo_otter.png 同画布，徽章已在位）
     桌面端（git / tools）：macos/AppIcon.appiconset/、macos/MenuBarIcon.imageset/（含 Contents.json）、
@@ -172,10 +172,10 @@ def mark_and_layers(tile: Image.Image) -> tuple[Image.Image, Image.Image, Image.
 
 def mac_canvas(tile: Image.Image) -> Image.Image:
     body = 824
-    face = tile.resize((body, body), Image.LANCZOS).convert("RGBA")
+    face = rounded(tile.resize((body, body), Image.LANCZOS), body * RADIUS)
     canvas = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
     shadow = Image.new("L", (1024, 1024), 0)
-    ImageDraw.Draw(shadow).rectangle((100, 112, 924, 936), fill=90)
+    ImageDraw.Draw(shadow).rounded_rectangle((100, 112, 924, 936), radius=body * RADIUS, fill=90)
     layer = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
     layer.putalpha(shadow.filter(ImageFilter.GaussianBlur(14)))
     canvas.alpha_composite(layer)
@@ -206,7 +206,7 @@ def desktop(out: str, tile: Image.Image, mark: Image.Image, black: Image.Image) 
     }, f"{menubar}/Contents.json")
 
     os.makedirs(f"{out}/windows", exist_ok=True)
-    tile.resize((256, 256), Image.LANCZOS).save(
+    rounded(tile.resize((256, 256), Image.LANCZOS), 256 * RADIUS).save(
         f"{out}/windows/app_icon.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64, 128, 256)])
     mark.resize((256, 256), Image.LANCZOS).save(
         f"{out}/windows/tray_icon.ico", sizes=[(n, n) for n in (16, 24, 32, 48, 64)])
@@ -266,7 +266,7 @@ def main() -> None:
         out = f"{BRAND}/{app}"
         tile = full_bleed(Image.open(f"{MASTER}/{app}.png"))
         mark, otter_layer, badge_layer = mark_and_layers(tile)
-        write(tile.resize((512, 512), Image.LANCZOS), f"{out}/icon.png")
+        write(rounded(tile.resize((512, 512), Image.LANCZOS), 512 * RADIUS), f"{out}/icon.png")
         write(mark, f"{out}/mark.png", 512)
         write(badge_layer, f"{out}/logo_badge.png", 512)
         if app == "git":

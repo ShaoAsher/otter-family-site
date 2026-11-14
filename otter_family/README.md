@@ -47,7 +47,7 @@ python3 source/sync_tos.py            # 本地 → TOS（改了母版、重新�
 
 | 文件 | 规格 | 用途 |
 | --- | --- | --- |
-| `<app>/icon.png` | 512，正方深底（不额外切圆角） | 关于页、家族卡、官网 |
+| `<app>/icon.png` | 512，22.5% 圆角深底 | 关于页、家族卡、官网 |
 | `<app>/mark.png` | 512，透明，圆盘 + 徽章 | 启动页、页头 Logo |
 | `common/logo_otter.png` + `<app>/logo_badge.png` | 512，画布 = 圆盘外接正方形，已在位 | 启动页 / 关于页分层动效：代码画渐变圆盘，再叠水獭层（墨色，可着色）、徽章层 |
 | `common/otter_{black,white}.png` | 512，透明剪影 | 32px 以下的装饰小标 |
