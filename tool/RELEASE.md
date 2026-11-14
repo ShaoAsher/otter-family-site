@@ -15,6 +15,8 @@
 
 `<file>` = 各 App `otter.json` 的 `package.file`（`OtterGit` / `OtterTools`）。
 
+分支约定见 [`tool/BRANCHES.md`](BRANCHES.md)。
+
 ## 一键入口
 
 ```bash
