@@ -108,7 +108,7 @@ TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分�
 
 ## 共用工具链
 
-App 仓库根目录的 `otter.json` 写这个 App 和别人不一样的地方，`tool/*.sh` 只是几行转发（本仓默认在 App 的 `../../otter-family-site`，`FAMILY_SITE` 可改）：
+App 仓库根目录的 `otter.json` 写这个 App 和别人不一样的地方，`tool/*.sh` 只是几行转发。找本仓的顺序在 App 的 `tool/_family.sh`：`FAMILY_SITE` → App 的 `../../otter-family-site` → 本机缓存 `~/.cache/otter-family/otter-family-site`（没有就浅克隆，有就快进更新）。`release.sh`、`site.sh` 会改本仓文件，只认前两种正式克隆：
 
 ```json
 {"app": "git",
