@@ -102,8 +102,8 @@ if [[ "$NOTARIZE" -eq 1 ]]; then
 fi
 
 if [[ "$SKIP_BUILD" -eq 0 ]]; then
-  echo "==> 表情包"
-  python3 "$FAMILY/tool/app/assets.py" pull "$ROOT"
+  echo "==> 表情包（瘦包：仅 still_270）"
+  python3 "$FAMILY/tool/app/assets.py" pull bundle "$ROOT"
   echo "==> flutter pub get"
   flutter pub get
   # 清掉过期的 Swift Explicit Modules 缓存，避免刷屏
@@ -113,7 +113,7 @@ if [[ "$SKIP_BUILD" -eq 0 ]]; then
     "$ROOT/build/macos/SDKExplicitPrecompiledModules" \
     2>/dev/null || true
   echo "==> flutter build macos --release"
-  flutter build macos --release
+  flutter build macos --release --tree-shake-icons
 else
   echo "==> 跳过编译（--skip-build）"
 fi

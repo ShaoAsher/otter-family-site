@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """按 App 根目录的 otter.json 拉取家族共用的二进制素材（只读公开地址，不要密钥，CI 也能跑）。
 
-  ./tool/otter assets [pull]   # 缺的、内容不对的才下载；目录里多出来的 .webp 删掉
-  ./tool/otter assets check    # 只校验，不下载；不一致时退出码 1
+  ./tool/otter assets [pull]          # 全量（anim + still，开发用）
+  ./tool/otter assets pull bundle     # 仅 still（发版瘦包）；并删除本地 anim_270
+  ./tool/otter assets check           # 只校验，不下载；不一致时退出码 1
   （CI 里直接 python3 <家族仓>/tool/app/assets.py pull|check <App 根目录>）
 
 otter.json：
@@ -48,20 +49,24 @@ def md5(path):
     return h.hexdigest()
 
 
-def expr(app_root, pull):
+def expr(app_root, pull, bundle=False):
     cfg = json.loads((app_root / "otter.json").read_text(encoding="utf-8"))["expr"]
     remote = f"{base_url()}expr/{cfg['version']}/"
     files = json.loads(fetch(remote + "manifest.json"))["files"]
+    if bundle:
+        wanted = {k: v for k, v in files.items() if k.startswith("still_270/")}
+    else:
+        wanted = files
     dest = app_root / cfg["dir"]
     cache = CACHE / "expr" / cfg["version"]
-    wrong = [n for n, m in files.items() if not (dest / n).is_file() or md5(dest / n) != m["md5"]]
-    extra = sorted(n for n in (p.relative_to(dest).as_posix() for p in dest.rglob("*.webp")) if n not in files) if dest.is_dir() else []
-    label = f"表情包 {cfg['version']} → {cfg['dir']}"
+    wrong = [n for n, m in wanted.items() if not (dest / n).is_file() or md5(dest / n) != m["md5"]]
+    extra = sorted(n for n in (p.relative_to(dest).as_posix() for p in dest.rglob("*.webp")) if n not in wanted) if dest.is_dir() else []
+    label = f"表情包 {cfg['version']} → {cfg['dir']}" + ("（瘦包仅 still）" if bundle else "")
     if not pull:
         if wrong or extra:
             print(f"{label}：缺或不一致 {len(wrong)} 个，多余 {len(extra)} 个；先跑 ./tool/otter assets", file=sys.stderr)
             return False
-        print(f"{label}：{len(files)} 个，一致")
+        print(f"{label}：{len(wanted)} 个，一致")
         return True
 
     def get(name):
@@ -81,7 +86,11 @@ def expr(app_root, pull):
         list(pool.map(get, wrong))
     for name in extra:
         (dest / name).unlink()
-    print(f"{label}：更新 {len(wrong)} 个，删除多余 {len(extra)} 个，共 {len(files)} 个")
+    if bundle:
+        anim_dir = dest / "anim_270"
+        if anim_dir.is_dir():
+            shutil.rmtree(anim_dir)
+    print(f"{label}：更新 {len(wrong)} 个，删除多余 {len(extra)} 个，共 {len(wanted)} 个")
     return True
 
 
@@ -89,10 +98,15 @@ def main():
     argv = sys.argv[1:]
     if not argv or argv[0] not in ("pull", "check"):
         sys.exit(__doc__)
-    app_root = Path(argv[1] if len(argv) > 1 else ".").resolve()
+    bundle = argv[0] == "pull" and len(argv) > 1 and argv[1] == "bundle"
+    if bundle:
+        app_i = 2
+    else:
+        app_i = 1
+    app_root = Path(argv[app_i] if len(argv) > app_i else ".").resolve()
     if not (app_root / "otter.json").is_file():
         sys.exit(f"{app_root} 下没有 otter.json")
-    ok = expr(app_root, argv[0] == "pull")
+    ok = expr(app_root, argv[0] == "pull", bundle=bundle)
     sys.exit(0 if ok else 1)
 
 

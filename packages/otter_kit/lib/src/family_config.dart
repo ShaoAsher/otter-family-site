@@ -89,6 +89,13 @@ class FamilyConfig {
 
   String get familySite => _str(_family['site']);
 
+  /// 公开表情包根 URL（如 `…/expr/v3/`）。
+  String get exprAssetsBase {
+    final s = _str(_family['expr']);
+    if (s.isEmpty) return '';
+    return s.endsWith('/') ? s : '$s/';
+  }
+
   /// 家族官网成员页，`from` 让官网标出「你从这里来」。
   String members(String from) =>
       _str(_family['members']).replaceAll('{from}', from);
