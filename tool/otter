@@ -11,11 +11,14 @@
 #   site <demo|shots|art|promo|all>
 # 发版枢纽
 #   publish|mirror|status|ci-upload|launch
+# 契约
+#   check [App根]
 set -euo pipefail
 T="$(cd "$(dirname "$0")" && pwd)"
 cmd="${1:-}"
 [[ $# -gt 0 ]] && shift
 case "$cmd" in
+  check)     exec python3 "$T/check.py" "$@" ;;
   lib)
     sub="${1:-}"; [[ $# -gt 0 ]] && shift
     case "$sub" in
@@ -43,6 +46,6 @@ case "$cmd" in
              exec python3 "$T/release/release.py" "$cmd" "$@" ;;
   ci-upload) exec python3 "$T/release/ci_upload.py" "$@" ;;
   ""|help|-h|--help)
-             sed -n '2,16p' "$0" ;;
+             sed -n '2,18p' "$0" ;;
   *)         echo "未知命令：${cmd}（./tool/otter help）" >&2; exit 1 ;;
 esac

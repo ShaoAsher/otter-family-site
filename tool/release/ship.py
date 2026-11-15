@@ -67,6 +67,20 @@ def main(argv):
     if not os.environ.get("TOS_BUCKET"):
         sys.exit("请先 source ~/.config/devkeys/env.sh（TOS_*）")
 
+    # TOS 走直连，其余可走本机代理（避免 sqlite3/GitHub 下载挂死）
+    no_proxy = os.environ.get("NO_PROXY") or os.environ.get("no_proxy") or ""
+    if ".volces.com" not in no_proxy:
+        merged = ",".join(
+            x for x in (no_proxy, "localhost,127.0.0.1,::1,.local,.volces.com,.volcengine.com") if x
+        )
+        os.environ["NO_PROXY"] = merged
+        os.environ["no_proxy"] = merged
+        print(f"==> NO_PROXY={merged}")
+
+    check = subprocess.run([sys.executable, str(ROOT / "tool/check.py"), str(app_root)])
+    if check.returncode:
+        sys.exit("otter check 未通过，修好再发版")
+
     release_flags = sorted(flags & {"--skip-build", "--use-dist", "--no-notarize", "--zip-only"})
     if "--no-push-main" not in flags and "--no-push-release" not in flags:
         ahead = subprocess.run(
