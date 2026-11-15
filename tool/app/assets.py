@@ -199,8 +199,10 @@ def brand(app_root: Path, pull: bool) -> bool:
     cfg = json.loads((app_root / "otter.json").read_text(encoding="utf-8"))
     app_id = cfg["id"]
     fam = family()
-    ver = fam["libraryVersion"]
-    brand_base = expand(fam.get("brand") or f"{fam['assets']}library/v{{version}}/brand/", ver)
+    ver = fam.get("libraryVersion") or ""
+    brand_base = fam.get("brand") or f"{fam['assets']}library/current/brand/"
+    if "{version}" in brand_base:
+        brand_base = expand(brand_base, ver)
     if not brand_base.endswith("/"):
         brand_base += "/"
     label = f"品牌 library/v{ver}/brand → {app_root.name}"
