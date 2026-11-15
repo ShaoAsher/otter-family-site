@@ -40,7 +40,7 @@
       ],
       "latest": "3.0.1",
       "download": {
-        "version": "3.0.0",
+        "version": "3.0.1",
         "files": {
           "macos": "OtterGit-macos-arm64.dmg",
           "macos_zip": "OtterGit-macos-arm64.zip",
