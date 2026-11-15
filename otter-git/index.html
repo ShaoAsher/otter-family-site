@@ -1121,20 +1121,26 @@
     }
 
     .demo-view {
+      position: relative;
       aspect-ratio: 1280 / 800;
       background: #0b0a12;
+      isolation: isolate;
     }
 
     .demo-view iframe {
+      position: absolute;
+      inset: 0;
       display: block;
       width: 100%;
       height: 100%;
       border: 0;
+      z-index: 1;
     }
 
     .demo-poster {
       position: absolute;
       inset: 0;
+      z-index: 2;
       display: grid;
       place-items: center;
       border: 0;

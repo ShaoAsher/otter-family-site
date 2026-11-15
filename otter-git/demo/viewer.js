@@ -4,7 +4,7 @@ const KIND_LABEL={text:'文本',md:'Markdown',image:'图片',video:'视频',doc:
 function fileKind(f){const e=(f[2].split('.').pop()||'').toLowerCase();for(const k in KIND_EXT)if(KIND_EXT[k].split(' ').includes(e))return k;return 'bin'}
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const PROMO='https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-git/promo.mp4';
-const MEDIA={imgOld:'assets/brand/otter_git_icon.png',vidOld:PROMO+'#t=100',vidNew:PROMO+'#t=122'};
+const MEDIA={imgOld:'https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-git/icon.png',vidOld:PROMO+'#t=100',vidNew:PROMO+'#t=122'};
 const MODES={text:[['split','并排'],['unified','统一']],md:[['rich','渲染对比'],['split','源码并排']],image:[['side','并排'],['swipe','滑动'],['onion','叠加'],['diff','差异']],
   video:[['side','并排'],['swipe','滑动对比']],doc:[['pages','页面对比'],['revs','修订列表']],audio:[['wave','波形']],bin:[['meta','概览'],['hex','十六进制']]};
 

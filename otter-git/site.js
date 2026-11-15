@@ -316,6 +316,7 @@
   }
 
   $("#demo-start").addEventListener("click", function () {
+    if (frame) return;
     frame = document.createElement("iframe");
     frame.src = "demo/index.html?embed&nosplash&page=files";
     frame.title = "水獭 Git 交互演示";
@@ -323,11 +324,14 @@
     view.appendChild(frame);
     var poster = $("#demo-start");
     $("#ro-text").textContent = "正在载入…";
-    frame.addEventListener("load", function () {
-      poster.remove();
+    function ready() {
+      if (poster && poster.parentNode) poster.remove();
       $$("button[disabled]", panel).forEach(function (b) { b.disabled = false; });
-      frame.focus();
-    });
+      try { frame.focus(); } catch (e) {}
+      $("#ro-text").textContent = "工作副本 · 有未提交的更改";
+    }
+    frame.addEventListener("load", ready);
+    setTimeout(function () { if (poster && poster.parentNode) ready(); }, 2500);
   });
 
   panel.addEventListener("click", function (e) {
