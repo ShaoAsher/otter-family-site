@@ -19,7 +19,7 @@ class FamilyConfig {
 
   static const schema = 1;
   static const remotes = [
-    'https://otter-family-site.tos-cn-beijing.volces.com/config/family.json',
+    'https://otter-family-site.tos-cn-beijing.volces.com/library/family.json',
     'https://shaoasher.github.io/otter-family-site/family.json',
   ];
 
@@ -89,7 +89,7 @@ class FamilyConfig {
 
   String get familySite => _str(_family['site']);
 
-  /// 公开表情包根 URL（如 `…/expr/v3/`）。
+  /// 公开表情包根 URL（`…/library/latest/expr/`）。
   String get exprAssetsBase {
     final s = _str(_family['expr']);
     if (s.isEmpty) return '';
