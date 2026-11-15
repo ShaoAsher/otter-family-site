@@ -1,5 +1,5 @@
-# otter-site
+# 水獭家族
 
-家族官网 + `family.json` + 唯一 CLI（`tool/otter`）。
+水獭游时 · 水獭工具 · 水獭 Git
 
-媒体在同级 `otter-library/`；片子在 `otter-films/`。流程见 `tool/FLOW.md`。
+官网：https://shaoasher.github.io/otter-family-site/

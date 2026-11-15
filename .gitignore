@@ -1,6 +1,6 @@
 .DS_Store
 __pycache__/
-# 本地真相已迁到同级 <code>/otter-library/（不在本仓）
+# 本地缓存
 otter_family/library/
 
 # 官网图标走 TOS；旧 shared/icons 二进制不进 git
@@ -8,6 +8,11 @@ shared/icons/*.png
 shared/icons/*.jpg
 shared/icons/*.webp
 
-# Dart 包构建缓存
-packages/otter_kit/build/
-packages/otter_kit/.dart_tool/
+# 构建缓存
+packages/*/build/
+packages/*/.dart_tool/
+
+# 本地/内部文档不进公开仓
+.cursor/
+tool/FLOW.md
+shared/README.md
