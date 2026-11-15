@@ -51,32 +51,32 @@
         {
           "version": "3.0.1",
           "date": "2026-11-15",
-          "zh": "官网焕新：文案与版面更干净；素材链路统一到家族真相源；表情落点 still/270 · anim/270。",
-          "en": "Site refresh with cleaner copy and layout; assets flow through the family library; expression paths unified to still/270 and anim/270."
+          "zh": "官网焕新：文案与版面更干净；小獭表情与品牌素材更统一。",
+          "en": "Site refresh with cleaner copy and layout; otter expressions and brand assets aligned."
         },
         {
           "version": "3.0.0",
           "date": "2026-11-14",
-          "zh": "水獭家族 3.0：图标换成三端统一模板的琥珀金；小獭表情升级为家族 120 套，编排扩到 74 个场景：凌晨和周五的提交、第一次推送、一次推上一大批、强制推送、拉到很多新提交、取回贮藏、被远程拒绝都有专属表情和标题，拉取、推送、克隆时小獭陪你等；版本记录、官网地址等改由家族公共配置下发，关于页自动更新。",
-          "en": "Otter Family 3.0: the icon moves to the shared family template in amber gold; otter expressions upgraded to the full family set of 120, now choreographed across 74 scenes — dawn and Friday commits, first push, big pushes, force pushes, pulling many commits, stash restore and rejected pushes each get their own face and headline, and the otter keeps you company while fetching, pulling, pushing and cloning; changelog and site links now come from the shared family config, so the About page stays current."
+          "zh": "水獭家族 3.0：图标换成三端统一模板的琥珀金；小獭表情升级为家族 120 套，编排扩到 74 个场景：凌晨和周五的提交、第一次推送、一次推上一大批、强制推送、拉到很多新提交、取回贮藏、被远程拒绝都有专属表情和标题，拉取、推送、克隆时小獭陪你等；关于页的版本记录与官网地址会自动保持最新。",
+          "en": "Otter Family 3.0: the icon moves to the shared family template in amber gold; otter expressions upgraded to the full family set of 120, now choreographed across 74 scenes — dawn and Friday commits, first push, big pushes, force pushes, pulling many commits, stash restore and rejected pushes each get their own face and headline, and the otter keeps you company while fetching, pulling, pushing and cloning; the About page keeps version history and site links up to date."
         },
         {
           "version": "2.0.7",
           "date": "2026-11-08",
-          "zh": "小獭表情升级为家族 HD 全量 50 套（心情 / 游戏 / 生活），动图与静帧统一路径 assets/otter/expr；应用侧使用 240 压缩包，观感更清晰、包体可控。",
-          "en": "Otter expressions upgraded to the full family HD set of 50 (mood / game / life), with a unified assets/otter/expr layout; apps ship the 240px compressed pack for clearer looks at a controlled size."
+          "zh": "小獭表情升级为家族 HD 全量 50 套（心情 / 游戏 / 生活），动图与静帧观感更清晰。",
+          "en": "Otter expressions upgraded to the full family HD set of 50 (mood / game / life), with clearer stills and animations."
         },
         {
           "version": "2.0.6",
           "date": "2026-11-06",
-          "zh": "历史页切换提交更跟手：点下去立刻选中，提交说明和文件列表并行加载，按住方向键连续翻也不再一卡一卡。提交说明可以自由选择、整段复制，详情区新增「复制提交说明」按钮；代码预览复制时不再带上行号。下载改为国内优先走 Gitee、海外走 GitHub。macOS 不再反复弹「访问桌面文件夹」的系统授权框：允许一次后系统会记住。",
-          "en": "Switching commits in History is snappier: the selection updates immediately, the message and file list load in parallel, and holding the arrow keys no longer stutters. Commit messages can now be selected and copied freely, and the detail panel has a Copy commit message button; copying from the code preview no longer includes line numbers. Downloads now come from Gitee in mainland China and GitHub elsewhere. macOS no longer keeps asking for access to your Desktop folder: allow it once and it is remembered."
+          "zh": "历史页切换提交更跟手：点下去立刻选中，提交说明和文件列表并行加载，按住方向键连续翻也不再一卡一卡。提交说明可以自由选择、整段复制，详情区新增「复制提交说明」按钮；代码预览复制时不再带上行号。下载体验优化。macOS 不再反复弹「访问桌面文件夹」的系统授权框：允许一次后系统会记住。",
+          "en": "Switching commits in History is snappier: the selection updates immediately, the message and file list load in parallel, and holding the arrow keys no longer stutters. Commit messages can now be selected and copied freely, and the detail panel has a Copy commit message button; copying from the code preview no longer includes line numbers. Download experience improved. macOS no longer keeps asking for access to your Desktop folder: allow it once and it is remembered."
         },
         {
           "version": "2.0.5",
           "date": "2026-11-08",
-          "zh": "修复 Windows 上打不开的问题：之前给窗口设的底色会走一个未公开的合成接口，在 Windows 11 上会把整个窗口盖成一片灰，内容只剩极淡的影子，点哪里都没反应，现在改用窗口自身的底色并在首帧后重画一次。",
-          "en": "Fixed OtterGit not opening on Windows: the window background colour went through an undocumented compositor call. On Windows 11 that covered the whole window in a solid tint with only a ghost of the UI left and nothing responding. The window now uses its own background brush and repaints once after the first frame."
+          "zh": "修复 Windows 上打不开的问题：部分 Windows 11 上窗口底色会盖住整窗，内容几乎看不见也点不到，现已修好。",
+          "en": "Fixed OtterGit not opening on Windows: on some Windows 11 setups the window tint covered the whole UI so almost nothing was visible or clickable."
         },
         {
           "version": "2.0.4",
@@ -105,8 +105,8 @@
         {
           "version": "2.0.0",
           "date": "2026-11-06",
-          "zh": "小獭 AI 助手重做：改用 Genkit 引擎，回复带步骤卡，写操作先出确认卡并标注风险等级，会话按仓库隔离并保留记忆，支持复制与重新生成；全新首页：小獭问候、继续工作卡片，仓库卡片直接显示分支、最近提交和未推送数；小獭表情系统按场景切换动态表情；背景环境层随仓库状态换色（干净、有改动、冲突、同步中）；提交、推送、拉取的结果直接显示在进度弹窗里，提交后可一键推送；主色改为琥珀金，「修改」状态改用蓝紫色。",
-          "en": "Otter AI rebuilt on the Genkit engine: replies show step cards, write actions ask first with a confirmation card and risk level, sessions are scoped per repository with memory, plus copy and regenerate. New home: a greeting from Otter, a resume card, and repository cards showing branch, latest commit and unpushed count. Otter now reacts with animated expressions per scene. The ambient backdrop follows repository state (clean, modified, conflict, syncing). Commit, push and pull results appear inside the progress dialog, with one-click push after commit. Amber is the new accent; \"Modified\" now uses indigo."
+          "zh": "小獭 AI 助手重做：回复带步骤卡，写操作先出确认卡并标注风险等级，会话按仓库隔离并保留记忆，支持复制与重新生成；全新首页：小獭问候、继续工作卡片，仓库卡片直接显示分支、最近提交和未推送数；小獭表情系统按场景切换动态表情；背景环境层随仓库状态换色（干净、有改动、冲突、同步中）；提交、推送、拉取的结果直接显示在进度弹窗里，提交后可一键推送；主色改为琥珀金，「修改」状态改用蓝紫色。",
+          "en": "Otter AI rebuilt: replies show step cards, write actions ask first with a confirmation card and risk level, sessions are scoped per repository with memory, plus copy and regenerate. New home: a greeting from Otter, a resume card, and repository cards showing branch, latest commit and unpushed count. Otter now reacts with animated expressions per scene. The ambient backdrop follows repository state (clean, modified, conflict, syncing). Commit, push and pull results appear inside the progress dialog, with one-click push after commit. Amber is the new accent; \"Modified\" now uses indigo."
         },
         {
           "version": "1.2.0",
@@ -173,7 +173,7 @@
         {
           "version": "2.0.6",
           "date": "2026-11-09",
-          "zh": "小獭表情升级为家族 HD 全量 50 套，资源路径统一为 assets/otter/expr；应用使用 240 压缩包。"
+          "zh": "小獭表情升级为家族 HD 全量 50 套，动图与静帧观感更清晰。"
         },
         {
           "version": "2.0.5",
