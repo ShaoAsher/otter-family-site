@@ -7,9 +7,9 @@
   ./tool/otter status  [app]                  # 各 App 当前下载版本，以及该版本各平台在两处是否都在
   python3 tool/release/release.py site <app> <目录>     # 官网素材同步到 TOS site/<app>/（./tool/otter site 调用）
 
-<app> 是 family.json 里 apps 的键（git / tools / …）；文件名必须是该 App `download.files` 里的某个值。
+<app> 是 family.json 里 apps 的键（otter-git / otter-tools / …）；文件名必须是该 App `download.files` 里的某个值。
 GitHub Release 建在本仓（ShaoAsher/otter-family-site），标签 `<app>-v<版本>`，不标记为 latest。
-TOS 路径 `release/<app>/v<版本>/<文件名>`，公共读。
+TOS 路径 `library/release/<app>/v<版本>/<文件名>`，公共读。
 「切换」= 改 family.json 的 `download.version`（必要时同步 `latest`），并把 family.json 推到 TOS；
 之后提交 family.json 并推 main（README「分支与上线」），Pages 上的那份才会更新。
 
@@ -72,7 +72,7 @@ def tos_client():
 
 
 def tos_key(app, version, name):
-    return f"release/{app}/v{version}/{name}"
+    return f"library/release/{app}/v{version}/{name}"
 
 
 def tos_has(client, bucket, key):
@@ -155,10 +155,10 @@ def switch(cfg, app, version, client, bucket):
         print(f"提醒：family.json 的 {app}.changelog 里还没有 {version} 这一条")
     save(cfg)
     client.put_object(
-        bucket, "config/family.json", content=CONFIG.read_bytes(),
+        bucket, "library/family.json", content=CONFIG.read_bytes(),
         content_type="application/json", cache_control="no-cache", acl=tos.ACLType.ACL_Public_Read,
     )
-    print(f"已切换 {app} 的下载版本为 {version}，family.json 已推到 TOS")
+    print(f"已切换 {app} 的下载版本为 {version}，library/family.json 已推到 TOS")
     print("接着提交 family.json 并推 main（见 README「分支与上线」），Pages 与产品官网随之更新")
 
 
@@ -233,8 +233,8 @@ def site(app, folder):
     if not folder.is_dir():
         sys.exit(f"找不到目录 {folder}")
     client, bucket = tos_client()
-    # 只写 library/current/site/<app>/
-    prefixes = [f"library/current/site/{app}/"]
+    # 只写 library/latest/site/<app>/
+    prefixes = [f"library/latest/{app}/"]
 
     def sync_prefix(prefix):
         remote, token = {}, None

@@ -1,27 +1,7 @@
 #!/usr/bin/env python3
-"""由 brand/master/ 母版生成三端可直接拷贝的品牌成品（只在母版变了时跑一次，App 侧只拷贝不生成）。
+"""master/ → common/ + otter-*/ 品牌成品。母版变了再跑。
 
-  python3 source/brand_build.py
-
-母版 brand/master/（只改这里）：
-  silhouette.png     透明底水獭剪影（图标主体唯一输入）
-  <app>.png          最新成品图标快照（构建结束回写；不再作圆盘母版）
-  badge_<app>.png    可选：生图角标；默认不用，角标走矢量字形
-  ip_full.png、ip_half.png   立绘（造型参考，不参与生成）
-
-产物（每个文件只有一份，不同用途靠不同规格区分）：
-  brand/common/   三端共用
-    otter_black.png、otter_white.png   512 剪影（贴边裁切后居中，四周留 4%）
-    logo_otter.png                     512 分层 logo 的水獭层（画布 = 圆盘外接正方形，墨色 #0B0A14）
-  brand/<app>/
-    icon.png         512 圆角图标（22.5%）
-    mark.png         512 产品标：抠掉深底，只留圆盘 + 徽章
-    logo_badge.png   512 分层 logo 的徽章层（与 logo_otter.png 同画布，徽章已在位）
-    桌面端（git / tools）：macos/AppIcon.appiconset/、macos/MenuBarIcon.imageset/（含 Contents.json）、
-                         windows/app_icon.ico、windows/tray_icon.ico
-    移动端（gametime）：ios/AppIcon.appiconset/（含 Contents.json，无 alpha）、
-                       android/res/（mipmap-*/ic_launcher.png、drawable-*/ic_launcher_foreground.png、
-                                    mipmap-anydpi-v26/ic_launcher.xml、values/colors.xml）
+  ./tool/otter lib brand
 """
 from __future__ import annotations
 
@@ -30,20 +10,22 @@ import os
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BRAND = f"{ROOT}/library/brand"
+from paths import family_site, library_root
+
+BRAND = library_root()
 MASTER = f"{BRAND}/master"
+FAMILY_JSON = f"{family_site()}/family.json"
 INK = (11, 10, 20)
-APPS = {"git": "desktop", "tools": "desktop", "gametime": "mobile"}
+APPS = {"otter-git": "desktop", "otter-tools": "desktop", "otter-gametime": "mobile"}
 
 RADIUS = 0.225
 # 角标方案（右上、无圆底、墨色符号）：
 # - 水獭占中下方，面孔在上半区；角标放右上圆角安全区，避开五官，扫一眼能分 App。
 # - 只有分支 / 扳手 / 手柄符号，不要白圆底；相对边长约 13%，中心锚在 (84%, 17%)。
 ICON_BADGE = {
-    "git": {"scale": 0.215, "anchor": (0.80, 0.195)},
-    "tools": {"scale": 0.215, "anchor": (0.80, 0.195)},
-    "gametime": {"scale": 0.20, "anchor": (0.80, 0.18)},
+    "otter-git": {"scale": 0.215, "anchor": (0.80, 0.195)},
+    "otter-tools": {"scale": 0.215, "anchor": (0.80, 0.195)},
+    "otter-gametime": {"scale": 0.20, "anchor": (0.80, 0.18)},
 }
 # 源图方块自带约 12% 圆角，圆角外是白底或深底；四周各裁 4.2% 就全落在方块内。
 INSET = 0.042
@@ -184,8 +166,7 @@ def _hex_rgb(h: str) -> tuple[int, int, int]:
 
 
 def app_colors() -> dict[str, tuple[tuple[int, int, int], tuple[int, int, int]]]:
-    path = os.path.join(ROOT, "..", "family.json")
-    data = json.load(open(path, encoding="utf-8"))
+    data = json.load(open(FAMILY_JSON, encoding="utf-8"))
     out = {}
     for app, meta in data["apps"].items():
         cs = meta.get("colors")
@@ -302,7 +283,7 @@ def _glyph_gametime(n: int) -> Image.Image:
     return m
 
 
-GLYPHS = {"git": _glyph_git, "tools": _glyph_tools, "gametime": _glyph_gametime}
+GLYPHS = {"otter-git": _glyph_git, "otter-tools": _glyph_tools, "otter-gametime": _glyph_gametime}
 
 
 def vector_badge(app: str, size: int = 512) -> Image.Image:
@@ -334,7 +315,7 @@ def _place_badge(canvas: Image.Image, badge_layer: Image.Image, side: int, app: 
     if not bbox:
         return
     bb = bb.crop(bbox)
-    cfg = ICON_BADGE.get(app or "git", ICON_BADGE["git"])
+    cfg = ICON_BADGE.get(app or "otter-git", ICON_BADGE["otter-git"])
     target = int(side * cfg["scale"])
     sc = target / max(bb.size)
     nw, nh = max(1, round(bb.width * sc)), max(1, round(bb.height * sc))

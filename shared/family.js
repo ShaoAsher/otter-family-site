@@ -1,11 +1,11 @@
 /* 水獭家族官网公共脚本：素材地址、版本号、版本记录与下载链接，都按 family.json 来。
  *
- *   <script src="../shared/family.js" data-app="git" defer></script>   放在页面自己的脚本前面
+ *   <script src="../shared/family.js" data-app="otter-git" defer></script>   放在页面自己的脚本前面
  *
  * - `[data-media]`：素材在 TOS（family.json 的 `family.media`，`{app}` 换成 data-app），值是相对路径；
  *   img / source 填 src，a 填 href，`[data-media-poster]` 填 video 的 poster。页面脚本用 `otterMedia(路径)` 拼地址
- * - `[data-expr]`：小獭表情，和 App 用同一份 TOS 表情包（family.json 的 `family.expr`），值如 `anim_270/hi.webp`、
- *   `still_270/hi.webp`；页面脚本用 `otterExpr(路径)` 拼地址
+ * - `[data-expr]`：小獭表情，和 App 用同一份 TOS 表情包（family.json 的 `family.expr`），值如 `anim/270/hi.webp`、
+ *   `still/270/hi.webp`；页面脚本用 `otterExpr(路径)` 拼地址
  * - `.v` / `.ver`：能下载到的版本（`download.version`，没有安装包时是 `latest`）；导航「下载 X.Y」同
  * - `.vlist`：版本记录（全部条目，新的在前）
  * - `[data-dl]`：值是 family.json 里 `download.files` 的键（macos / windows / …），空串 = 发布页
@@ -19,9 +19,9 @@
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
   var LIB_VER = "1.1.0";
-  var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/library/current/site/{app}/";
-  var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/library/current/expr/";
-  var BRAND = "https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/";
+  var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/{app}/";
+  var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/";
+  var BRAND = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/";
 
   function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
   function expand(tpl, ver) {

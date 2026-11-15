@@ -151,7 +151,7 @@
     var k;
     do { k = PET[Math.random() * PET.length | 0]; } while (k === lastPet);
     lastPet = k;
-    peekImg.src = EXPR + "anim_270/" + k + ".webp";
+    peekImg.src = EXPR + "anim/270/" + k + ".webp";
     say(LINES[li++ % LINES.length]);
     if (window.gsap && !reduced) gsap.fromTo(peekImg, { scale: .82, rotate: -8 }, { scale: 1, rotate: 0, duration: .5, ease: "back.out(2.4)" });
   });
@@ -177,31 +177,31 @@
   /* ── 陪伴：一天里的小獭（候选与标题同 App 的 OtterScene / 结果页文案） ── */
   var DAY = [
     { t: "09:00", n: "早安", c: "var(--amber)", cmd: "greet · morning", title: "早上好，先拉一下远程再开工吧",
-      say: "打开 App，首页先跟你打招呼；继续工作卡片一点就回到昨天停下的地方。",
+      say: "它先跟你打个招呼，昨天停在哪，一点就能回去。",
       pool: ["morning", "hi", "cafe", "stretch", "jog", "drink"] },
     { t: "10:20", n: "第一次提交", c: "var(--green)", cmd: "git commit · 今天第 1 次", title: "今天的第一次提交",
-      say: "勾好文件、写好说明，点提交。结果页的主按钮就是「推送」。",
+      say: "勾好改动、写下说明，提交完它会邀你推送。",
       pool: ["morning", "start", "cheer", "quest", "cafe"] },
     { t: "12:30", n: "饭点", c: "var(--amber)", cmd: "git commit · 12:30", title: "提交成功，记得吃饭",
-      say: "饭点提交，小獭会捧着碗提醒你：代码不会跑，饭要按时吃。",
+      say: "饭点提交，它捧着碗：代码不会跑，饭要按时吃。",
       pool: ["eat", "rice", "noodles", "hungry", "burger", "yum"] },
     { t: "14:10", n: "撞上冲突", c: "var(--coral)", cmd: "git pull · CONFLICT × 6", title: "合并冲突 · 6 个文件",
-      say: "冲突一多，小獭从紧张变成头大。别怕，一块一块解，或者让它先出个方案。",
+      say: "冲突一多，它也跟着紧张。一块一块来，或让它先出个方案。",
       pool: ["angry", "shock", "speechless", "rage", "sick"] },
     { t: "15:40", n: "推送一大批", c: "var(--sky)", cmd: "git push · 12 commits", title: "推送成功 · 12 个提交",
-      say: "一次推上 10 个以上提交，小獭会爬上山顶插旗。新分支第一次推送，也有专属的一刻。",
+      say: "一次推上许多提交，它会上山插旗，替你高兴这一下。",
       pool: ["mountain", "rank", "win", "victory"] },
     { t: "17:30", n: "周五收工", c: "var(--violet)", cmd: "git commit · Fri 17:30", title: "这周的提交，收工啦",
-      say: "周五傍晚提交，小獭已经在看晚霞；周五下午推送，它会祝你好运。",
+      say: "周五傍晚，它已经在看晚霞，也祝你周末好运。",
       pool: ["weekend", "sunset", "celebrate", "milktea"] },
     { t: "23:40", n: "深夜", c: "var(--violet)", cmd: "git commit · 23:40", title: "提交成功，早点休息",
-      say: "这么晚还在写？它陪你写完最后一行，再催你去睡。",
+      say: "这么晚还在写？它陪你收尾，再催你去睡。",
       pool: ["overtime", "night", "goodnight", "sleepy"] },
     { t: "02:30", n: "凌晨", c: "var(--coral)", cmd: "git commit · 02:30", title: "都这个点了，提交完快去睡",
-      say: "凌晨两点以后，劝睡升级：犯困、喝水、生病的样子都会摆出来给你看。",
+      say: "凌晨以后劝睡升级——犯困、喝水，都写在脸上。",
       pool: ["sleepy", "sick", "drink", "nap"] },
     { t: "#1300", n: "里程碑", c: "var(--amber)", cmd: "git commit · #1300", title: "里程碑 · 第 1300 次提交",
-      say: "第 1 次、每满 100 次提交，小獭换上庆祝的表情，带着光晕替你记下这一刻。",
+      say: "第 1 次、每满 100 次，它换上庆祝的脸，替你记下这一刻。",
       pool: ["victory", "celebrate", "highlight", "proud", "cheer"] }
   ];
   var dayList = $("#day .day-list"), dayCard = $("#day-card"), dayFace = $("#day-face");
@@ -215,7 +215,7 @@
   var dayBtns = $$("button", dayList);
   function dayFaceTo(k) {
     $$("#day-pool li").forEach(function (li) { li.classList.toggle("on", li.textContent === k); });
-    dayFace.src = EXPR + (reduced ? "still_270/" : "anim_270/") + k + ".webp";
+    dayFace.src = EXPR + (reduced ? "still/270/" : "anim/270/") + k + ".webp";
     if (window.gsap && !reduced) gsap.fromTo(dayFace, { scale: .86, y: 6 }, { scale: 1, y: 0, duration: .45, ease: "back.out(2)" });
   }
   function dayShow(i) {

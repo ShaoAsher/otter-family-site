@@ -24,11 +24,11 @@ ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "family.json"
 RELEASE_PY = ROOT / "tool/release/release.py"
 SHIP_PY = ROOT / "tool/release/ship.py"
-SYNC_BRAND = ROOT / "otter_family/source/sync_tos.py"
+SYNC_BRAND = ROOT / "tool/sync_tos.py"
 
 DEFAULT_APP_ROOTS = {
-    "git": "otter-git",
-    "tools": "otter-tools",
+    "otter-git": "otter-git",
+    "otter-tools": "otter-tools",
     "gametime": "otter-gametime/app",
 }
 
@@ -97,7 +97,7 @@ def scan():
         print("⚠ 未 source devkeys（TOS_*）")
     if subprocess.run(["gh", "auth", "status", "-h", "github.com"], capture_output=True).returncode:
         print("⚠ gh 未登录")
-    for app in ("git", "tools"):
+    for app in ("otter-git", "otter-tools"):
         root = app_root(app)
         print(f"— {app} ({root.name}) v{version_of(root)} —")
         for line in preflight_app(app, root):
@@ -108,7 +108,7 @@ def scan():
 
 
 def sync_brand():
-    run(sys.executable, SYNC_BRAND, "library", "publish", cwd=ROOT / "otter_family")
+    run(sys.executable, SYNC_BRAND, "library", "publish", cwd=ROOT)
 
 
 def ship_one(app: str, flags: list[str]):
@@ -140,11 +140,11 @@ def main(argv: list[str]):
         scan()
     elif cmd == "sync":
         sync_brand()
-    elif cmd in ("git", "tools"):
+    elif cmd in ("otter-git", "otter-tools"):
         ship_one(cmd, rest)
         run(sys.executable, RELEASE_PY, "status", cmd, cwd=ROOT)
     elif cmd == "all":
-        for app in ("git", "tools"):
+        for app in ("otter-git", "otter-tools"):
             ship_one(app, rest)
         run(sys.executable, RELEASE_PY, "status", cwd=ROOT)
     else:

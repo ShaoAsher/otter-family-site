@@ -169,7 +169,7 @@
     var k;
     do { k = PET[Math.random() * PET.length | 0]; } while (k === lastPet);
     lastPet = k;
-    peekImg.src = EXPR + "anim_270/" + k + ".webp";
+    peekImg.src = EXPR + "anim/270/" + k + ".webp";
     say(LINES[li++ % LINES.length]);
     if (window.gsap && !reduced) gsap.fromTo(peekImg, { scale: .82, rotate: -8 }, { scale: 1, rotate: 0, duration: .5, ease: "back.out(2.4)" });
   });
@@ -236,7 +236,7 @@
   var dayBtns = $$("button", dayList);
   function dayFaceTo(k) {
     $$("#day-pool li").forEach(function (el) { el.classList.toggle("on", el.textContent === k); });
-    dayFace.src = EXPR + (reduced ? "still_270/" : "anim_270/") + k + ".webp";
+    dayFace.src = EXPR + (reduced ? "still/270/" : "anim/270/") + k + ".webp";
     if (window.gsap && !reduced) gsap.fromTo(dayFace, { scale: .86, y: 6 }, { scale: 1, y: 0, duration: .45, ease: "back.out(2)" });
   }
   function dayShow(i) {

@@ -10,11 +10,11 @@
   <meta name="theme-color" content="#0B0A14" />
   <meta property="og:title" content="水獭工具 3.0 · 会陪你照顾电脑的电脑管家" />
   <meta property="og:description" content="专业的电脑管家，也是一只替你看着电脑的小水獭。系统垃圾、内存压力、启动项、隐私权限一眼看清；清理都进废纸篓，小獭动手之前先问你。免费，不用注册。" />
-  <meta property="og:image" content="https://otter-family-site.tos-cn-beijing.volces.com/site/tools/og.jpg" />
+  <meta property="og:image" content="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/og.jpg" />
   <meta property="og:url" content="https://shaoasher.github.io/otter-family-site/tools/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" type="image/png" href="https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/tools/icon.png" />
+  <link rel="icon" type="image/png" href="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" />
   <script>
     (function (r) {
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -988,7 +988,7 @@
     .appcard .mark { display: block; width: 64px; height: 64px; }
     /* 家族入口只放小獭剪影，不排成员图标：成员会越来越多 */
     .appcard .fam { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 16px; background: color-mix(in srgb, var(--accent) 14%, transparent); }
-    .appcard .fam i { width: 38px; height: 38px; background: var(--ink); -webkit-mask: url(https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/common/otter_white.png) center/contain no-repeat; mask: url(https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/common/otter_white.png) center/contain no-repeat; }
+    .appcard .fam i { width: 38px; height: 38px; background: var(--ink); -webkit-mask: url(https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png) center/contain no-repeat; mask: url(https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png) center/contain no-repeat; }
     .appcard p { margin: 6px 0 0; font-size: 14.5px; }
     .appcard .meta { font-size: 13px; color: var(--mute); }
     .appcard .go { font-size: 14px; color: var(--accent); white-space: nowrap; }
@@ -1116,7 +1116,7 @@
   <header class="nav" id="nav">
     <div class="wrap nav-in">
       <a class="brand" href="#top" aria-label="水獭工具首页">
-        <img src="https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/tools/icon.png" alt="" width="30" height="30" />
+        <img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" alt="" width="30" height="30" />
         水獭工具 <small>OTTERTOOLS</small>
       </a>
       <nav class="nav-links" aria-label="站内导航">
@@ -1137,7 +1137,7 @@
     <section class="hero" id="top" data-tone="dawn" aria-labelledby="hero-title">
       <div class="wrap">
         <button type="button" class="greet" id="greet" data-in aria-label="小獭的问候，点一下换一句">
-          <img data-expr="anim_270/hi.webp" alt="" width="30" height="30" />
+          <img data-expr="anim/270/hi.webp" alt="" width="30" height="30" />
           <span id="greet-text">你好，我是小獭</span>
           <span class="v">v3.0.0</span>
         </button>
@@ -1176,7 +1176,7 @@
         <div class="stage" data-in-stage>
           <button type="button" class="peek" id="peek" aria-label="小獭，点一下换个表情">
             <span class="bubble" id="bubble" hidden></span>
-            <img data-expr="anim_270/cheer.webp" alt="" width="150" height="150" />
+            <img data-expr="anim/270/cheer.webp" alt="" width="150" height="150" />
           </button>
           <figure class="frame" id="hero-frame" style="margin: 0">
             <img data-media="shots/home-dark.webp" width="2560" height="1600" fetchpriority="high"
@@ -1205,7 +1205,7 @@
         <div class="day rise" id="day">
           <ol class="day-list" role="tablist" aria-label="一天里的小獭"></ol>
           <article class="day-card" id="day-card" role="tabpanel" aria-live="polite">
-            <div class="day-face"><img id="day-face" data-expr="anim_270/morning.webp" alt="" width="200" height="200" loading="lazy" /></div>
+            <div class="day-face"><img id="day-face" data-expr="anim/270/morning.webp" alt="" width="200" height="200" loading="lazy" /></div>
             <div>
               <p class="day-cmd" id="day-cmd">greet · 早上</p>
               <h3 id="day-title">早～今天也一起把电脑收拾清爽</h3>
@@ -1229,25 +1229,25 @@
 
         <div class="states">
           <ol class="steps">
-            <li class="step on" data-tone="calm" data-shot="0" data-otter="anim_270/calm" style="--c: var(--calm)">
+            <li class="step on" data-tone="calm" data-shot="0" data-otter="anim/270/calm" style="--c: var(--calm)">
               <span class="tag"><i></i>平静 · 一切正常</span>
               <h3>水挺清的，顺手清掉 12.4 GB</h3>
               <p>健康分 86，内存平稳。「接下来可以做」按影响从大到小排好，最上面那条通常点一下就完事。</p>
               <img class="inline frame" data-media="shots/home-dark.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="busy" data-shot="1" data-otter="anim_270/focus" style="--c: var(--busy)">
+            <li class="step" data-tone="busy" data-shot="1" data-otter="anim/270/focus" style="--c: var(--busy)">
               <span class="tag"><i></i>忙碌 · CPU 78%</span>
               <h3>Xcode 在编译，波浪跟着变急</h3>
               <p>CPU 一高，水面的波浪就快起来，水色偏暖，小獭换成埋头干活的样子。只是忙不是坏事，它不会催你去关东西。</p>
               <img class="inline frame" data-media="shots/home-busy.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="alarm" data-shot="2" data-otter="anim_270/scared" style="--c: var(--alarm)">
+            <li class="step" data-tone="alarm" data-shot="2" data-otter="anim/270/scared" style="--c: var(--alarm)">
               <span class="tag"><i></i>告急 · 内存紧张</span>
               <h3>内存快撑不住，先释放一下</h3>
               <p>内存压力到了红线，水变红，首页的主按钮换成「释放内存」。只回收不活跃的缓存，不会关掉你正在用的应用。</p>
               <img class="inline frame" data-media="shots/home-alarm.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </li>
-            <li class="step" data-tone="full" data-shot="3" data-otter="still_270/shock" style="--c: var(--busy)">
+            <li class="step" data-tone="full" data-shot="3" data-otter="still/270/shock" style="--c: var(--busy)">
               <span class="tag"><i></i>注意 · 磁盘仅剩 34 GB</span>
               <h3>水要漫出来了，磁盘快满</h3>
               <p>水位就是磁盘占用。快满的时候，小獭把能腾地方的大头列出来：垃圾、大文件、半年没开过的虚拟机，一项一项给你看。</p>
@@ -1262,7 +1262,7 @@
               <img data-media="shots/home-alarm.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
               <img data-media="shots/home-full.webp" width="2560" height="1600" loading="lazy" decoding="async" alt="" />
             </div>
-            <span class="peek" style="pointer-events: none"><img id="state-otter" data-expr="anim_270/calm.webp" alt="" width="116" height="116" /></span>
+            <span class="peek" style="pointer-events: none"><img id="state-otter" data-expr="anim/270/calm.webp" alt="" width="116" height="116" /></span>
           </div>
         </div>
 
@@ -1298,13 +1298,13 @@
         <div class="oc-stage rise" id="oc-stage" aria-label="一键养护示意：进度条走完后切换为「水清了 · 腾出 6.3 GB」，下方是好的、撤销两个按钮" role="img">
           <div class="oc" id="oc">
             <div class="busy">
-              <img data-expr="anim_270/focus.webp" alt="" width="84" height="84" loading="lazy" />
+              <img data-expr="anim/270/focus.webp" alt="" width="84" height="84" loading="lazy" />
               <h4>正在养护…</h4>
               <p>清理缓存与日志 · 释放内存</p>
               <div class="bar"><i></i></div>
             </div>
             <div class="done">
-              <img data-expr="anim_270/highlight.webp" alt="" width="84" height="84" loading="lazy" />
+              <img data-expr="anim/270/highlight.webp" alt="" width="84" height="84" loading="lazy" />
               <h4>水清了 · 腾出 6.3 GB</h4>
               <p>文件都在废纸篓里 · 石头罐 +1，现在 22 颗</p>
               <div class="btns"><span>好的</span><span>撤销</span></div>
@@ -1334,7 +1334,7 @@
                 <li>卸载应用时，设置和缓存这些残留一起移进废纸篓</li>
                 <li>重复文件每组自动留下最新的一份</li>
               </ul>
-              <p class="otter-say"><img data-expr="anim_270/bath.webp" alt="" width="40" height="40" loading="lazy" />清理的时候我在洗澡，洗完告诉你腾出了多少。</p>
+              <p class="otter-say"><img data-expr="anim/270/bath.webp" alt="" width="40" height="40" loading="lazy" />清理的时候我在洗澡，洗完告诉你腾出了多少。</p>
             </div>
             <figure class="frame rise" style="margin: 0">
               <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1360">
@@ -1353,7 +1353,7 @@
                 <li>进程列表里能结束卡死的应用，结束前先确认</li>
                 <li>启动项写明拖慢开机几秒，挨个关掉就行</li>
               </ul>
-              <p class="otter-say"><img data-expr="anim_270/sweat.webp" alt="" width="40" height="40" loading="lazy" />内存一下子紧了，我盯着呢。</p>
+              <p class="otter-say"><img data-expr="anim/270/sweat.webp" alt="" width="40" height="40" loading="lazy" />内存一下子紧了，我盯着呢。</p>
             </div>
             <figure class="frame rise" style="margin: 0">
               <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1360">
@@ -1372,7 +1372,7 @@
                 <li>macOS 不允许别的应用替你改权限，小獭帮你直接跳到系统设置那一页</li>
                 <li>「痕迹」里可以清掉浏览器历史和最近使用记录</li>
               </ul>
-              <p class="otter-say"><img data-expr="anim_270/think.webp" alt="" width="40" height="40" loading="lazy" />谁拿着摄像头权限，我帮你记着。</p>
+              <p class="otter-say"><img data-expr="anim/270/think.webp" alt="" width="40" height="40" loading="lazy" />谁拿着摄像头权限，我帮你记着。</p>
             </div>
             <figure class="frame rise" style="margin: 0">
               <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1180">
@@ -1391,7 +1391,7 @@
                 <li>截图识字：框一块屏幕，不让复制的网页、图片里的字也能拿出来</li>
                 <li>显示隐藏文件、锁定屏幕这类开关，在 <kbd>⌘</kbd> <kbd>K</kbd> 里搜得到</li>
               </ul>
-              <p class="otter-say"><img data-expr="anim_270/nap.webp" alt="" width="40" height="40" loading="lazy" />看剧睡着了也没事，到点我帮你让电脑睡。</p>
+              <p class="otter-say"><img data-expr="anim/270/nap.webp" alt="" width="40" height="40" loading="lazy" />看剧睡着了也没事，到点我帮你让电脑睡。</p>
             </div>
             <figure class="frame rise" style="margin: 0">
               <div class="crop" style="--x: 500; --y: 56; --w: 2040; --h: 1180">
@@ -1409,7 +1409,7 @@
               <ul class="bullets">
                 <li>关掉主窗口，小獭照样在菜单栏值班</li>
               </ul>
-              <p class="otter-say"><img data-expr="anim_270/relax.webp" alt="" width="40" height="40" loading="lazy" />窗口关了我也在，菜单栏里看着呢。</p>
+              <p class="otter-say"><img data-expr="anim/270/relax.webp" alt="" width="40" height="40" loading="lazy" />窗口关了我也在，菜单栏里看着呢。</p>
             </div>
             <figure class="frame rise" style="margin: 0">
               <div class="crop" style="--x: 1640; --y: 64; --w: 680; --h: 1150">
@@ -1443,55 +1443,55 @@
             <span class="k">Screenshot OCR</span>
             <h3>截图识字</h3>
             <p>框一块屏幕，把字认出来放进剪切板。识别在本机完成，截图不上传。</p>
-            <p class="otter-say"><img data-expr="anim_270/ok.webp" alt="" width="34" height="34" loading="lazy" />不让复制的字，我帮你抄下来。</p>
+            <p class="otter-say"><img data-expr="anim/270/ok.webp" alt="" width="34" height="34" loading="lazy" />不让复制的字，我帮你抄下来。</p>
           </article>
           <article class="term rise">
             <span class="k">Wi‑Fi QR Code</span>
             <h3>Wi‑Fi 给客人</h3>
             <p>生成当前网络的二维码，手机扫一下就连上，不用再念一遍密码。</p>
-            <p class="otter-say"><img data-expr="anim_270/wave.webp" alt="" width="34" height="34" loading="lazy" />客人来了？扫这个就行。</p>
+            <p class="otter-say"><img data-expr="anim/270/wave.webp" alt="" width="34" height="34" loading="lazy" />客人来了？扫这个就行。</p>
           </article>
           <article class="term rise">
             <span class="k">Clipboard History</span>
             <h3>剪切板</h3>
             <p>最近复制过的文字和图片都留着，点一下再复制一次。</p>
-            <p class="otter-say"><img data-expr="anim_270/think.webp" alt="" width="34" height="34" loading="lazy" />刚才复制的那段，我还留着。</p>
+            <p class="otter-say"><img data-expr="anim/270/think.webp" alt="" width="34" height="34" loading="lazy" />刚才复制的那段，我还留着。</p>
           </article>
           <article class="term rise">
             <span class="k">Image Compression</span>
             <h3>图片压缩</h3>
             <p>拖进来批量压小，发消息、传网页不再超过大小限制。</p>
-            <p class="otter-say"><img data-expr="anim_270/clean.webp" alt="" width="34" height="34" loading="lazy" />压小一点，发得出去了。</p>
+            <p class="otter-say"><img data-expr="anim/270/clean.webp" alt="" width="34" height="34" loading="lazy" />压小一点，发得出去了。</p>
           </article>
           <article class="term rise">
             <span class="k">Battery Health</span>
             <h3>电池</h3>
             <p>健康度、循环次数、谁最耗电，笔记本用了几年心里有数。</p>
-            <p class="otter-say"><img data-expr="anim_270/relief.webp" alt="" width="34" height="34" loading="lazy" />电池还挺健康，放心用。</p>
+            <p class="otter-say"><img data-expr="anim/270/relief.webp" alt="" width="34" height="34" loading="lazy" />电池还挺健康，放心用。</p>
           </article>
           <article class="term rise">
             <span class="k">Storage</span>
             <h3>存储</h3>
             <p>磁盘按应用、开发者、文稿、系统数据分开，点一类直接去清理。</p>
-            <p class="otter-say"><img data-expr="anim_270/shock.webp" alt="" width="34" height="34" loading="lazy" />系统数据怎么这么大？我去看看。</p>
+            <p class="otter-say"><img data-expr="anim/270/shock.webp" alt="" width="34" height="34" loading="lazy" />系统数据怎么这么大？我去看看。</p>
           </article>
           <article class="term rise">
             <span class="k">Network · DNS</span>
             <h3>网络</h3>
             <p>测一下网速，看 Wi‑Fi 信号；网页打不开时先刷新 DNS。</p>
-            <p class="otter-say"><img data-expr="anim_270/focus.webp" alt="" width="34" height="34" loading="lazy" />网页打不开？先刷一下 DNS。</p>
+            <p class="otter-say"><img data-expr="anim/270/focus.webp" alt="" width="34" height="34" loading="lazy" />网页打不开？先刷一下 DNS。</p>
           </article>
           <article class="term rise">
             <span class="k">Hardware</span>
             <h3>硬件</h3>
             <p>芯片、内存、序列号、保修状态，卖二手、报修前看一眼。</p>
-            <p class="otter-say"><img data-expr="anim_270/ok.webp" alt="" width="34" height="34" loading="lazy" />序列号和保修，我都抄好了。</p>
+            <p class="otter-say"><img data-expr="anim/270/ok.webp" alt="" width="34" height="34" loading="lazy" />序列号和保修，我都抄好了。</p>
           </article>
           <article class="term rise">
             <span class="k">Command Palette ⌘K</span>
             <h3>搜一下就能用</h3>
             <p>任何功能和开关都能用名字搜到，回车直接执行。</p>
-            <p class="otter-say"><img data-expr="anim_270/happy.webp" alt="" width="34" height="34" loading="lazy" />想做什么，打个字就行。</p>
+            <p class="otter-say"><img data-expr="anim/270/happy.webp" alt="" width="34" height="34" loading="lazy" />想做什么，打个字就行。</p>
           </article>
         </div>
       </div>
@@ -1747,7 +1747,7 @@
 
   <footer>
     <div class="wrap foot">
-      <a class="brand" href="#top"><img src="https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/tools/icon.png" alt="" width="30" height="30" />水獭工具</a>
+      <a class="brand" href="#top"><img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" alt="" width="30" height="30" />水獭工具</a>
       <nav aria-label="相关链接">
         <a href="#vlog">更新记录</a>
         <a href="#demo">在线试用</a>
@@ -1761,7 +1761,7 @@
 
   <script src="../shared/vendor/gsap.min.js" defer></script>
   <script src="../shared/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="../shared/family.js" data-app="tools" defer></script>
+  <script src="../shared/family.js" data-app="otter-tools" defer></script>
   <script src="site.js" defer></script>
 </body>
 

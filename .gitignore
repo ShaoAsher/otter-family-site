@@ -1,9 +1,13 @@
 .DS_Store
 __pycache__/
-# 本地真相目录（TOS library 工作副本），不进 git
+# 本地真相已迁到同级 <code>/otter-library/（不在本仓）
 otter_family/library/
 
-# 官网图标走 TOS library/current/ URL，不进 git
+# 官网图标走 TOS；旧 shared/icons 二进制不进 git
 shared/icons/*.png
 shared/icons/*.jpg
 shared/icons/*.webp
+
+# Dart 包构建缓存
+packages/otter_kit/build/
+packages/otter_kit/.dart_tool/

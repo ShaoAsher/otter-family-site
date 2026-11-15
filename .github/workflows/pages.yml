@@ -1,7 +1,3 @@
-# 推 main 后把网页部署到 GitHub Pages。只发网页目录，素材库与发布脚本不上 Pages。
-# 加了新成员官网（如 gametime/）要加进下面的 WEB 和 sparse-checkout。
-# 仓库 Settings → Pages → Source 选「GitHub Actions」。
-
 name: pages
 
 on:
@@ -25,7 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     env:
-      WEB: index.html family.json shared git tools
+      WEB: index.html family.json shared otter-git otter-tools
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,18 +30,19 @@ jobs:
             /index.html
             /family.json
             /shared/
-            /git/
-            /tools/
+            /otter-git/
+            /otter-tools/
 
       - name: 收集网页
         run: |
-          mkdir _site
-          cp -R $WEB _site/
-          du -sh _site
+          mkdir -p _site
+          for p in $WEB; do
+            if [ -e "$p" ]; then cp -a "$p" _site/; fi
+          done
 
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-
       - id: deploy
         uses: actions/deploy-pages@v4

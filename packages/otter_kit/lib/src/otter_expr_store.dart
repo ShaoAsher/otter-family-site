@@ -10,7 +10,7 @@ import 'family_config.dart';
 /// 动图按需从家族 TOS `expr/<版本>/` 拉取，静帧仍走安装包内 [stillAssetPath]。
 abstract final class OtterExprStore {
   static const _fallbackBase =
-      'https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/';
+      'https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/';
 
   static String _version = 'v3';
   static Map<String, String>? _manifestMd5;
@@ -23,7 +23,7 @@ abstract final class OtterExprStore {
   }
 
   static String stillAssetPath(String key) =>
-      'assets/otter/expr/still_270/$key.webp';
+      'assets/otter/expr/still/270/$key.webp';
 
   static String get _remoteBase {
     final url = FamilyConfig.current.value?.exprAssetsBase ?? '';
@@ -77,7 +77,7 @@ abstract final class OtterExprStore {
 
   static Future<File?> _fetchAnim(String key) async {
     if (kIsWeb) return null;
-    final name = 'anim_270/$key.webp';
+    final name = 'anim/270/$key.webp';
     try {
       await _manifest();
       final root = await _cacheRoot();
