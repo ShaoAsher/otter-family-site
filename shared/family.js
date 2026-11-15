@@ -18,13 +18,19 @@
   var id = me && me.dataset.app;
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
-  var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/site/{app}/"; // 与 family.json 的 family.media 一致，先用它出图
-  var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/"; // 与 family.json 的 family.expr 一致
+  var LIB_VER = "1.1.0";
+  var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/library/current/site/{app}/";
+  var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/library/current/expr/";
+  var BRAND = "https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/";
 
   function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  function expand(tpl, ver) {
+    return tpl.replace(/\{version\}/g, ver || LIB_VER).replace(/\{app\}/g, id);
+  }
 
   function media(tpl) {
-    var base = tpl.replace("{app}", id);
+    var base = expand(tpl, LIB_VER);
+    if (base.indexOf("{app}") >= 0) base = base.replace("{app}", id);
     if (window.otterMedia && window.otterMedia("") === base) return;
     window.otterMedia = function (p) { return base + p; };
     $$("[data-media]").forEach(function (el) {
@@ -36,11 +42,21 @@
   media(MEDIA);
 
   function expr(base) {
+    base = expand(base, LIB_VER);
     if (window.otterExpr && window.otterExpr("") === base) return;
     window.otterExpr = function (p) { return base + p; };
     $$("[data-expr]").forEach(function (el) { el.src = base + el.dataset.expr; });
   }
+  function brand(base) {
+    base = expand(base, LIB_VER);
+    if (!base.endsWith("/")) base += "/";
+    window.otterBrand = function (p) { return base + p; };
+    $$("[data-brand]").forEach(function (el) {
+      el[el.tagName === "A" ? "href" : "src"] = base + el.dataset.brand;
+    });
+  }
   expr(EXPR);
+  brand(BRAND);
   if (!window.fetch) return;
   function fill(tpl, v) { return tpl.replace(/\{(\w+)\}/g, function (_, k) { return v[k] == null ? "" : v[k]; }); }
 
@@ -104,8 +120,10 @@
     .then(function (cfg) {
       var app = cfg && cfg.schema === 1 && cfg.apps && cfg.apps[id];
       if (!app) return;
+      if (cfg.family && cfg.family.libraryVersion) LIB_VER = cfg.family.libraryVersion;
       if (cfg.family && cfg.family.media) media(cfg.family.media);
       if (cfg.family && cfg.family.expr) expr(cfg.family.expr);
+      if (cfg.family && cfg.family.brand) brand(cfg.family.brand);
       if (app.latest) versions(app);
       links(cfg, app, "cn");
       where().then(function (w) { if (w !== "cn") links(cfg, app, w); });

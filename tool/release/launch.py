@@ -2,7 +2,7 @@
 """家族发版一键入口（在家族仓执行 ./tool/otter launch）。
 
   ./tool/otter launch scan              预检三端 + family.json + 各 App status（不发包）
-  ./tool/otter launch sync              品牌 TOS（公开层）+ 推 main 上的 shared/icons（若已提交）
+  ./tool/otter launch sync              library publish（上传品牌/表情等到 TOS library）
   ./tool/otter launch git|tools [--push] [ship 参数…]
   ./tool/otter launch all [--push]      依次 ship 水獭 Git、水獭工具
 
@@ -108,7 +108,7 @@ def scan():
 
 
 def sync_brand():
-    run(sys.executable, SYNC_BRAND, "brand", "--delete", cwd=ROOT / "otter_family")
+    run(sys.executable, SYNC_BRAND, "library", "publish", cwd=ROOT / "otter_family")
 
 
 def ship_one(app: str, flags: list[str]):

@@ -2,11 +2,11 @@
 
 水獭家族的全部官网都在这一个仓库：家族首页、各成员的产品官网与在线试用的页面代码、三端共用的公共配置 `family.json`、三端共用的工具链（`tool/`）与 Dart 代码（`packages/otter_kit`），以及家族素材库 `otter_family/` 的脚本与文档。
 
-**仓库只放代码和文本，图片、视频、安装包都在 TOS，覆盖即生效。**
+**仓库只放代码、配置、提示词。本地真相：`otter_family/library/`；远端：TOS `library/objects` + `versions` + `current/`（增量，不全量备份）。流程见 [tool/FLOW.md](tool/FLOW.md)。**
 
-- 页面里的截图、封面、宣传片写成 `data-media="shots/home-dark.webp"`，由 `shared/family.js` 拼上 `family.json` 的 `family.media`（TOS `site/<app>/`）；小獭表情写成 `data-expr="anim_270/hi.webp"`，拼上 `family.expr`（和 App 同一份表情包 `expr/<版本>/`）。换素材 = 覆盖 TOS 上的文件，不用改页面、不用提交。
-- 这些素材由 App 仓库的 `./tool/otter site` 生产并上传，在线试用的页面代码由它写进 `<app>/demo/`；安装包由 App 的 `./tool/otter release` 发到 TOS + GitHub Release。
-- 素材库的大文件（图标、表情、母版视频）只在 TOS，新克隆后用 `python3 otter_family/source/sync_tos.py --pull` 拉到本地。
+- 全库版本见 `family.libraryVersion` 与 `library/current.json`。图标 / 表情 / 官网媒体 / 母图都在对应 library 版本下；改素材先 `library publish`，再让 App / 官网读新版本。
+- 页面：`data-media` / `data-expr` / `data-brand` 由 `shared/family.js` 按 `family.media` / `expr` / `brand`（含 `{version}`）拼 TOS URL。
+- 新克隆：`cd otter_family && python3 source/sync_tos.py library pull`；App：`./tool/otter assets pull`。
 
 | 页面 | 地址 |
 | --- | --- |
@@ -22,7 +22,7 @@
 | --- | --- |
 | `index.html` | 家族首页（手写，样式、脚本内联） |
 | `family.json` | **公共配置**（手写；发布脚本会切换下载版本）：版本号、版本记录、官网地址、下载版本与文件名、配色，见「公共配置」 |
-| `shared/icons/` | 各成员 App 图标 + 家族剪影（= `otter_family/brand/<app>/icon.png`、`common/otter_white.png`），各页面共用 |
+| `shared/icons/` | 已废弃二进制（改走 TOS `library/…/brand/`）；仅留说明 |
 | `shared/vendor/` | GSAP 3.15.1 与 ScrollTrigger，产品官网共用（本地托管，不依赖 CDN） |
 | `shared/family.js` | 产品官网共用脚本：素材地址（`data-media`）、版本号、版本记录与下载链接，国内 / 海外选下载源 |
 | `<app>/index.html`、`<app>/site.js` | 产品官网页面与它自己的动效、交互（手写） |
@@ -35,7 +35,7 @@
 | `.github/workflows/pages.yml` | 推 `main` 后把网页目录部署到 Pages |
 | `otter_family/` | 家族素材库的脚本、文档、提示词（大文件在 TOS），见 [`otter_family/README.md`](otter_family/README.md) |
 
-TOS `site/<app>/`：`promo.mp4` 宣传片、`poster.jpg` 封面、`og.jpg` 分享图、`shots/` 截图、`build.json`（每类素材由 App 的哪个分支、提交、版本出的）。在线试用的表情直接用公开表情包 `expr/<版本>/`，不另存。
+TOS `library/vX/site/<app>/`（并双写旧 `site/<app>/`）：`promo.mp4`、`poster.jpg`、`og.jpg`、`shots/`、`build.json`。表情：`library/vX/expr/`。
 
 ## 分支与上线
 

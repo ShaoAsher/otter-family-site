@@ -1,15 +1,15 @@
 {
   "schema": 1,
-  "updated": "2026-11-14",
+  "updated": "2026-11-15",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
     "site": "https://shaoasher.github.io/otter-family-site/",
     "members": "https://shaoasher.github.io/otter-family-site/?from={from}#members",
     "assets": "https://otter-family-site.tos-cn-beijing.volces.com/",
-    "media": "https://otter-family-site.tos-cn-beijing.volces.com/site/{app}/",
-    "brand": "https://otter-family-site.tos-cn-beijing.volces.com/brand/",
-    "expr": "https://otter-family-site.tos-cn-beijing.volces.com/expr/v3/",
+    "media": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/site/{app}/",
+    "brand": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/",
+    "expr": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/expr/",
     "config": [
       "https://otter-family-site.tos-cn-beijing.volces.com/config/family.json",
       "https://shaoasher.github.io/otter-family-site/family.json"
@@ -18,7 +18,10 @@
       "cn": "https://otter-family-site.tos-cn-beijing.volces.com/release/{app}/v{version}/{file}",
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
-    }
+    },
+    "libraryVersion": "1.1.0",
+    "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/",
+    "libraryManifest": "https://otter-family-site.tos-cn-beijing.volces.com/library/versions/v{version}/manifest.json"
   },
   "apps": {
     "git": {
@@ -31,7 +34,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/git/",
       "demo": "https://shaoasher.github.io/otter-family-site/git/demo/",
-      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/brand/git/icon.png",
+      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/git/icon.png",
       "colors": [
         "#E89B0C",
         "#FFD66B"
@@ -136,7 +139,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/tools/",
       "demo": "https://shaoasher.github.io/otter-family-site/tools/#demo",
-      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/brand/tools/icon.png",
+      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/tools/icon.png",
       "colors": [
         "#FA5A1E",
         "#FFB04A"
@@ -234,7 +237,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/?from=gametime#gametime",
       "demo": null,
-      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/brand/gametime/icon.png",
+      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/library/current/brand/gametime/icon.png",
       "colors": [
         "#1FB6FF",
         "#5CF2DE"

@@ -33,7 +33,9 @@ def version(repo):
 
 
 def remote(app):
-    media = json.loads((ROOT / "family.json").read_text())["family"]["media"].replace("{app}", app)
+    fam = json.loads((ROOT / "family.json").read_text())["family"]
+    ver = fam.get("libraryVersion") or "1.1.0"
+    media = fam["media"].replace("{version}", ver).replace("{app}", app)
     try:
         with urllib.request.urlopen(media + "build.json", timeout=10) as r:
             return json.loads(r.read())

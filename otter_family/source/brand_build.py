@@ -4,10 +4,9 @@
   python3 source/brand_build.py
 
 母版 brand/master/（只改这里）：
-  <app>.png          仅从各图扣出徽章图形（mark_and_layers）；图标底 = family.json 品牌渐变色铺满圆角方图，
-                     无圆盘描边；剪影居中放大叠在渐变色上
-  silhouette.png     透明底水獭剪影
-  badge_<app>.png    可选：生图角标剪影（无白圆底）；没有则从母版抠图后压成纯色剪影
+  silhouette.png     透明底水獭剪影（图标主体唯一输入）
+  <app>.png          最新成品图标快照（构建结束回写；不再作圆盘母版）
+  badge_<app>.png    可选：生图角标；默认不用，角标走矢量字形
   ip_full.png、ip_half.png   立绘（造型参考，不参与生成）
 
 产物（每个文件只有一份，不同用途靠不同规格区分）：
@@ -32,7 +31,7 @@ import os
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BRAND = f"{ROOT}/brand"
+BRAND = f"{ROOT}/library/brand"
 MASTER = f"{BRAND}/master"
 INK = (11, 10, 20)
 APPS = {"git": "desktop", "tools": "desktop", "gametime": "mobile"}
@@ -508,14 +507,25 @@ def main() -> None:
         if app not in colors:
             raise SystemExit(f"family.json 缺少 apps.{app}.colors")
         out = f"{BRAND}/{app}"
-        tile = full_bleed(Image.open(f"{MASTER}/{app}.png"))
-        _, _, badge_raw = mark_and_layers(tile)
-        badge = load_badge(app, badge_raw)
+        # 默认矢量角标；仅 BRAND_USE_GEN_BADGE=1 或无矢量字形时，才从旧母版/生图稿抠角标。
+        if app in GLYPHS and os.environ.get("BRAND_USE_GEN_BADGE") != "1":
+            badge = vector_badge(app)
+        else:
+            src = f"{MASTER}/badge_{app}.png" if os.environ.get("BRAND_USE_GEN_BADGE") == "1" else f"{MASTER}/{app}.png"
+            if not os.path.isfile(src):
+                raise SystemExit(f"缺少角标来源：{src}")
+            if src.endswith(f"badge_{app}.png"):
+                badge = load_badge(app, Image.new("RGBA", (64, 64), (0, 0, 0, 0)))
+            else:
+                _, _, badge_raw = mark_and_layers(full_bleed(Image.open(src)))
+                badge = load_badge(app, badge_raw)
         hero = compose_app_icon(black, badge, colors[app], 1024, app=app)
         mark = product_mark(black, badge, 512, app=app)
         write(hero.resize((512, 512), Image.LANCZOS), f"{out}/icon.png")
         write(mark, f"{out}/mark.png", 512)
         write(logo_badge_plate(badge, 512, app=app), f"{out}/logo_badge.png", 512)
+        # master/<app>.png = 最新成品快照，避免文件夹里留着旧圆盘母版。
+        write(hero.resize((1024, 1024), Image.LANCZOS), f"{MASTER}/{app}.png")
         if kind == "desktop":
             desktop(out, hero, badge, colors[app][0])
         else:

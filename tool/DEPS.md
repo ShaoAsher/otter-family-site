@@ -1,33 +1,10 @@
-# 仓库依赖（水獭家族）
+# 依赖与真相源
 
-权威数据在 **TOS** 或 **家族仓**，App 仓库只保留代码与本产品运行时素材。
+| 层 | 位置 |
+|----|------|
+| 远端真相 | TOS `library/objects/` + `versions/vX/manifest.json` + `current/` |
+| 本地真相 | `otter-family-site/otter_family/library/`（gitignore） |
+| 仓库 | 代码、`family.json`、提示词、脚本 |
+| App 缓存 | `assets/brand`、`assets/otter/expr`（gitignore，`assets pull`） |
 
-```text
-otter-family-site/          family.json、tool/、packages/otter_kit、官网 HTML
-         │
-         ├── TOS config/      family.json（App 国内主读）
-         ├── TOS expr/v3/     表情包（三端 ./tool/otter assets pull）
-         ├── TOS brand/       公开 icon/mark/common（平台套件仅本机 otter_family/brand）
-         ├── TOS site/        官网媒体
-         └── TOS release/     安装包
-
-App 分支约定：[`tool/BRANCHES.md`](BRANCHES.md)（统一 `main`）。
-
-../otter-git | otter-tools    otter.json → 家族 tool/otter（otter_proxy.sh）
-         │
-         ├── assets/brand/    本产品图标 + common 剪影（构建需要）
-         ├── assets/otter/expr  不入 git，构建前 pull
-         └── docs/mockup/     原型 → ../../assets/，不复制品牌 png
-
-../otter-gametime/app        同上；expr 不入 git；无独立官网
-```
-
-克隆后：
-
-```bash
-source ~/.config/devkeys/env.sh
-cd otter-family-site/otter_family && python3 source/sync_tos.py --pull brand
-cd ../otter-git && ./tool/otter assets pull
-```
-
-发版见 [`RELEASE.md`](RELEASE.md)。
+流水线：[`FLOW.md`](FLOW.md)。发版：[`RELEASE.md`](RELEASE.md)。

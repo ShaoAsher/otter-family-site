@@ -2,7 +2,7 @@
 # 水獭家族统一入口。App 里执行 ./tool/otter <命令>（转到这里，工作目录是 App 根目录，配置读它的 otter.json）。
 #
 # 在 App 里用：
-#   assets [pull|check]               小獭表情：按 otter.json 从 TOS expr/<版本>/ 拉到本地 / 只校验
+#   assets [pull|check] [brand|expr] [bundle]  从 TOS library 拉品牌+表情（打包前必跑）
 #   package [参数]                    macOS 打包 DMG + ZIP 到 dist/（--notarize --skip-build --zip-only --keep-old）
 #   notarize <.app|.dmg>              Developer ID 签名并公证（--sign-only 只签名）
 #   release [参数]                    发版：main 分支上打包公证，上传 TOS + GitHub（--use-dist --skip-build --no-notarize --zip-only）
@@ -20,7 +20,10 @@ T="$(cd "$(dirname "$0")" && pwd)"
 cmd="${1:-}"
 [[ $# -gt 0 ]] && shift
 case "$cmd" in
-  assets)    exec python3 "$T/app/assets.py" "${1:-pull}" . ;;
+  assets)
+    if [[ $# -eq 0 ]]; then set -- pull; fi
+    exec python3 "$T/app/assets.py" "$@" .
+    ;;
   package)   exec bash "$T/app/package.sh" "$@" ;;
   notarize)  exec bash "$T/app/notarize.sh" "$@" ;;
   release)   exec bash "$T/app/release.sh" "$@" ;;

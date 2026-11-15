@@ -3,14 +3,14 @@
 
   ./tool/otter site demo                 在线试用：原型（不含 *.md）→ 家族仓 <app>/demo/
   ./tool/otter site shots                官网截图：原型按 site.shots 清单截图 → TOS site/<app>/shots/
-  ./tool/otter site art                  素材图：工厂 out/ 的 og.jpg、poster.jpg → TOS；promo.zh.vtt → 家族仓 <app>/（要同域）
+  ./tool/otter site art                  素材图：读 otter.json 的 site.art（og/poster/字幕）→ TOS；字幕另拷家族仓 <app>/
   ./tool/otter site promo [视频 [字幕 [封面]]]
-                                         宣传片：压成 H.264 → TOS promo.mp4；字幕、封面更新到工厂 out/ 再出一次 art。
-                                         不给参数时用 otter.json 的 site.promo（相对工厂 <app>/）
+                                         宣传片：压成 H.264 → TOS promo.mp4，再出一次 art。
+                                         不给参数时用 otter.json 的 site.promo（相对工厂 <app>/；成品在片子的 out/）
   ./tool/otter site all                  demo + shots + art；默认宣传片在时再加 promo
 
-在线试用里原型的 ../../assets/otter/expr/ 改指 TOS 的公开表情包 expr/<版本>/（不再另传），
-其它 ../../assets/… 复制进 demo/assets/；TOS 上 site/<app>/demo/ 清空（旧的表情副本会被删掉）。
+在线试用里原型的 ../../assets/otter/expr/、assets/brand/ 改指 TOS library 的 expr/brand（不再另传），
+其它 ../../assets/… 复制进 demo/assets/；TOS 上 library/vX/site/<app>/ 与旧 site/<app>/ 双写。
 
 制作工厂（宣传片工程与成品）默认在家族仓旁边的 otter-factory/，可用 OTTER_FACTORY 改。
 要先 source ~/.config/devkeys/env.sh（TOS_*）。每步都更新 TOS 上的 build.json。
@@ -34,8 +34,43 @@ APP = CFG["id"]
 SITE = CFG["site"]
 OUT = FAMILY / APP
 FACTORY = Path(os.environ.get("OTTER_FACTORY") or FAMILY.parent / "otter-factory") / APP
-ASSETS = json.loads((FAMILY / "family.json").read_text())["family"]["assets"]
-EXPR_URL = f"{ASSETS}expr/{CFG['expr']['version']}/"
+
+def _demo_brand_key(app: str, name: str) -> str:
+    """demo 里 assets/brand/文件名 → library brand 相对路径。"""
+    table = {
+        "git": {
+            "otter_git_icon.png": "git/icon.png",
+            "otter_git_mark.png": "git/mark.png",
+            "otter_black.png": "common/otter_black.png",
+            "otter_white.png": "common/otter_white.png",
+        },
+        "tools": {
+            "tools_icon.png": "tools/icon.png",
+            "tools_badge.png": "tools/logo_badge.png",
+            "tools_otter.png": "common/logo_otter.png",
+            "otter_black.png": "common/otter_black.png",
+            "otter_white.png": "common/otter_white.png",
+        },
+        "gametime": {
+            "gt_icon.png": "gametime/icon.png",
+            "gt_badge.png": "gametime/logo_badge.png",
+            "gt_logo_otter.png": "common/logo_otter.png",
+            "gt_otter_w.png": "common/otter_white.png",
+            "gt_otter_k.png": "common/otter_black.png",
+        },
+    }
+    return table.get(app, {}).get(name, f"{app}/{name}")
+
+_FAM = json.loads((FAMILY / "family.json").read_text())["family"]
+_LIB_VER = _FAM.get("libraryVersion") or "1.1.0"
+ASSETS = _FAM["assets"]
+EXPR_URL = (_FAM.get("expr") or f"{ASSETS}library/current/expr/").replace("{version}", _LIB_VER)
+if not EXPR_URL.endswith("/"):
+    EXPR_URL += "/"
+BRAND_URL = (_FAM.get("brand") or f"{ASSETS}library/current/brand/").replace("{version}", _LIB_VER)
+if not BRAND_URL.endswith("/"):
+    BRAND_URL += "/"
+
 VER = re.search(r"^version:\s*([0-9.]+)", (APP_ROOT / "pubspec.yaml").read_text(), re.M).group(1)
 MOCKUP = APP_ROOT / SITE["mockup"]
 
@@ -66,7 +101,15 @@ def demo():
             continue
         text = f.read_text()
         new = text.replace("../../assets/otter/expr/", EXPR_URL)
+        # 品牌图走 TOS library，避免 demo 再拷一份
+        new = re.sub(
+            r"\.\./\.\./assets/brand/([\w./-]+\.\w+)",
+            lambda m: BRAND_URL + _demo_brand_key(APP, m.group(1)),
+            new,
+        )
         for ref in re.findall(r"\.\./\.\./(assets/[\w./-]+\.\w+)", new):
+            if ref.startswith("assets/brand/"):
+                continue
             wanted.add(ref)
         new = re.sub(r"\.\./\.\./(assets/)", r"\1", new)
         new = re.sub(r'\?v=[0-9.]+"', f'?v={VER}"', new)
@@ -92,13 +135,24 @@ def shots():
         upload(stage, "shots")
 
 
+def _factory_file(key):
+    """工厂内相对路径 → 绝对路径；优先 site.art，缺项回落 site.promo。"""
+    art = SITE.get("art") or {}
+    promo = SITE.get("promo") or {}
+    rel = art.get(key) or promo.get(key)
+    return FACTORY / rel if rel else None
+
+
 def art():
-    out = FACTORY / "out"
+    og, poster, subtitle = _factory_file("og"), _factory_file("poster"), _factory_file("subtitle")
+    missing = [n for n, p in (("og", og), ("poster", poster), ("subtitle", subtitle)) if not p or not p.is_file()]
+    if missing:
+        sys.exit(f"找不到素材（otter.json site.art / site.promo）：{', '.join(missing)}")
     with tempfile.TemporaryDirectory() as stage:
-        for n in ("og.jpg", "poster.jpg"):
-            shutil.copy2(out / n, stage)
-        shutil.copy2(out / "promo.zh.vtt", OUT / "promo.zh.vtt")
-        print(f"素材图：og.jpg poster.jpg → TOS，promo.zh.vtt → {OUT}")
+        shutil.copy2(og, Path(stage) / "og.jpg")
+        shutil.copy2(poster, Path(stage) / "poster.jpg")
+        shutil.copy2(subtitle, OUT / "promo.zh.vtt")
+        print(f"素材图：{og.name} {poster.name} → TOS，{subtitle.name} → {OUT}")
         upload(stage, "art")
 
 
@@ -112,12 +166,6 @@ def promo(video=None, subtitle=None, poster=None):
         run("ffmpeg", "-loglevel", "error", "-y", "-i", video, "-c:v", "libx264", "-preset", "slow", "-crf", "26",
             "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", Path(stage) / "promo.mp4")
         upload(stage, "promo", f"source={video.name}")
-    out = FACTORY / "out"
-    out.mkdir(parents=True, exist_ok=True)
-    if subtitle and subtitle.is_file():
-        shutil.copy2(subtitle, out / "promo.zh.vtt")
-    if poster and poster.is_file():
-        shutil.copy2(poster, out / "poster.jpg")
     art()
 
 

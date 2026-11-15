@@ -102,8 +102,9 @@ if [[ "$NOTARIZE" -eq 1 ]]; then
 fi
 
 if [[ "$SKIP_BUILD" -eq 0 ]]; then
-  echo "==> 表情包（瘦包：仅 still_270）"
-  python3 "$FAMILY/tool/app/assets.py" pull bundle "$ROOT"
+  echo "==> 品牌 + 表情包（TOS library；瘦包仅 still）"
+  python3 "$FAMILY/tool/app/assets.py" pull brand "$ROOT"
+  python3 "$FAMILY/tool/app/assets.py" pull expr bundle "$ROOT"
   echo "==> flutter pub get"
   flutter pub get
   # 清掉过期的 Swift Explicit Modules 缓存，避免刷屏

@@ -233,35 +233,41 @@ def site(app, folder):
     if not folder.is_dir():
         sys.exit(f"找不到目录 {folder}")
     client, bucket = tos_client()
-    prefix = f"site/{app}/"
-    remote, token = {}, None
-    while True:
-        r = client.list_objects_type2(bucket, prefix=prefix, continuation_token=token, max_keys=1000)
-        remote.update({o.key: o.etag.strip('"') for o in r.contents})
-        if not r.is_truncated:
-            break
-        token = r.next_continuation_token
-    local = {prefix + p.relative_to(folder).as_posix(): p
-             for p in sorted(folder.rglob("*")) if p.is_file() and not p.name.startswith(".")}
-    todo = [(k, p) for k, p in local.items() if remote.get(k) != md5(p)]
-    dirs = {p.name for p in folder.iterdir() if p.is_dir()}
-    extra = [k for k in remote if k not in local and k[len(prefix):].split("/")[0] in dirs]
-    size = sum(p.stat().st_size for _, p in todo)
-    print(f"==> TOS {prefix}  上传 {len(todo)} 个（{size / 1e6:.1f} MB），删除 {len(extra)} 个，未变 {len(local) - len(todo)} 个")
+    # 只写 library/current/site/<app>/
+    prefixes = [f"library/current/site/{app}/"]
 
-    def put(item):
-        k, p = item
-        client.upload_file(
-            bucket, k, str(p),
-            acl=tos.ACLType.ACL_Public_Read,
-            content_type=mimetypes.guess_type(p.name)[0] or "application/octet-stream",
-            cache_control="public, max-age=600",
-            part_size=16 * 1024 * 1024, task_num=4, enable_checkpoint=False,
-        )
+    def sync_prefix(prefix):
+        remote, token = {}, None
+        while True:
+            r = client.list_objects_type2(bucket, prefix=prefix, continuation_token=token, max_keys=1000)
+            remote.update({o.key: o.etag.strip('"') for o in (r.contents or [])})
+            if not r.is_truncated:
+                break
+            token = r.next_continuation_token
+        local = {prefix + p.relative_to(folder).as_posix(): p
+                 for p in sorted(folder.rglob("*")) if p.is_file() and not p.name.startswith(".")}
+        todo = [(k, p) for k, p in local.items() if remote.get(k) != md5(p)]
+        dirs = {p.name for p in folder.iterdir() if p.is_dir()}
+        extra = [k for k in remote if k not in local and k[len(prefix):].split("/")[0] in dirs]
+        size = sum(p.stat().st_size for _, p in todo)
+        print(f"==> TOS {prefix}  上传 {len(todo)} 个（{size / 1e6:.1f} MB），删除 {len(extra)} 个，未变 {len(local) - len(todo)} 个")
 
-    with ThreadPoolExecutor(8) as pool:
-        list(pool.map(put, todo))
-        list(pool.map(lambda k: client.delete_object(bucket, k), extra))
+        def put(item):
+            k, p = item
+            client.upload_file(
+                bucket, k, str(p),
+                acl=tos.ACLType.ACL_Public_Read,
+                content_type=mimetypes.guess_type(p.name)[0] or "application/octet-stream",
+                cache_control="public, max-age=600",
+                part_size=16 * 1024 * 1024, task_num=4, enable_checkpoint=False,
+            )
+
+        with ThreadPoolExecutor(8) as pool:
+            list(pool.map(put, todo))
+            list(pool.map(lambda k: client.delete_object(bucket, k), extra))
+
+    for prefix in prefixes:
+        sync_prefix(prefix)
 
 
 def main():
