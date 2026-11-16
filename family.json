@@ -8,6 +8,7 @@
     "members": "https://shaoasher.github.io/otter-family-site/?from={from}#members",
     "assets": "https://otter-family-site.tos-cn-beijing.volces.com/",
     "media": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/{app}/",
+    "shots": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/shots/{app}/",
     "brand": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/",
     "expr": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/",
     "config": [

@@ -78,6 +78,11 @@ def run(*cmd):
     subprocess.run([str(c) for c in cmd], check=True)
 
 
+def library_root() -> Path:
+    env = os.environ.get("OTTER_LIBRARY")
+    return Path(env) if env else FAMILY.parent / "otter-library"
+
+
 def mirror_local(stage):
     dest = local_site_root()
     dest.mkdir(parents=True, exist_ok=True)
@@ -85,10 +90,14 @@ def mirror_local(stage):
         if not src.is_file() or src.name.startswith("."):
             continue
         rel = src.relative_to(stage)
-        out = dest / rel
+        # 截图单独落到 shots/<app>/，与品牌/宣传片分开，TOS 上按 app 一眼能分清
+        if rel.parts and rel.parts[0] == "shots":
+            out = library_root() / "shots" / APP / Path(*rel.parts[1:])
+        else:
+            out = dest / rel
         out.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, out)
-    print(f"本地真相 ← {dest}（上云：otter lib publish）")
+    print(f"本地真相 ← {dest}（截图 → shots/{APP}/；上云：otter lib publish）")
 
 
 def commit(stage, part, *extra):

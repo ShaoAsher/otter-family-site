@@ -2,8 +2,9 @@
  *
  *   <script src="../shared/family.js" data-app="otter-git" defer></script>   放在页面自己的脚本前面
  *
- * - `[data-media]`：素材在 TOS（family.json 的 `family.media`，`{app}` 换成 data-app），值是相对路径；
- *   img / source 填 src，a 填 href，`[data-media-poster]` 填 video 的 poster。页面脚本用 `otterMedia(路径)` 拼地址
+ * - `[data-media]`：素材在 TOS。普通路径走 `family.media`（`…/latest/{app}/`）；以 `shots/` 开头的
+ *   走 `family.shots`（`…/latest/shots/{app}/`，按 app 分组）。img/source→src，a→href；
+ *   `[data-media-poster]` 填 video poster。`otterMedia(路径)` 同上规则。
  * - `[data-expr]`：小獭表情，和 App 用同一份 TOS 表情包（family.json 的 `family.expr`），值如 `anim/270/hi.webp`、
  *   `still/270/hi.webp`；页面脚本用 `otterExpr(路径)` 拼地址
  * - `.v` / `.ver`：能下载到的版本（`download.version`，没有安装包时是 `latest`）；导航「下载 X.Y」同
@@ -20,6 +21,7 @@
   var root = me.src.replace(/shared\/family\.js.*$/, "");
   var LIB_VER = "1.1.0";
   var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/{app}/";
+  var SHOTS = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/shots/{app}/";
   var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/";
   var BRAND = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/";
 
@@ -27,19 +29,30 @@
   function expand(tpl, ver) {
     return tpl.replace(/\{version\}/g, ver || LIB_VER).replace(/\{app\}/g, id);
   }
+  function absMedia(path, mediaBase, shotsBase) {
+    if (!path) return mediaBase;
+    if (path.indexOf("shots/") === 0) return shotsBase + path.slice(6);
+    return mediaBase + path;
+  }
 
-  function media(tpl) {
-    var base = expand(tpl, LIB_VER);
+  function media(mediaTpl, shotsTpl) {
+    var base = expand(mediaTpl, LIB_VER);
+    var shots = expand(shotsTpl || SHOTS, LIB_VER);
     if (base.indexOf("{app}") >= 0) base = base.replace("{app}", id);
-    if (window.otterMedia && window.otterMedia("") === base) return;
-    window.otterMedia = function (p) { return base + p; };
+    if (shots.indexOf("{app}") >= 0) shots = shots.replace("{app}", id);
+    if (window.otterMedia && window.otterMedia.__mediaBase === base && window.otterMedia.__shotsBase === shots) return;
+    window.otterMedia = function (p) { return absMedia(p, base, shots); };
+    window.otterMedia.__mediaBase = base;
+    window.otterMedia.__shotsBase = shots;
     $$("[data-media]").forEach(function (el) {
-      el[el.tagName === "A" ? "href" : "src"] = base + el.dataset.media;
+      el[el.tagName === "A" ? "href" : "src"] = absMedia(el.dataset.media, base, shots);
     });
-    $$("[data-media-poster]").forEach(function (el) { el.poster = base + el.dataset.mediaPoster; });
+    $$("[data-media-poster]").forEach(function (el) {
+      el.poster = absMedia(el.dataset.mediaPoster, base, shots);
+    });
     $$("video source[data-media]").forEach(function (s) { s.parentNode.load(); });
   }
-  media(MEDIA);
+  media(MEDIA, SHOTS);
 
   function expr(base) {
     base = expand(base, LIB_VER);
@@ -121,7 +134,7 @@
       var app = cfg && cfg.schema === 1 && cfg.apps && cfg.apps[id];
       if (!app) return;
       if (cfg.family && cfg.family.libraryVersion) LIB_VER = cfg.family.libraryVersion;
-      if (cfg.family && cfg.family.media) media(cfg.family.media);
+      if (cfg.family && cfg.family.media) media(cfg.family.media, cfg.family.shots);
       if (cfg.family && cfg.family.expr) expr(cfg.family.expr);
       if (cfg.family && cfg.family.brand) brand(cfg.family.brand);
       if (app.latest) versions(app);

@@ -38,7 +38,8 @@ SKIP = {".DS_Store", "__pycache__"}
 SKIP_DIRS = {"__pycache__", "master._bak", "_keep"}
 
 # 本地顶层 → TOS 分区
-PUBLIC_TOP = {"common", "otter-git", "otter-tools", "otter-gametime"}
+# shots/ 下再按 app 分子目录，避免各端截图文件名撞车
+PUBLIC_TOP = {"common", "otter-git", "otter-tools", "otter-gametime", "shots"}
 PRIVATE_TOP = {"master", "source", "expr"}  # 三档表情整树属母版
 PUBLIC_EXPR_SIZES = {"270"}  # 对外只挂交付档
 
@@ -227,6 +228,7 @@ def apply_family_urls(fam: dict, version: str) -> None:
     fam["family"]["brand"] = base
     fam["family"]["expr"] = f"{base}expr/"  # 公开仅 270
     fam["family"]["media"] = f"{base}{{app}}/"
+    fam["family"]["shots"] = f"{base}shots/{{app}}/"
     fam["family"]["config"] = [
         f"{BUCKET_BASE}/library/family.json",
         "https://shaoasher.github.io/otter-family-site/family.json",
