@@ -1,38 +1,36 @@
 (() => {
   const root = document.documentElement;
   const nav = document.getElementById("nav");
-  const timer = document.getElementById("liveTimer");
+  const phone = document.getElementById("phone3d");
+  const stage = document.getElementById("stage");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const reveal = () => {
     const nodes = [...document.querySelectorAll("[data-in]")];
-    if (!root.classList.contains("motion") || !("IntersectionObserver" in window)) {
-      nodes.forEach((n) => {
-        n.style.visibility = "visible";
-      });
+    if (!root.classList.contains("motion") || reduce) {
+      nodes.forEach((n) => { n.style.visibility = "visible"; });
       root.classList.add("ready");
       return;
     }
-
     nodes.forEach((n) => {
       n.style.opacity = "0";
-      n.style.transform = "translateY(18px)";
-      n.style.transition = "opacity 700ms cubic-bezier(.22,1,.36,1), transform 700ms cubic-bezier(.22,1,.36,1)";
+      n.style.transform = "translateY(22px) scale(.985)";
+      n.style.transition = "opacity 780ms cubic-bezier(.22,1,.36,1), transform 780ms cubic-bezier(.22,1,.36,1)";
       n.style.visibility = "visible";
     });
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          const el = e.target;
-          el.style.opacity = "1";
-          el.style.transform = "translateY(0)";
-          io.unobserve(el);
-        });
-      },
-      { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
-    );
-    nodes.forEach((n) => io.observe(n));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.style.opacity = "1";
+        el.style.transform = "translateY(0) scale(1)";
+        io.unobserve(el);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    nodes.forEach((n, i) => {
+      n.style.transitionDelay = `${Math.min(i % 4, 3) * 60}ms`;
+      io.observe(n);
+    });
     root.classList.add("ready");
   };
 
@@ -41,51 +39,52 @@
     nav.classList.toggle("scrolled", window.scrollY > 8);
   };
 
-  let t0 = performance.now();
-  const tick = (now) => {
-    if (!timer) return;
-    const sec = Math.floor((now - t0) / 1000) % 360000;
-    const h = String(Math.floor(sec / 3600)).padStart(2, "0");
-    const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
-    const s = String(sec % 60).padStart(2, "0");
-    const label = timer.querySelector("small");
-    timer.firstChild.textContent = `${h}:${m}:${s}`;
-    if (label && !label.isConnected) timer.appendChild(label);
-    // keep IN BATTLE label
-    if (!timer.querySelector("small")) {
-      const sm = document.createElement("small");
-      sm.textContent = "IN BATTLE";
-      timer.appendChild(sm);
-    }
-    requestAnimationFrame(tick);
-  };
-
-  // Fix timer text node without wiping <small>
-  const startTimer = () => {
-    if (!timer) return;
-    const small = timer.querySelector("small");
-    const text = document.createTextNode("00:00:00");
-    timer.textContent = "";
-    timer.appendChild(text);
-    if (small) timer.appendChild(small);
-    else {
-      const sm = document.createElement("small");
-      sm.textContent = "IN BATTLE";
-      timer.appendChild(sm);
-    }
-    const run = (now) => {
-      const sec = Math.floor((now - t0) / 1000);
-      const h = String(Math.floor(sec / 3600)).padStart(2, "0");
-      const m = String(Math.floor((sec % 3600) / 60)).padStart(2, "0");
-      const s = String(sec % 60).padStart(2, "0");
-      text.textContent = `${h}:${m}:${s}`;
-      requestAnimationFrame(run);
+  // pointer tilt for phone
+  if (phone && stage && !reduce) {
+    let tx = 0, ty = 0, cx = 0, cy = 0;
+    const loop = () => {
+      cx += (tx - cx) * 0.12;
+      cy += (ty - cy) * 0.12;
+      phone.style.transform = `rotateX(${cy}deg) rotateY(${cx}deg)`;
+      requestAnimationFrame(loop);
     };
-    requestAnimationFrame(run);
-  };
+    stage.addEventListener("pointermove", (e) => {
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      tx = x * 14;
+      ty = -y * 10;
+    });
+    stage.addEventListener("pointerleave", () => { tx = 0; ty = 0; });
+    requestAnimationFrame(loop);
+  }
+
+  // store placeholders: keep slots, no dead-end toast
+  document.querySelectorAll("[data-store]").forEach((a) => {
+    a.addEventListener("click", (e) => {
+      if (!a.dataset.hrefReady) e.preventDefault();
+    });
+  });
+
+  // hydrate changelog from family.json when available
+  const list = document.getElementById("changelog");
+  if (list) {
+    fetch("../family.json")
+      .then((r) => r.json())
+      .then((d) => {
+        const rows = d?.apps?.["otter-gametime"]?.changelog;
+        if (!Array.isArray(rows) || !rows.length) return;
+        list.innerHTML = rows.slice(0, 5).map((c) => `
+          <li>
+            <b>v${c.version}</b>
+            <time datetime="${c.date}">${String(c.date).slice(5)}</time>
+            <span>${c.zh}</span>
+          </li>`).join("");
+      })
+      .catch(() => {});
+  }
 
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
   reveal();
-  startTimer();
 })();
