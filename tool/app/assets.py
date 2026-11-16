@@ -87,6 +87,7 @@ def expand(tpl: str, version: str, app: str | None = None) -> str:
 def library_base(fam: dict | None = None) -> str:
     fam = fam or family()
     base = fam.get("library") or f"{fam['assets']}library/latest/"
+    # {version} = libraryVersion（与 App 同号）；不用 libraryBuild 拼路径（走 latest/）
     if "{version}" in base:
         base = expand(base, fam.get("libraryVersion") or "1.0.0")
     return base if base.endswith("/") else base + "/"

@@ -7,7 +7,12 @@
 对外 library/latest/：
   common/  otter-*/  expr/*/270/ + manifest.json
 
-另：keep/vX/、release/、current.json、family.json
+另：keep/v{libraryVersion}+{libraryBuild}/、release/、current.json、family.json
+
+家族资源世代（与 App 安装包 build 无关）：
+  libraryVersion  — 与当前 App 版本号一致（如 3.0.2），App 升版时用 --version 对齐
+  libraryBuild    — 仅标识 TOS 素材树发版；小改素材 --bump 只涨这一位
+  展示形态        — 3.0.2+16（加号后是 libraryBuild，不是 pubspec +N）
 
   ./tool/otter lib publish|pull
   python3 tool/sync_tos.py library publish|pull|wipe-legacy
@@ -144,12 +149,26 @@ def delivery_mirrors(rel: str, path: str) -> list[tuple[str, str, bool]]:
     return []
 
 
-def bump_version(ver: str) -> str:
-    parts = [int(x) for x in ver.split(".")]
-    while len(parts) < 3:
-        parts.append(0)
-    parts[-1] += 1
-    return ".".join(map(str, parts))
+def library_id(version: str, build: str | int | None) -> str:
+    """家族 TOS 世代：version+libraryBuild。build 空则只返回 version。"""
+    b = "" if build is None else str(build).strip()
+    return f"{version}+{b}" if b else version
+
+
+def parse_library_id(raw: str) -> tuple[str, str]:
+    """解析 3.0.2+16；兼容旧假版本 3.0.16（无 +）→ version 原样、build 空。"""
+    s = (raw or "").strip().lstrip("v")
+    if "+" in s:
+        ver, _, b = s.partition("+")
+        return ver, b
+    return s, ""
+
+
+def bump_library_build(build: str | int | None) -> str:
+    try:
+        return str(int(str(build or "0").strip() or "0") + 1)
+    except ValueError:
+        return "1"
 
 
 def load_current_json(client, bucket) -> dict | None:
@@ -181,7 +200,7 @@ def parse_publish_argv(argv: list[str]):
     bump = "--bump" in argv
     keep_all = "--keep-all" in argv
     keep_none = "--keep-none" in argv
-    notes, version, keeps = "", None, []
+    notes, version, build, keeps = "", None, None, []
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -189,14 +208,24 @@ def parse_publish_argv(argv: list[str]):
             notes, i = argv[i + 1], i + 2
             continue
         if a == "--version" and i + 1 < len(argv):
-            version, i = argv[i + 1].lstrip("v"), i + 2
+            # 与 App 版本号对齐；可写 3.0.2 或 3.0.2+1（顺带设 libraryBuild）
+            raw = argv[i + 1].lstrip("v")
+            ver, b = parse_library_id(raw)
+            version = ver
+            if b:
+                build = b
+            i += 2
+            continue
+        if a == "--build" and i + 1 < len(argv):
+            # 仅设 libraryBuild（TOS 资源世代），与 App pubspec +N 无关
+            build, i = argv[i + 1].lstrip("+"), i + 2
             continue
         if a == "--keep" and i + 1 < len(argv):
             keeps.append(argv[i + 1].lstrip("/"))
             i += 2
             continue
         i += 1
-    return dry, bump, notes, version, keep_all, keep_none, keeps
+    return dry, bump, notes, version, build, keep_all, keep_none, keeps
 
 
 def ask_keep(candidates: list[tuple[str, str]]) -> list[str]:
@@ -221,9 +250,11 @@ def ask_keep(candidates: list[tuple[str, str]]) -> list[str]:
     return chosen
 
 
-def apply_family_urls(fam: dict, version: str) -> None:
+def apply_family_urls(fam: dict, version: str, build: str) -> None:
     base = f"{BUCKET_BASE}/library/latest/"
+    # libraryVersion ≡ App 版本号；libraryBuild 仅 TOS 素材世代（≠ App pubspec build）
     fam["family"]["libraryVersion"] = version
+    fam["family"]["libraryBuild"] = str(build)
     fam["family"]["library"] = base
     fam["family"]["brand"] = base
     fam["family"]["expr"] = f"{base}expr/"  # 公开仅 270
@@ -243,17 +274,48 @@ def apply_family_urls(fam: dict, version: str) -> None:
         meta["icon"] = f"{base}{app}/icon.png"
 
 
-def library_publish(argv: list[str]):
-    dry, bump, notes, version, keep_all, keep_none, keeps = parse_publish_argv(argv)
-    fam = load_family()
+def resolve_library_generation(fam: dict, *, bump: bool, version: str | None, build: str | None) -> tuple[str, str, str, str]:
+    """返回 (new_version, new_build, old_id, new_id)。
+
+    - --bump：只涨 libraryBuild（素材小改，不碰与 App 同号的 version）
+    - --version：与 App 版本号对齐；未带 --build/--bump 时 libraryBuild 从 1 起
+    - --version + --bump：对齐 version 且 libraryBuild=1
+    - --build：显式指定 libraryBuild（与 App pubspec +N 无关）
+    """
     old_ver = fam["family"].get("libraryVersion") or "0.0.0"
-    version = version or (bump_version(old_ver) if bump else old_ver)
+    old_build = str(fam["family"].get("libraryBuild") or "").strip()
+    old_id = library_id(old_ver, old_build) if old_build else old_ver
+
+    new_ver = version or old_ver
+    version_changed = bool(version) and version != old_ver
+
+    if build is not None:
+        new_build = str(build).strip()
+    elif bump and version_changed:
+        new_build = "1"
+    elif bump:
+        new_build = bump_library_build(old_build or "0")
+    elif version_changed:
+        new_build = "1"
+    else:
+        new_build = old_build or "0"
+
+    return new_ver, new_build, old_id, library_id(new_ver, new_build)
+
+
+def library_publish(argv: list[str]):
+    dry, bump, notes, version, build, keep_all, keep_none, keeps = parse_publish_argv(argv)
+    fam = load_family()
+    version, build, old_id, new_id = resolve_library_generation(fam, bump=bump, version=version, build=build)
     if not os.path.isdir(LIB):
         sys.exit(f"缺少 {LIB}")
 
     client, env = client_env()
     bucket = env["TOS_BUCKET"]
-    print(f"==> publish v{version}  private=母版三档+源  latest=对外资源  lib={LIB}")
+    print(
+        f"==> publish library {new_id}  (libraryVersion={version} 与 App 同号；"
+        f"libraryBuild={build} 仅 TOS，≠ App build)  lib={LIB}"
+    )
 
     # uploads: list of (key, path, public_acl)
     uploads: dict[str, tuple[str, bool]] = {}
@@ -343,7 +405,8 @@ def library_publish(argv: list[str]):
         if src in remote or True:
             try:
                 data = client.get_object(bucket, src).read()
-                put_object(client, bucket, f"{KEEP_PREFIX}v{old_ver}/{rel}", data, public=True)
+                # keep 目录用完整世代 id（含 libraryBuild），避免与 App 版本目录混淆
+                put_object(client, bucket, f"{KEEP_PREFIX}v{old_id}/{rel}", data, public=True)
             except Exception as e:
                 print(f"  ! keep 失败 {rel}: {e}")
 
@@ -357,11 +420,13 @@ def library_publish(argv: list[str]):
         client.delete_object(bucket, k)
 
     cur_meta = load_current_json(client, bucket) or {}
-    keep_list = list(dict.fromkeys(list(cur_meta.get("keep") or []) + ([old_ver] if keep_rels else [])))
+    keep_list = list(dict.fromkeys(list(cur_meta.get("keep") or []) + ([old_id] if keep_rels else [])))
     current = {
-        "schema": 6,
-        "version": version,
-        "parent": old_ver if old_ver != version else cur_meta.get("parent"),
+        "schema": 7,
+        "version": version,  # = libraryVersion，与 App 版本号一致
+        "build": build,  # = libraryBuild，仅 TOS 素材世代（≠ App pubspec build）
+        "id": new_id,
+        "parent": old_id if old_id != new_id else cur_meta.get("parent"),
         "publishedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "notes": notes,
         "latest": f"{BUCKET_BASE}/library/latest/",
@@ -385,10 +450,10 @@ def library_publish(argv: list[str]):
     except Exception as e:
         print(f"  ! slim expr manifest: {e}")
 
-    apply_family_urls(fam, version)
+    apply_family_urls(fam, version, build)
     save_family(fam)
     put_object(client, bucket, "library/family.json", open(FAMILY_JSON, "rb").read(), public=True, cache="no-cache")
-    print(f"已发布 v{version}")
+    print(f"已发布 library {new_id}")
 
 
 def library_pull(argv: list[str]):

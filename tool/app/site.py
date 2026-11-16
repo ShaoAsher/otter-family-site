@@ -58,6 +58,7 @@ def _demo_brand_key(app: str, name: str) -> str:
 
 
 _FAM = json.loads((FAMILY / "family.json").read_text())["family"]
+# libraryVersion 与 App 版本号一致；libraryBuild 是 TOS 素材世代，这里不用来拼 URL（走 latest/）
 _LIB_VER = _FAM.get("libraryVersion") or "1.0.0"
 ASSETS = _FAM["assets"]
 EXPR_URL = (_FAM.get("expr") or f"{ASSETS}library/latest/expr/").replace("{version}", _LIB_VER)
@@ -67,7 +68,10 @@ BRAND_URL = (_FAM.get("brand") or f"{ASSETS}library/latest/").replace("{version}
 if not BRAND_URL.endswith("/"):
     BRAND_URL += "/"
 
-VER = re.search(r"^version:\s*([0-9.]+)", (APP_ROOT / "pubspec.yaml").read_text(), re.M).group(1)
+# 试用页缓存戳：App 版本 + App build（pubspec），≠ family.libraryBuild
+_ver_m = re.search(r"^version:\s*([0-9.]+)(?:\+(\d+))?", (APP_ROOT / "pubspec.yaml").read_text(), re.M)
+VER = _ver_m.group(1) + (f"+{_ver_m.group(2)}" if _ver_m.group(2) else "")
+APP_BUILD = _ver_m.group(2) or ""
 MOCKUP = APP_ROOT / SITE["mockup"]
 
 if not (OUT / "index.html").is_file():
@@ -129,7 +133,7 @@ def demo():
                 continue
             wanted.add(ref)
         new = re.sub(r"\.\./\.\./(assets/)", r"\1", new)
-        new = re.sub(r'\?v=[0-9.]+"', f'?v={VER}"', new)
+        new = re.sub(r'\?v=[0-9.+]+"', f'?v={VER}"', new)
         if new != text:
             f.write_text(new)
     for ref in sorted(wanted):

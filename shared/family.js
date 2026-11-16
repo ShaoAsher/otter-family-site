@@ -11,6 +11,11 @@
  * - `.vlist`：版本记录（全部条目，新的在前）
  * - `[data-dl]`：值是 family.json 里 `download.files` 的键（macos / windows / …），空串 = 发布页
  *
+ * 版本字段（勿混）：
+ *   family.libraryVersion — 与 App 版本号一致（拼旧模板 {version} 时用）
+ *   family.libraryBuild   — 仅 TOS 素材树世代；小改素材只涨它，≠ App pubspec +N
+ *   apps.*.latest / download.version — 各 App 安装包版本
+ *
  * 下载源：国内走 TOS，海外走 GitHub Release；按访客 IP 判断，查询失败或超时保持 TOS。
  * 页面里写死的版本号与链接只是脚本没跑起来时的兜底。
  */
@@ -19,7 +24,7 @@
   var id = me && me.dataset.app;
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
-  var LIB_VER = "1.1.0";
+  var LIB_VER = "3.0.2"; // fallback = libraryVersion（与 App 同号），不是 libraryBuild
   var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/{app}/";
   var SHOTS = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/shots/{app}/";
   var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/";
@@ -133,6 +138,7 @@
     .then(function (cfg) {
       var app = cfg && cfg.schema === 1 && cfg.apps && cfg.apps[id];
       if (!app) return;
+      // 只取 libraryVersion（与 App 同号）；libraryBuild 不参与 URL 拼接
       if (cfg.family && cfg.family.libraryVersion) LIB_VER = cfg.family.libraryVersion;
       if (cfg.family && cfg.family.media) media(cfg.family.media, cfg.family.shots);
       if (cfg.family && cfg.family.expr) expr(cfg.family.expr);

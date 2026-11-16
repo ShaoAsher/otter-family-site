@@ -2,7 +2,7 @@
  "spec": {
   "anim": "anim/270/<key>.webp 动图（透明 WebP 12fps）",
   "still": "still/270/<key>.webp 静帧",
-  "source": "otter-library / TOS library/latest/expr/"
+  "source": "otter-family-site/otter_family（水獭家族素材库）"
  },
  "groups": {
   "mood": "心情",

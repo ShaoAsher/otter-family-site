@@ -60,19 +60,47 @@
             <img id="greetFace" data-expr="anim/270/wave.webp" alt="" />
             <span id="greetText">今晚开一局？我帮你记着。</span>
           </button>
-          <h1>水獭游时<em>。</em><br />今晚这局，留得住。</h1>
+          <h1 class="hero-title">
+            <span class="line" data-line>水獭游时<em>。</em></span>
+            <span class="line" data-line>今晚这局，</span>
+            <span class="line accent" data-line>留得住。</span>
+          </h1>
           <p class="hero-lead">开战计时，看见今日水位，把高光收进藏品。她就在池边——不用注册，数据只在这台手机。</p>
+          <div class="pond" aria-label="今晚池情">
+            <div class="pond-cell">
+              <span>今日水位</span>
+              <b><em data-count="136" data-suffix="m">0</em><small>/ 3h</small></b>
+              <i class="pond-bar" style="--p:76%"></i>
+            </div>
+            <div class="pond-cell">
+              <span>安心剩余</span>
+              <b><em data-count="83" data-suffix="m">0</em></b>
+              <i class="pond-bar mint" style="--p:46%"></i>
+            </div>
+            <div class="pond-cell">
+              <span>连打卡</span>
+              <b><em data-count="12" data-suffix="">0</em><small>天</small></b>
+              <i class="pond-bar ember" style="--p:88%"></i>
+            </div>
+          </div>
           <div class="hero-cta">
             <a class="btn btn-solid" href="#demo">真机里试用</a>
             <a class="btn btn-ghost" href="#features">看看功能</a>
           </div>
           <p class="hero-note">iOS / Android · 本地优先 · 可选自备 AI Key</p>
         </div>
-        <div class="hero-art" data-in>
+        <div class="hero-art" data-in id="heroArt">
           <img data-media="scenes/scene-pond-data.webp" alt="今日水位与小獭" />
+          <div class="hero-chip chip-a" aria-hidden="true"><b>2h 16m</b><span>池水刚涨到这</span></div>
+          <div class="hero-chip chip-b" aria-hidden="true"><b>开战中</b><span>橙环在烧</span></div>
         </div>
       </div>
     </section>
+
+    <button type="button" class="peek" id="peek" aria-label="小獭陪看，点一下换表情">
+      <img id="peekFace" data-expr="anim/270/wave.webp" alt="" width="96" height="96" />
+      <span id="peekSay">点我，我陪你往下看</span>
+    </button>
 
     <section class="band band-demo" id="demo" data-tone="play">
       <div class="wrap">
@@ -135,6 +163,9 @@
               <p class="day-cmd" id="day-cmd">focus · 开战</p>
               <h3 id="day-title">专心打完这局</h3>
               <p class="say" id="day-say">计时在烧，她坐在旁边。收工时，一眼能看见你刚刚走完的路。</p>
+              <ul class="day-pool" id="day-pool" aria-label="这一刻的标签">
+                <li class="on">开战</li><li>计时</li><li>并肩</li>
+              </ul>
               <div class="day-shots" id="day-shots">
                 <img data-media="shots/timer.webp" alt="" />
                 <img data-media="shots/home.webp" alt="" />
@@ -146,97 +177,108 @@
       </div>
     </section>
 
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>开战</span><span>水位</span><span>安心</span><span>藏品</span><span>并肩</span><span>本机</span><span>晚安</span>
+        <span>开战</span><span>水位</span><span>安心</span><span>藏品</span><span>并肩</span><span>本机</span><span>晚安</span>
+      </div>
+    </div>
+
     <section class="band band-features" id="features" data-tone="cool">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker"><span class="sec-idx">03</span> 功能分组</p>
-          <h2 class="sec-title">时间、记忆、陪伴，<span class="hl">各归各位</span>。</h2>
-          <p class="sec-lead">四块各说各的事——每组用真机截图，不再挤成一锅。</p>
+          <p class="sec-kicker"><span class="sec-idx">03</span> 功能叙事</p>
+          <h2 class="sec-title">先读字，<span class="hl">再看屏</span>。</h2>
+          <p class="sec-lead">每一段一个主视觉、一句口令、一条水位——不是截图墙。</p>
         </div>
 
         <div class="feats">
-          <article class="feat feat-time" data-in data-cat="time">
-            <div class="feat-copy">
-              <div class="feat-num">01 · 时间</div>
-              <h3>开战，让时间有形状</h3>
-              <p>选好这一局，计时开始烧。青是此刻，橙是开战，红是快到上限。</p>
-              <ul>
-                <li>一键开战 / 收工小结</li>
-                <li>今日水位与安心剩余</li>
-                <li>桌面小组件同步今日时长</li>
-              </ul>
+          <article class="stage stage-time" data-in data-cat="time">
+            <p class="stage-mark" aria-hidden="true">01</p>
+            <div class="stage-copy">
+              <p class="feat-num">时间 · TIME</p>
+              <h3>开战，让时间<br /><em>有形状</em></h3>
+              <p class="stage-lead">青是此刻，橙是开战，红是快到上限。选好这一局，计时开始烧。</p>
+              <ol class="stage-steps">
+                <li><b>01</b><span>一键开战 / 收工小结</span></li>
+                <li><b>02</b><span>今日水位与安心剩余</span></li>
+                <li><b>03</b><span>桌面小组件同步今日</span></li>
+              </ol>
             </div>
-            <div class="shot-board">
-              <figure class="main"><img data-media="shots/timer.webp" alt="开战计时" data-shot-dark="shots/timer.webp" data-shot-light="shots/timer-light.webp" /></figure>
-              <div class="side">
-                <figure><img data-media="shots/home.webp" alt="此刻水位" data-shot-dark="shots/home.webp" data-shot-light="shots/home-light.webp" /></figure>
-                <figure><img data-media="shots/calendar.webp" alt="日历" /></figure>
-                <figure><img data-media="shots/desk.webp" alt="桌面小组件" /></figure>
-              </div>
-            </div>
+            <figure class="stage-shot">
+              <img data-media="shots/timer.webp" alt="开战计时" data-shot-dark="shots/timer.webp" data-shot-light="shots/timer-light.webp" />
+              <figcaption>开战页 · 时长在烧</figcaption>
+            </figure>
+            <aside class="stage-aside">
+              <img data-media="shots/home.webp" alt="" data-shot-dark="shots/home.webp" data-shot-light="shots/home-light.webp" />
+              <p>水位一眼懂</p>
+            </aside>
           </article>
 
-          <article class="feat feat-memory" data-in data-cat="memory">
-            <div class="feat-copy">
-              <div class="feat-num">02 · 记忆</div>
-              <h3>高光收进藏品墙</h3>
-              <p>通关、宵夜、雨停。把值得留下的贴上墙，翻开仍有当晚的温度。</p>
-              <ul>
-                <li>藏品瀑布流</li>
-                <li>记一条：图文与语音</li>
-                <li>关联到某一局时长</li>
-              </ul>
+          <article class="stage stage-memory" data-in data-cat="memory">
+            <p class="stage-mark" aria-hidden="true">02</p>
+            <figure class="stage-shot">
+              <img data-media="shots/gallery.webp" alt="藏品墙" data-shot-dark="shots/gallery.webp" data-shot-light="shots/gallery-light.webp" />
+              <figcaption>藏品墙 · 当晚温度还在</figcaption>
+            </figure>
+            <div class="stage-copy">
+              <p class="feat-num">记忆 · KEEP</p>
+              <h3>高光收进<br /><em>藏品墙</em></h3>
+              <p class="stage-lead">通关、宵夜、雨停。贴上墙，翻开仍有那晚的温度。</p>
+              <ol class="stage-steps">
+                <li><b>01</b><span>瀑布流浏览</span></li>
+                <li><b>02</b><span>图文与语音一条</span></li>
+                <li><b>03</b><span>挂回那一局时长</span></li>
+              </ol>
             </div>
-            <div class="shot-board">
-              <figure class="main"><img data-media="shots/gallery.webp" alt="藏品墙" data-shot-dark="shots/gallery.webp" data-shot-light="shots/gallery-light.webp" /></figure>
-              <div class="side">
-                <figure><img data-media="shots/compose.webp" alt="记一条" /></figure>
-                <figure><img data-media="shots/note.webp" alt="记一条细节" /></figure>
-                <figure><img data-media="memories/life_ramen.webp" alt="宵夜记忆" /></figure>
-              </div>
-            </div>
+            <aside class="stage-aside">
+              <img data-media="memories/life_ramen.webp" alt="" />
+              <p>宵夜也算高光</p>
+            </aside>
           </article>
 
-          <article class="feat feat-bond" data-in data-cat="bond">
-            <div class="feat-copy">
-              <div class="feat-num">03 · 陪伴</div>
-              <h3>表情接住你的节奏</h3>
-              <p>心情、社交、游戏、生活……她用一整套表情陪你开战、收工、翻相册。</p>
-              <ul>
-                <li>家族表情与标签</li>
-                <li>头像与个性装扮</li>
-                <li>关于页与家族入口</li>
-              </ul>
+          <article class="stage stage-bond" data-in data-cat="bond">
+            <p class="stage-mark" aria-hidden="true">03</p>
+            <div class="stage-copy">
+              <p class="feat-num">陪伴 · BOND</p>
+              <h3>表情接住<br /><em>你的节奏</em></h3>
+              <p class="stage-lead">开战、收工、翻相册——她用一整套表情并肩，不是说明书。</p>
+              <ol class="stage-steps">
+                <li><b>01</b><span>家族表情节奏</span></li>
+                <li><b>02</b><span>头像与装扮</span></li>
+                <li><b>03</b><span>关于页 · 家族入口</span></li>
+              </ol>
             </div>
-            <div class="shot-board">
-              <figure class="main"><img data-media="shots/me.webp" alt="我的页面" data-shot-dark="shots/me.webp" data-shot-light="shots/me-light.webp" /></figure>
-              <div class="side">
-                <figure><img data-media="shots/about.webp" alt="关于" /></figure>
-                <figure><img data-expr="anim/270/celebrate.webp" alt="庆祝表情" /></figure>
-                <figure><img data-media="avatars/avatar_05.webp" alt="头像" /></figure>
-              </div>
-            </div>
+            <figure class="stage-shot">
+              <img data-media="shots/me.webp" alt="我的页面" data-shot-dark="shots/me.webp" data-shot-light="shots/me-light.webp" />
+              <figcaption>我的页 · 表情在场</figcaption>
+            </figure>
+            <aside class="stage-aside face">
+              <img data-expr="anim/270/celebrate.webp" alt="" />
+              <p>庆祝这一局</p>
+            </aside>
           </article>
 
-          <article class="feat feat-local" data-in data-cat="local">
-            <div class="feat-copy">
-              <div class="feat-num">04 · 本地</div>
-              <h3>不用注册，也可选 AI</h3>
-              <p>数据在这台手机。想聊两句时，可自备 AI Key，请求直连你的服务商。</p>
-              <ul>
-                <li>本机优先，可备份互认</li>
-                <li>外观：日 / 夜 / 自动</li>
-                <li>隐私政策与用户协议外链</li>
-              </ul>
+          <article class="stage stage-local" data-in data-cat="local">
+            <p class="stage-mark" aria-hidden="true">04</p>
+            <figure class="stage-shot">
+              <img data-media="shots/settings.webp" alt="设置" />
+              <figcaption>设置 · 数据在这台手机</figcaption>
+            </figure>
+            <div class="stage-copy">
+              <p class="feat-num">本地 · LOCAL</p>
+              <h3>不用注册，<br /><em>也可选 AI</em></h3>
+              <p class="stage-lead">本机优先。想聊两句时，自备 Key，请求直连你的服务商。</p>
+              <ol class="stage-steps">
+                <li><b>01</b><span>本机优先 · 可备份</span></li>
+                <li><b>02</b><span>日 / 夜 / 自动</span></li>
+                <li><b>03</b><span>隐私与协议外链</span></li>
+              </ol>
             </div>
-            <div class="shot-board">
-              <figure class="main"><img data-media="shots/settings.webp" alt="设置" /></figure>
-              <div class="side">
-                <figure><img data-media="shots/home-light.webp" alt="浅色主题" /></figure>
-                <figure><img data-media="scenes/scene-local-safe.webp" alt="本地优先" /></figure>
-                <figure><img data-media="shots/about.webp" alt="关于与合规" /></figure>
-              </div>
-            </div>
+            <aside class="stage-aside">
+              <img data-media="scenes/scene-local-safe.webp" alt="" />
+              <p>护盾在你手里</p>
+            </aside>
           </article>
         </div>
 
@@ -265,7 +307,7 @@
           <h2 class="sec-title">功能长什么样，<span class="hl">情绪也长什么样</span>。</h2>
           <p class="sec-lead">立绘走进场景：水位数字、开战计时、藏品光点、心情星座、本地护盾——一眼读懂特色。</p>
         </div>
-        <div class="scene-grid">
+        <div class="scene-rail" tabindex="0" aria-label="沉浸场景横滑">
           <article class="scene-card">
             <img data-media="scenes/scene-pond-data.webp" alt="水位" />
             <div class="cap"><b>水位</b><span>2h 16m 就在池里</span></div>
@@ -287,6 +329,7 @@
             <div class="cap"><b>本地</b><span>数据在你手里</span></div>
           </article>
         </div>
+        <p class="scene-hint">按住横滑 · 像翻一整卷情绪胶卷</p>
       </div>
     </section>
 

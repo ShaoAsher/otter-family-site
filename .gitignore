@@ -19,3 +19,4 @@ packages/*/.dart_tool/
 .cursor/
 tool/FLOW.md
 shared/README.md
+.local-serve/

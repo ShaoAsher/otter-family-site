@@ -20,7 +20,8 @@
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
-    "libraryVersion": "3.0.15",
+    "libraryVersion": "3.0.2",
+    "libraryBuild": "17",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -273,6 +274,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "3.0.0",
+          "date": "2026-11-16",
+          "zh": "官网上线：真机样板试用、功能叙事分区、沉浸场景与深浅主题；素材同步家族 library（宣传片稍后更新）。",
+          "en": "Site launch: interactive phone demo, narrative feature stages, immersion scenes and theme compare; assets synced to family library (promo film to follow)."
+        },
         {
           "version": "3.0.0",
           "date": "2026-11-14",

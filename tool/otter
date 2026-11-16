@@ -3,6 +3,8 @@
 #
 # 真相
 #   lib export|brand|publish|pull
+#   publish --bump 只涨 libraryBuild（TOS 素材世代，≠ App build）
+#   publish --version X.Y.Z 与 App 版本号对齐 libraryVersion
 # 片子
 #   film pull <app> | film ingest <app>
 # App
