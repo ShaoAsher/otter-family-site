@@ -1,0 +1,170 @@
+/* ═══════════════════════════════════════════════════════════════════
+   空态 & 骨架（empty.js）—— 全站一套
+   空态三种尺寸，版式固定、只换内容：
+     .ge-page    整页：舞台（虚线占位 + 小獭 + 地面影）· 标题 18 · 副文 13.5 · 主按钮 + 次链接
+     .ge-card    卡内：虚线占位条（未来内容的形状）+ 一行「小獭 44 · 标题 15 / 副文 12.5 · 文字链」
+     .ge-inline  行内：小獭 72 · 一句话 · 文字链（筛选 / 搜索没结果）
+   生命力：小獭呼吸 + 地面影同步；点她会换一句；虚线占位轻轻呼吸；心情粒子慢慢飘。
+   骨架：所有块共用一道光（background-attachment:fixed），整屏只有一次扫过；小獭在主卡里翻本子。
+   ═══════════════════════════════════════════════════════════════════ */
+.ge{--ec:61,220,255; position:relative; text-align:center; color:var(--mid)}
+.ge-ot{display:block; object-fit:contain; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transform-origin:50% 100%; animation:geBob 3.4s ease-in-out infinite}
+.ge-ot.poke{animation:gePoke .5s cubic-bezier(.34,1.6,.64,1)}
+@keyframes geBob{0%,100%{translate:0 0}50%{translate:0 -5px}}
+@keyframes gePoke{0%{transform:scale(1)}30%{transform:scale(1.12,.86)}60%{transform:scale(.94,1.08)}100%{transform:none}}
+.ge-sh{display:block; margin:-6px auto 0; width:58%; height:10px; border-radius:50%;
+  background:radial-gradient(closest-side, rgba(0,0,0,.42), transparent); animation:geShadow 3.4s ease-in-out infinite}
+@keyframes geShadow{0%,100%{scale:1; opacity:.9}50%{scale:.84; opacity:.6}}
+.ge-t{display:block; color:var(--hi); font-weight:800}
+.ge-s{margin:0; line-height:1.6; transition:opacity .2s}
+.ge-s.swap{opacity:0}
+.ge-link{border:0; background:none; padding:10px 6px; margin:-4px 0 -10px; font:inherit; font-size:13px; font-weight:700;
+  color:rgb(var(--ec)); cursor:pointer; -webkit-tap-highlight-color:transparent}
+.ge-link::after{content:' ›'}
+
+/* 心情粒子：zzz / ? / ✦ 从小獭头顶慢慢飘起 */
+.ge-amb{position:absolute; left:50%; top:8%; width:0; height:0; pointer-events:none}
+.ge-amb i{position:absolute; left:var(--x); top:0; font-style:normal; font-size:var(--s,13px); font-weight:800;
+  color:rgba(var(--ec),.75); opacity:0; animation:geAmb 3.6s ease-out infinite; animation-delay:var(--d)}
+@keyframes geAmb{0%{opacity:0; transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0; transform:translate(var(--dx,8px),-46px) scale(1.1)}}
+
+/* ── 虚线占位：以后会长出东西的位置 ── */
+.ge-gh{display:flex; justify-content:center; align-items:flex-end; gap:8px}
+.ge-gh i{display:block; flex:none; border:1.5px dashed rgba(var(--ec),.32); background:rgba(var(--ec),.04);
+  animation:geSlot 2.8s ease-in-out infinite; animation-delay:calc(var(--i,0) * .18s)}
+@keyframes geSlot{0%,100%{border-color:rgba(var(--ec),.22); background-color:rgba(var(--ec),.03)}50%{border-color:rgba(var(--ec),.45); background-color:rgba(var(--ec),.07)}}
+.ge-gh i.add{display:grid; place-items:center; color:rgba(var(--ec),.9); font-size:22px; font-weight:400; font-style:normal}
+.ge-gh.polaroid i{width:58px; height:70px; border-radius:6px; rotate:var(--r)}
+.ge-gh.icons{justify-content:flex-start}
+.ge-gh.icons i{width:58px; height:58px; border-radius:18px}
+.ge-gh.days{justify-content:space-between}
+.ge-gh.days i{width:30px; height:30px; border-radius:50%}
+.ge-gh.days i.now{border-style:solid; border-color:rgba(var(--ec),.7); box-shadow:0 0 0 4px rgba(var(--ec),.1); animation:geNow 1.8s ease-in-out infinite}
+@keyframes geNow{0%,100%{box-shadow:0 0 0 3px rgba(var(--ec),.08)}50%{box-shadow:0 0 0 7px rgba(var(--ec),.16)}}
+.ge-gh.bars{justify-content:space-between; height:64px}
+.ge-gh.bars i{width:18px; height:var(--h); border-radius:6px}
+.ge-gh.pod{gap:10px; height:96px}
+.ge-gh.pod i{width:64px; height:var(--h); border-radius:12px 12px 4px 4px; display:grid; place-items:center; color:rgba(var(--ec),.6); font-style:normal; font-weight:800}
+.ge-gh.rows{flex-direction:column; align-items:stretch; gap:8px}
+.ge-gh.rows i{height:44px; border-radius:14px; width:100%}
+.ge-gh.rows i:nth-child(2){width:86%} .ge-gh.rows i:nth-child(3){width:64%}
+.ge-gh.hl{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+.ge-gh.hl i{height:62px; border-radius:14px}
+.ge-gh.hl i.big{grid-column:1 / -1; height:96px; border-radius:18px}
+.ge-gh.card i{width:150px; height:190px; border-radius:26px}
+
+/* ── 整页 ── */
+.ge-page{padding:36px 20px 24px}
+.ge-page .ge-stage{position:relative; height:156px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end}
+.ge-page .ge-gh{position:absolute; left:0; right:0; bottom:22px}
+.ge-page .ge-gh.polaroid{gap:96px}
+.ge-page .ge-gh.polaroid i:nth-child(2){display:none}
+.ge-page .ge-ot{position:relative; width:120px; height:120px}
+.ge-page .ge-t{font-size:18px; margin-top:10px}
+.ge-page .ge-s{font-size:13.5px; margin:6px auto 0; max-width:280px}
+.ge-page .ge-acts{display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:20px}
+.ge-page .ge-acts .slab{min-width:176px}
+
+/* ── 卡内 ── */
+.ge-card{text-align:left; padding:var(--pad)}
+/* 区块原本没有卡（游戏库 / 拍立得 / 高光 / 今日记录）：直接落在画布上，左右与区块对齐 */
+:not(.v3-card) > .ge-card{padding:4px 0 0}
+.ge-card .ge-gh{margin-bottom:14px}
+.ge-card .ge-row{display:flex; align-items:center; gap:10px}
+.ge-card .ge-ot{width:44px; height:44px; flex:none; animation-duration:3s}
+.ge-card .ge-tx{flex:1; min-width:0}
+.ge-card .ge-t{font-size:15px; font-weight:700}
+.ge-card .ge-s{font-size:12.5px; margin-top:2px; line-height:1.5}
+.ge-card .ge-link{flex:none; margin:0 -6px 0 0}
+.ge-card .ge-amb{left:22px; top:0}
+.ge-card .ge-amb i{--s:10px}
+
+/* ── 行内 ── */
+.ge-inline{padding:28px 20px 12px; font-size:14px}
+.ge-inline .ge-ot{width:72px; height:72px; margin:0 auto 6px}
+.ge-inline .ge-t{font-size:14.5px; font-weight:700}
+.ge-inline .ge-s{font-size:12.5px; color:var(--lo); margin-top:2px}
+.ge-inline .ge-link{margin-top:2px}
+
+/* 出现：小獭弹上来，文字跟着浮起（只在挂载时跑一次） */
+.ge.in .ge-ot{animation:geIn .55s cubic-bezier(.34,1.56,.64,1) both, geBob 3.4s ease-in-out .55s infinite}
+.ge.in .ge-t, .ge.in .ge-s, .ge.in .ge-acts, .ge.in .ge-gh{animation:geRise .45s ease-out both}
+.ge.in .ge-t{animation-delay:.12s} .ge.in .ge-s{animation-delay:.18s} .ge.in .ge-acts{animation-delay:.26s}
+.ge.in .ge-gh{animation:geRise .45s ease-out both, none}
+@keyframes geIn{from{opacity:0; transform:translateY(16px) scale(.7)}}
+@keyframes geRise{from{opacity:0; transform:translateY(8px)}}
+
+/* 整页空态在场时，页头摘要卡（回收站 / 草稿箱）收起：一屏只讲一件事 */
+#trHero[hidden], .df-hd[hidden]{display:none !important}
+
+/* 被空态接管的容器：去掉原来的网格 / 横滚 / 内边距，由空态自己排 */
+.ge-host{display:block !important; padding:0 !important; overflow:visible !important; grid-template-columns:none !important}
+
+/* ── 首页「接着玩」空：封面换成虚线 + 号 ── */
+.h3-now .cover.ge-slot{display:grid; place-items:center; border:1.5px dashed rgba(124,140,255,.5); background:rgba(124,140,255,.08);
+  color:rgba(170,180,255,.95); font-size:26px; animation:geSlot 2.8s ease-in-out infinite; --ec:124,140,255}
+/* 新用户：首页没有「那天的你」和今日小纸条（还没有可回忆的东西） */
+body.e-home #page-home .lf-day, body.e-home #page-home .lf-note{display:none}
+/* 「我」页数字为 0 时淡一点 */
+.m3-nums .n.zero b{color:var(--lo)}
+/* 开战页：没有游戏 → 牌堆换成空态，开战键不可用 */
+/*   空态是这一屏唯一的主角：牌堆、翻页、「这局打算」、开战键都先收起来 */
+body.e-timer #stage .disc, body.e-timer #page-timer .nav, body.e-timer #page-timer .floor,
+body.e-timer #tkPlan, body.e-timer #page-timer .cta{display:none}
+body.e-timer #page-timer #stage{height:auto; margin:8px 0 var(--sec)}
+#stage .ge-deck .ge-page{padding:58px 0 0}
+#stage .ge-deck .ge-gh.card{bottom:30px}
+
+/* ═══ 骨架 ═══════════════════════════════════════════════════════ */
+.page > .sk-layer{position:absolute !important; inset:0; z-index:20 !important; margin:0; padding:inherit; pointer-events:none; transition:opacity .35s ease-out}
+.sk-layer.out{opacity:0}
+.page.sk-on > :not(.sk-layer){opacity:0}
+.page.sk-off > :not(.sk-layer){animation:skReveal .5s ease-out both}
+@keyframes skReveal{from{opacity:0; transform:translateY(6px)}}
+.sk{display:block; position:relative; border-radius:10px;
+  background:linear-gradient(100deg, rgba(255,255,255,.045) 30%, rgba(var(--sk,61,220,255),.16) 46%, rgba(255,255,255,.07) 52%, rgba(255,255,255,.045) 68%)
+    rgba(255,255,255,.045);
+  background-size:220vw 100%; background-attachment:fixed; animation:skSweep 1.6s linear infinite}
+@keyframes skSweep{from{background-position:120vw 0}to{background-position:-100vw 0}}
+.sk.card{border-radius:var(--r-lg)}
+.sk.round{border-radius:50%}
+.sk.pill{border-radius:999px}
+.sk-row{display:flex; align-items:center; gap:12px}
+.sk-col{display:flex; flex-direction:column; gap:8px; flex:1; min-width:0}
+.sk-sec{margin-top:var(--sec)}
+.sk-gap{margin-top:var(--gap)}
+/* 小獭在主卡里翻本子 + 一句状态 */
+.sk-ot{position:absolute; right:14px; bottom:10px; width:56px; height:56px; object-fit:contain; animation:geBob 2.4s ease-in-out infinite}
+.sk-say{position:absolute; right:74px; bottom:24px; font-size:12px; font-weight:600; color:var(--mid); white-space:nowrap;
+  opacity:0; transition:opacity .3s}
+.sk-say.on{opacity:1}
+.sk-done .sk-ot{animation:skHop .4s cubic-bezier(.34,1.6,.64,1)}
+@keyframes skHop{40%{transform:translateY(-14px) scale(1.06)}}
+
+/* 同一屏只让一只小獭说话：整页空态在场时，悬浮小獭退到边上、收起气泡 */
+body.ge-solo .pet:not(.drag){translate:40px 0; opacity:.45}
+body.ge-solo .pet.left:not(.drag){translate:-40px 0}
+body.ge-solo .pet .say{opacity:0}
+/* 藏品：空态占满两列；热力格全灭 */
+#g3Fall.ge-empty{display:block}
+#g3Fall.ge-empty .col:nth-child(2){display:none}
+body.e-gallery #g3Heat i{background:rgba(255,255,255,.06) !important; box-shadow:none !important; opacity:1 !important}
+body.light.e-gallery #g3Heat i{background:rgba(23,21,31,.07) !important}
+
+/* ── 走查条：?empty / ?skel 时左下角一枚小标签 ── */
+.ge-dev{position:fixed; left:10px; bottom:calc(env(safe-area-inset-bottom,0px) + 96px); z-index:400; height:26px; padding:0 10px;
+  border-radius:13px; display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:#0B0A14;
+  background:rgba(255,210,122,.92); box-shadow:0 4px 14px rgba(0,0,0,.3); cursor:pointer}
+
+/* ── 亮色 ── */
+body.light .ge-sh{background:radial-gradient(closest-side, rgba(60,50,96,.2), transparent)}
+body.light .ge-gh i{border-color:rgba(var(--ec),.45); background:rgba(var(--ec),.05)}
+body.light .sk{background:linear-gradient(100deg, rgba(23,21,31,.05) 30%, rgba(var(--sk,61,220,255),.18) 46%, rgba(255,255,255,.6) 52%, rgba(23,21,31,.05) 68%) rgba(23,21,31,.05);
+  background-size:220vw 100%; background-attachment:fixed}
+
+/* ── 减弱动效：全部静止，留形状与文字 ── */
+@media (prefers-reduced-motion: reduce){
+  .ge-ot, .ge-sh, .ge-gh i, .ge-amb, .sk, .sk-ot, .ge.in *{animation:none !important}
+  .ge-amb{display:none}
+}

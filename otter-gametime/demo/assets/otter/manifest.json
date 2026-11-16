@@ -1,0 +1,988 @@
+{
+ "spec": {
+  "anim": "anim/270/<key>.webp 动图（透明 WebP 12fps）",
+  "still": "still/270/<key>.webp 静帧",
+  "source": "otter-library / TOS library/latest/expr/"
+ },
+ "groups": {
+  "mood": "心情",
+  "game": "游戏",
+  "social": "社交",
+  "life": "生活",
+  "food": "美食",
+  "trip": "出行",
+  "study": "学习"
+ },
+ "expr": [
+  {
+   "key": "happy",
+   "name": "开心",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "laugh",
+   "name": "大笑",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "smile",
+   "name": "微笑",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "cheer",
+   "name": "欢呼",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "great",
+   "name": "超棒",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "proud",
+   "name": "骄傲",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "love",
+   "name": "喜欢",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "shy",
+   "name": "害羞",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "calm",
+   "name": "平静",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "relief",
+   "name": "松口气",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sleepy",
+   "name": "犯困",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "nap",
+   "name": "打盹",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "goodnight",
+   "name": "晚安",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "morning",
+   "name": "早安",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "cry",
+   "name": "哭泣",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sad",
+   "name": "难过",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "scared",
+   "name": "害怕",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "shock",
+   "name": "震惊",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "bashful",
+   "name": "扭捏",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "angry",
+   "name": "生气",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "pout",
+   "name": "嘟嘴",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "speechless",
+   "name": "无语",
+   "group": "mood",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "start",
+   "name": "开局",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "loading",
+   "name": "加载中",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "victory",
+   "name": "胜利",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "defeat",
+   "name": "失败",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "rank",
+   "name": "上分",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "highlight",
+   "name": "高光",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "gacha",
+   "name": "抽卡",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "queue",
+   "name": "排队",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "grind",
+   "name": "刷本",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "focus",
+   "name": "专注",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "rage",
+   "name": "暴怒",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "win",
+   "name": "连胜",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "lose",
+   "name": "连败",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "pause",
+   "name": "暂停",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "retry",
+   "name": "重试",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "quest",
+   "name": "任务",
+   "group": "game",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "hi",
+   "name": "打招呼",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "bye",
+   "name": "再见",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "ok",
+   "name": "好的",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "please",
+   "name": "拜托",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "thanks",
+   "name": "谢谢",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "hug",
+   "name": "拥抱",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "friends",
+   "name": "好友",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "solo",
+   "name": "独处",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "coop",
+   "name": "开黑",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "wave",
+   "name": "挥手",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "salute",
+   "name": "敬礼",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "gg",
+   "name": "寄了",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "welcome",
+   "name": "欢迎",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sorry",
+   "name": "道歉",
+   "group": "social",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "bath",
+   "name": "泡澡",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "stroll",
+   "name": "散步",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sport",
+   "name": "运动",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "movie",
+   "name": "看电影",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "music",
+   "name": "听歌",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "story",
+   "name": "追剧",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "night",
+   "name": "夜晚",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "clear",
+   "name": "天晴",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "weekend",
+   "name": "周末",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "clean",
+   "name": "打扫",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "outfit",
+   "name": "穿搭",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sleep",
+   "name": "入睡",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "drink",
+   "name": "喝水",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "relax",
+   "name": "放松",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "rot",
+   "name": "摆烂",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sick",
+   "name": "生病",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "rain",
+   "name": "下雨",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "snow",
+   "name": "下雪",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "wind",
+   "name": "吹风",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "birthday",
+   "name": "生日",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "celebrate",
+   "name": "庆祝",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "lucky",
+   "name": "好运",
+   "group": "life",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "cook",
+   "name": "下厨",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "cafe",
+   "name": "喝咖啡",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "milktea",
+   "name": "奶茶",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "eat",
+   "name": "干饭",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "burger",
+   "name": "汉堡",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "noodles",
+   "name": "面条",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "rice",
+   "name": "米饭",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "dessert",
+   "name": "甜点",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "fruit",
+   "name": "水果",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "tea",
+   "name": "泡茶",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "feast",
+   "name": "大餐",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "snack",
+   "name": "零食",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "hungry",
+   "name": "饿了",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "yum",
+   "name": "好吃",
+   "group": "food",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "travel",
+   "name": "出行",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "hike",
+   "name": "徒步",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "beach",
+   "name": "海边",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "mountain",
+   "name": "登山",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "city",
+   "name": "城市",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "photo",
+   "name": "拍照",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "souvenir",
+   "name": "纪念品",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "luggage",
+   "name": "行李",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sunset",
+   "name": "日落",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "camping",
+   "name": "露营",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "map",
+   "name": "看地图",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "arrive",
+   "name": "抵达",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "jog",
+   "name": "跑步",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "stretch",
+   "name": "拉伸",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "yoga",
+   "name": "瑜伽",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "ball",
+   "name": "球类",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "sweat",
+   "name": "流汗",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "heal",
+   "name": "康复",
+   "group": "trip",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "study",
+   "name": "学习",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "think",
+   "name": "思考",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "write",
+   "name": "书写",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "read",
+   "name": "阅读",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "busy",
+   "name": "忙碌",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "deadline",
+   "name": "赶截止",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "done",
+   "name": "完成",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "review",
+   "name": "复盘",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "note",
+   "name": "记笔记",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "ask",
+   "name": "提问",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "idea",
+   "name": "灵感",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "plan",
+   "name": "计划",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "meeting",
+   "name": "开会",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  },
+  {
+   "key": "overtime",
+   "name": "加班",
+   "group": "study",
+   "frames": 49,
+   "size": 270,
+   "still": true
+  }
+ ],
+ "count": {
+  "expr": 120,
+  "mood": 22,
+  "game": 16,
+  "social": 14,
+  "life": 22,
+  "food": 14,
+  "trip": 18,
+  "study": 14
+ }
+}

@@ -1,0 +1,122 @@
+/* 水獭家族标：分层 logo · 启动页 · 关于 · 新手引导 · 桌面（见 brand.js） */
+
+/* 分层 logo：深底 + 渐变圆盘（直径 87%）+ 底色水獭层 + 徽章层；两层素材来自家族素材库 common/logo_otter.png、gametime/logo_badge.png（画布 = 圆盘外接正方形），与圆盘同框 */
+.gtl{position:relative; display:block; width:100%; height:100%; border-radius:22.5%; overflow:hidden; isolation:isolate;
+  background:radial-gradient(circle at 50% 45%, #1A1726, #0B0A14 70%)}
+.gtl .dk{position:absolute; inset:6.5%; border-radius:50%;
+  background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.27), transparent 55%),
+    radial-gradient(circle, transparent 70%, rgba(0,0,0,.2) 100%), linear-gradient(45deg, var(--g1), var(--g2))}
+.gtl .ot{position:absolute; inset:6.5%; background:#0B0A14;
+  -webkit-mask:url(assets/brand/gt_logo_otter.png) center/100% 100% no-repeat; mask:url(assets/brand/gt_logo_otter.png) center/100% 100% no-repeat}
+.gtl img.bdg{position:absolute; left:6.5%; top:6.5%; width:87%; height:87%; margin:0; border-radius:0; box-shadow:none; transform-origin:83.9% 83%}
+
+/* 启动页：深底先浮出 → 圆盘弹开 → 水獭从下面浮上来；两圈光一青一白 */
+.boot .mark .gtl{animation:logoIn 1.1s var(--ease-spring) both}
+.boot .ring{border-color:rgba(61,220,255,.30)}
+.boot .ring:nth-child(2){border-color:rgba(255,255,255,.14)}
+.boot .gtl .dk{animation:gtDisc .62s var(--ease-spring) .2s both}
+.boot .gtl .ot{animation:gtOtter .62s cubic-bezier(.22,1,.36,1) .5s both}
+.boot .gtl .bdg{animation:gtBadge .62s var(--ease-spring) .9s both}
+@keyframes gtBadge{from{transform:scale(0) rotate(-30deg); opacity:0}}
+@keyframes gtDisc{from{transform:scale(.4); opacity:0}}
+@keyframes gtOtter{from{transform:translateY(12%); opacity:0}}
+@keyframes gtNod{40%{transform:translateY(-5%) rotate(-4deg)} 70%{transform:translateY(1%) rotate(1deg)}}
+@keyframes gtSpin{to{transform:rotate(360deg)}}
+.boot .fam{margin-top:8px; font-size:11px; letter-spacing:4px; color:var(--lo); opacity:0; animation:fadeUp .8s var(--ease) .7s forwards}
+
+/* 关于：同一枚分层 logo；点一下圆盘转一圈、水獭点个头 */
+.ab-logo .gtl{width:88px; height:88px; position:relative; z-index:1}
+.ab-logo > i{z-index:0; opacity:0; animation:none}
+.ab-logo.wave > i{animation:abWave 1.8s cubic-bezier(.22,1,.36,1) both}
+.ab-logo.wave > i:nth-child(2){animation-delay:.3s} .ab-logo.wave > i:nth-child(3){animation-delay:.6s}
+@keyframes abWave{from{transform:scale(1); opacity:.55} to{transform:scale(1.7); opacity:0}}
+.ab-logo.tick .dk{animation:gtSpin .9s cubic-bezier(.22,1,.36,1)}
+.ab-logo.tick .ot{animation:gtNod .62s var(--ease)}
+.ab-logo.tick .bdg{animation:gtBadge .62s var(--ease-spring) .2s both}
+/* 关于 · 水獭家族入口：三枚成员图标叠放 + 两行字 + 外链箭头，点一下去家族官网 */
+.fam3{display:flex; align-items:center; gap:12px; width:100%; margin-top:12px; padding:14px var(--pad); color:var(--hi); text-align:left; cursor:pointer; transition:scale .15s ease-out}
+.fam3:active{scale:.98}
+.fam3 .ics{flex:none; display:grid; place-items:center; width:40px; height:40px; border-radius:22.5%; background:color-mix(in srgb, var(--accent) 16%, transparent)}
+.fam3 .ics i{width:24px; height:24px; background:var(--hi); -webkit-mask:url(assets/brand/gt_otter_w.png) center/contain no-repeat; mask:url(assets/brand/gt_otter_w.png) center/contain no-repeat}
+.fam3 .tx{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px}
+.fam3 .tx b{font-size:14.5px; font-weight:700}
+.fam3 .tx span{font-size:12px; color:var(--mid)}
+.fam3 svg{flex:none; width:18px; height:18px; fill:none; stroke:var(--lo); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .26s var(--ease)}
+.fam3:active svg{transform:translate(2px,-2px)}
+
+/* 新手引导顶部 */
+.ob-top img{border-radius:22.5%}
+.ob-top .fam{font-size:10.5px; letter-spacing:2px; color:var(--lo); padding:2px 7px; border-radius:99px; border:1px solid rgba(255,255,255,.08)}
+.ob-top .skip{margin-left:auto}
+
+.topbar img, .m3-foot .sig img, .sc-ft img, .nt-prev .ap img{border-radius:0; object-fit:contain}
+/* 入口（设置 · 关于水獭游时）用 App 图标本身，铺满图标位 */
+.si.logo{background:none; padding:0}
+.si.logo img{width:100%; height:100%; border-radius:22.5%; object-fit:cover}
+
+/* ── 桌面上的样子 ── */
+.dk-phone{position:relative; height:560px; margin-top:8px; border-radius:34px; overflow:hidden; isolation:isolate; border:1px solid rgba(255,255,255,.10); user-select:none; -webkit-user-select:none}
+.dk-phone .wp{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2}
+.dk-phone .dim{position:absolute; inset:0; z-index:-1; background:rgba(11,10,20,.45)}
+.dk-sb{display:flex; justify-content:space-between; align-items:center; padding:14px 22px 0; font-size:13px}
+.dk-sb span{display:flex; gap:3px; align-items:flex-end}
+.dk-sb span i{width:3px; border-radius:1px; background:var(--hi)}
+.dk-sb span i:nth-child(1){height:5px} .dk-sb span i:nth-child(2){height:8px} .dk-sb span i:nth-child(3){height:11px}
+
+.dk-wg{position:relative; display:flex; align-items:center; gap:12px; width:calc(100% - 36px); margin:18px 18px 0; padding:14px; border-radius:22px;
+  border:1px solid rgba(255,255,255,.10); background:rgba(19,17,30,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); color:var(--hi); text-align:left; cursor:pointer}
+.dk-wg .pond{position:relative; width:64px; height:64px; flex:none}
+.dk-wg svg{position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg)}
+.dk-wg circle{fill:none; stroke:rgba(255,255,255,.08); stroke-width:3.5}
+.dk-wg circle.v{stroke:#3DDCFF; stroke-linecap:round; stroke-dasharray:119.4; stroke-dashoffset:119.4; transition:stroke-dashoffset 1.1s var(--ease)}
+.dk-phone.in .dk-wg circle.v{stroke-dashoffset:54.9}
+.dk-wg .pond img{position:absolute; inset:0; margin:auto; width:44px; height:44px; object-fit:contain}
+.dk-wg small{display:block; font-size:11px; color:var(--mid)}
+.dk-wg b{display:block; margin-top:1px; font-size:22px; font-weight:800; letter-spacing:-.4px}
+.dk-wg .tx span{display:block; margin-top:1px; font-size:11.5px; color:#3DDCFF}
+.dk-wg em{position:absolute; right:14px; top:12px; font-style:normal; font-size:10px; color:var(--lo)}
+
+.dk-grid{display:grid; grid-template-columns:repeat(4,1fr); row-gap:16px; padding:22px 14px 0}
+.dk-dock{position:absolute; left:12px; right:12px; bottom:12px; display:grid; grid-template-columns:repeat(4,1fr); padding:10px 2px 8px; border-radius:26px;
+  background:rgba(255,255,255,.10); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px)}
+.dk-dock .ap span{display:none}
+.dk-phone .ap{display:flex; flex-direction:column; align-items:center; gap:5px; padding:0; border:0; background:none; color:var(--hi); cursor:pointer; -webkit-tap-highlight-color:transparent}
+.dk-phone .ap img,.dk-phone .ap .nt{width:54px; height:54px; border-radius:22.5%; object-fit:cover; transition:scale .15s ease-out}
+.dk-phone .ap .nt{display:grid; place-items:center; font-style:normal; font-size:18px; font-weight:700; color:rgba(255,255,255,.7); background:rgba(255,255,255,.14)}
+.dk-phone .ap:active img,.dk-phone .ap:active .nt{scale:.9}
+.dk-phone .ap span{font-size:10.5px; text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.dk-phone.in .dk-grid .ap{animation:dkIn .42s var(--ease-spring) both; animation-delay:calc(var(--i)*40ms + 120ms)}
+.dk-phone.in .dk-wg{animation:dkIn .62s var(--ease-spring) both}
+@keyframes dkIn{from{opacity:0; transform:scale(.8)}}
+.dk-launch{position:absolute; z-index:20; border-radius:22%; object-fit:cover; pointer-events:none}
+
+/* 长按：其余图标虚化，菜单从图标下方升起 */
+.dk-phone.menu .dk-grid .ap:not(.gt), .dk-phone.menu .dk-wg, .dk-phone.menu .dk-dock{filter:blur(6px); opacity:.5; transition:filter .26s var(--ease), opacity .26s var(--ease)}
+.dk-phone.menu .ap.gt{position:relative; z-index:6; scale:1.08; transition:scale .26s var(--ease-spring)}
+.dk-menu{position:absolute; z-index:5; left:14px; top:250px; width:220px; border-radius:16px; overflow:hidden; background:rgba(27,24,41,.94);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.10);
+  opacity:0; transform:translateY(-8px) scale(.94); transform-origin:20% 0; pointer-events:none; transition:opacity .26s var(--ease), transform .26s var(--ease-spring)}
+.dk-phone.menu .dk-menu{opacity:1; transform:none; pointer-events:auto}
+.dk-menu button{display:block; width:100%; padding:10px 14px; border:0; border-top:1px solid rgba(255,255,255,.06); background:none; color:var(--hi); text-align:left; cursor:pointer}
+.dk-menu button:first-child{border-top:0}
+.dk-menu b{display:block; font-size:13.5px}
+.dk-menu small{display:block; margin-top:1px; font-size:11px; color:var(--mid)}
+.dk-tip{margin:10px 0 0; text-align:center; font-size:11.5px; color:var(--lo)}
+
+.dk-sizes{display:flex; align-items:flex-end; justify-content:space-between; gap:4px; padding:var(--pad)}
+.dk-sizes div{display:flex; flex-direction:column; align-items:center; gap:6px}
+.dk-sizes img{display:block; height:auto; aspect-ratio:1; border-radius:22.5%}
+.dk-sizes span{font-size:10px; color:var(--lo); white-space:nowrap}
+.dk-sizes .mono img{padding:6px; box-sizing:content-box; border-radius:22.5%; background:#13111E}
+.dk-sizes .mono.lt img{background:#F4F2FA}
+.dk-bgs{display:grid; grid-template-columns:repeat(3,1fr); gap:14px 12px; padding:var(--pad)}
+.dk-bgs div{display:flex; flex-direction:column; align-items:center; gap:6px}
+.dk-bgs img{display:block; width:64px; height:64px; border-radius:22.5%}
+.dk-bgs small{font-size:10.5px; color:var(--lo); white-space:nowrap}
+.dk-rule{padding:var(--pad)}
+.dk-rule p{margin:0; font-size:12.5px; line-height:1.6; color:var(--mid)}
+.dk-rule p + p{margin-top:6px}
+
+@media (prefers-reduced-motion:reduce){
+  .boot .gtl .dk, .boot .gtl .ot, .boot .gtl .bdg, .ab-logo .gtl, .ab-logo.tick .dk, .ab-logo.tick .ot, .ab-logo.tick .bdg, .ab-logo.wave > i, .dk-phone.in *{animation:none}
+}

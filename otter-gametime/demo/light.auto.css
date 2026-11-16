@@ -1,0 +1,472 @@
+/* 自动生成：python3 tools/make_light.py — 不要手改，手工覆盖写在 light.css */
+
+/* ── index.html ── */
+:where(body.light) .topbar.on{background:linear-gradient(to bottom, rgba(255,255,255,.92), rgba(255,255,255,.4) 74%, transparent)}
+
+:where(body.light) nav{background:rgba(255,255,255,.78); border:1px solid rgba(23,21,31,0.06); box-shadow:0 12px 40px rgba(60,50,96,0.165)}
+
+:where(body.light) .otter-frame{border:1px solid rgba(23,21,31,0.075); box-shadow:0 26px 68px rgba(60,50,96,0.186),0 0 0 1px rgba(61,220,255,.12),
+             0 0 60px rgba(61,220,255,.16)}
+
+body:where(.light)[data-timing="on"] .otter-frame{box-shadow:0 26px 68px rgba(60,50,96,0.186),0 0 0 1px rgba(255,107,44,.16),
+             0 0 66px rgba(255,107,44,.20)}
+:where(body.light) .badge{background:rgba(255,255,255,.94)}
+
+:where(body.light) .gtile .box{border:1px solid rgba(23,21,31,0.06)}
+
+:where(body.light) .timerbar .tm{text-shadow:0 1px 10px rgba(60,50,96,0.12)}
+
+:where(body.light) .timerbar::before{background:linear-gradient(180deg,rgba(23,21,31,0.165),transparent 58%)}
+
+:where(body.light) #sceneB .disc .edge{background:linear-gradient(to right,rgba(23,21,31,0.075),transparent)}
+
+:where(body.light) .nav .arr{background:rgba(23,21,31,0.022)}
+
+:where(body.light) .nav .arr:active{background:rgba(23,21,31,0.068)}
+
+:where(body.light) .firebar::before{background:linear-gradient(to top,rgba(23,21,31,0.165),transparent 62%)}
+
+:where(body.light) .firebar .tm{text-shadow:0 1px 10px rgba(60,50,96,0.126)}
+
+body:where(.light).s-timing .eyebrow,
+body:where(.light).s-warn .eyebrow{color:#9E4727}
+body:where(.light).s-timing .h2 em,
+body:where(.light).s-warn .h2 em{color:#9E4727}
+:where(body.light) .disc{border:1px solid rgba(23,21,31,0.075); background:#F7F6FA}
+
+body:where(.light).s-timing .disc.sel .nm,
+body:where(.light).s-warn   .disc.sel .nm{text-shadow:0 2px 14px rgba(60,50,96,0.27)}
+:where(body.light) .timer .arr{background:rgba(23,21,31,0.022)}
+
+:where(body.light) .timer .arr:active{background:rgba(23,21,31,0.068)}
+
+:where(body.light) .timer .floor{background:linear-gradient(to right,transparent,rgba(23,21,31,0.105),transparent)}
+
+:where(body.light) .realms{background:linear-gradient(to bottom,rgba(255,255,255,.95),rgba(255,255,255,.74) 72%,transparent)}
+
+:where(body.light) .shot .gicon{border:1px solid rgba(23,21,31,0.135); box-shadow:0 4px 12px rgba(60,50,96,0.165)}
+
+:where(body.light) .me .head .cfg{background:rgba(23,21,31,0.022)}
+
+:where(body.light) .me .head .cfg:active{background:rgba(23,21,31,0.06)}
+
+:where(body.light) .dial-avatar{border:1px solid rgba(23,21,31,0.105); box-shadow:0 0 0 5px rgba(11,10,20,.92),0 18px 46px rgba(60,50,96,0.18)}
+
+:where(body.light) .dial-center{background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(60,50,96,0.15)}
+
+:where(body.light) .dialwrap .track{stroke:rgba(23,21,31,0.05)}
+
+:where(body.light) .dialwrap .day{stroke:rgba(23,21,31,0.108)}
+
+:where(body.light) .dialwrap .day.has{stroke:rgba(45,136,161,.52)}
+
+:where(body.light) .bars .b .bar{background:rgba(23,21,31,0.098)}
+
+:where(body.light) .entry:active{background:rgba(23,21,31,0.03)}
+
+:where(body.light) .picker{background:rgba(255,255,255,.86)}
+
+:where(body.light) .picker .ptop .x{background:rgba(23,21,31,0.03)}
+
+:where(body.light) .sub .bar{background:linear-gradient(to bottom,rgba(255,255,255,.96),rgba(255,255,255,.62) 76%,transparent)}
+
+:where(body.light) .sub .bar .back{background:rgba(23,21,31,0.022)}
+
+:where(body.light) .sub .bar .back:active{background:rgba(23,21,31,0.06)}
+
+:where(body.light) .grp .row:active{background:rgba(23,21,31,0.03)}
+
+:where(body.light) .grp .row .sw{background:rgba(23,21,31,0.075)}
+
+:where(body.light) .gmanage .g .bx{border:1px solid rgba(23,21,31,0.06)}
+
+:where(body.light) .gmanage .g .bx .del{background:rgba(255,255,255,.82); color:#9E475D}
+
+:where(body.light) .slider input[type=range]{background:rgba(23,21,31,0.105)}
+
+
+/* ── me2.css ── */
+:where(body.light) .me2 .stage .oi{box-shadow:0 4px 14px rgba(60,50,96,0.15),0 0 0 1px rgba(23,21,31,0.075)}
+
+:where(body.light) .me2 .stage .ring{border:1px solid rgba(23,21,31,0.034)}
+
+
+/* ── v3.css ── */
+:where(body.light) .v3-card{background:linear-gradient(180deg,rgba(23,21,31,0.041),rgba(23,21,31,0.019)); border:1px solid rgba(23,21,31,0.053)}
+
+:where(body.light) .slab.ghost{box-shadow:0 4px 0 rgba(60,50,96,0.12)}
+:where(body.light) .tip3{box-shadow:0 14px 34px rgba(60,50,96,0.126), 0 0 0 1px rgba(23,21,31,0.33) inset, 0 0 22px rgba(155,123,240,.28)}
+
+:where(body.light) .dlg-back{background:radial-gradient(ellipse at 50% 42%, rgba(var(--mc),.14), rgba(255,255,255,.7) 60%)}
+
+:where(body.light) .dlg-card{background:linear-gradient(180deg, rgba(var(--mc),.2), rgba(var(--mc),.04) 40%, transparent 60%), #F8F7FA; box-shadow:0 30px 70px rgba(60,50,96,0.18), 0 0 40px rgba(var(--mc),.12), inset 0 1px 0 rgba(23,21,31,0.075)}
+
+:where(body.light) .dlg-ot{filter:drop-shadow(0 10px 18px rgba(60,50,96,0.203))}
+
+
+:where(body.light) .h3-streak{color:#9E6F48}
+
+:where(body.light) .h3-pond .bowl{background:radial-gradient(circle at 50% 30%, rgba(var(--wc),.16), rgba(255,255,255,.92) 70%); box-shadow:inset 0 0 0 1px rgba(var(--wc),.22), inset 0 -20px 40px rgba(60,50,96,0.12), 0 20px 60px rgba(var(--wc),.16)}
+
+:where(body.light) .h3-pond .otter{filter:drop-shadow(0 8px 18px rgba(60,50,96,0.158))}
+
+:where(body.light) .h3-pond .gloss{background:radial-gradient(ellipse 60% 30% at 34% 16%, rgba(23,21,31,0.135), transparent 70%)}
+
+:where(body.light) .h3-bubble b{color:#51498A}
+
+:where(body.light) .h3-bubble .caret{background:#F8F7FA}
+
+:where(body.light) .h3-now{background:linear-gradient(120deg, rgba(var(--brand),.30), rgba(var(--brand),.06) 60%, rgba(23,21,31,0.015))}
+
+
+:where(body.light) .h3-week .d.on{color:#9E6F48}
+
+:where(body.light) .h3-lib .g .bx{box-shadow:0 0 0 1px rgba(23,21,31,0.06)}
+
+:where(body.light) .pola{box-shadow:0 14px 26px rgba(60,50,96,0.12)}
+
+:where(body.light) .pola .ph{background:#FBFBFB}
+
+:where(body.light) .pola .dt{color:#5A5563}
+
+:where(body.light) .g3 .v3-title em,
+:where(body.light) .g3 .eyebrow{color:color-mix(in srgb, rgba(var(--rc),1) 60%, #1A1726)}
+
+:where(body.light) .spk-core{background:radial-gradient(circle, rgba(23,21,31,0.413), rgba(var(--c),.45) 35%, rgba(var(--c),0) 70%)}
+
+:where(body.light) .tab-peek img{filter:drop-shadow(0 -2px 6px rgba(60,50,96,0.158))}
+
+:where(body.light) .tab-shine::after{background:linear-gradient(105deg, transparent 30%, rgba(23,21,31,0.33) 48%, rgba(23,21,31,0.112) 56%, transparent 70%)}
+
+
+
+:where(body.light) .g3-fab{box-shadow:0 4px 0 rgba(60,50,96,0.105), 0 14px 30px rgba(var(--rc,61,220,255),.4)}
+
+:where(body.light) .m3-id .av .lv{box-shadow:0 0 0 3px #F7F6FA}
+
+:where(body.light) .m3-id .ttl2{color:#9E8354}
+
+:where(body.light) .m3-week .top .delta{color:#498F6E}
+
+:where(body.light) .m3-week .say{border-top:1px solid rgba(23,21,31,0.045)}
+
+:where(body.light) .m3-pod .p .st{color:rgba(23,21,31,0.765)}
+
+:where(body.light) .m3-row + .m3-row{border-top:1px solid rgba(23,21,31,0.038)}
+
+
+:where(body.light) .s3 .bar3{background:rgba(255,255,255,.82)}
+
+:where(body.light) :is(.s3,
+:where(body.light) .sh3) .rw + .rw{border-top:1px solid rgba(23,21,31,0.038)}
+
+:where(body.light) .sw3::after{box-shadow:0 2px 6px rgba(60,50,96,0.09)}
+
+:where(body.light) #s3-record .bar3{background:linear-gradient(180deg, rgba(255,255,255,.6), transparent)}
+
+:where(body.light) #s3-record .bar3.solid{background:rgba(255,255,255,.86); box-shadow:0 1px 0 rgba(23,21,31,0.045)}
+
+:where(body.light) .rd-hero{background:#F7F7FA}
+
+:where(body.light) .rd-hero::after{background:linear-gradient(180deg, rgba(255,255,255,.2), transparent 30%, rgba(255,255,255,.7) 72%, var(--canvas) 96%)}
+
+:where(body.light) .rd-hero.note{background:radial-gradient(80% 120% at 20% 0%, rgba(var(--rc,61,220,255),.22), transparent 70%), #F7F7FA}
+
+:where(body.light) .rd-ai .hd2{color:#7568A1}
+
+:where(body.light) .cp-ai{border-top:1px solid rgba(23,21,31,0.045)}
+
+:where(body.light) .cp-media .add{border:1.5px dashed rgba(23,21,31,0.135)}
+
+:where(body.light) .cal-gd .c.on span{text-shadow:0 1px 4px rgba(60,50,96,0.24)}
+
+:where(body.light) .gm3 .add .bx{box-shadow:inset 0 0 0 1.5px rgba(23,21,31,0.135)}
+:where(body.light) .lm-ot img{filter:drop-shadow(0 6px 14px rgba(60,50,96,0.18))}
+
+:where(body.light) .lm-ot .say{box-shadow:0 8px 20px rgba(60,50,96,0.09)}
+
+:where(body.light) .tr-row .left .bg{stroke:rgba(23,21,31,0.072)}
+
+:where(body.light) .tr-row.warn .left .fg{stroke:#9E5942}
+
+:where(body.light) .tr-row.warn .left span{color:#9E5942}
+
+:where(body.light) .tr-row .ck{border:2px solid rgba(23,21,31,0.138)}
+
+:where(body.light) .tr-clear{color:#9E4754}
+
+:where(body.light) .tr-bar{background:rgba(255,255,255,.9); border-top:1px solid rgba(23,21,31,0.045)}
+
+:where(body.light) .tr-plus{color:#9E5966}
+
+:where(body.light) .timer .today .row .gi{box-shadow:0 0 0 1px rgba(23,21,31,0.075)}
+
+
+:where(body.light) .fly3{box-shadow:0 18px 40px rgba(60,50,96,0.15)}
+
+:where(body.light) .pt3{text-shadow:0 2px 8px rgba(60,50,96,0.105)}
+
+:where(body.light) .ob3{background:radial-gradient(ellipse at 50% 30%, #F7F6FA, #F5F5F9 70%)}
+
+:where(body.light) .ob3::before{background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.35) 40%, rgba(255,255,255,.85) 85%), url(assets/onboard/bg.webp) center/cover}
+
+:where(body.light) .ob-dots i{background:rgba(23,21,31,0.11)}
+
+:where(body.light) .sh3 .sh-back{background:rgba(255,255,255,.6)}
+
+:where(body.light) .sh3 .sh-panel{background:#F7F7FA; border-top:1px solid rgba(23,21,31,0.06)}
+
+:where(body.light) .sh-grab{background:rgba(23,21,31,0.135)}
+
+:where(body.light) .sh-grid .g .bx{box-shadow:0 0 0 1px rgba(23,21,31,0.06)}
+
+:where(body.light) .sh-grid .g .ck{box-shadow:0 0 0 2px #F7F7FA}
+
+:where(body.light) .sh-ok{background:linear-gradient(transparent,#F7F7FA 30%)}
+
+:where(body.light) .timer .go .chg{background:linear-gradient(90deg, rgba(23,21,31,0.112), rgba(23,21,31,0.303))}
+
+:where(body.light) .tk-done .bk{background:rgba(255,255,255,.55)}
+
+:where(body.light) .tk-done .cd{background:linear-gradient(180deg, #F8F8FB, #F8F7FA); border:1px solid rgba(23,21,31,0.075); box-shadow:0 30px 60px rgba(60,50,96,0.165)}
+
+:where(body.light) .tk-done .ot{filter:drop-shadow(0 10px 20px rgba(60,50,96,0.18))}
+
+
+:where(body.light) .cp3 .cp-media .cv-b{background:rgba(255,255,255,.6)}
+
+:where(body.light) .cp3 .cp-media .x{background:rgba(255,255,255,.6)}
+
+
+:where(body.light) .cp-box .think i{background:linear-gradient(90deg, rgba(23,21,31,0.038), rgba(var(--rc),.25), rgba(23,21,31,0.038))}
+
+:where(body.light) .cp-foot{background:linear-gradient(transparent, rgba(255,255,255,.96) 35%)}
+
+
+:where(body.light) .cp-box .stamp{filter:drop-shadow(0 4px 8px rgba(60,50,96,0.18))}
+
+:where(body.light) .rd-feel .mo .xp{filter:drop-shadow(0 6px 12px rgba(60,50,96,0.203))}
+
+
+:where(body.light) .ex-hero img{filter:drop-shadow(0 12px 24px rgba(60,50,96,0.203))}
+
+
+:where(body.light) .ex-dock{background:linear-gradient(120deg, rgba(var(--mc,61,220,255),.22), rgba(255,255,255,.92) 55%); box-shadow:0 14px 34px rgba(60,50,96,0.135)}
+
+:where(body.light) .ex-dock img{filter:drop-shadow(0 6px 12px rgba(60,50,96,0.18))}
+
+
+:where(body.light) .nt-prev{background:radial-gradient(120% 140% at 20% 0%, rgba(124,140,255,.35), transparent 60%), linear-gradient(160deg,#F7F7FB,#F6F6FA); border:1px solid rgba(23,21,31,0.06)}
+
+:where(body.light) .nt-prev .bn{box-shadow:0 8px 20px rgba(60,50,96,0.075)}
+
+:where(body.light) .nt-prev .ap{color:rgba(23,21,31,0.54)}
+
+:where(body.light) .nt-prev p{color:rgba(23,21,31,0.792)}
+
+:where(body.light) .m3-mood{background:radial-gradient(90% 70% at 15% 0%, rgba(var(--mc),.16), transparent 70%), linear-gradient(180deg,rgba(23,21,31,0.041),rgba(23,21,31,0.019))}
+
+:where(body.light) .m3-mood .wk i img{filter:drop-shadow(0 2px 3px rgba(60,50,96,0.18)) saturate(.8)}
+
+
+:where(body.light) .m3-id .st .ot{filter:drop-shadow(0 3px 6px rgba(60,50,96,0.203))}
+
+
+:where(body.light) .m3-id .st.empty{border:1px dashed rgba(23,21,31,0.11)}
+
+:where(body.light) .md-prev img{filter:drop-shadow(0 6px 12px rgba(60,50,96,0.18))}
+
+
+:where(body.light) .md-list .md-row em{border:1px dashed rgba(23,21,31,0.135)}
+
+
+:where(body.light) .td-hero .day{background:repeating-linear-gradient(90deg, rgba(23,21,31,0.038) 0 1px, transparent 1px calc(100%/24)), rgba(23,21,31,0.03)}
+
+:where(body.light) .rd-feel .mo .xp{filter:drop-shadow(0 6px 12px rgba(60,50,96,0.158))}
+
+
+:where(body.light) :is(.s3,
+:where(body.light) .sh3) .rw[role="button"]:active{background:rgba(23,21,31,0.03)}
+
+:where(body.light) .si{box-shadow:inset 0 1px 0 rgba(23,21,31,0.09), 0 4px 12px rgba(var(--c),.18)}
+
+
+:where(body.light) .st-hero{background:radial-gradient(120% 140% at 0% 0%, rgba(61,220,255,.16), transparent 60%), linear-gradient(180deg,rgba(23,21,31,0.041),rgba(23,21,31,0.019))}
+
+:where(body.light) .ab-chk.ok{color:#498F6E}
+
+:where(body.light) .ai-can p i{color:#7860A1}
+
+:where(body.light) .ai-can small{border-top:1px solid rgba(23,21,31,0.045)}
+
+:where(body.light) .nt-perm.ok{color:#498F6E}
+
+:where(body.light) .cn-res.ok{color:#498F6E}
+
+:where(body.light) .cn-res.bad{color:#9E5C60}
+
+:where(body.light) .s3 .bar3{background:rgba(255,255,255,.55)}
+
+:where(body.light) .s3 .bar3.scrolled{background:rgba(255,255,255,.86); box-shadow:0 1px 0 rgba(23,21,31,0.045), 0 10px 24px rgba(60,50,96,0.075)}
+
+:where(body.light) .s3 .bar3 .nav-b{background:rgba(23,21,31,0.053); border-color:rgba(23,21,31,0.068)}
+
+:where(body.light) .s3 .bar3 .nav-b:active{background:rgba(23,21,31,0.09)}
+
+:where(body.light) .topbar.on{background:rgba(255,255,255,.86); box-shadow:0 1px 0 rgba(23,21,31,0.045)}
+
+:where(body.light) .md-bdg{background:rgba(255,255,255,.5); box-shadow:inset 0 0 0 1px rgba(23,21,31,0.105)}
+
+:where(body.light) .gl-bdg{background:rgba(255,255,255,.45); box-shadow:inset 0 0 0 1px rgba(23,21,31,0.12)}
+
+:where(body.light) .gl-hint{color:rgba(23,21,31,0.675); background:rgba(255,255,255,.35)}
+
+:where(body.light) .rd-cnt{background:rgba(255,255,255,.45)}
+
+:where(body.light) .cp3 .cp-media .tile.lifted{box-shadow:0 18px 40px rgba(60,50,96,0.15), 0 0 0 2px rgba(var(--rc),.8)}
+
+:where(body.light) .h3-chat{color:#51498A}
+
+:where(body.light) .ct-av{background:linear-gradient(145deg,#F8F8FC,#F7F6FA); box-shadow:inset 0 0 0 1.5px rgba(23,21,31,0.09)}
+
+:where(body.light) .ct-hero .say{box-shadow:0 10px 24px rgba(60,50,96,0.075)}
+
+:where(body.light) .ct-mode b{color:#9E8354}
+
+:where(body.light) .ct-mode em{color:#9E8354}
+
+:where(body.light) .cm-av{background:#F8F7FB}
+
+:where(body.light) .cm.ot .cm-b{box-shadow:0 6px 16px rgba(60,50,96,0.054)}
+
+:where(body.light) .cm.stopped .cm-b::after{color:#5A556A}
+
+:where(body.light) .cm-acts button + button{background:rgba(255,255,255,.08)}
+
+:where(body.light) .cm-stk{filter:drop-shadow(0 6px 12px rgba(60,50,96,0.135))}
+
+:where(body.light) .cm-sug button{color:#7860A1}
+
+:where(body.light) .ct-dock{background:linear-gradient(180deg, rgba(255,255,255,0), var(--canvas) 26%)}
+
+:where(body.light) .ct-dock.focus .ct-in{background:rgba(23,21,31,0.068)}
+
+:where(body.light) .ct-emo.on{color:#9E8354}
+
+:where(body.light) .ct-send .go path + path{stroke:#2D88A1}
+
+
+/* ── expr.css ── */
+
+:where(body.light) .tg-pick .xp-tabs,
+:where(body.light) .md-pick .xp-tabs{background:#F7F7FA}
+
+
+/* ── share.css ── */
+:where(body.light) .sc-dock{background:#F7F7FA; border-top:1px solid rgba(23,21,31,0.06)}
+
+:where(body.light) .sc-seg .pill{background:rgba(23,21,31,0.09)}
+
+
+
+/* ── compose.css ── */
+
+:where(body.light) .cp-guess{color:#887FA1}
+
+:where(body.light) .lk-day{background:#F7F7FA}
+
+:where(body.light) .lk-row{box-shadow:inset 0 0 0 1px rgba(23,21,31,0.045)}
+:where(body.light) .lk-row em{background:rgba(23,21,31,0.038)}
+
+
+:where(body.light) .lk-row .rd{box-shadow:inset 0 0 0 2px rgba(23,21,31,0.135)}
+
+:where(body.light) .lk-row.on .rd{box-shadow:inset 0 0 0 5px #F7F7FA, 0 0 0 2px rgb(var(--b))}
+
+
+:where(body.light) .df-card{box-shadow:inset 0 0 0 1px rgba(23,21,31,0.045)}
+:where(body.light) .df-card .cv b{background:rgba(255,255,255,.65)}
+
+
+:where(body.light) .df-card .lk.miss{color:#9E744B}
+
+:where(body.light) .df-card .del:active{background:rgba(23,21,31,0.06)}
+
+
+/* ── alive.css ── */
+:where(body.light) .ca-fl svg{fill:#9E6F48}
+
+:where(body.light) .ca-fl svg .in{fill:#9E8C73}
+
+:where(body.light) .ca-hero .tx b{color:#9E6F48}
+
+:where(body.light) .ca-rec span{border:2px solid #F7F7FA}
+
+:where(body.light) .ca-more{border-top:1px solid rgba(23,21,31,0.045)}
+
+
+:where(body.light) .ca-say,
+:where(body.light) .ca-new{border-top:1px solid rgba(23,21,31,0.045)}
+
+:where(body.light) .fp-hero{background:linear-gradient(135deg, rgba(61,220,255,.12), rgba(255,138,184,.08) 55%, rgba(23,21,31,0.015)), #F7F7FA}
+
+:where(body.light) .fp-tip{background:#F8F7FA}
+
+:where(body.light) .fp-tip::before{background:#F8F7FA}
+
+
+:where(body.light) .fp-mo + .fp-mo{border-top:1px solid rgba(23,21,31,0.038)}
+
+:where(body.light) .fp-mem span{color:rgba(158,89,120,1)}
+
+:where(body.light) .pf-card .av{box-shadow:0 0 0 3px #F7F7FA, 0 0 0 5px var(--accent)}
+
+:where(body.light) .pf-cnt.warn{color:#9E744B}
+
+:where(body.light) .gm-top .st img{box-shadow:0 0 0 2px #F7F7FA}
+
+
+/* ── battle.css ── */
+:where(body.light) .tk-plan .ops button.on small{color:rgba(45,136,161,.75)}
+
+:where(body.light) .tk-plan.past .run span b{color:#9E744B}
+
+:where(body.light) .tk-done .chips .pl{color:#9E744B}
+
+:where(body.light) .tk-done .chips .pl.ok{color:#498F6E}
+
+
+/* ── mine.css ── */
+:where(body.light) .mn-sub{color:#498F6E}
+
+:where(body.light) .mn-one .ring circle{stroke:rgba(23,21,31,0.063)}
+
+:where(body.light) .mn-one .ring circle.v{stroke:#498F6E}
+
+:where(body.light) .mn-rhythm .bg{fill:rgba(23,21,31,0.027)}
+
+:where(body.light) .mn-rhythm line{stroke:rgba(100,80,152,.45)}
+
+:where(body.light) .mn-rhythm line.pk{stroke:#645098}
+
+:where(body.light) .mn-rhythm .rt > b{color:#7567A1}
+
+
+
+/* ── memory.css ── */
+:where(body.light) .me-mem small{color:#7567A1}
+
+:where(body.light) .mm-hero b em{color:#7567A1}
+
+:where(body.light) .mm-doors .cal b em{color:#9E6F48}
+
+:where(body.light) .mm-doors .ft b em{color:#498F6E}
+
+:where(body.light) .mm-line .pt{background:#F7F6FA}
+
+:where(body.light) .mm-line .more-b{border-top:1px solid rgba(23,21,31,0.045)}
+
+
+/* ── brand.css ── */
+:where(body.light) .ob-top .fam{border:1px solid rgba(23,21,31,0.06)}
+

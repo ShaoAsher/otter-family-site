@@ -1,0 +1,3138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0A14">
+<title>水獭游时 · 全站设计</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   水獭游时 · 共享设计令牌
+
+   开战页是第一个做透的页面（转盘 + 四状态）。其余页面**不另起一套**，
+   全部从这里取。这样"设计感"才是同一套语言，而不是八个不同的人在画。
+
+   ─────────────────────────────────────────────────────────────────
+   一、色板（暮色方向）
+
+     青 #3DDCFF = "现在"（计时、行动、选中、可交互）
+     紫 #9B7BF0 = "回忆"（生活核、已过去、她的语气）
+     暖橙/熔红 = "正在烧 / 超了"（只给计时与超限，别处不用）
+
+   二、节奏（**只有三档，不许出现手感数**）
+
+     8  /  20  /  48
+     紧 / 块  / 呼吸
+
+   三、动效曲线（只有两条）
+
+     ease        = cubic-bezier(.22,1,.36,1)      出场、位移、换页
+     ease-spring = cubic-bezier(.34,1.45,.64,1)   升起、浮出（**只给"长出来"**）
+
+   ⚠️ 退潮/收起**不用**弹曲线 —— 长出来要有生命，收下去要利落。
+      共用一条会读成"收不回去"。
+
+   四、持续时间
+
+     120ms  按下反馈
+     260ms  小元素状态切换
+     420ms  图标/文字换
+     620ms  卡片/页面位移（主曲线）
+     900ms  大块颜色（环境光）
+     1.1s   角色/图片入场
+
+   五、四条通用模式（开战页验证过的）
+
+     ① **主角独占**：每页只有一个主角（她 / 碟 / 图 / 环），
+        其余全部退让。合上眼能想起的那一个形象，就是这页存在的理由。
+     ② **状态单变量**：状态写在**一个**地方，各层各读它做过渡 →
+        天然同步。任何一层自带定时器，同步就断。
+     ③ **极缓推拉**：静态图带 20~26s 的 `scale 1.0→1.07`，
+        不引人注意，但让它"活着"。
+     ④ **弹曲线只给升起**：见上。
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* 面 */
+  --canvas:#0B0A14; --surface:#13111E; --raised:#1B1829;
+  --line:rgba(255,255,255,.07);
+
+  /* 信号 */
+  --accent:#3DDCFF;      /* 现在 */
+  --alt:#9B7BF0;         /* 回忆 */
+  --ember:#FF6B2C;       /* 正在烧 */
+  --live:#FF3B4E;        /* 超了 */
+
+  /* 字 */
+  --hi:#F4F2FA; --mid:#A09BB4; --lo:#7F7A93;
+  --on-solid:#07131A;    /* 压在亮色实心块上的字（两主题相同） */
+  --accent-solid:#3DDCFF;/* 实心块用的亮青，两主题不变；--accent 是「作字用的青」 */
+  --tx-mix:100%;         /* 信号色作字：color-mix(c var(--tx-mix), var(--hi))，日间压到 60% */
+
+  /* 表面角色：亮度 = 高度。组件只引用角色，亮暗各给一套值（日间值在 light.css）。
+     raise 凸起控件（圆钮 / chip / 次按钮 / 卡片内的可点块）
+     well  凹槽（轨道 / 输入框 / 进度底 / 热力格 / 空位）
+     press 行按下  sep 分隔线 */
+  --raise:rgba(255,255,255,.06); --raise-edge:rgba(255,255,255,.08); --raise-sh:0 0 #0000; --raise-blur:none;
+  --well:rgba(255,255,255,.05); --well-edge:transparent; --well-sh:inset 0 1px 2px rgba(0,0,0,.28);
+  --press:rgba(255,255,255,.05); --sep:rgba(255,255,255,.1); --dash:rgba(255,255,255,.18);
+  --wash:rgba(255,255,255,.02);  /* 有色 hero 渐变的收尾色 */
+  --card-base:#15131F;           /* 有色 hero 的底面（日间是玻璃） */
+
+  /* 节奏（三档） */
+  --r-tight:8px; --r-block:20px; --r-beat:48px;
+
+  /* 曲线（两条） */
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-spring:cubic-bezier(.34,1.45,.64,1);
+
+  /* 时长（六档） */
+  --t-press:120ms; --t-tiny:260ms; --t-snap:420ms;
+  --t-move:620ms; --t-wash:900ms; --t-enter:1100ms;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%;overflow-x:clip;max-width:100vw}
+main,.page,.hero{max-width:100vw;overflow-x:hidden}
+body{
+  background:var(--canvas); color:var(--hi); overflow-x:clip;
+  font-family:"PingFang SC","Hiragino Sans GB",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  transition:background var(--t-wash) var(--ease);
+}
+
+/* ═══ 环境层：所有页面共享一层"天光" ═══════════════════════════
+   每个页面通过 `body[data-page]` 换自己的光色 —— 换页时是"天变了"，
+   不是"页面跳了"。这一层永远在内容之下，不参与页面切换。 */
+.env{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 130% 52% at 50% 28%,
+    rgba(61,220,255,.17), rgba(155,123,240,.08) 44%, transparent 72%), var(--canvas);
+  transition:background var(--t-wash) var(--ease);
+}
+body[data-page="gallery"] .env{
+  background:radial-gradient(ellipse 130% 52% at 50% 24%,
+    rgba(155,123,240,.20), rgba(61,220,255,.06) 46%, transparent 72%), var(--canvas);
+}
+body[data-page="me"] .env{
+  background:radial-gradient(ellipse 130% 50% at 50% 26%,
+    rgba(155,123,240,.22), rgba(61,220,255,.07) 44%, transparent 70%), var(--canvas);
+}
+
+/* ═══ 文字层级 ═══════════════════════════════════════════════════
+   只有四级，`eyebrow` 是机打小标签（唯一允许"字距拉开"的文字） */
+.eyebrow{
+  font-size:9px; letter-spacing:3px; font-weight:700; color:var(--accent);
+  display:flex; align-items:center; gap:10px;
+  transition:color var(--t-snap) var(--ease);
+}
+.eyebrow::after{content:"";flex:1;height:.8px;background:currentColor;opacity:.20}
+
+.h1{font-size:clamp(32px,10.5vw,44px); line-height:1.04; font-weight:800;
+  letter-spacing:-1.6px}
+.h2{font-size:27px; line-height:1.1; font-weight:800; letter-spacing:-1px}
+.h2 em, .h1 em{font-style:normal; color:var(--accent);
+  transition:color var(--t-snap) var(--ease)}
+.cap{font-size:9px; letter-spacing:2.6px; font-weight:700; color:var(--lo)}
+.cap em{font-style:normal; color:var(--accent)}
+.body{font-size:13.5px; line-height:1.8; color:var(--mid)}
+
+/* ═══ 页面容器 ═══════════════════════════════════════════════════ */
+main{position:relative;z-index:2}
+.page{display:none}
+.page.on{display:block}
+
+/* ═══ 顶栏：滚动折叠 ═════════════════════════════════════════════ */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:30;
+  display:flex; align-items:center; gap:10px;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 22px 12px;
+  transform:translateY(-110%);
+  transition:transform var(--t-snap) var(--ease);
+}
+.topbar.on{
+  transform:translateY(0); backdrop-filter:blur(24px) saturate(1.5);
+  background:linear-gradient(to bottom, rgba(11,10,20,.92), rgba(11,10,20,.4) 74%, transparent);
+}
+.topbar img{width:24px;height:24px;border-radius:7px}
+.topbar b{font-size:15px;font-weight:700}
+.topbar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.topbar .pill{
+  font-size:10px; letter-spacing:1.4px; font-weight:700; color:var(--accent);
+  padding:5px 10px; border-radius:999px;
+  border:.8px solid rgba(61,220,255,.32); background:rgba(61,220,255,.08);
+}
+
+/* ═══ 底导：浮动胶囊，激活项展开文字 ════════════════════════════
+   未激活只剩一个 7px 点，**但每项有 min-width** —— 否则视觉上像"只有一项"。 */
+nav{
+  position:fixed; left:16px; right:16px; z-index:40;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
+  height:60px; border-radius:999px;
+  display:flex; align-items:center; justify-content:space-around;
+  background:rgba(19,17,30,.78);
+  backdrop-filter:blur(26px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 12px 40px rgba(0,0,0,.55);
+  transition:transform var(--t-snap) var(--ease);
+}
+nav button{
+  display:flex; align-items:center; justify-content:center;
+  height:42px; min-width:56px; padding:0 14px; border-radius:999px;
+  border:0; background:none; cursor:pointer;
+  color:var(--lo); font-size:13px; font-weight:600; font-family:inherit;
+  transition:all var(--t-snap) var(--ease); white-space:nowrap;
+}
+nav button .dot{width:7px;height:7px;border-radius:50%;background:currentColor;
+  opacity:.62;flex:0 0 auto;transition:all var(--t-snap) var(--ease)}
+nav button .lb{max-width:0;overflow:hidden;opacity:0;
+  transition:all var(--t-snap) var(--ease)}
+nav button.on{color:#07131A;background:var(--accent);padding:0 18px;
+  box-shadow:0 6px 22px rgba(61,220,255,.35)}
+nav button.on .dot{opacity:0;width:0}
+nav button.on .lb{max-width:5em;opacity:1;margin-left:6px}
+
+/* ═══ 进场：只给"进入视口"的内容 ════════════════════════════════
+   ⚠️ 首屏内容**不要**挂 .fx（它在视口外永远不触发）。 */
+.fx{opacity:0;transform:translateY(20px);
+  transition:opacity var(--t-wash) var(--ease),transform var(--t-wash) var(--ease)}
+.fx.in{opacity:1;transform:none}
+.fx-d1{transition-delay:.08s}.fx-d2{transition-delay:.16s}
+
+/* ═══ 通用：会呼吸的静态图（规则③）════════════════════════════
+   20~26s 的极缓推拉。不引人注意，但让它"活着"。 */
+@keyframes gentleDrift{50%{transform:scale(1.07)}}
+.drift img,.drift{animation:gentleDrift 26s ease-in-out infinite}
+
+/* ═══ 通用：边光呼吸（选中/进行中的唯一表达）═════════════════════ */
+@keyframes breatheAccent{
+  0%,100%{box-shadow:0 0 0 1px rgba(61,220,255,.24),0 22px 58px rgba(61,220,255,.20)}
+  50%    {box-shadow:0 0 0 1px rgba(61,220,255,.44),0 26px 76px rgba(61,220,255,.34)}
+}
+.breathe{animation:breatheAccent 3.8s ease-in-out infinite}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+  .fx{opacity:1;transform:none}
+}
+
+/* ═══ 01 此刻 ═══════════════════════════════════════════════════════
+   主角 = **她**。这一页回答"我把时间花在哪了"。
+
+   和开战页同一套语言：
+   · 主角占版面（她占上半屏，比别人大一号）
+   · 状态单变量（body[data-timing]）—— 计时中她的表情、光、读数一起变
+   · 极缓推拉（她的动图本身就在动 + 背光 4.4s 呼吸）
+   · 节奏三档（8 / 20 / 48）
+
+   【记忆点】她脚下挂着一枚"连续天数"徽章，随天数增长会**更亮**。
+   ——这是这一页唯一"会因为你做了什么而改变"的东西。
+   ═══════════════════════════════════════════════════════════════════ */
+
+.home{padding:0 0 100px}
+
+.home .hero{
+  padding:calc(env(safe-area-inset-top,0px) + 22px) 24px 0;
+  display:flex; flex-direction:column;
+}
+
+/* 页头：日期 + 连续天数 */
+.home .head{display:flex;align-items:center;margin-bottom:var(--r-block);
+  width:100%;min-width:0}
+.home .head .date{flex:0 1 auto;overflow:hidden;white-space:nowrap}
+.home .head .date{font-size:9px;letter-spacing:3px;font-weight:700;color:var(--accent)}
+.home .head .streak{
+  margin-left:auto;display:flex;align-items:center;gap:5px;
+  font-size:10px;letter-spacing:1.2px;font-weight:700;color:var(--accent);
+  padding:5px 10px;border-radius:999px;
+  border:.8px solid rgba(61,220,255,.30);background:rgba(61,220,255,.07);
+}
+.home .head .streak svg{width:10px;height:10px;fill:var(--accent)}
+
+/* 她：画框 + 背光呼吸。居中，和下面的标题成一组。 */
+.otter-wrap{position:relative;margin:0 auto 6px;width:min(54vw,208px);
+  padding-bottom:10px}
+.otter-frame{
+  position:relative;width:100%;aspect-ratio:1;border-radius:34px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 26px 68px rgba(0,0,0,.62),0 0 0 1px rgba(61,220,255,.12),
+             0 0 60px rgba(61,220,255,.16);
+  transition:box-shadow var(--t-move) var(--ease),border-color var(--t-move) var(--ease);
+}
+.otter-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.otter-frame::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(11,10,20,.66) 2%,transparent 44%)}
+/* 背光呼吸：4.4s，±40% */
+.otter-wrap::before{
+  content:"";position:absolute;inset:-16px;border-radius:46px;z-index:-1;
+  background:radial-gradient(ellipse at 50% 50%,rgba(61,220,255,.30),transparent 64%);
+  filter:blur(18px);animation:otterGlow 4.4s ease-in-out infinite;
+  transition:background var(--t-wash) var(--ease);
+}
+@keyframes otterGlow{50%{transform:scale(1.04);opacity:.60}}
+
+/* 计时中她也换光：青 → 暖（和开战页同一套"烧起来"的语言） */
+body[data-timing="on"] .otter-wrap::before{
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,107,44,.34),transparent 64%)}
+body[data-timing="on"] .otter-frame{
+  border-color:rgba(255,107,44,.34);
+  box-shadow:0 26px 68px rgba(0,0,0,.62),0 0 0 1px rgba(255,107,44,.16),
+             0 0 66px rgba(255,107,44,.20);
+}
+
+/* 徽章：挂在她脚下。天数越多越亮 —— 唯一"因为你做了什么而改变"的东西 */
+.badge{
+  position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:5px;z-index:3;
+  padding:5px 12px;border-radius:999px;
+  background:rgba(19,17,30,.94);border:1px solid rgba(61,220,255,.32);
+  backdrop-filter:blur(12px);
+  font-size:10.5px;font-weight:700;letter-spacing:.6px;color:var(--accent);
+  white-space:nowrap;
+  transition:border-color var(--t-snap),box-shadow var(--t-snap);
+  animation:badgeBreathe 3.8s ease-in-out infinite;
+}
+@keyframes badgeBreathe{
+  0%,100%{box-shadow:0 0 0 0 rgba(61,220,255,.0)}
+  50%{box-shadow:0 0 18px 2px rgba(61,220,255,.24)}
+}
+.badge svg{width:10px;height:10px;fill:currentColor}
+
+/* 标题组 */
+.copy{margin-top:var(--r-beat);position:relative;z-index:2}
+.copy .h1{margin-bottom:var(--r-block)}
+.copy .h1 span{display:block;overflow:hidden}
+.copy .h1 span i{display:block;font-style:normal;transform:translateY(110%);
+  animation:lineUp 1s var(--ease) forwards}
+.copy .h1 span:nth-child(2) i{animation-delay:.1s}
+.copy .h1 .thin{font-weight:200}
+@keyframes lineUp{to{transform:translateY(0)}}
+
+/* 她的话：左边一条紫线，像引号 */
+.say{
+  padding-left:13px;border-left:1.5px solid rgba(155,123,240,.55);
+  font-size:13px;line-height:1.85;color:rgba(244,242,250,.88);
+}
+.say b{display:block;font-size:8.5px;letter-spacing:2.4px;color:var(--alt);
+  margin-bottom:6px;font-weight:700}
+
+/* 今日读数：一块面，三列 */
+.readstrip{
+  margin:var(--r-beat) 24px 0;padding:16px 18px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;
+  overflow:hidden;max-width:calc(100vw - 48px);
+  transition:border-color var(--t-snap);
+}
+body[data-timing="on"] .readstrip{border-color:rgba(255,107,44,.22)}
+.readstrip .big{
+  font-size:31px;font-weight:200;line-height:1;letter-spacing:-1.4px;
+  font-variant-numeric:tabular-nums;
+  background:linear-gradient(160deg,var(--hi) 30%,var(--accent));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  transition:background var(--t-snap);
+}
+body[data-timing="on"] .readstrip .big{
+  background:linear-gradient(160deg,var(--hi) 30%,var(--ember));
+  -webkit-background-clip:text;background-clip:text;
+}
+.readstrip .cols{display:flex;gap:12px;margin-left:auto;flex:0 1 auto;min-width:0}
+.readstrip .col{text-align:right}
+.readstrip .col .v{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.readstrip .col .l{font-size:8px;letter-spacing:1.5px;color:var(--lo);margin-top:4px}
+
+/* 游戏库：横向，真图标 */
+.shelf{margin-top:var(--r-block);padding:0 24px 0 24px;overflow:hidden}
+.shelf .hd{display:flex;align-items:baseline;margin-bottom:14px}
+.shelf .hd .t{font-size:15px;font-weight:700}
+.shelf .hd .more{margin-left:auto;font-size:11.5px;color:var(--accent)}
+.shelf .row{display:flex;gap:13px;overflow-x:auto;padding-bottom:6px;
+  scrollbar-width:none}
+.shelf .row::-webkit-scrollbar{display:none}
+
+/* 游戏砖：选中态用**边光呼吸**，和开战页的碟同一种语言 */
+.gtile{flex:0 0 auto;width:62px;text-align:center;cursor:pointer;
+  transition:transform var(--t-tiny) var(--ease)}
+.gtile:active{transform:scale(.94)}
+.gtile .box{
+  width:62px;height:62px;border-radius:15px;overflow:hidden;position:relative;
+  border:1px solid rgba(255,255,255,.08);
+  transition:border-color var(--t-snap),box-shadow var(--t-snap);
+}
+.gtile .box img{width:100%;height:100%;object-fit:cover;display:block}
+.gtile.on .box{
+  border-color:rgba(61,220,255,.52);
+  animation:breatheAccent 3.8s ease-in-out infinite;
+}
+.gtile.on .box::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(61,220,255,.20),transparent 60%)}
+.gtile .nm{margin-top:6px;font-size:9.5px;color:var(--lo);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gtile.on .nm{color:var(--hi);font-weight:600}
+
+/* ── 计时中：整页"烧起来"（和开战页完全同一套语言）──────────────
+   不换界面，只换呼吸方式：
+   · 环境光转暖
+   · 她的背光转暖
+   · 读数条数字转暖
+   · 底下浮出一条"正在计时"的火条 + 秒数 */
+body[data-timing="on"] .env{
+  background:radial-gradient(ellipse 130% 56% at 50% 40%,
+    rgba(255,107,44,.18), rgba(255,59,78,.07) 46%, transparent 74%), var(--canvas);
+}
+
+.timerbar{
+  position:fixed;left:16px;right:16px;z-index:35;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 82px);
+  height:0;overflow:hidden;border-radius:16px;
+  background:linear-gradient(90deg,var(--ember),var(--live));
+  box-shadow:0 10px 36px rgba(255,59,78,.30);
+  transition:height .52s var(--ease-spring),opacity var(--t-snap);
+  opacity:0;
+}
+body[data-timing="on"] .timerbar{height:52px;opacity:1}
+.timerbar .in{height:52px;display:flex;align-items:center;
+  padding:0 20px;gap:12px}
+.timerbar .nm{font-size:12.5px;font-weight:600;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timerbar .tm{margin-left:auto;font-size:20px;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:.7px;
+  text-shadow:0 1px 10px rgba(0,0,0,.4)}
+/* 火面上的流动高光 */
+.timerbar::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.30),transparent 58%);
+  animation:fireFlow 1.9s linear infinite;pointer-events:none}
+@keyframes fireFlow{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+
+.timer .stage{position:relative;height:min(56vw,226px);margin:0 0 26px}
+#sceneA .disc{transition:none}
+#sceneA .floor{
+  position:relative;height:1px;margin:0 24px;
+  background:linear-gradient(to right,transparent,rgba(61,220,255,.30),transparent);
+}
+#sceneA .reflection{
+  position:absolute;left:50%;top:0;width:min(60vw,238px);height:70px;
+  transform:translateX(-50%) scaleY(-.42);
+  background:url(assets/games/ys.webp) center top/cover;
+  opacity:.16;filter:blur(6px);pointer-events:none;
+}
+
+/* ── B 翻页：卡片有厚度，绕左边缘翻 ─────────────────── */
+#sceneB .timer .stage{position:relative;height:min(64vw,254px);margin:0 0 26px;perspective:1200px}
+#sceneB .disc{transform-origin:left center}
+/* 卡片侧面：给"厚度"感 */
+#sceneB .disc .edge{position:absolute;top:0;bottom:0;right:0;width:6px;
+  background:linear-gradient(to right,rgba(255,255,255,.10),transparent)}
+
+/* ── C 深度：从远处浮上来 ───────────────────────────── */
+#sceneC .timer .stage{position:relative;height:min(60vw,238px);margin:0 0 26px;perspective:900px}
+#sceneC .disc{transition:none}
+
+/* 切换控件 */
+.nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:22px}
+.nav .arr{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);display:grid;place-items:center;
+  color:var(--mid);cursor:pointer;transition:all .3s var(--ease)}
+.nav .arr:active{transform:scale(.9);background:rgba(255,255,255,.09)}
+.nav .idx{font-size:12px;color:var(--lo);font-variant-numeric:tabular-nums;
+  letter-spacing:1.4px;min-width:52px;text-align:center}
+
+
+/* ═══ 三态三色 + 收工：不是四套界面，是同一张卡的几种呼吸 ═══════
+   待机（青）→ 开战（暖橙）→ 接近上限 ≥85%（熔红，已超更急）→ 收工。
+   （s-warn 即「接近上限」，由已用比例驱动，不等超限。）
+   状态切换只改 body 上一个 class，所有层（环境光/卡/CTA/文字）
+   各读同一个 class 做各自的过渡 —— 所以它们天然同步。
+   ═══════════════════════════════════════════════════════════ */
+body.s-timing .env{
+  background:radial-gradient(ellipse 130% 56% at 50% 46%,rgba(255,107,44,.22),
+             rgba(255,59,78,.09) 46%,transparent 74%),var(--canvas)}
+body.s-warn .env{
+  background:radial-gradient(ellipse 130% 58% at 50% 46%,rgba(255,59,78,.30),
+             rgba(255,59,78,.12) 46%,transparent 74%),var(--canvas);
+  animation:warnPulse 2.6s ease-in-out infinite}
+@keyframes warnPulse{50%{opacity:.74}}
+
+body.s-timing .disc.sel{
+  border-color:rgba(255,107,44,.55);
+  animation:discEmber 3.4s ease-in-out infinite}
+@keyframes discEmber{
+  0%,100%{box-shadow:0 0 0 1px rgba(255,107,44,.26),0 24px 64px rgba(255,107,44,.26),inset 0 0 40px rgba(255,107,44,.10)}
+  50%{box-shadow:0 0 0 1px rgba(255,107,44,.48),0 28px 84px rgba(255,107,44,.42),inset 0 0 58px rgba(255,107,44,.20)}
+}
+body.s-warn .disc.sel{
+  border-color:rgba(255,59,78,.62);
+  animation:discLive 1.5s ease-in-out infinite}
+@keyframes discLive{
+  0%,100%{box-shadow:0 0 0 1px rgba(255,59,78,.30),0 24px 64px rgba(255,59,78,.30),inset 0 0 40px rgba(255,59,78,.14)}
+  50%{box-shadow:0 0 0 2px rgba(255,59,78,.62),0 30px 96px rgba(255,59,78,.52),inset 0 0 66px rgba(255,59,78,.26)}
+}
+
+/* 卡底火条：计时中从底部"烧"起来 */
+.firebar{
+  position:absolute;left:0;right:0;bottom:0;height:0;overflow:hidden;z-index:4;
+  transition:height .5s cubic-bezier(.34,1.4,.64,1);
+  background:linear-gradient(90deg,rgba(255,107,44,.92),rgba(255,59,78,.92))}
+body.s-timing .disc.sel .firebar,
+body.s-warn .disc.sel .firebar{height:44px}
+.firebar::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(255,255,255,.30),transparent 62%);
+  animation:fireFlow 2.2s linear infinite}
+@keyframes fireFlow{to{background-position:0 -44px}}
+.firebar .tm{position:relative;z-index:2;height:44px;display:flex;align-items:center;
+  justify-content:center;font-size:18px;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:.6px;
+  text-shadow:0 1px 10px rgba(0,0,0,.42)}
+body.s-warn .firebar .tm{animation:tmPulse 1.5s ease-in-out infinite}
+@keyframes tmPulse{50%{transform:scale(1.07);opacity:.85}}
+
+/* 计时中锁死切换（视觉先"熄"） */
+body.s-timing .nav,body.s-warn .nav{opacity:.26;pointer-events:none}
+
+/* CTA 计时态 */
+.go.tim{background:linear-gradient(90deg,#FF6B2C,#FF3B4E);color:#fff;
+  justify-content:space-between;padding:0 26px;
+  box-shadow:0 12px 46px rgba(255,59,78,.34)}
+body.s-warn .go.tim{animation:goLive 1.6s ease-in-out infinite}
+@keyframes goLive{50%{box-shadow:0 14px 62px rgba(255,59,78,.58)}}
+.go .tm{font-variant-numeric:tabular-nums;font-size:19px;letter-spacing:.7px}
+
+/* eyebrow / h2 跟着状态换色 */
+body.s-timing .eyebrow,body.s-warn .eyebrow{color:#FF6B2C}
+body.s-timing .h2 em,body.s-warn .h2 em{color:#FF6B2C}
+.eyebrow{transition:color .6s}
+.h2 em{transition:color .6s}
+
+/* CTA */
+.cta{padding:14px 24px 0}
+.go{width:100%;height:46px;border-radius:23px;border:0;cursor:pointer;
+  position:relative;overflow:hidden;background:var(--accent-solid);color:var(--on-solid);
+  font-size:16.5px;font-weight:800;letter-spacing:1.6px;font-family:inherit;
+  box-shadow:0 12px 42px rgba(61,220,255,.30);
+  transition:transform .16s var(--ease)}
+.go:active{transform:scale(.975)}
+.go .rip{position:absolute;inset:0;border-radius:999px;opacity:0;
+  background:radial-gradient(circle,#fff,transparent 62%);transform:scale(0)}
+.go.press .rip{animation:rip .9s var(--ease) forwards}
+@keyframes rip{0%{opacity:0;transform:scale(0)}30%{opacity:.9}100%{opacity:0;transform:scale(3.2)}}
+
+/* 计时态：整页变暖 */
+body.timing .env{
+  background:radial-gradient(ellipse 120% 55% at 50% 42%,rgba(255,107,44,.22),
+             rgba(255,59,78,.10) 44%,transparent 72%),var(--canvas)}
+.go.timing{background:linear-gradient(90deg,#FF6B2C,#FF3B4E);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;padding:0 26px;
+  box-shadow:0 12px 46px rgba(255,59,78,.34)}
+.go.timing .tm{font-variant-numeric:tabular-nums;font-size:19px;letter-spacing:.6px}
+
+
+/* ═══ 开战 · 转盘里的碟 ═══════════════════════════════════════════
+   ⚠️ 这一段是**主规则**，必须在。曾经整段丢失，只剩 `body.s-timing .disc.sel`
+   这类状态规则 —— 结果卡片建出来了但**没有尺寸、不可见**，
+   看起来像"转盘是空的"。 */
+/* ── 一张碟的尺寸（唯一真源）──────────────────────────────────
+   gap = 0.37 × 屏宽（上限 148）；卡必须**明显小于 gap**，
+   否则两侧卡被中间那张整个盖住 —— 就看不到"一圈碟"。
+   390 屏：gap 144，卡 132 → 第2张露 25、第3张露 37。 */
+.timer{--disc:min(34vw,132px)}
+
+/* stage 高 = 卡 + 侧卡下坠（2 格 = 36）+ 呼吸余量 4。
+   ⚠️ 不写死 232：卡变小了还留 232，下面就空一大截
+   （真机上"转盘和按钮隔得老远"就是这个）。 */
+.timer .stage{position:relative;
+  height:calc(var(--disc) + 40px);
+  margin:16px 0 10px;
+  touch-action:pan-y}
+
+/* ⚠️ 居中不能用 `left:50%` + `translate(-50%)`：
+   那个 -50% 是**相对卡片自身宽度**，会和 JS 写的 translate 冲突
+   （transform 只能有一份），结果卡片被推到右边外面。
+   改成 `left:50%` + `margin-left:-半个宽度`，把居中交给布局，transform 全给 JS。 */
+.disc{
+  position:absolute;left:50%;top:0;
+  margin-left:calc(var(--disc) / -2);
+  width:var(--disc);aspect-ratio:1;border-radius:22px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  will-change:transform,opacity,filter;cursor:pointer;
+  background:#141220;
+  transition:transform var(--t-move) var(--ease),opacity var(--t-snap),
+             filter var(--t-snap),border-color var(--t-snap),box-shadow var(--t-snap);
+}
+.disc img{width:100%;height:100%;object-fit:cover;display:block;
+  animation:discDrift 26s ease-in-out infinite}
+@keyframes discDrift{50%{transform:scale(1.07)}}
+.disc .veil{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(11,10,20,.94) 3%,transparent 54%)}
+.disc .nm{position:absolute;left:0;right:0;bottom:0;padding:10px 11px;z-index:5;
+  transition:bottom var(--t-move) var(--ease-spring)}
+.disc .nm .t{font-size:13px;font-weight:700;letter-spacing:-.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.disc .nm .s{font-size:8.5px;color:var(--mid);margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 选中：青边光呼吸 */
+.disc.sel{
+  border-color:rgba(61,220,255,.52);
+  animation:discBreathe 3.8s ease-in-out infinite;
+}
+@keyframes discBreathe{
+  0%,100%{box-shadow:0 0 0 1px rgba(61,220,255,.26),0 24px 64px rgba(61,220,255,.26),
+                     inset 0 0 40px rgba(61,220,255,.10)}
+  50%{box-shadow:0 0 0 1px rgba(61,220,255,.46),0 28px 84px rgba(61,220,255,.40),
+                 inset 0 0 58px rgba(61,220,255,.18)}
+}
+
+/* ═══ 水：随时间把整张卡灌满 ═══════════════════════════════════
+   不是"底部一条进度条"，是**整张卡像杯子一样被灌**。
+
+   ## 三个细节决定它像不像水
+
+   1. **液面不是直线**：两层不同相位的正弦波叠出起伏，相位一直在走 ——
+      液面永远在动，但看不出是"动画循环"。
+   2. **水面有反光**：液面上沿一条 1px 亮线 + 上方一层极淡的辉光。
+      没有它就像一块半透明色块。
+   3. **水里有气泡**：小圆点缓慢上浮，越接近满浮得越快（水压变大）。
+
+   ## 水位
+
+   `--fill` 是 0~1，由 JS 更新（`fill = elapsed / limit`）。
+   **封顶 0.86**：再高液面会从卡顶那行状态字上穿过去，字就读不清了。
+   封顶是版面约束，不是审美。 */
+
+.water{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  height:0;
+  pointer-events:none;
+  /* 1.6s 缓上：水位上涨要"慢慢"，不能一帧跳上去 */
+  transition:height 1.6s cubic-bezier(.25,.8,.35,1);
+}
+/* ⚠️ 待机也要有水 —— 这是"生命力"的来源。
+   水位极低（8%），但液面在动、气泡在升，卡就是活的。
+   不做这件事的后果不是"少了一点动效"，是**整张卡读起来是死的**。 */
+.disc.sel .water{height:calc((var(--fill, 0.08)) * 100%)}
+body.s-timing .disc.sel .water,
+body.s-warn   .disc.sel .water{height:calc(var(--fill, 0) * 100%)}
+/* 计时/超限时水才"上色" */
+body.s-timing .disc.sel .water .wbody,
+body.s-warn   .disc.sel .water .wbody{opacity:1}
+
+/* 水体：从下往上越深越烫 */
+.water .wbody{
+  position:absolute;inset:0;
+  /* 待机时整体降到 42%：有水的"动"，但没有火的"烫"。 */
+  opacity:.42;
+  transition:opacity .8s var(--ease);
+  /* 从下往上：深红 → 橙 → 极淡。
+     上沿淡下去才看得到"水面之下还有画"，浓到底就成了色块。 */
+  background:linear-gradient(to top,
+    rgba(255,59,78,.58) 0%,
+    rgba(255,90,58,.46) 38%,
+    rgba(255,124,52,.30) 72%,
+    rgba(255,150,70,.14) 100%);
+}
+/* 厚度：四边压深、中间透 —— 像真有一层液体 */
+.water .wbody::after{
+  content:"";position:absolute;inset:0;
+  box-shadow:inset 0 -40px 60px -30px rgba(255,59,78,.55),
+             inset 0 40px 60px -40px rgba(255,180,90,.35);
+}
+
+/* 液面：两层正弦波。用 path 不用 CSS 圆角 ——
+   CSS 画不出"一直在变形"的曲线。 */
+.water .surface{
+  position:absolute;left:0;bottom:calc(100% - 8px);
+  height:34px;width:100%;overflow:visible;
+}
+.water .surface svg{position:absolute;left:0;bottom:0;
+  width:220%;height:34px;display:block}
+/* 两层：一层深、一层浅，相位不同 → 永不重复的液面 */
+.water .surface .w1{animation:waveA 3.6s linear infinite;fill:rgba(255,107,44,.42)}
+.water .surface .w2{animation:waveB 5.2s linear infinite;fill:rgba(255,140,70,.30)}
+@keyframes waveA{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes waveB{0%{transform:translateX(-28%)}100%{transform:translateX(-78%)}}
+
+/* 水面高光 */
+.water .glint{
+  position:absolute;left:0;right:0;bottom:calc(100% - 1px);height:2px;
+  border-radius:2px;
+  background:linear-gradient(90deg,
+    transparent 2%, rgba(255,210,160,.55) 16%,
+    rgba(255,255,255,.98) 40%, rgba(255,235,200,.95) 58%,
+    rgba(255,210,160,.55) 82%, transparent 98%);
+  box-shadow:0 0 10px 2px rgba(255,180,90,.45);
+  animation:glint 4.4s ease-in-out infinite;
+}
+@keyframes glint{50%{opacity:.5}}
+.water .halo{
+  position:absolute;left:0;right:0;bottom:100%;height:32px;
+  background:linear-gradient(to top, rgba(255,140,70,.22), transparent);
+  filter:blur(6px);pointer-events:none;
+}
+
+/* 气泡 */
+.water .bub{
+  position:absolute;bottom:-6px;border-radius:50%;
+  background:radial-gradient(circle at 32% 30%,
+    rgba(255,255,255,.95), rgba(255,210,160,.5) 55%, rgba(255,150,90,.18) 78%, transparent 88%);
+  box-shadow:0 0 6px rgba(255,200,140,.5);
+  animation:bubbleUp linear infinite;opacity:0;
+}
+@keyframes bubbleUp{
+  0%{transform:translate(0,0) scale(.8);opacity:0}
+  14%{opacity:.7}
+  84%{opacity:.45}
+  100%{transform:translate(var(--sway,5px), calc(-1 * var(--rise,200px))) scale(1.1);opacity:0}
+}
+
+/* ⚠️ 名字待在**原位**，不跟着水位上移 ——
+   水从下面漫上来才像"水位在涨"；名字跟着走就变成"条在长"。
+   但要给 text-shadow，否则被水淹掉读不清。 */
+body.s-timing .disc.sel .nm,
+body.s-warn   .disc.sel .nm{bottom:0;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+
+/* 名字底下垫一层极淡的暗，水漫到名字高度时字才不会糊在液面上 */
+.disc .nm::before{
+  content:"";position:absolute;left:0;right:0;bottom:-15px;height:2.6em;
+  background:linear-gradient(to top, rgba(11,10,20,.5), transparent);
+  opacity:0;transition:opacity .5s var(--ease);pointer-events:none;
+  border-radius:0 0 30px 30px;
+}
+body.s-timing .disc.sel .nm::before,
+body.s-warn   .disc.sel .nm::before{opacity:1}
+
+/* 页码 + 箭头 */
+
+.timer .nav{display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:6px;transition:opacity var(--t-snap)}
+.timer .arr{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);display:grid;place-items:center;
+  color:var(--mid);cursor:pointer;transition:all var(--t-tiny) var(--ease)}
+.timer .arr:active{transform:scale(.9);background:rgba(255,255,255,.09)}
+.timer .idx{font-size:11px;color:var(--lo);letter-spacing:1.6px;
+  font-variant-numeric:tabular-nums;min-width:52px;text-align:center}
+body.s-timing .timer .nav,body.s-warn .timer .nav{opacity:.24;pointer-events:none}
+
+.timer .cta{padding:16px 24px 0}
+.timer .go{
+  width:100%;height:60px;border-radius:999px;border:0;cursor:pointer;
+  position:relative;overflow:hidden;background:var(--accent-solid);color:var(--on-solid);
+  font-size:14px;font-weight:800;letter-spacing:1.2px;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 40px rgba(61,220,255,.28);
+  transition:transform var(--t-press) var(--ease),background .5s,box-shadow .5s;
+}
+.timer .go:active{transform:scale(.975)}
+.timer .go .rip{position:absolute;inset:0;border-radius:999px;opacity:0;
+  background:radial-gradient(circle,#fff,transparent 62%);transform:scale(0)}
+.timer .go.press .rip{animation:rip .9s var(--ease) forwards}
+@keyframes rip{0%{opacity:0;transform:scale(0)}30%{opacity:.92}100%{opacity:0;transform:scale(3.2)}}
+.timer .go.tim{background:linear-gradient(90deg,var(--ember),var(--live));color:#fff;
+  justify-content:space-between;padding:0 26px;
+  box-shadow:0 12px 44px rgba(255,59,78,.32)}
+body.s-warn .timer .go.tim{animation:goLive 1.6s ease-in-out infinite}
+@keyframes goLive{50%{box-shadow:0 14px 60px rgba(255,59,78,.56)}}
+.timer .go .tm{font-variant-numeric:tabular-nums;font-size:18px;letter-spacing:.7px}
+
+/* 开战页：环境光随状态换色 */
+body.s-timing .env{
+  background:radial-gradient(ellipse 130% 56% at 50% 44%,rgba(255,107,44,.20),
+             rgba(255,59,78,.08) 46%,transparent 74%),var(--canvas)}
+body.s-warn .env{
+  background:radial-gradient(ellipse 130% 58% at 50% 44%,rgba(255,59,78,.28),
+             rgba(255,59,78,.11) 46%,transparent 74%),var(--canvas)}
+/* ═══ 对齐 App（check_in_view / deck_card）═══════════════════════
+   三态三色：待机 青 / 开战 暖橙 / 接近上限（≥85%，含已超）熔红。
+   页头 = 状态小标签（随态换色）+ 大标题「开战」；不再有演示药丸、
+   「挑一张碟」标题、收工存档卡（记录由下方「今日记录」承接）。
+
+   情绪 = 速度：JS 写 body 上的 --rim（卡边呼吸周期）与 --wspd（水的倍速），
+   稳 3.4s/1 → 过半 2.6s/1.25 → 快到 1.5s/1.7 → 已超 1.1s/2.2。
+   ═══════════════════════════════════════════════════════════ */
+.timer .head{padding:calc(env(safe-area-inset-top,0px) + 18px) 24px 0}
+.timer .head .h2{font-size:34px;font-weight:700;letter-spacing:-.7px;margin-top:6px}
+.timer .eyebrow::after{display:none}
+.timer .eyebrow::before{content:"";width:12px;height:1.5px;border-radius:1px;background:currentColor}
+.timer .eyebrow{gap:6px;font-size:10.5px;letter-spacing:1.8px;transition:color .6s var(--ease)}
+body.s-timing .timer .eyebrow{color:var(--ember)}
+body.s-warn   .timer .eyebrow{color:var(--live)}
+
+/* 卡框跟游戏 icon 主色（--brand 由 JS 从封面像素提取，"r,g,b"） */
+.timer .disc{--brand:61,220,255;border-color:rgba(var(--brand),.30)}
+.timer .disc.sel{border-color:rgba(var(--brand),.52);animation:discBrand 3.8s ease-in-out infinite}
+@keyframes discBrand{
+  0%,100%{box-shadow:0 0 0 1px rgba(var(--brand),.26),0 24px 64px rgba(var(--brand),.26),inset 0 0 40px rgba(var(--brand),.10)}
+  50%{box-shadow:0 0 0 1px rgba(var(--brand),.46),0 28px 84px rgba(var(--brand),.40),inset 0 0 58px rgba(var(--brand),.18)}
+}
+body.s-timing .timer .disc.sel{animation:discEmber var(--rim,3.4s) ease-in-out infinite}
+body.s-warn   .timer .disc.sel{animation:discLive  var(--rim,1.5s) ease-in-out infinite}
+
+/* 水随情绪变急：越接近上限，液面和气泡越快 */
+.timer .water .surface .w1{animation-duration:calc(3.6s / var(--wspd,.8))}
+.timer .water .surface .w2{animation-duration:calc(5.2s / var(--wspd,.8))}
+.timer .water .bub{animation-duration:calc(var(--d,8s) / var(--wspd,.8)) !important}
+
+/* 地平线 */
+.timer .floor{height:1px;margin:10px 24px 0;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,.14),transparent)}
+
+/* 今日记录（App 的 _TodaySection）：标题 17/700，紧贴 CTA 下方 */
+.timer .today{padding:12px 24px 120px}
+.timer .today .hd{display:flex;align-items:baseline;margin:0 0 12px}
+.timer .today .hd .t{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.timer .today .hd .more{margin-left:auto;font-size:11.5px;color:var(--mid)}
+.timer .today .gauge{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--line)}
+.timer .today .ring{width:58px;height:58px;flex:0 0 auto;position:relative}
+.lring{width:100%;height:100%;display:block}
+.timer .today .ring b{position:absolute;inset:0;display:grid;place-items:center;
+  font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.timer .today .gauge .mid{flex:1;min-width:0}
+.timer .today .gauge .k{font-size:10px;color:var(--lo);letter-spacing:1px}
+.timer .today .gauge .v{font-size:26px;font-weight:600;letter-spacing:-.6px;margin-top:2px;
+  font-variant-numeric:tabular-nums}
+.timer .today .gauge .v small{font-size:11px;color:var(--lo);font-weight:500;letter-spacing:0}
+.timer .today .gauge .hint{font-size:10.5px;color:var(--lo);margin-top:3px}
+.timer .today .gauge .streak{font-size:11px;color:var(--accent);padding:4px 10px;border-radius:999px;
+  border:1px solid rgba(61,220,255,.3);background:rgba(61,220,255,.08)}
+.timer .today .row{display:flex;align-items:center;gap:12px;margin-top:10px;padding:13px 16px;
+  border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.timer .today .row::before{content:"";width:3px;align-self:stretch;border-radius:2px;background:var(--accent)}
+.timer .today .row .nm{font-size:14px;font-weight:600}
+.timer .today .row .tm{font-size:11px;color:var(--lo);margin-top:3px;font-variant-numeric:tabular-nums}
+.timer .today .row .du{margin-left:auto;font-size:15px;font-weight:600;color:var(--accent);
+  font-variant-numeric:tabular-nums}
+
+/* ═══ 02 记录 ═══════════════════════════════════════════════════════
+   主角 = **图**。这是藏品页：图片本身就是内容。
+
+   所以这一页**反其道**：别的页都在加容器，这一页在**去容器**。
+   · 不要卡片盒、不要外框——图满出去
+   · 不要统一尺寸——瀑布流错落才像"一墙藏品"
+   · 筛选用**药丸吸顶**，吸住时不加阴影（加阴影=多一层容器）
+
+   【记忆点】**卡角挂着游戏图标**。一眼认出"这条属于哪款游戏"——
+   这是藏品页最该被一眼读懂的信息，却最容易被做成一行小字。
+   ═══════════════════════════════════════════════════════════════════ */
+
+.gallery{padding:0 0 110px}
+.galhead{padding:calc(env(safe-area-inset-top,0px) + 24px) 24px 0}
+.galhead .h2{margin-top:10px}
+
+/* 两级筛选：吸顶，靠模糊和渐隐"浮"在图上 */
+.realms{
+  display:flex;gap:8px;
+  position:sticky;top:0;z-index:12;
+  padding:12px 24px;
+  backdrop-filter:blur(20px);
+  background:linear-gradient(to bottom,rgba(11,10,20,.95),rgba(11,10,20,.74) 72%,transparent);
+  margin-top:var(--r-block);
+}
+.realms button{
+  padding:8px 18px;border-radius:999px;border:1px solid var(--line);
+  background:none;color:var(--mid);
+  font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;
+  transition:all var(--t-snap) var(--ease);
+}
+.realms button.on{color:#07131A;background:var(--accent);border-color:var(--accent);
+  box-shadow:0 6px 20px rgba(61,220,255,.28)}
+/* 生活核用紫 —— 和她的语气同一个颜色，不做第二支"UI 信号" */
+.realms button.on[data-realm="life"]{background:var(--alt);border-color:var(--alt);
+  color:#fff;box-shadow:0 6px 20px rgba(155,123,240,.32)}
+
+/* 瀑布流：两列，交错高度 */
+.tiles{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+  padding:24px 20px 20px;
+  box-sizing:border-box;
+  width:auto;
+  overflow:hidden;
+}
+.tiles .col{display:flex;flex-direction:column;gap:12px;min-width:0;max-width:100%;overflow:hidden}
+/* 右列整体下移 26px —— 一眼看出是"错落"而不是"对齐没做好" */
+.tiles .col:nth-child(2){margin-top:26px}
+
+.shot{
+  position:relative;border-radius:18px;overflow:hidden;cursor:pointer;
+  background:var(--raised);
+  transition:transform var(--t-snap) var(--ease),box-shadow var(--t-snap);
+}
+.shot:active{transform:scale(.975)}
+.shot{min-width:0;max-width:100%;overflow:hidden}
+.shot .art{width:100%;aspect-ratio:3/4;display:block;overflow:hidden;min-width:0}
+.shot.tall .art{aspect-ratio:3/5}
+.shot.short .art{aspect-ratio:1/1}
+.shot .art img{width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform var(--t-move) var(--ease);max-width:100%}
+/* 悬停/按下时图片轻微放大 —— 规则③"极缓推拉"的短版，只在交互时给 */
+.shot:active .art img{transform:scale(1.03)}
+/* 没有实拍的卡：用渐变代替，但保持同一套光位（左上亮） */
+.shot .art.tintA{background:radial-gradient(circle at 42% 30%,rgba(61,220,255,.22),transparent 62%)}
+.shot .art.tintB{background:radial-gradient(circle at 58% 32%,rgba(155,123,240,.26),transparent 62%)}
+
+.shot .ov{position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(11,10,20,.94) 3%,transparent 48%)}
+.shot .meta{position:absolute;left:0;right:0;bottom:0;padding:13px}
+.shot .meta .d{font-size:8px;letter-spacing:1.6px;color:var(--accent);margin-bottom:5px}
+.shot .meta .d.life{color:var(--alt)}
+.shot .meta .t{font-size:13.5px;font-weight:700;line-height:1.3}
+
+/* 卡角游戏图标：一眼认出来 */
+.shot .gicon{
+  position:absolute;top:9px;left:9px;width:28px;height:28px;
+  border-radius:8px;overflow:hidden;z-index:2;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 4px 12px rgba(0,0,0,.55);
+  transition:transform var(--t-tiny) var(--ease);
+}
+.shot:active .gicon{transform:scale(.94)}
+.shot .gicon img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ═══ 03 我 ═════════════════════════════════════════════════════════
+   主角 = **环**。这一页回答"我这一年是怎么过的"。
+
+   【记忆点】**环可以点开**。它不是进度条，是一圈时间：
+   7 段弧 = 最近 7 天，有记录的是青、今天的是紫。
+   点哪段，下面那行就变成那天的记录。
+
+   这条和开战页的转盘是同一种思路：**把静态图表做成可操作的实体**。
+   ═══════════════════════════════════════════════════════════════════ */
+
+.me{padding:0 0 110px}
+
+.me .head{
+  padding:calc(env(safe-area-inset-top,0px) + 24px) 24px 0;
+  display:flex;align-items:center;gap:13px;
+}
+.me .head .avatar{
+  width:46px;height:46px;border-radius:15px;overflow:hidden;flex:0 0 auto;
+  border:1px solid rgba(61,220,255,.32);
+  box-shadow:0 0 0 3px rgba(61,220,255,.09);
+}
+.me .head .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.me .head .who{flex:1;min-width:0}
+.me .head .who .n{font-size:16.5px;font-weight:700}
+.me .head .who .id{font-size:9px;letter-spacing:1.6px;color:var(--lo);margin-top:4px}
+.me .head .cfg{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);display:grid;place-items:center;
+  cursor:pointer;color:var(--mid);transition:all var(--t-tiny) var(--ease);
+}
+.me .head .cfg:active{transform:scale(.92);background:rgba(255,255,255,.08)}
+
+/* 环 */
+/* ═══ 大环 + 头像（这一页唯一的记忆点）═══════════════════════════
+   不是"头像放在环里"，也不是"环套在头像外"。
+
+   做法：**头像本身是圆的，环贴着它的外沿长出来**（间隙只有 10px）。
+   于是两者是"同一个东西的两层"，而不是两个零件叠在一起。
+
+   环上开三个"缺口"分隔 7 天 —— 缺口让环读成"刻度"而不是"进度条"。
+   今天的片段是紫的（还没结束），有记录的是青的，没记录的是灰的。 */
+.dialwrap{
+  position:relative;
+  width:min(70vw,262px);aspect-ratio:1;
+  margin:var(--r-beat) auto 44px;   /* 底部留够：胶囊挂在环下 -15%，要 44px 才不被下面压到 */
+  display:grid;place-items:center;
+}
+
+/* 她：圆形头像，居中压在环里 */
+.dial-avatar{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:64%;aspect-ratio:1;border-radius:50%;overflow:hidden;z-index:2;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 0 0 5px rgba(11,10,20,.92),0 18px 46px rgba(0,0,0,.6);
+  background:var(--raised);
+}
+.dial-avatar img{width:100%;height:100%;object-fit:cover;
+  /* 胸像构图：这些图是**方形胸像**（头顶留白、胸部以下出画）。
+     圆形裁切要往上取，让脸落在圆心偏上 —— 50% 30% 大约正好
+     切到下巴下方，不会把脸压扁。 */
+  object-position:50% 30%;
+  animation:avatarDrift 30s ease-in-out infinite}
+/* 30s 极缓推拉：头像"活着" */
+@keyframes avatarDrift{50%{transform:scale(1.06)}}
+
+/* 头像下方：连续天数压在一个半透明胶囊上，压在头像上沿 */
+/* ⚠️ 胶囊一开始压在 bottom:12% —— 正好盖住她的嘴。
+   改到**环外下方**（bottom:-14%），和整个环叠成"徽章挂在环下"的关系，
+   这样它既读得出是这一圈的注脚，又完全不挡脸。 */
+.dial-center{
+  position:absolute;left:50%;bottom:-15%;transform:translateX(-50%);
+  z-index:3;text-align:center;pointer-events:none;
+  padding:6px 15px;border-radius:999px;
+  background:rgba(19,17,30,.92);backdrop-filter:blur(16px);
+  border:1px solid rgba(61,220,255,.30);
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+  white-space:nowrap;
+}
+.dial-center .v{font-size:25px;font-weight:300;letter-spacing:-1.2px;line-height:1;
+  font-variant-numeric:tabular-nums;color:var(--hi)}
+.dial-center .l{font-size:7.5px;letter-spacing:2.2px;color:var(--lo);margin-top:4px}
+.dialwrap svg{position:absolute;inset:0;width:100%;height:100%;
+  transform:rotate(-90deg);overflow:visible;z-index:1}
+.dialwrap .track{fill:none;stroke:rgba(255,255,255,.055);stroke-width:1.6}
+/* 7 段弧：有记录=青（半透明）/ 今天=紫 / 选中=亮青且加粗 */
+.dialwrap .day{
+  fill:none;stroke:rgba(255,255,255,.12);stroke-width:7;stroke-linecap:round;
+  cursor:pointer;
+  transition:stroke var(--t-snap),stroke-width var(--t-snap),filter var(--t-snap);
+}
+.dialwrap .day.has{stroke:rgba(61,220,255,.52)}
+.dialwrap .day.today{stroke:var(--alt)}
+.dialwrap .day.sel{stroke:var(--accent);stroke-width:9;
+  filter:drop-shadow(0 0 8px rgba(61,220,255,.7))}
+/* 中心读数 */
+
+/* 环外的背光：和她的背光同一套（4.4s 呼吸） */
+.dialwrap::before{
+  content:"";position:absolute;inset:-12%;border-radius:50%;z-index:-1;
+  background:radial-gradient(circle,rgba(155,123,240,.16),transparent 66%);
+  filter:blur(20px);animation:otterGlow 5s ease-in-out infinite;
+}
+
+/* 点开某天后的展开条 —— 和开战页的"存档卡"同一种浮现语言 */
+.daydetail{
+  margin:var(--r-block) 24px 0;padding:14px 18px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;
+  min-height:58px;overflow:hidden;
+  transition:border-color var(--t-snap);
+}
+.daydetail .dl{font-size:9px;letter-spacing:1.6px;color:var(--accent);
+  flex:0 0 auto;max-width:54px;white-space:nowrap;overflow:hidden}
+.daydetail .dt{font-size:13px;color:var(--hi);flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.daydetail .dv{flex:0 0 auto;font-size:15px;font-weight:600;color:var(--mid);
+  font-variant-numeric:tabular-nums}
+
+/* 最近 7 天柱（和环是同一份数据的第二种看法） */
+.week{margin:var(--r-beat) 24px 0}
+.week .hd{display:flex;align-items:baseline;margin-bottom:14px}
+.week .hd .t{font-size:15px;font-weight:700}
+.week .hd .v{margin-left:auto;font-size:11.5px;color:var(--mid)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:72px;width:100%}
+.bars .b{flex:1;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:center;gap:6px;height:100%;min-width:0}
+/* ⚠️ 柱子必须在"弹性高度"的容器里才撑得开。
+   父级 `.b` 是 column + justify-content:flex-end，
+   子 `.bar` 给了百分比高度却没给 flex 基准 —— 会塌成 0。 */
+.bars .b .bar{flex:0 0 auto}
+.bars .b .bar{
+  width:100%;max-width:17px;border-radius:4px 4px 2px 2px;
+  background:rgba(255,255,255,.13);min-height:3px;
+  transition:height var(--t-wash) var(--ease),background var(--t-snap);
+}
+.bars .b.today .bar{background:linear-gradient(to top,var(--accent),rgba(61,220,255,.34))}
+.bars .b .lb{font-size:8px;color:var(--lo)}
+.bars .b.today .lb{color:var(--accent);font-weight:700}
+
+/* 三条数字 */
+.stats{display:flex;gap:10px;margin:var(--r-block) 24px 0}
+.stats .s{flex:1;padding:13px 11px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--line);
+  transition:border-color var(--t-snap)}
+.stats .s .v{font-size:19px;font-weight:300;letter-spacing:-.7px;
+  font-variant-numeric:tabular-nums}
+.stats .s .l{font-size:8px;letter-spacing:1.5px;color:var(--lo);margin-top:5px}
+
+/* 二级入口：一块面 + 发丝线（和开战页的"今日记录"同一个做法） */
+.entries{
+  margin:var(--r-block) 24px 0;border-radius:16px;
+  background:var(--surface);border:1px solid var(--line);overflow:hidden;
+}
+.entry{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;
+  border-bottom:1px solid var(--line);transition:background var(--t-tiny)}
+.entry:last-child{border-bottom:0}
+.entry:active{background:rgba(255,255,255,.04)}
+.entry .ei{
+  width:29px;height:29px;border-radius:9px;display:grid;place-items:center;
+  background:rgba(61,220,255,.10);color:var(--accent);font-size:13px;
+}
+.entry .et{flex:1;min-width:0}
+.entry .et .t{font-size:13.5px;font-weight:600}
+.entry .et .s{font-size:10px;color:var(--lo);margin-top:3px}
+.entry .ar{color:var(--lo);font-size:15px}
+
+/* ═══ 00 启动 ═══════════════════════════════════════════════════════
+   启动页只回答一件事：**这台设备通电了**。
+
+   所以它只有：一个 logo、两圈从中心扩散的光、一行机打状态。
+   没有 "Loading..." —— 环在扩散、状态在变，已经说明"还没好"。 */
+
+.boot{
+  position:fixed;inset:0;z-index:100;background:var(--canvas);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .7s var(--ease),visibility .7s;
+}
+.boot.gone{opacity:0;visibility:hidden}
+
+.boot .mark{position:relative;width:108px;height:108px}
+/* 两圈错相位扩散 —— 一圈读成"脉冲"，两圈读成"通电" */
+.boot .ring{
+  position:absolute;inset:-16px;border-radius:50%;
+  border:1px solid rgba(61,220,255,.30);
+  animation:bootRing 2.4s var(--ease) infinite;
+}
+.boot .ring:nth-child(2){inset:-30px;border-color:rgba(155,123,240,.20);
+  animation-delay:.5s}
+@keyframes bootRing{
+  0%{transform:scale(.86);opacity:0}
+  30%{opacity:1}
+  100%{transform:scale(1.16);opacity:0}
+}
+.boot .mark img{
+  position:relative;z-index:2;width:108px;height:108px;border-radius:27px;
+  display:block;
+  box-shadow:0 0 0 1px rgba(255,255,255,.10);
+  animation:logoIn 1.1s var(--ease-spring) both;
+}
+@keyframes logoIn{
+  from{transform:scale(.84);opacity:0;filter:brightness(.4)}
+  to{transform:scale(1);opacity:1;filter:brightness(1)}
+}
+.boot .name{
+  margin-top:24px;font-size:18px;font-weight:700;letter-spacing:6px;
+  opacity:0;animation:fadeUp .8s var(--ease) .45s forwards;
+}
+.boot .st{
+  position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);
+  display:flex;align-items:center;gap:8px;
+  font-size:9px;letter-spacing:3px;color:var(--lo);
+}
+.boot .st i{width:5px;height:5px;border-radius:50%;background:var(--accent);
+  animation:dotPulse 1.4s ease-in-out infinite}
+@keyframes dotPulse{50%{opacity:.25}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+
+/* ═══ 头像选择器 ═══════════════════════════════════════════════════
+   点头像 → 铺出 22 张。**不是弹窗，是原地展开** ——
+   头像从圆里"散开"成一格一格，选完再收回圆里。
+   这个动作本身就是在说"你可以换一个自己"。 */
+.picker{
+  position:fixed;inset:0;z-index:70;display:none;
+  background:rgba(11,10,20,.86);backdrop-filter:blur(22px) saturate(1.3);
+  padding:calc(env(safe-area-inset-top,0px) + 30px) 20px 30px;
+  overflow-y:auto;
+}
+.picker.on{display:block;animation:pickerIn .5s var(--ease)}
+@keyframes pickerIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+
+.picker .ptop{display:flex;align-items:center;margin-bottom:20px}
+.picker .ptop .t{font-size:15px;font-weight:700}
+.picker .ptop .x{
+  margin-left:auto;width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);
+  display:grid;place-items:center;color:var(--mid);cursor:pointer;font-size:15px;
+}
+.picker .grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+}
+.picker .av{
+  position:relative;aspect-ratio:1;border-radius:50%;overflow:hidden;
+  border:1.5px solid transparent;cursor:pointer;
+  transition:transform .2s var(--ease),border-color .3s,box-shadow .3s;
+  background:var(--raised);
+  animation:avPop .45s var(--ease) both;
+}
+@keyframes avPop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.picker .av img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.picker .av:active{transform:scale(.94)}
+.picker .av.on{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px rgba(61,220,255,.4),0 8px 22px rgba(61,220,255,.30);
+}
+.picker .av.on::after{
+  content:"✓";position:absolute;right:0;bottom:0;width:20px;height:20px;
+  border-radius:50%;background:var(--accent-solid);color:var(--on-solid);
+  font-size:11px;font-weight:800;display:grid;place-items:center;
+  border:2px solid var(--canvas);
+}
+
+/* ═══ 二级页（通用）═══════════════════════════════════════════════
+   二级页只有一个任务：**把事做完，别让人迷路**。
+   所以：一个返回、一个标题、一块面。不玩花活。 */
+
+.sub{position:fixed;inset:0;z-index:80;background:var(--canvas);
+  display:none;flex-direction:column;overflow-y:auto}
+.sub.on{display:flex}
+/* 进场：从右侧推入（二级页的唯一动效） */
+.sub{
+  animation:subIn var(--t-move) var(--ease);
+}
+@keyframes subIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+
+.sub .bar{
+  position:sticky;top:0;z-index:5;
+  display:flex;align-items:center;gap:12px;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 20px 12px;
+  backdrop-filter:blur(20px);
+  background:linear-gradient(to bottom,rgba(11,10,20,.96),rgba(11,10,20,.62) 76%,transparent);
+}
+.sub .bar .back{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);display:grid;place-items:center;
+  cursor:pointer;color:var(--hi);font-size:17px;
+  transition:all var(--t-tiny) var(--ease);
+}
+.sub .bar .back:active{transform:scale(.9);background:rgba(255,255,255,.08)}
+.sub .bar .tt{font-size:16px;font-weight:700}
+.sub .body{padding:8px 20px 40px}
+
+/* 分组面 + 发丝线 */
+.grp{
+  border-radius:16px;background:var(--surface);border:1px solid var(--line);
+  overflow:hidden;margin-bottom:var(--r-block);
+}
+.grp .row{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;
+  border-bottom:1px solid var(--line);cursor:pointer;
+  transition:background var(--t-tiny);
+}
+.grp .row:last-child{border-bottom:0}
+.grp .row:active{background:rgba(255,255,255,.04)}
+.grp .row .l{flex:1;font-size:13.5px}
+.grp .row .r{font-size:12px;color:var(--lo);font-variant-numeric:tabular-nums}
+/* 开关：和底导同一种"长出来"的语言 */
+.grp .row .sw{
+  width:44px;height:26px;border-radius:999px;background:rgba(255,255,255,.10);
+  position:relative;flex:0 0 auto;
+  transition:background var(--t-tiny) var(--ease);
+}
+.grp .row .sw::after{
+  content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;
+  border-radius:50%;background:#fff;
+  transition:transform var(--t-tiny) var(--ease-spring);
+}
+.grp .row .sw.on{background:var(--accent)}
+.grp .row .sw.on::after{transform:translateX(18px)}
+
+.mlabel{
+  font-size:9px;letter-spacing:2.4px;font-weight:700;color:var(--accent);
+  margin:0 4px 10px;
+}
+
+/* 游戏管理：3 列网格，真图标 */
+.gmanage{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;padding:6px 0}
+.gmanage .g{text-align:center;cursor:pointer}
+.gmanage .g .bx{
+  width:100%;aspect-ratio:1;border-radius:19px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);position:relative;
+  transition:transform var(--t-tiny) var(--ease);
+}
+.gmanage .g:active .bx{transform:scale(.95)}
+.gmanage .g .bx img{width:100%;height:100%;object-fit:cover;display:block}
+.gmanage .g .bx .del{
+  position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;
+  background:rgba(11,10,20,.82);display:grid;place-items:center;
+  font-size:11px;color:#FF6B8A;
+}
+.gmanage .g .nm{margin-top:6px;font-size:10px;color:var(--mid);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gadd{
+  width:100%;aspect-ratio:1;border-radius:19px;
+  border:1.5px dashed rgba(61,220,255,.30);display:grid;place-items:center;
+  color:var(--accent);font-size:25px;cursor:pointer;
+  background:rgba(61,220,255,.04);
+  transition:background var(--t-tiny);
+}
+.gadd:active{background:rgba(61,220,255,.10)}
+
+/* 时长管家：大数字 + 滑块 */
+.slider{padding:2px 0}
+.slider .v{
+  font-size:32px;font-weight:200;letter-spacing:-1.3px;
+  font-variant-numeric:tabular-nums;color:var(--hi);
+}
+.slider .v small{font-size:12px;color:var(--mid);letter-spacing:0;margin-left:3px}
+.slider input[type=range]{
+  width:100%;margin-top:13px;-webkit-appearance:none;
+  height:3px;border-radius:2px;background:rgba(255,255,255,.14);outline:none;
+}
+.slider input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--accent);cursor:pointer;
+  box-shadow:0 0 0 4px rgba(61,220,255,.18);
+}
+
+</style>
+<link rel="stylesheet" href="me2.css">
+<link rel="stylesheet" href="v3.css?v=w6">
+<link rel="stylesheet" href="expr.css">
+<link rel="stylesheet" href="share.css?v=w6">
+<link rel="stylesheet" href="compose.css">
+<link rel="stylesheet" href="alive.css">
+<link rel="stylesheet" href="battle.css">
+<link rel="stylesheet" href="mine.css">
+<link rel="stylesheet" href="memory.css">
+<link rel="stylesheet" href="brand.css?v=w6">
+<link rel="stylesheet" href="light.auto.css?v=l13">
+<link rel="stylesheet" href="light.css?v=l15">
+<link rel="stylesheet" href="glass.css?v=l14">
+<link rel="stylesheet" href="pet.css?v=p1">
+<link rel="stylesheet" href="scroll.css?v=p1">
+<link rel="stylesheet" href="empty.css?v=e1">
+</head>
+<body data-page="home">
+<script>
+/* 主题在首帧前定下来，避免先暗后亮闪一下：?theme=light|dark|auto 优先，其次记住的选择（自动 = 跟随系统） */
+try{ var m=(location.search.match(/[?&]theme=(light|dark|auto)\b/)||[])[1]||localStorage.getItem('gt_theme')||'dark';
+  if(m==='light' || (m==='auto' && !matchMedia('(prefers-color-scheme: dark)').matches)) document.body.classList.add('light'); }catch(_){}
+</script>
+<!-- 环境层：所有页面共享 -->
+<div class="env" id="env">
+  <div class="base"></div>
+  <div class="glow" id="envGlow"></div>
+  <div class="dust"></div>
+</div>
+
+<!-- ═══ 启动页 ═══════════════════════════════════════════════ -->
+<div class="boot" id="boot">
+  <div class="mark">
+    <div class="ring"></div><div class="ring"></div>
+    <img src="assets/logo.png" alt="水獭游时">
+  </div>
+  <div class="name">水 獭 游 时</div>
+  <div class="st"><i></i><span id="bootSt">正在启动</span></div>
+</div>
+
+<header class="topbar" id="topbar">
+  <img src="assets/brand/gt_otter_w.png" alt="">
+  <b id="tbTitle">此刻</b>
+  <div class="right">
+    <span class="pill" id="tbPill">连续 12 天</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══ 此刻 ═════════════════════════════════════════════════ -->
+<section class="page on v3 h3" id="page-home">
+  <header class="v3-head fx">
+    <div class="ttl">
+      <div class="eyebrow" id="h3Date">11 月 2 日 · 周一</div>
+      <h1 class="v3-title" id="h3Greet">晚上好，<em>旅人</em></h1>
+    </div>
+    <button class="h3-streak" data-s3="s3-calendar" aria-label="连续 12 天，打开打卡日历">
+      <span class="flame"><svg viewBox="0 0 24 24"><path fill="#FF9F43" d="M12 2c1 3.2 4.6 5 4.6 9.6A4.6 4.6 0 0 1 12 22a6 6 0 0 1-6-6c0-3 1.8-4.6 3-6.4.3 1.8 1.2 2.8 2.2 3.2C10.6 9.2 11 5.4 12 2z"/><path fill="#FFD27A" d="M12 13.2c.9 1.3 2.4 2 2.4 4a2.4 2.4 0 0 1-4.8 0c0-1.2.7-2 1.3-2.6.2.6.6.9 1.1 1-.3-1-.2-1.6 0-2.4z"/></svg></span>
+      <b>12</b>
+    </button>
+  </header>
+
+  <!-- 记忆点：小獭的水池。水位 = 今天 / 上限；水色 = 待机青 / 开战橙 / 接近上限红；点她会回应 -->
+  <div class="h3-hero v3-card fx">
+   <div class="h3-top">
+    <div class="h3-pond" id="h3Pond" role="button" aria-label="小獭，点一下听她说">
+      <img class="aura" src="assets/page_aura.webp" alt="">
+      <canvas class="lring" id="h3Ring"></canvas>
+      <span class="limit">上限</span>
+      <div class="bowl">
+        <img class="otter" id="h3Otter" src="assets/otter/expr/anim/270/hi.webp" alt="小獭">
+        <div class="water" id="h3Water" style="--lv:.54">
+          <svg viewBox="0 0 400 16" preserveAspectRatio="none">
+            <path class="w2" d="M0 9 Q25 2 50 9 T100 9 T150 9 T200 9 T250 9 T300 9 T350 9 T400 9 V16 H0Z"/>
+            <path class="w1" d="M0 11 Q25 4 50 11 T100 11 T150 11 T200 11 T250 11 T300 11 T350 11 T400 11 V16 H0Z"/>
+          </svg>
+          <div class="body"></div>
+          <i class="bub" style="left:30%;width:9px;height:9px;--d:5.6s"></i>
+          <i class="bub" style="left:52%;width:6px;height:6px;--d:7.2s;animation-delay:1.4s"></i>
+          <i class="bub" style="left:68%;width:11px;height:11px;--d:6.4s;animation-delay:2.6s"></i>
+        </div>
+      </div>
+      <div class="gloss"></div>
+    </div>
+    <div class="h3-read">
+      <div class="k">今天 · 2 局</div>
+      <div class="v"><b id="h3Today">1h 37m</b></div>
+      <div class="cap">上限 <span class="tkLimit">3</span> 小时</div>
+      <div class="hint" id="h3Hint">还能安心玩 1h 23m</div>
+      <div class="h3-split" id="h3Split">
+        <div class="bar"><i style="--c:90,150,255" data-w="54"></i><i style="--c:232,196,120" data-w="46"></i></div>
+        <div class="lg">
+          <span><img src="assets/games/wzry.webp" alt="">王者荣耀 <em>52m</em></span>
+          <span><img src="assets/games/ys.webp" alt="">原神 <em>45m</em></span>
+        </div>
+      </div>
+    </div>
+   </div>
+    <div class="h3-bubble" id="h3Bubble" role="button" aria-label="和小獭聊天"><b>小獭</b><span id="tw"></span><i class="caret"></i><span class="h3-chat">聊两句<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span></div>
+  </div>
+
+  <!-- 接着玩：品牌色跟游戏封面走；计时中变成「回到战场」 -->
+  <div class="h3-now fx" id="h3Now">
+    <div class="cover"><img id="h3NowImg" src="assets/games/hsr.webp" alt=""></div>
+    <div class="info">
+      <div class="cap2" id="h3NowCap"><span class="live"></span><span id="h3NowCapT">接着玩</span></div>
+      <div class="nm" id="h3NowNm">崩坏：星穹铁道</div>
+      <div class="s" id="h3NowS">昨天 2 局 · 平均 48m</div>
+    </div>
+    <button class="slab" id="h3Go">开战</button>
+  </div>
+
+  <div class="v3-sec h3-week fx">
+    <div class="v3-hd"><span class="t">最近 7 天</span><span class="more" data-s3="s3-calendar">日历 ›</span></div>
+    <div class="v3-card days" id="h3Days"></div>
+  </div>
+
+  <div class="v3-sec h3-lib fx">
+    <div class="v3-hd"><span class="t">游戏库</span><span class="more" data-sh3="sh3-games">全部 21 款 ›</span></div>
+    <div class="row" id="h3Lib"></div>
+  </div>
+
+  <div class="v3-sec h3-mem fx">
+    <div class="v3-hd"><span class="t">最近留下的</span><span class="more" data-goto="gallery">藏品 ›</span></div>
+    <div class="row" id="h3Mem"></div>
+  </div>
+</section>
+
+<!-- 计时中浮出的火条（此刻页也有 —— 和开战页同一套语言） -->
+<div class="timerbar" id="timerbar">
+  <div class="in">
+    <span class="nm" id="tbNm">崩坏：星穹铁道</span>
+    <span class="tm" id="tbTm">00:00</span>
+  </div>
+</div>
+
+<!-- ═══ 开战 ═════════════════════════════════════════════════ -->
+<section class="page timer" id="page-timer">
+    <!-- 页头 = App 的 GtScrollHeaderContent：状态小标签（三态三色）+「开战」 -->
+    <div class="head">
+      <div class="eyebrow" id="tkSub">选游戏</div>
+      <h2 class="h2">开战</h2>
+    </div>
+    <div class="stage" id="stage">
+      <!-- 卡片由 JS 生成 -->
+    </div>
+    <div class="floor"></div>
+    <div class="nav">
+      <div class="arr" data-dir="-1">‹</div>
+      <div class="idx" id="tkIdx">1 / 6</div>
+      <div class="arr" data-dir="1">›</div>
+    </div>
+    <div class="cta"><button class="go" data-go><span class="rip"></span><span class="lb">开 战</span></button></div>
+
+    <!-- 今日记录：收工后的这一局就记在这里，不另起存档卡 -->
+    <div class="today">
+      <div class="hd"><div class="t">今日记录</div><div class="more" data-s3="s3-today">全部 ›</div></div>
+      <div class="gauge">
+        <!-- 活的今日环（与 App _LiveRing 同一套）：上限只在这里表达 -->
+        <div class="ring"><canvas class="lring" id="tkRing" data-ratio=".54"></canvas><b id="tkRingPct">54%</b></div>
+        <div class="mid">
+          <div class="k">今天 · 2 局</div>
+          <div class="v">1h 37m <small>/ <span class="tkLimit">3</span> 小时</small></div>
+          <div class="hint">还差 1h 23m 到上限</div>
+        </div>
+        <div class="streak">12 天</div>
+      </div>
+      <div class="row"><div><div class="nm">原神</div><div class="tm">13:30 – 14:15</div></div><div class="du">45m</div></div>
+      <div class="row"><div><div class="nm">王者荣耀</div><div class="tm">20:12 – 21:04</div></div><div class="du">52m</div></div>
+    </div>
+  </section>
+
+  
+
+<!-- ═══ 藏品 ═════════════════════════════════════════════════ -->
+<section class="page v3 g3" id="page-gallery">
+  <img class="g3-dust" src="assets/dust_field.webp" alt="">
+  <header class="v3-head fx">
+    <div class="ttl">
+      <div class="eyebrow">留下的都在这里</div>
+      <h1 class="v3-title">藏品<em>.</em></h1>
+    </div>
+    <div class="acts">
+      <button class="ib ib-ot" data-s3="s3-expr" aria-label="表情标签"><img src="assets/otter/expr/still/270/happy.webp" alt=""></button>
+      <button class="ib" data-s3="s3-trash" aria-label="回收站"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+    </div>
+  </header>
+
+  <div class="g3-realm fx" id="g3Realm" data-tabs="realm">
+    <i class="pill"></i>
+    <button class="on" data-r="game" data-peek="@game" data-c="61,220,255">游戏<small>28</small></button>
+    <button data-r="life" data-peek="@life" data-c="255,138,184">生活<small>18</small></button>
+  </div>
+
+  <div class="v3-card g3-foot fx" data-s3="s3-foot">
+    <div class="heat" id="g3Heat"></div>
+    <div class="tx"><b>这个月，<em id="g3FootN">19</em> 天留下了东西</b><div id="g3FootS">最长连续 7 天 · 最爱周六晚上</div></div>
+    <span class="ar">›</span>
+  </div>
+
+  <div class="g3-filter fx" id="g3Filter">
+    <div class="g3-chips" id="g3Chips" data-tabs></div>
+    <div class="g3-tags" id="g3Tags" aria-label="按标签筛选"></div>
+  </div>
+
+  <div class="g3-feat fx" id="g3Feat"></div>
+  <div class="g3-fall" id="g3Fall"><div class="col"></div><div class="col"></div></div>
+</section>
+
+<!-- ═══ 我 ═══════════════════════════════════════════════════ -->
+<section class="page v3 m3" id="page-me">
+  <header class="v3-head fx">
+    <div class="ttl">
+      <div class="eyebrow">第 128 天，你一直在</div>
+      <h1 class="v3-title">我</h1>
+    </div>
+    <button class="ib" data-s3="s3-settings" aria-label="设置"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  </header>
+
+  <!-- 身份：头像外圈 = 打卡率（活环） -->
+  <!-- 头部融合心情状态：卡片底色 / 光晕跟着此刻心情走；小獭动图贴在心情文案旁边 -->
+  <div class="v3-card m3-id fx" id="m3Id">
+    <i class="aura"><b></b><b></b></i>
+    <div class="av" data-s3="s3-profile" role="button" aria-label="编辑资料">
+      <canvas class="lring" id="m3Ring"></canvas>
+      <img id="m3Av" src="assets/avatars/avatar_01.webp" alt="头像">
+    </div>
+    <div class="who">
+      <div class="nm">旅人 <span class="ttl2">常驻旅人</span></div>
+      <div class="line">打卡率 <em>86%</em> · 连续 <em>12</em> 天</div>
+      <button class="st" id="m3St" data-sh3="sh3-mood" aria-label="设置心情状态">
+        <img class="ot" id="m3MoodAv" src="assets/otter/expr/anim/270/happy.webp" alt="">
+        <span class="st-tx" id="m3StTx"></span>
+      </button>
+      <div class="uid" id="m3Uid" role="button" aria-label="复制本机 ID 尾号">本机 ID ····91C3 <svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg></div>
+    </div>
+  </div>
+
+  <div class="v3-sec fx">
+    <div class="v3-hd"><span class="t">最近 7 天</span><span class="more" data-s3="s3-calendar">日历 ›</span></div>
+    <div class="v3-card m3-week">
+      <div class="top">
+        <div class="v" id="m3WeekV">12.4<small>/ 20 小时预算</small></div>
+        <span class="delta">比上周少 2.1h</span>
+      </div>
+      <div class="budget"><i id="m3Budget"></i></div>
+      <div class="bars" id="m3Bars"></div>
+      <div class="say"><img data-ot="weekly" src="assets/otter/expr/anim/270/proud.webp" alt="">周六玩超了一次，其他几天都很克制，继续保持～</div>
+    </div>
+  </div>
+
+  <div class="m3-nums fx">
+    <div class="v3-card n"><div class="v"><b data-c3="214">0</b><small>h</small></div><div class="l">累计时长</div></div>
+    <div class="v3-card n"><div class="v"><b data-c3="268">0</b></div><div class="l">开过的局</div></div>
+    <div class="v3-card n" data-goto="gallery"><div class="v"><b data-c3="46">0</b></div><div class="l">藏品</div></div>
+  </div>
+
+  <!-- 记忆点：最常陪你的三款游戏站上领奖台 -->
+  <div class="v3-sec fx">
+    <div class="v3-hd"><span class="t">最常陪你的</span><span class="more">今年</span></div>
+    <div class="v3-card m3-pod" id="m3Pod"></div>
+  </div>
+
+  <div class="v3-card m3-list fx">
+    <div class="m3-row" data-s3="s3-calendar" style="--c:255,159,67"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><div class="tx"><div class="t">打卡日历</div><div class="s">本月 19 天 · 超时 2 天</div></div><span class="ar">›</span></div>
+    <div class="m3-row" data-s3="s3-games" style="--c:61,220,255"><div class="ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v3M5.5 12.5h3M15 12h.01M18 13h.01"/></svg></div><div class="tx"><div class="t">游戏管理</div><div class="s">21 款 · 改名字和图标</div></div><span class="ar">›</span></div>
+    <div class="m3-row" data-s3="s3-limit" style="--c:255,107,44"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></div><div class="tx"><div class="t">时长管家</div><div class="s">单次上限 <span class="tkLimit">3</span> 小时 · 周预算 20 小时</div></div><span class="ar">›</span></div>
+  </div>
+
+  <div class="v3-card m3-list fx">
+    <div class="m3-row" data-s3="s3-otter" style="--c:155,123,240"><div class="ic"><img src="assets/otter/expr/anim/270/think.webp" alt=""></div><div class="tx"><div class="t">小獭助手</div><div class="s">她今天有话想说</div></div><span class="ar">›</span></div>
+    <div class="m3-row" data-s3="s3-settings" style="--c:160,155,180"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg></div><div class="tx"><div class="t">备份与设置</div><div class="s">通知 · AI · 备份 · 关于</div></div><span class="ar">›</span></div>
+  </div>
+
+  <div class="m3-foot">
+    <img class="ot" data-ot="foot" src="assets/otter/expr/anim/270/love.webp" alt="">
+    <div>你玩过的每一局，我都记得</div>
+    <div class="sig"><img src="assets/brand/gt_otter_w.png" alt="">水獭游时 0.90.1 · 只存在这台手机</div>
+  </div>
+</section>
+
+<button class="g3-fab" data-s3="s3-compose"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>记一条</button>
+<div class="toast3" id="toast3" role="status" aria-live="polite"><i class="th"></i><img class="tm" id="toast3M" src="assets/otter/expr/anim/270/happy.webp" alt=""><span class="tx"><span id="toast3T"></span><small id="toast3S"></small></span><b id="toast3A"></b><i class="tbar" id="toast3B"></i></div>
+<!-- 全局确认：小獭从卡片上沿探头；不可逆操作要按住确认 -->
+<div class="dlg3" id="dlg3" role="dialog" aria-modal="true" aria-labelledby="dlgT">
+  <div class="dlg-back" id="dlgBack"></div>
+  <div class="dlg-card">
+    <i class="dlg-glow"></i>
+    <img class="dlg-ot" id="dlgOt" src="assets/otter/expr/anim/270/calm.webp" alt="">
+    <b id="dlgT">确定吗？</b>
+    <p id="dlgP"></p>
+    <div class="dlg-acts"><button class="slab ghost" id="dlgNo">再想想</button><button class="slab" id="dlgOk"><i class="fill"></i><span id="dlgOkT">确定</span></button></div>
+    <button class="dlg-alt" id="dlgAlt" hidden></button>
+    <small class="dlg-hint" id="dlgHint">按住确认</small>
+  </div>
+</div>
+<!-- 锚点提示：指向某个元素的小獭气泡 -->
+<div class="tip3" id="tip3" role="tooltip"><img src="assets/otter/expr/anim/270/happy.webp" alt=""><span id="tip3T"></span><i class="ar"></i></div>
+
+</main>
+
+<!-- 底导 -->
+<nav id="nav">
+  <button data-page="home" class="on"><span class="dot"><svg viewBox="0 0 24 24"><path d="M12 3.5c3.2 3.9 5.5 7 5.5 10a5.5 5.5 0 0 1-11 0c0-3 2.3-6.1 5.5-10z"/><path d="M9.2 14.6c.3 1.3 1.3 2.2 2.6 2.4"/></svg></span><span class="lb">此刻</span></button>
+  <button data-page="timer"><span class="dot"><svg viewBox="0 0 24 24"><path d="M7.5 8.5h9a4 4 0 0 1 3.9 4.9l-.8 3.5a2.2 2.2 0 0 1-3.8 1L14 16h-4l-1.8 1.9a2.2 2.2 0 0 1-3.8-1l-.8-3.5a4 4 0 0 1 3.9-4.9z"/><path d="M8.5 11.5v3M7 13h3"/><circle cx="15.5" cy="12.3" r=".6"/><circle cx="17" cy="13.8" r=".6"/></svg></span><span class="lb">开战</span></button>
+  <button data-page="gallery"><span class="dot"><svg viewBox="0 0 24 24"><rect x="5" y="6.5" width="13" height="13" rx="2.5"/><path d="M8 3.8h10.5A2.5 2.5 0 0 1 21 6.3V16"/><path d="m5.5 16.5 3.6-3.6a1.5 1.5 0 0 1 2.1 0l4.3 4.3"/><circle cx="14.2" cy="10.3" r="1.2"/></svg></span><span class="lb">藏品</span></button>
+  <button data-page="me"><span class="dot"><svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.8 20c.9-3.6 3.8-5.6 7.2-5.6s6.3 2 7.2 5.6"/></svg></span><span class="lb">我</span></button>
+</nav>
+
+
+<!-- 头像选择器 -->
+<div class="picker" id="picker">
+  <div class="ptop">
+    <span class="t">换一个自己</span>
+    <div class="x" id="pickerClose">✕</div>
+  </div>
+  <div class="grid" id="avatarGrid"></div>
+</div>
+
+<!-- ═══ 二级页（v3）═══════════════════════════════════════════ -->
+<div class="s3" id="s3-record">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt"></div><span class="act" data-s3="s3-share">分享</span></div>
+  <div class="bd">
+    <div class="rd-hero"><img id="rdImg" src="assets/memories/game_boss.webp" alt=""></div>
+    <div class="rd-head">
+      <div class="gm"><img id="rdGi" src="assets/games/hsr.webp" alt=""><span id="rdGm">崩坏：星穹铁道 · 深渊</span></div>
+      <h2 id="rdT">深渊十二层，第三次通关</h2>
+    </div>
+    <div class="v3-card rd-feel rd-block" id="rdFeel"></div>
+    <div class="rd-stats rd-block">
+      <div class="v3-card"><b id="rdDur">2h 12m</b><span>这一局</span></div>
+      <div class="v3-card"><b>20:12</b><span>开始</span></div>
+      <div class="v3-card"><b>10.30</b><span>周四</span></div>
+    </div>
+    <div class="v3-card rd-ai rd-block">
+      <div class="hd2"><img src="assets/otter/expr/anim/270/review.webp" alt=""><span>小獭的复盘</span></div>
+      <p id="rdAi"></p>
+    </div>
+    <div class="rd-tags rd-block"><span class="chip">#通关</span><span class="chip">#深夜档</span><span class="chip">#第三次</span><span class="chip auto">自动标签</span></div>
+    <div class="rd-acts rd-block"><button class="slab ghost">编辑</button><button class="slab" data-s3="s3-share">生成分享卡</button></div>
+    <div class="v3-card grp rd-block" style="margin-top:var(--gap)"><div class="rw" id="rdCopy"><span class="l">复制正文</span><span class="r">›</span></div><div class="rw" id="rdDel"><span class="l" style="color:var(--live)">放进回收站<small>30 天内都能找回</small></span><span class="r">›</span></div></div>
+    <div class="lb3" style="text-align:center">左右滑动看上一条 / 下一条</div>
+  </div>
+</div>
+
+<div class="s3" id="s3-compose">
+  <div class="bar3"><button class="ib" id="cpClose" aria-label="关闭">✕</button><div class="tt">记一条</div><span class="act" id="cpDraft">存草稿</span></div>
+  <div class="bd cp3" id="cp3">
+    <div class="g3-realm" data-tabs="realm"><i class="pill"></i><button class="on" data-r="game" data-peek="@game" data-c="61,220,255">游戏</button><button data-r="life" data-peek="@life" data-c="255,138,184">生活</button></div>
+
+    <!-- 关联：游戏 = 刚收工的那一局（可换）；生活 = 时间 + 地点 -->
+    <div class="v3-card cp-link" id="cpLink" role="button">
+      <div class="ic" id="cpLinkIc"><img src="assets/games/ys.webp" alt=""></div>
+      <div class="tx"><b id="cpLinkT">原神 · 刚刚那局</b><small id="cpLinkS">21:04 – 21:52 · 48 分钟</small></div>
+      <span class="sw" id="cpLinkSw">重新选择</span>
+    </div>
+
+    <div class="cp-media" id="cpMedia"></div>
+
+    <div class="v3-card cp-box" id="cpBox">
+      <input class="cp-title" id="cpTitle" placeholder="给这一刻起个名字" maxlength="20" aria-label="标题">
+      <textarea class="cp-text" id="cpText" placeholder="这一刻想记住什么？" maxlength="300" aria-label="正文"></textarea>
+      <div class="think"><i></i><i></i><i></i></div>
+      <div class="cp-ai"><button class="spark" id="cpSpark">✦ 帮我想一句</button><span class="hint" id="cpHint">小獭会看图帮你写</span><span class="cnt" id="cpCnt">0/300</span></div>
+      <img class="peek" src="assets/otter/expr/anim/270/think.webp" alt="">
+      <img class="stamp" id="cpStamp" alt="">
+    </div>
+
+    <div class="lb3">贴个标签 <span class="opt" id="cpTagOpt">标签就是那一刻的心情 · 最多 3 个</span></div>
+    <div class="cp-tags" id="cpTags"></div>
+
+    <div class="v3-card grp" style="margin-top:var(--sec)">
+      <div class="rw"><span class="l">时间</span><span class="r" id="cpWhen">今天 21:52 ›</span></div>
+      <div class="rw"><span class="l">只存在这台手机<small>不上传 · 导出备份时一起带走</small></span><span class="r"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-label="仅本机"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span></div>
+    </div>
+  </div>
+  <div class="cp-foot"><button class="slab" id="cpPub">收进藏品</button></div>
+</div>
+
+<div class="s3" id="s3-foot">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">足迹</div><span class="act"></span></div>
+  <div class="bd">
+    <div class="ft-big" style="margin-top:8px">
+      <div class="v3-card"><b>186</b><span>今年留下的天</span></div>
+      <div class="v3-card"><b>23</b><span>最长连续</span></div>
+      <div class="v3-card"><b>46</b><span>藏品</span></div>
+    </div>
+    <div class="lb3" style="display:flex;align-items:center;justify-content:space-between">每一格是一天<span style="display:flex;gap:6px" data-tabs data-auto><span class="chip" data-peek="walk,calm,think,focus">近半年</span><span class="chip on" data-peek="great,proud,cheer,love">近一年</span></span></div>
+    <div class="v3-card ft-year" id="ftYear"></div>
+    <div class="lb3">这几个月</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">十月<small>19 天 · 12 件藏品 · 贴得最多的是「抽卡」</small></span><span class="r">›</span></div>
+      <div class="rw"><span class="l">九月<small>22 天 · 9 件藏品 · 「通关」贴了 3 次</small></span><span class="r">›</span></div>
+      <div class="rw"><span class="l">八月<small>17 天 · 7 件藏品 · 暑假第一次超时</small></span><span class="r">›</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="s3" id="s3-calendar">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">打卡日历</div><span class="act"></span></div>
+  <div class="bd">
+    <div class="ft-big" style="margin-top:8px">
+      <div class="v3-card"><b style="color:#FFB066">12</b><span>连续天数</span></div>
+      <div class="v3-card"><b>86%</b><span>打卡率</span></div>
+      <div class="v3-card"><b style="color:var(--live)">2</b><span>超时天</span></div>
+    </div>
+    <div class="v3-card" style="margin-top:var(--gap)">
+      <div class="cal-hd"><b id="calTt">2026 年 11 月</b><div class="nv"><button class="ib" id="calPrev" aria-label="上个月">‹</button><button class="ib" id="calNext" aria-label="下个月">›</button></div></div>
+      <div class="cal-wk"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+      <div class="cal-gd" id="calGd"></div>
+    </div>
+    <div class="v3-card ot-card" id="calDay"><img src="assets/games/hsr.webp" alt=""><div class="tx"><b>11 月 2 日 · 今天</b><small>星穹铁道 · 2 局 · 点日历里的任意一天看看</small></div><span class="du">1h 37m</span></div>
+    <div class="lb3">每一格贴着那天玩得最久的游戏；红点 = 超过上限</div>
+    <div class="v3-card ot-card"><div class="k">这一段 · 10 月</div><p>共 41.6 小时 · 活跃 25 天 · 46 场，平均 54 分钟；最长一局 3h 20m（10.18 星穹铁道）；最常玩：原神。</p></div>
+  </div>
+</div>
+
+<!-- 和小獭聊天：AI 开着就走配置的连接（chat-gen，只在发送时调用）；没开就是本地陪聊 -->
+<div class="s3" id="s3-otter">
+  <div class="bar3 ct-bar"><button class="ib" data-back aria-label="返回">‹</button>
+    <div class="tt ct-who"><span class="ct-av"><img id="ctAv" src="assets/otter/expr/still/270/happy.webp" alt=""><i class="ct-on" id="ctOn"></i></span><span class="ct-nm"><b>小獭</b><small id="ctSt">在线</small></span></div>
+    <span class="act" id="ctModel" role="button">豆包</span></div>
+  <div class="bd ct-bd">
+    <div class="ct-hero" id="ctHero"><i class="halo"></i><img id="otImg" src="assets/otter/expr/anim/270/hi.webp" alt="小獭"><div class="say"><span id="otSay"></span></div></div>
+    <div class="ct-mode" id="ctMode" role="button"></div>
+    <div class="v3-card ct-brief"><div class="k"><span><i></i>今日简报</span><button id="otRefresh" aria-label="换一条"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4.5v4h-4"/></svg></button></div>
+      <p id="ctBrief">你最近三天都在 20 点后开局，平均一局 48 分钟，比上周短了 12 分钟。周六最容易玩超，要不要临时把上限调到 4 小时？</p>
+      <div class="ot-asks"><span class="chip" data-s3="s3-limit">去调上限</span></div></div>
+    <div class="ct-day"><span>今天</span></div>
+    <div class="ct-log" id="otLog"></div>
+  </div>
+  <div class="ct-dock" id="ctDock">
+    <div class="ct-quick" id="otQuick"><span class="chip">今天玩得多吗？</span><span class="chip">帮我想个收工理由</span><span class="chip">这周最爱哪款？</span><span class="chip">讲个冷笑话</span><span class="chip">我今天赢了！</span></div>
+    <div class="ct-stk" id="ctStk"></div>
+    <div class="ct-in" id="ctIn">
+      <button class="ct-emo" id="ctEmo" aria-label="表情"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 14.2a4.2 4.2 0 0 0 7 0M9.2 9.8h.01M14.8 9.8h.01"/></svg></button>
+      <textarea id="otIn" rows="1" placeholder="和小獭说点什么…" aria-label="和小獭说话"></textarea>
+      <button class="ct-send" id="otSend" aria-label="发送" disabled><svg class="go" viewBox="0 0 24 24"><path d="M5 12.5 19.5 5l-4.6 15-3.1-6.3z"/><path d="M11.8 13.7 19.5 5"/></svg><svg class="st" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2.5"/></svg></button>
+    </div>
+    <div class="ct-foot" id="ctFoot"></div>
+  </div>
+</div>
+
+<div class="s3" id="s3-profile">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">编辑资料</div><span class="act" data-back>完成</span></div>
+  <div class="bd">
+    <div class="lb3" style="display:flex;justify-content:space-between">换一个自己<span style="color:var(--accent)">从相册选 ›</span></div>
+    <div class="v3-card pf-av" id="pfAv"></div>
+    <div class="lb3">资料</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">昵称</span><input class="pf-in" value="旅人" aria-label="昵称"></div>
+      <div class="rw"><span class="l">称号<small>由你的游戏习惯推导</small></span><span class="r">常驻旅人</span></div>
+      <div class="rw"><span class="l">简介</span><input class="pf-in" placeholder="一句话介绍自己" aria-label="简介"></div>
+    </div>
+    <div class="lb3">各游戏里的昵称</div>
+    <div class="v3-card grp">
+      <div class="rw"><img src="assets/games/hsr.webp" style="width:28px;height:28px;border-radius:8px" alt=""><span class="l">星穹铁道</span><input class="pf-in" value="开拓者·旅人" aria-label="星穹铁道昵称"></div>
+      <div class="rw"><img src="assets/games/ys.webp" style="width:28px;height:28px;border-radius:8px" alt=""><span class="l">原神</span><input class="pf-in" placeholder="未填写" aria-label="原神昵称"></div>
+    </div>
+  </div>
+</div>
+
+<div class="s3" id="s3-games">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">游戏管理</div><span class="act">编辑</span></div>
+  <div class="bd">
+    <div class="lb3">已收录 21 款 · 边框是从图标里取的主色</div>
+    <div class="v3-card gm3" id="gm3"></div>
+  </div>
+</div>
+
+<div class="s3" id="s3-limit">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">时长管家</div><span class="act"></span></div>
+  <div class="bd">
+    <div class="lb3" style="text-align:center">单次上限</div>
+    <div class="lm-ring"><canvas class="lring" id="lmRing"></canvas>
+      <div class="c"><b id="lmV">3.0</b><small>小时</small><span class="mood" id="lmMood">刚刚好</span></div>
+      <div class="lm-ot"><span class="say" id="lmSay">三小时，刚刚好～</span><img id="lmOt" src="assets/otter/expr/anim/270/happy.webp" alt=""></div></div>
+    <div class="lm-steps"><button class="ib" id="lmDn" aria-label="减少半小时">−</button><button class="ib" id="lmUp" aria-label="增加半小时">＋</button></div>
+    <div class="lm-pre" id="lmPre"><span class="chip" data-h="1">1 小时</span><span class="chip" data-h="2">2 小时</span><span class="chip" data-h="3">3 小时</span><span class="chip" data-h="4">4 小时</span></div>
+    <div class="lb3">提醒</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">快到时提醒<small>到 85% 时轻轻震一下</small></span><span class="sw3 on" data-sw3></span></div>
+      <div class="rw"><span class="l">超时后继续提醒<small>每 15 分钟一次</small></span><span class="sw3 on" data-sw3></span></div>
+    </div>
+    <div class="lb3">每周预算</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">本周已用<small>还剩 7.6 小时</small></span><span class="r">12.4 / 20 h</span></div>
+      <div class="rw"><span class="l">超过预算时提醒我</span><span class="sw3" data-sw3></span></div>
+      <div class="rw"><img src="assets/games/ys.webp" style="width:24px;height:24px;border-radius:7px" alt=""><span class="l">原神</span><span class="r">5.2 h</span></div>
+      <div class="rw"><img src="assets/games/hsr.webp" style="width:24px;height:24px;border-radius:7px" alt=""><span class="l">星穹铁道</span><span class="r">4.8 h</span></div>
+      <div class="rw"><img src="assets/games/wzry.webp" style="width:24px;height:24px;border-radius:7px" alt=""><span class="l">王者荣耀</span><span class="r">2.4 h</span></div>
+    </div>
+    <div class="lb3">守护</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">安全守护<small>本地通知，不联网</small></span><span class="sw3 on" data-sw3></span></div>
+      <div class="rw"><span class="l">悬浮计时窗<small>仅安卓，需要悬浮窗权限</small></span><span class="sw3" data-sw3></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="s3" id="s3-settings">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">设置</div><span class="act"></span></div>
+  <div class="bd st3">
+    <!-- 这台手机里的家底：数据只在本机，所以把"装了多少"摆在第一眼 -->
+    <div class="v3-card st-hero" id="stHero">
+      <div class="st-top"><div class="tx"><b>都存在这台手机里</b><small>46 件藏品 · 214 局记录 · 不上传任何服务器</small></div><img class="ot" data-ot="settings" src="assets/otter/expr/anim/270/calm.webp" alt=""></div>
+      <div class="st-bar" id="stBar"><i style="--w:58%;--c:61,220,255"></i><i style="--w:24%;--c:255,138,184"></i><i style="--w:6%;--c:255,210,122"></i></div>
+      <div class="st-lg"><span style="--c:61,220,255">图片 74 MB</span><span style="--c:255,138,184">视频 31 MB</span><span style="--c:255,210,122">记录 8 MB</span><em>共 113 MB</em></div>
+    </div>
+
+    <!-- 外观：三张迷你手机预览，日 / 夜 / 自动 -->
+    <div class="v3-card st-theme" id="stTheme"><div class="th-h"><b>外观</b><small class="th-sub"></small></div><div class="th-opts"></div></div>
+
+    <div class="lb3">存档</div>
+    <div class="v3-card grp">
+      <div class="rw" id="setExport" role="button"><span class="si" style="--c:61,220,255"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M5 14v4.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V14"/></svg></span><span class="l">导出存档<small>上次 10.28 21:04 · .gtbackup 12.4 MB</small></span><span class="r">›</span></div>
+      <div class="rw" id="bkRestore" role="button"><span class="si" style="--c:155,123,240"><svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 14v4.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V14"/></svg></span><span class="l">导入存档<small>从 .gtbackup 恢复，换机不丢数据</small></span><span class="r">›</span></div>
+      <div class="rw" data-s3="s3-trash" role="button"><span class="si" style="--c:255,138,120"><svg viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2A1.5 1.5 0 0 0 8.9 20.6h6.2a1.5 1.5 0 0 0 1.5-1.4L17.5 7M10 11v5.5M14 11v5.5"/></svg></span><span class="l">回收站<small>删掉的记录在这里待 30 天</small></span><span class="r" data-tr-n>3 项 ›</span></div>
+    </div>
+
+    <div class="lb3">陪伴</div>
+    <div class="v3-card grp">
+      <div class="rw" data-s3="s3-otter" role="button"><span class="si av"><img src="assets/otter/expr/still/270/happy.webp" alt=""></span><span class="l">小獭助手<small>陪你说两句，看看这周</small></span><span class="r">›</span></div>
+      <div class="rw" data-s3="s3-notify" role="button"><span class="si" style="--c:255,170,90"><svg viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15zM10 20.5a2.2 2.2 0 0 0 4 0"/></svg></span><span class="l">通知与音效<small>提醒方式与声音</small></span><span class="r">›</span></div>
+      <div class="rw" data-s3="s3-limit" role="button"><span class="si" style="--c:110,231,168"><svg viewBox="0 0 24 24"><path d="M7 3.5h10M7 20.5h10M8 3.5c0 4 8 4.5 8 8.5s-8 4.5-8 8.5M16 3.5c0 4-8 4.5-8 8.5"/></svg></span><span class="l">时长管家<small>单次上限 3 小时 · 快到时提醒</small></span><span class="r">›</span></div>
+      <div class="rw" data-s3="s3-ai" role="button"><span class="si" style="--c:190,150,255"><svg viewBox="0 0 24 24"><path d="M12 3.5c.6 3.8 2.7 5.9 6.5 6.5-3.8.6-5.9 2.7-6.5 6.5-.6-3.8-2.7-5.9-6.5-6.5 3.8-.6 5.9-2.7 6.5-6.5zM18.5 15.5c.3 1.6 1.1 2.4 2.5 2.5-1.4.3-2.2 1.1-2.5 2.5-.3-1.4-1.1-2.2-2.5-2.5 1.4-.1 2.2-.9 2.5-2.5z"/></svg></span><span class="l">AI 功能<small id="setAiS">豆包 · 复盘、标签、文案、问候、聊天</small></span><span class="r"><i class="st-dot" id="setAiDot"></i>›</span></div>
+    </div>
+
+    <div class="lb3">关于</div>
+    <div class="v3-card grp">
+      <div class="rw" data-legal="privacy" role="button"><span class="si" style="--c:120,200,255"><svg viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="10" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span class="l">隐私政策</span><span class="r">›</span></div>
+      <div class="rw" data-legal="terms" role="button"><span class="si" style="--c:160,170,200"><svg viewBox="0 0 24 24"><path d="M7 3.5h7l4 4v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-15a1 1 0 0 1 1-1zM13.5 3.5V8h4.5M9 12.5h6M9 16h6"/></svg></span><span class="l">用户协议</span><span class="r">›</span></div>
+      <div class="rw" data-s3="s3-about" role="button"><span class="si logo"><img src="assets/brand/gt_icon.png" alt=""></span><span class="l">关于水獭游时</span><span class="r">0.90.1 ›</span></div>
+    </div>
+    <p class="st-foot">时间花在哪里，是看得见的</p>
+  </div>
+</div>
+
+<div class="s3" id="s3-trash">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">回收站</div><span class="act" id="trSel">选择</span></div>
+  <div class="bd tr3">
+    <div class="v3-card tr-hero" id="trHero">
+      <img class="ot" id="trOt" src="assets/otter/expr/anim/270/calm.webp" alt="">
+      <div class="tx"><b id="trSum">3 件在这里等你</b><p id="trSub">最早的一件 4 天后会被清除</p></div>
+    </div>
+    <div class="lb3" id="trLb">30 天后自动清除 · 点一下恢复，长按更多</div>
+    <div class="tr-list" id="trList"></div>
+    <div id="trEmpty" hidden></div>
+    <button class="tr-clear" id="trClear">清空回收站</button>
+  </div>
+  <div class="tr-bar" id="trBar">
+    <button class="slab ghost" id="trBarRs">恢复</button>
+    <button class="slab danger" id="trBarDel">彻底删除</button>
+  </div>
+</div>
+
+
+<!-- ═══ 补齐的页面（v3 · 第二批）═══════════════════════════════ -->
+
+<!-- 新手引导：三屏，小獭带路 -->
+<div class="ob3" id="ob3">
+  <div class="ob-top"><img src="assets/brand/gt_icon.png" alt=""><b>水獭游时</b><small class="fam">水獭家族</small><span class="skip" id="obSkip">跳过</span></div>
+  <div class="ob-track" id="obTrack">
+    <div class="ob-slide">
+      <div class="ob-art"><div class="halo"></div><img data-src="assets/onboard/ob1.webp" data-fb="assets/otter/expr/anim/270/happy.webp" alt=""></div>
+      <h2>玩多久，<em>水位</em>告诉你</h2>
+      <p>开战就开始计时。今天玩了多少，小獭的水池就涨多少——到上限之前，她会先提醒你。</p>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-art"><div class="halo p"></div><img data-src="assets/onboard/ob2.webp" data-fb="assets/otter/expr/anim/270/hi.webp" alt=""></div>
+      <h2>值得记住的，<em>收进藏品</em></h2>
+      <p>出金、通关、和朋友的一桌游戏、一个人的晚饭。游戏和生活，各有一面墙。</p>
+    </div>
+    <div class="ob-slide">
+      <div class="ob-art"><div class="halo g"></div><img data-src="assets/onboard/ob3.webp" data-fb="assets/otter/expr/anim/270/think.webp" alt=""></div>
+      <h2>只存在<em>这台手机</em></h2>
+      <p>不用注册，不上传。换手机时导出一个备份文件就好，小獭会一直记得你。</p>
+    </div>
+  </div>
+  <div class="ob-foot">
+    <div class="ob-dots" id="obDots"><i class="on"></i><i></i><i></i></div>
+    <button class="slab" id="obNext">下一步</button>
+  </div>
+</div>
+
+<!-- 底部弹层：选游戏（GameSelectorSheet） -->
+<div class="sh3" id="sh3-games">
+  <div class="sh-back" data-shclose></div>
+  <div class="sh-panel">
+    <div class="sh-grab"></div>
+    <div class="sh-hd"><b>添加游戏</b><span class="r" data-shclose>取消</span></div>
+    <div class="sh-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="sgQ" placeholder="搜游戏名，比如「原神」" aria-label="搜索游戏"></div>
+    <div class="sh-cats" id="sgCats" data-tabs></div>
+    <div class="sh-grid" id="sgGrid"></div>
+    <div class="sh-ok"><button class="slab" id="sgOk" disabled>选好了</button></div>
+  </div>
+</div>
+
+<!-- 底部弹层：贴标签（从全部表情里挑一枚，名字可以改成自己的说法） -->
+<div class="sh3" id="sh3-tag">
+  <div class="sh-back" data-shclose></div>
+  <div class="sh-panel tg-sh">
+    <div class="sh-grab"></div>
+    <div class="sh-hd"><b>挑一个表情当标签</b><span class="r" data-shclose>取消</span></div>
+    <div class="tg-prev" id="tgPrev"><i class="halo"></i><img id="tgPImg" src="assets/otter/expr/anim/270/happy.webp" alt=""><div class="tx"><small>标签名 · 可以改成你的说法</small><input id="tgIn" maxlength="6" value="开心" aria-label="标签名"><p id="tgSay">开心就要大声记下来</p></div></div>
+    <div class="tg-pick" id="tgPick"></div>
+    <div class="sh-ok"><button class="slab" id="tgOk">贴上</button></div>
+  </div>
+</div>
+
+<!-- 今日记录：一天 24 小时的时间轴 + 每一局 -->
+<div class="s3" id="s3-today">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">今日记录</div><span class="act" data-s3="s3-calendar">日历</span></div>
+  <div class="bd">
+    <div class="v3-card td-hero">
+      <div class="top"><div><small>11 月 2 日 · 周一</small><b id="tdSum">1h 37m</b><span class="lim">/ <span class="tkLimit">3</span> 小时</span></div><div class="left" id="tdLeft">还能安心玩<br><em>1h 23m</em></div></div>
+      <div class="day" id="tdDay"><i class="now" id="tdNow"></i></div>
+      <div class="ax"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
+    </div>
+    <div class="lb3" id="tdN">2 局 · 点时间轴上的色块也能找到那一局</div>
+    <div class="td-list" id="tdList"></div>
+    <div class="lb3" style="text-align:center">收工后的每一局都会自动记在这里</div>
+  </div>
+</div>
+
+<!-- 底部弹层：此刻心情（独立于藏品的心情状态，像微信状态） -->
+<div class="sh3" id="sh3-mood">
+  <div class="sh-back" data-shclose></div>
+  <div class="sh-panel md-sh">
+    <div class="sh-grab"></div>
+    <div class="sh-hd"><b>此刻的心情</b><span class="r" data-shclose>取消</span></div>
+    <div class="md-prev" id="mdPrev"><i class="halo"></i><img id="mdPImg" src="assets/otter/expr/anim/270/happy.webp" alt=""><div class="tx"><b id="mdPNm">开心</b><p id="mdPTx">说一句此刻</p><small id="mdPDur">今天内有效</small></div></div>
+    <div class="md-pick" id="mdPick"></div>
+    <div class="v3-card grp md-in"><div class="rw"><input class="pf-in" id="mdIn" maxlength="24" placeholder="说一句此刻（可不填）" aria-label="心情文字"><span class="n" id="mdN">0/24</span></div></div>
+    <div class="md-sug" id="mdSug"></div>
+    <div class="lb3">持续多久</div>
+    <div class="md-dur" id="mdDur" data-tabs><span class="chip" data-d="4h" data-peek="nap,sleepy,calm,relief">4 小时</span><span class="chip on" data-d="today" data-peek="happy,hi,cheer,ok">今天</span><span class="chip" data-d="ever" data-peek="love,hug,shy,proud" data-c="255,138,184">一直</span></div>
+    <div class="v3-card grp md-hist" id="mdHist" role="button">
+      <div class="rw"><span class="l">最近的心情<small>这一周每天的小獭</small></span><span class="r">›</span></div>
+    </div>
+    <div class="md-exp" id="mdExp">看看小獭的全部表情 ›</div>
+    <div class="sh-ok two"><button class="slab ghost" id="mdClear">清除心情</button><button class="slab" id="mdOk">设为此刻心情</button></div>
+  </div>
+</div>
+
+<!-- 最近的心情：从「此刻的心情」进来，不放在个人中心 -->
+<div class="s3" id="s3-moods">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">最近的心情</div><span class="act" id="mdSet">设心情</span></div>
+  <div class="bd">
+    <div class="v3-card m3-mood" id="m3Mood">
+      <div class="top"><img class="big" id="mdBig" src="assets/otter/expr/anim/270/happy.webp" alt=""><div class="tx"><small id="mdDay">这一周</small><b id="mdTt"></b><p id="mdSay"></p></div></div>
+      <div class="wk" id="mdWk"></div>
+      <div class="bar" id="mdBar"></div>
+    </div>
+    <div class="lb3" style="text-align:center">点某一天，小獭会换成那天的样子</div>
+    <div class="lb3">每一天</div>
+    <div class="v3-card grp md-list" id="mdList"></div>
+  </div>
+</div>
+
+<!-- 小獭表情馆 -->
+<div class="s3" id="s3-expr">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">小獭表情馆</div><span class="act" id="exN">50 个</span></div>
+  <div class="ex-dock" id="exDock" aria-live="polite">
+    <i class="glow"></i>
+    <img id="exDkImg" src="assets/otter/expr/anim/270/happy.webp" alt="">
+    <div class="tx"><b id="exDkNm">开心</b><span id="exDkSay">开心就要大声记下来</span></div>
+    <button class="pill" id="exDkSet">设为心情</button>
+  </div>
+  <div class="bd">
+    <div class="ex-hero" id="exHero">
+      <i class="halo"></i>
+      <img id="exBig" src="assets/otter/expr/anim/270/happy.webp" alt="">
+      <b id="exNm">开心</b>
+      <p id="exSay">开心就要大声记下来</p>
+      <small id="exCnt">用过 2 次 · 最近 10.30</small>
+      <button class="slab" id="exSet">设为此刻心情</button>
+      <span class="ex-go" id="exGo" role="button">看贴着它的藏品 ›</span>
+    </div>
+    <div class="lb3">全部表情 <span class="opt" style="float:right;text-transform:none;letter-spacing:0">心情、标签、筛选都用这一套</span></div>
+    <div class="ex-pick" id="exPick"></div>
+    <div class="ex-foot">小獭还在学新表情，过节会有限定款</div>
+  </div>
+</div>
+
+<!-- 分享卡预览 -->
+<!-- 分享卡：卡片是主角，占满上方并自动缩放；调整项全部收进底部面板（可拖动收起） -->
+<div class="s3 sc-page" id="s3-share">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">分享卡</div><span class="act"></span></div>
+  <div class="bd sc-stage" id="scStage"><div class="sc-fit" id="scFit"><div class="sc3" id="sc3"></div></div></div>
+  <div class="sc-dock" id="scDock">
+    <div class="sh-grab" id="scGrab" role="button" aria-label="收起或展开"></div>
+    <div class="sc-mini" id="scMini" role="button">调整版式 · 主题 · 文案</div>
+    <div class="sc-more"><div>
+      <div class="sc-seg" id="scSeg" data-tabs><i class="pill"></i><button class="on" data-p="layout">版式</button><button data-p="theme">主题</button><button data-p="cap">文案</button></div>
+      <div class="sc-panes">
+        <div class="sc-pane on" data-p="layout"><div class="sc-styles" id="scLayouts" data-tabs></div></div>
+        <div class="sc-pane" data-p="theme"><div class="sc-styles" id="scStyles" data-tabs></div></div>
+        <div class="sc-pane" data-p="cap">
+          <div class="sc-cap"><textarea id="scCapIn" rows="2" maxlength="40" placeholder="写一句想对这一刻说的话" aria-label="分享文案"></textarea>
+            <div class="sc-caprow"><button class="spark" id="scSpark">✦ 换一句</button><span class="sc-capre" id="scCapRe" role="button">恢复默认</span><small id="scCapN">0/40</small></div></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="rd-acts sc-acts"><button class="slab ghost" id="scSave">存到相册</button><button class="slab" id="scSend">分享给朋友</button></div>
+  </div>
+</div>
+
+<!-- 全屏媒体预览 -->
+<div class="vw3" id="vw3"><i class="vw-bg"></i><div class="vw-top"><button class="nav-b is-x" id="vwClose" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="vw-kind" id="vwKind"></span><span class="vw-idx" id="vwIdx">1 / 1</span></div><div class="vw-track" id="vwTrack"></div><div class="vw-foot"><div class="vw-dots" id="vwDots"></div><div class="vw-cap" id="vwCap"></div><div class="vw-edit" id="vwEdit" hidden><button id="vwCover"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg><span>设为封面</span></button><button id="vwRm" class="rm"><svg viewBox="0 0 24 24"><path d="M5 7h14M9.5 7V5h5v2M7 7l1 12h8l1-12"/></svg><span>移除</span></button></div></div></div>
+
+<!-- 关于 -->
+<div class="s3" id="s3-about">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">关于水獭游时</div><span class="act"></span></div>
+  <div class="bd">
+    <div class="ab-hero">
+      <div class="ab-logo"><i></i><i></i><i></i><img src="assets/logo.png" alt=""></div>
+      <h2>水獭游时</h2>
+      <p>时间花在哪里，是看得见的</p>
+      <img class="ab-ot" src="assets/otter/expr/anim/270/happy.webp" alt="">
+    </div>
+    <div class="v3-card ab-desc">记下每一局、每一刻。<br>不需要账号，数据只存在这台手机里。</div>
+    <div class="lb3">版本与设备</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">当前版本</span><span class="r tn">0.90.1</span></div>
+      <div class="rw"><span class="l">构建号</span><span class="r tn">91</span></div>
+      <div class="rw"><span class="l">玩家 ID<small>换机导入存档后保持不变</small></span><span class="r tn">GT-2F8A</span></div>
+      <div class="rw" id="abDev" role="button"><span class="l">本机设备码<small>备份与问题反馈时用，点一下复制</small></span><span class="r tn" id="abDevV">A7C2-91F0-3B6E</span></div>
+    </div>
+    <button class="slab ghost ab-chk" id="abChk"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4.5v4h-4"/></svg><span>检查版本</span></button>
+    <p class="ab-note" id="abNote">上次检查：今天 09:12</p>
+    <div class="lb3">更多</div>
+    <div class="v3-card grp">
+      <div class="rw" data-legal="privacy" role="button"><span class="l">隐私政策</span><span class="r">›</span></div>
+      <div class="rw" data-legal="terms" role="button"><span class="l">用户协议</span><span class="r">›</span></div>
+      <div class="rw" id="abOnb" role="button"><span class="l">再看一遍新手引导</span><span class="r">›</span></div>
+    </div>
+    <p class="st-foot">Made with 小獭 · 2026</p>
+  </div>
+</div>
+
+<!-- AI 功能 -->
+<div class="s3" id="s3-ai">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">AI 功能</div><span class="act"></span></div>
+  <div class="bd">
+    <div class="v3-card ai-st"><img src="assets/otter/expr/anim/270/hi.webp" alt=""><div><b id="aiStT">小獭在线</b><small id="aiStS">我的豆包 · doubao-seed-1.6 · 连续失败 0 次</small></div><i class="dot" id="aiDot"></i></div>
+    <div class="v3-card grp" style="margin-top:var(--gap)">
+      <div class="rw"><span class="si" style="--c:190,150,255"><svg viewBox="0 0 24 24"><path d="M12 3.5c.6 3.8 2.7 5.9 6.5 6.5-3.8.6-5.9 2.7-6.5 6.5-.6-3.8-2.7-5.9-6.5-6.5 3.8-.6 5.9-2.7 6.5-6.5z"/></svg></span><span class="l">总开关<small id="aiMs">已开启 · 我的豆包</small></span><span class="sw3 on" id="aiMaster"></span></div>
+    </div>
+    <p class="st-note">关掉后不会发出任何 AI 请求，复盘和文案的位置会安静地空着。</p>
+    <div class="ai-body" id="aiBody">
+      <div class="lb3">连接<span class="opt">请求从手机直连厂商</span></div>
+      <div class="v3-card grp" id="aiConns"></div>
+      <div class="lb3">添加连接<span class="opt">选一个预设，填上密钥就好</span></div>
+      <div class="ai-pre" id="aiPre"></div>
+      <div class="lb3">用在哪里</div>
+      <div class="v3-card grp">
+        <div class="rw"><span class="l">复盘点评<small>藏品详情里的「小獭的复盘」</small></span><span class="sw3 on" data-sw3></span></div>
+        <div class="rw"><span class="l">自动标签<small>发布时帮你贴好表情标签</small></span><span class="sw3 on" data-sw3></span></div>
+        <div class="rw"><span class="l">分享文案<small>分享卡上的一句话</small></span><span class="sw3 on" data-sw3></span></div>
+        <div class="rw"><span class="l">每日问候<small>首页小獭的开场白</small></span><span class="sw3 on" data-sw3></span></div>
+        <div class="rw"><span class="l">和小獭聊天<small>只在你发送消息时调用</small></span><span class="sw3 on" data-sw3 id="aiChatSw"></span></div>
+      </div>
+      <div class="lb3">它能做什么</div>
+      <div class="v3-card ai-can">
+        <p><i>✦</i>看完一局，帮你写两句复盘</p>
+        <p><i>✦</i>发布时帮你贴好表情标签</p>
+        <p><i>✦</i>给分享卡配一句文案</p>
+        <p><i>✦</i>每天换一句开场问候</p>
+        <p><i>✦</i>在小獭助手页陪你聊两句</p>
+        <small>AI 给的都是草稿，用不用由你决定。密钥只存在这台手机上，不经过我们的服务器。</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 通知与音效 -->
+<div class="s3" id="s3-notify">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt">通知与音效</div><span class="act"></span></div>
+  <div class="bd">
+    <div class="nt-prev" id="ntPrev">
+      <div class="bn in"><img class="av" src="assets/otter/expr/still/270/happy.webp" alt=""><div class="tx"><div class="ap"><span><img src="assets/brand/gt_otter_w.png" alt=""> 水獭游时</span><span>现在</span></div><b>小獭 · 每日提醒</b><p>晚上好～今天还没开战哦，来打个招呼吧</p></div></div>
+      <small>点一下看看其他提醒长什么样</small>
+    </div>
+    <div class="lb3">推送</div>
+    <div class="v3-card grp">
+      <div class="rw" id="ntPerm"><span class="si" style="--c:255,170,90"><svg viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15zM10 20.5a2.2 2.2 0 0 0 4 0"/></svg></span><span class="l">通知权限<small id="ntPermS">未允许，提醒无法送达</small></span><button class="nt-perm" id="ntPermB">开启</button></div>
+      <div class="rw" data-s3="s3-limit" role="button"><span class="si" style="--c:110,231,168"><svg viewBox="0 0 24 24"><path d="M7 3.5h10M7 20.5h10M8 3.5c0 4 8 4.5 8 8.5s-8 4.5-8 8.5M16 3.5c0 4-8 4.5-8 8.5"/></svg></span><span class="l">时长管家<small>阈值、提醒方式与超时处理</small></span><span class="r">›</span></div>
+      <div class="rw"><span class="l">每日提醒<small>到点小獭来打个招呼</small></span><span class="r">21:00 ›</span></div>
+      <div class="rw"><span class="l">连续天数快断了提醒我</span><span class="sw3 on" data-sw3></span></div>
+    </div>
+    <p class="st-note">提醒都在这台手机本地触发，不经过任何服务器。</p>
+    <div class="lb3">应用内音效</div>
+    <div class="v3-card grp">
+      <div class="rw"><span class="l">交互音效<small>开/关计时等轻反馈</small></span><span class="sw3 on" data-sw3 id="ntSfx"></span></div>
+      <div class="rw"><span class="l">提醒音效<small>接近阈值、已超时（仅前台）</small></span><span class="sw3 on" data-sw3></span></div>
+    </div>
+    <div class="lb3">试听<span class="opt">点一下听听看</span></div>
+    <div class="nt-try" id="ntTry">
+      <button data-snd="celebrate" data-m="great" style="--c:255,210,122"><i class="eq"><b></b><b></b><b></b></i>庆祝</button>
+      <button data-snd="store" data-m="proud" style="--c:61,220,255"><i class="eq"><b></b><b></b><b></b></i>入库</button>
+      <button data-snd="start" data-m="focus" style="--c:110,231,168"><i class="eq"><b></b><b></b><b></b></i>开计时</button>
+      <button data-snd="end" data-m="relief" style="--c:150,220,170"><i class="eq"><b></b><b></b><b></b></i>关计时</button>
+      <button data-snd="near" data-m="shock" style="--c:255,170,90"><i class="eq"><b></b><b></b><b></b></i>接近阈值</button>
+      <button data-snd="over" data-m="cry" style="--c:255,107,107"><i class="eq"><b></b><b></b><b></b></i>已超时</button>
+    </div>
+    <div class="lb3">提示音</div>
+    <div class="v3-card grp" id="ntSnd">
+      <div class="rw on" data-snd><span class="pl"><i></i><i></i><i></i></span><span class="l">水滴<small>默认 · 像水池涨了一格</small></span><span class="ck">✓</span></div>
+      <div class="rw" data-snd><span class="pl"><i></i><i></i><i></i></span><span class="l">风铃</span><span class="ck">✓</span></div>
+      <div class="rw" data-snd><span class="pl"><i></i><i></i><i></i></span><span class="l">小獭叫一声</span><span class="ck">✓</span></div>
+      <div class="rw" data-snd><span class="pl mute"><i></i><i></i><i></i></span><span class="l">静音</span><span class="ck">✓</span></div>
+    </div>
+    <div class="lb3">震动</div>
+    <div class="v3-card grp"><div class="rw" style="display:block">
+      <div class="ntv" id="ntVib" data-tabs><span data-peek="calm,relief,nap">轻</span><span class="on" data-peek="happy,ok,hi">中</span><span data-peek="great,shock,laugh">强</span></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- 隐私政策 / 用户协议：同一个阅读页，读到底小獭会冒出来 -->
+<div class="s3" id="s3-legal">
+  <div class="bar3"><button class="ib" data-back aria-label="返回">‹</button><div class="tt" id="lgT">隐私政策</div><span class="act"></span></div>
+  <div class="bd lg3">
+    <div class="lg-hd"><span class="chip" id="lgV">2026.10.01 更新</span><span class="lg-rt" id="lgRt">约 2 分钟读完</span></div>
+    <div id="lgBody"></div>
+    <div class="lg-end" id="lgEnd"><img src="assets/otter/expr/anim/270/happy.webp" alt=""><b>读完啦</b><small>有疑问随时在「关于」里找到我们</small></div>
+  </div>
+</div>
+
+<!-- 底部弹层：AI 连接编辑 -->
+<div class="sh3" id="sh3-conn">
+  <div class="sh-back" data-shclose></div>
+  <div class="sh-panel">
+    <div class="sh-grab"></div>
+    <div class="sh-hd"><b id="cnTitle">连接设置</b><span class="r" id="cnSave">保存</span></div>
+    <div class="cn-prev" id="cnPrev"><span class="cn-lg" id="cnLg">豆</span><div><b id="cnNm">我的豆包</b><small id="cnSt">还没测试过</small></div><img id="cnOt" src="assets/otter/expr/anim/270/calm.webp" alt=""></div>
+    <div class="lb3">接口</div>
+    <div class="v3-card grp cn-f">
+      <label class="rw"><span class="k">名称</span><input class="pf-in" id="cnName" placeholder="DeepSeek 官方 / 我的豆包"></label>
+      <label class="rw"><span class="k">接口地址</span><input class="pf-in" id="cnUrl" placeholder="https://"></label>
+      <label class="rw"><span class="k">模型名</span><input class="pf-in" id="cnModel" placeholder="deepseek-chat"></label>
+      <label class="rw"><span class="k">密钥</span><input class="pf-in" id="cnKey" type="password" placeholder="sk-..."><button class="cn-eye" id="cnEye" type="button" aria-label="显示密钥"><svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+    </div>
+    <button class="slab ghost cn-test" id="cnTest"><span>测试连接</span></button>
+    <div class="cn-res" id="cnRes"></div>
+    <div class="v3-card grp" style="margin-top:var(--gap)"><div class="rw" id="cnDel" role="button"><span class="l" style="color:var(--live)">删除这条连接<small>密钥会一并清除</small></span><span class="r">›</span></div></div>
+  </div>
+</div>
+
+<script>
+
+/* ═══════════════════════════════════════════════════════════════════
+   交互脚本
+
+   一条主线：**页面切换是一种"换景"**，不是"跳转"。
+   换页时环境光会先变（0.3s），内容再淡入 —— 读起来是"走到另一个地方"。
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 启动 ─────────────────────────────────────────────────────── */
+(function(){
+  var boot=document.getElementById('boot');
+  var st=document.getElementById('bootSt');
+  var steps=['正在启动','读取本地数据','准备就绪'];
+  var i=0;
+  var t=setInterval(function(){
+    i++;
+    if(i<steps.length){ st.textContent=steps[i]; }
+    else{
+      clearInterval(t);
+      setTimeout(function(){ boot.classList.add('gone'); enter('home'); },420);
+    }
+  },620);
+})();
+
+/* ── 换页：环境光先动，内容后到 ───────────────────────────────── */
+var currentPage='home';
+var pageTint={
+  home:  'radial-gradient(ellipse at 50% 30%, rgba(61,220,255,.20), rgba(155,123,240,.10) 42%, transparent 70%)',
+  timer: 'radial-gradient(ellipse at 50% 34%, rgba(61,220,255,.16), rgba(255,107,44,.06) 46%, transparent 72%)',
+  gallery:'radial-gradient(ellipse at 50% 28%, rgba(61,220,255,.14), rgba(155,123,240,.16) 44%, transparent 72%)',
+  me:    'radial-gradient(ellipse at 50% 30%, rgba(155,123,240,.20), rgba(61,220,255,.10) 44%, transparent 72%)'
+};
+var pageTitle={home:'此刻',timer:'开战',gallery:'藏品',me:'我'};
+
+function enter(name){
+  currentPage=name;
+  // ⚠️ 每一处都做空值保护。
+  // 之前 `getElementById('envGlow')` 直接 `.style` —— 一旦某个 id 对不上，
+  // 整个 enter() 就在第一行抛异常，页面永远切不过去，
+  // 而且**看起来像"点击没反应"**，极难查。
+  var g=document.getElementById('envGlow');
+  if(g){
+    g.style.opacity='0';
+    setTimeout(function(){
+      if(pageTint[name]) g.style.background=pageTint[name];
+      g.style.opacity='1';
+    },160);
+  }
+
+  // 页面切换
+  document.querySelectorAll('.page').forEach(function(p){
+    p.classList.toggle('on', p.id==='page-'+name);
+  });
+  // 底导 + 页面色调
+  document.body.dataset.page = name;
+  document.querySelectorAll('nav button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.page===name);
+  });
+  var tt=document.getElementById('tbTitle');
+  if(tt && pageTitle[name]) tt.textContent=pageTitle[name];
+  // 回到顶部 + 重播进场
+  try{ window.scrollTo(0,0); document.body.scrollTop=0; document.documentElement.scrollTop=0; }catch(e){}
+  var tb=document.getElementById('topbar');
+  if(tb) tb.classList.remove('on');
+  replayFx();
+  // 切到开战页：这一刻它才可见，卡片必须**现在**才建
+  // （display:none 时建卡，stage 尺寸为 0，几何全错）
+  if(name==='timer' && typeof layout==='function'){
+    try{ layout(); }catch(e){ console.warn('deck layout', e); }
+  }
+  // 「我的一角」同理：display:none 时算不出环绕半径，切过来才建。
+  if(name==='me' && typeof buildMe==='function'){
+    try{ buildMe(); }catch(e){ console.warn('me build', e); }
+  }
+}
+
+/* 进场重播：把 .fx 先复位再加 in，延迟按次序错开 */
+function replayFx(){
+  var list=[].slice.call(document.querySelectorAll('.page.on .fx'));
+  list.forEach(function(e){ e.classList.remove('in'); });
+  requestAnimationFrame(function(){
+    list.forEach(function(e,i){
+      setTimeout(function(){ e.classList.add('in'); }, 60+i*70);
+    });
+  });
+}
+
+/* 底导点击 */
+document.querySelectorAll('nav button').forEach(function(b){
+  b.addEventListener('click', function(){
+    if(b.dataset.page!==currentPage) enter(b.dataset.page);
+  });
+});
+
+/* ── 滚动：顶栏折叠 + 底导隐藏 ────────────────────────────────── */
+(function(){
+  var last=0;
+  var nav=document.getElementById('nav');
+  addEventListener('scroll', function(){
+    if(document.body.classList.contains('sx')) return; // 由 scroll.js 接管
+    var y=scrollY;
+    document.getElementById('topbar').classList.toggle('on', y>120);
+    // 向下滚藏起底导、向上滚露出（省屏，但永远能滑回来）
+    if(y>last+8 && y>220) nav.style.transform='translateY(150%)';
+    else if(y<last-8) nav.style.transform='translateY(0)';
+    last=y;
+  },{passive:true});
+})();
+
+/* ── 她说话：逐字浮现，只播一次 ──────────────────────────────── */
+(function(){
+  var el=document.getElementById('tw-legacy');
+  if(!el) return;
+  var full='今天已经玩了快两小时，记得起身走两步。';
+  var done=false;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting||done) return;
+      done=true;
+      var i=0;
+      var t=setInterval(function(){
+        el.textContent=full.slice(0,++i);
+        if(i>=full.length) clearInterval(t);
+      },40);
+    });
+  },{threshold:.4});
+  io.observe(el);
+})();
+
+/* ── 游戏库：点选换主卡 ──────────────────────────────────────── */
+(function(){
+  var row=document.getElementById('shelfRow');
+  if(!row) return;
+  row.addEventListener('click', function(e){
+    var tile=e.target.closest('.gtile');
+    if(!tile) return;
+    row.querySelectorAll('.gtile').forEach(function(t){t.classList.remove('on')});
+    tile.classList.add('on');
+    if(navigator.vibrate) navigator.vibrate(8);
+  });
+})();
+
+
+/* ── 记录：生活 / 游戏 切换 ─────────────────────────────────── */
+(function(){
+  var realms=document.getElementById('realms');
+  if(!realms) return;
+  realms.addEventListener('click',function(e){
+    var b=e.target.closest('button');
+    if(!b) return;
+    realms.querySelectorAll('button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    replayFx();
+  });
+})();
+
+/* ── 我：7 段环，每段一天，点开看那天 ───────────────────────── */
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  var g=document.getElementById('days');
+  if(!g) return;
+  var cx=50, cy=50, r=42;
+  var data=[
+    {d:'周一', t:'没有记录', v:'—', has:false},
+    {d:'周二', t:'原神 · 日常', v:'0:48', has:true},
+    {d:'周三', t:'没有记录', v:'—', has:false},
+    {d:'周四', t:'星穹铁道 · 深渊', v:'2:12', has:true},
+    {d:'周五', t:'没有记录', v:'—', has:false},
+    {d:'周六', t:'星穹铁道 · 主线', v:'3:30', has:true},
+    {d:'今天', t:'原神 · 日常', v:'1:36', has:true, today:true}
+  ];
+  var segs=[];
+  data.forEach(function(d,i){
+    // 7 段弧，每段留 6° 间隙
+    var a0=(i*360/7+3-90)*Math.PI/180;
+    var a1=((i+1)*360/7-3-90)*Math.PI/180;
+    var x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
+    var x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+    var p=document.createElementNS(NS,'path');
+    p.setAttribute('d','M '+x0+' '+y0+' A '+r+' '+r+' 0 0 1 '+x1+' '+y1);
+    p.setAttribute('class','day'+(d.has?' has':'')+(d.today?' today':''));
+    p.style.cursor='pointer';
+    p.dataset.i=i;
+    g.appendChild(p);
+    segs.push(p);
+  });
+
+  var detail=document.getElementById('dayDetail');
+  function select(i){
+    var d=data[i];
+    segs.forEach(function(s,j){ s.classList.toggle('sel', j===i); });
+    document.getElementById('ddLabel').textContent=d.d;
+    document.getElementById('ddText').textContent=d.t;
+    document.getElementById('ddValue').textContent=d.v;
+    detail.style.transform='scale(.985)';
+    setTimeout(function(){ detail.style.transform='scale(1)'; },160);
+    // 中间那个大数字保持"连续天数"不变 ——
+    // 点某天只是看那天，不该把"连续 7 天"改成当天的小时数（那会让人以为连续天塌了）
+    // 当天时长改由下面的 detail 行表达。
+  }
+  segs.forEach(function(s){
+    s.addEventListener('click',function(){
+      select(parseInt(s.dataset.i));
+      if(navigator.vibrate) navigator.vibrate(6);
+    });
+  });
+  // 默认选中"今天"
+  select(6);
+
+})();
+
+/* ── 二级页：打开 / 关闭 ────────────────────────────────────── */
+(function(){
+  document.querySelectorAll('[data-sub]').forEach(function(el){
+    el.addEventListener('click',function(){
+      var id=el.dataset.sub;
+      document.getElementById(id).classList.add('on');
+      if(navigator.vibrate) navigator.vibrate(6);
+    });
+  });
+  document.querySelectorAll('[data-close]').forEach(function(el){
+    el.addEventListener('click',function(){
+      el.closest('.sub').classList.remove('on');
+    });
+  });
+  var os=document.getElementById('openSettings');
+  if(os) os.addEventListener('click',function(){
+    document.getElementById('sub-settings').classList.add('on');
+  });
+})();
+
+/* ── 开关 ──────────────────────────────────────────────────── */
+document.querySelectorAll('[data-sw]').forEach(function(s){
+  s.addEventListener('click',function(){
+    s.classList.toggle('on');
+    if(navigator.vibrate) navigator.vibrate(5);
+  });
+});
+
+/* ── 时长滑块：数字跟着走 ──────────────────────────────────── */
+(function(){
+  var r=document.getElementById('limitRange');
+  var v=document.getElementById('limitV');
+  if(!r) return;
+  r.addEventListener('input',function(){
+    v.innerHTML=parseFloat(r.value).toFixed(1)+'<small>小时</small>';
+  });
+})();
+
+
+
+/* ═══ 「我」页：7 段环 + 柱状图 ═══════════════════════════════
+   环和柱是**同一份数据的两种看法**：环看"哪几天有"，柱看"各有多长"。
+   点环上某段 → 下面那行换成那天的记录（中间数字始终是"连续天数"）。 */
+(function(){
+  var g=document.getElementById('days');
+  var bars=document.getElementById('bars');
+  if(!g || !bars) return;
+
+  var DATA=[
+    {d:'周一', t:'没有记录',       v:'—',    has:false},
+    {d:'周二', t:'原神 · 日常',    v:'0:48', has:true},
+    {d:'周三', t:'没有记录',       v:'—',    has:false},
+    {d:'周四', t:'星穹铁道 · 深渊', v:'2:12', has:true},
+    {d:'周五', t:'没有记录',       v:'—',    has:false},
+    {d:'周六', t:'星穹铁道 · 主线', v:'3:30', has:true},
+    {d:'今天', t:'原神 · 日常',    v:'1:36', has:true, today:true}
+  ];
+  var MINS=[0,48,0,132,0,210,96];
+  var NS='http://www.w3.org/2000/svg';
+  var cx=50, cy=50, r=42, segs=[];
+
+  DATA.forEach(function(d,i){
+    var a0=(i*360/7 + 3 - 90)*Math.PI/180;
+    var a1=((i+1)*360/7 - 3 - 90)*Math.PI/180;
+    var p=document.createElementNS(NS,'path');
+    p.setAttribute('d','M '+(cx+r*Math.cos(a0))+' '+(cy+r*Math.sin(a0))+
+      ' A '+r+' '+r+' 0 0 1 '+(cx+r*Math.cos(a1))+' '+(cy+r*Math.sin(a1)));
+    p.setAttribute('class','day'+(d.has?' has':'')+(d.today?' today':''));
+    p.dataset.i=i;
+    g.appendChild(p); segs.push(p);
+  });
+
+  function select(i){
+    var d=DATA[i];
+    segs.forEach(function(s,j){ s.classList.toggle('sel', j===i); });
+    var dl=document.getElementById('ddLabel');
+    var dt=document.getElementById('ddText');
+    var dv=document.getElementById('ddValue');
+    if(dl) dl.textContent=d.d;
+    if(dt) dt.textContent=d.t;
+    if(dv) dv.textContent=d.v;
+    // 中间大数字**永远是连续天数** —— 点某天不改它，
+    // 否则会让人以为"连续 7 天"塌了。当天时长由下面那行说。
+    var dd=document.getElementById('dayDetail');
+    if(dd){ dd.style.borderColor='rgba(61,220,255,.28)';
+      setTimeout(function(){ dd.style.borderColor=''; }, 320); }
+  }
+  segs.forEach(function(s){
+    s.addEventListener('click',function(){
+      select(parseInt(s.dataset.i));
+      if(navigator.vibrate) navigator.vibrate(5);
+    });
+  });
+  select(6);
+
+  /* 柱：进入视口时依次长起来 */
+  var days=['一','二','三','四','五','六','日'];
+  var peak=Math.max.apply(null, MINS);
+  MINS.forEach(function(m,i){
+    var b=document.createElement('div');
+    b.className='b'+(i===6?' today':'');
+    // 高度**创建时给定**（像素，4~61px，容器 72px）。
+    // 不用百分比：父级是 flex column + justify-content:flex-end，
+    // 百分比拿不到参照；也不用 setTimeout —— 在 virtual-time 环境下不执行。
+    var h = m<=0 ? 4 : 9 + (m/peak)*52;
+    b.innerHTML='<div class="bar" style="height:'+h+'px"></div>'
+      + '<div class="lb">'+days[i]+'</div>';
+    bars.appendChild(b);
+  });
+})();
+
+/* ═══ 头像：22 张可选 ═══════════════════════════════════════════
+   点「我」页的大环头像 → 铺开 22 张 → 选一张 → 收回圆里。
+   ⚠️ 头像编号是**固定文件名**（avatar_01..22），
+   只在末尾追加、不重排 —— 和 App 里 `profile.avatarAsset` 的约定一致。 */
+(function(){
+  var grid=document.getElementById('avatarGrid');
+  var picker=document.getElementById('picker');
+  if(!grid || !picker) return;
+
+  var N=22, current=1;
+  for(var i=1;i<=N;i++){
+    (function(n){
+      var pad=(n<10?'0':'')+n;
+      var d=document.createElement('div');
+      d.className='av'+(n===current?' on':'');
+      d.style.animationDelay=(n*14)+'ms';
+      d.innerHTML='<img src="assets/avatars/avatar_'+pad+'.webp" alt="">';
+      d.addEventListener('click',function(){
+        current=n;
+        [].slice.call(grid.children).forEach(function(c,j){
+          c.classList.toggle('on', j+1===n);
+        });
+        // 同步到环里 + 顶栏
+        var pad2=(n<10?'0':'')+n;
+        var src='assets/avatars/avatar_'+pad2+'.webp';
+        var big=document.querySelector('.dial-avatar img');
+        var small=document.querySelector('.me .head .avatar img');
+        if(big) big.src=src;
+        if(small) small.src=src;
+        if(navigator.vibrate) navigator.vibrate(6);
+        setTimeout(function(){ picker.classList.remove('on'); }, 260);
+      });
+      grid.appendChild(d);
+    })(i);
+  }
+
+  var dial=document.querySelector('.dial-avatar');
+  if(dial) dial.addEventListener('click',function(){
+    picker.classList.add('on');
+    if(navigator.vibrate) navigator.vibrate(5);
+  });
+  document.getElementById('pickerClose').addEventListener('click',function(){
+    picker.classList.remove('on');
+  });
+  picker.addEventListener('click',function(e){
+    if(e.target===picker) picker.classList.remove('on');
+  });
+})();
+
+/* ═══ 开战页：转盘 + 四状态（来自 deck.html）═══════════════ */
+/* ═══ LiveRing：活的进度环（App `_LiveRing` 同款，全站复用）═══════════
+   刻度 24 点（12 点钟=上限）· 弧进场 1.2s 长出来 · 辉光随呼吸 · 弧头心跳 ·
+   计时中彗星绕轨 · 超了内侧第二圈熔红。速度 = 情绪（speed 倍率）。 */
+var LIVE_RINGS=[];
+function LiveRing(cv, o){
+  this.cv=cv; this.ctx=cv.getContext('2d');
+  this.p=0; this.target=o.ratio||0; this.color=o.color||'61,220,255';
+  this.comet=!!o.comet; this.speed=o.speed||1; this.t=0; this.stroke=o.stroke||3.6;
+  this.onTick=o.onTick||null;
+  LIVE_RINGS.push(this);
+}
+LiveRing.prototype.set=function(o){ for(var k in o) if(k==='ratio') this.target=o[k]; else this[k]=o[k]; };
+LiveRing.prototype.draw=function(dt){
+  var cv=this.cv, dpr=window.devicePixelRatio||1, W=cv.clientWidth, H=cv.clientHeight;
+  if(!W) return;
+  if(cv.width!==Math.round(W*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+  var x=this.ctx; x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,W,H);
+  this.t+=dt*this.speed;
+  this.p+=(this.target-this.p)*Math.min(1,dt*3.2);         // ≈ easeOut 1.2s
+  if(this.onTick) this.onTick(this.p);
+  var s=this.stroke, c=W/2, r=W/2-s*1.4, top=-Math.PI/2, col=this.color;
+  var b=0.5-0.5*Math.cos(this.t/3.4*2*Math.PI);
+  x.lineCap='round';
+  x.beginPath(); x.arc(c,c,r,0,Math.PI*2); x.strokeStyle='rgba(255,255,255,.07)'; x.lineWidth=s; x.stroke();
+  for(var i=0;i<24;i++){ var a=top+i/24*Math.PI*2, rr=r-s*1.6;
+    x.beginPath(); x.arc(c+Math.cos(a)*rr,c+Math.sin(a)*rr,i?s*.2:s*.36,0,Math.PI*2);
+    x.fillStyle=i?'rgba(255,255,255,.10)':'rgba(255,255,255,.55)'; x.fill(); }
+  var lap=Math.max(0,Math.min(1,this.p));
+  if(lap>0){
+    var sw=lap*Math.PI*2;
+    x.save(); x.shadowColor='rgba('+col+','+(0.3+0.5*b)+')'; x.shadowBlur=s*3;
+    x.beginPath(); x.arc(c,c,r,top,top+sw); x.strokeStyle='rgba('+col+',1)'; x.lineWidth=s; x.stroke(); x.restore();
+    var g=x.createConicGradient?x.createConicGradient(top,c,c):null;
+    if(g){ g.addColorStop(0,'rgba('+col+',.35)'); g.addColorStop(Math.max(lap,.01),'rgba('+col+',1)'); g.addColorStop(1,'rgba('+col+',1)');
+      x.beginPath(); x.arc(c,c,r,top,top+sw); x.strokeStyle=g; x.lineWidth=s; x.stroke(); }
+    var ha=top+sw, hx=c+Math.cos(ha)*r, hy=c+Math.sin(ha)*r;
+    x.beginPath(); x.arc(hx,hy,s*(1.4+1.2*b),0,Math.PI*2);
+    x.fillStyle='rgba('+col+','+(0.35*(1-b)+0.15)+')'; x.fill();
+    x.beginPath(); x.arc(hx,hy,s*.62,0,Math.PI*2); x.fillStyle='#fff'; x.fill();
+  }
+  if(this.p>1){
+    x.beginPath(); x.arc(c,c,r-s*1.9,top,top+Math.min(1,this.p-1)*Math.PI*2);
+    x.strokeStyle='rgba(255,59,78,'+(0.55+0.4*b)+')'; x.lineWidth=s*.55; x.stroke();
+  }
+  if(this.comet){
+    var a0=top+(this.t/(3.4*1.4))%1*Math.PI*2;
+    for(var k=0;k<10;k++){ var ak=a0-k*.07;
+      x.beginPath(); x.arc(c+Math.cos(ak)*r,c+Math.sin(ak)*r,s*.5*(1-k/10),0,Math.PI*2);
+      x.fillStyle='rgba('+col+','+(0.9*(1-k/10))+')'; x.fill(); }
+  }
+};
+(function loop(){
+  var last=performance.now();
+  (function f(now){ var dt=Math.min(.05,(now-last)/1000); last=now;
+    for(var i=0;i<LIVE_RINGS.length;i++) LIVE_RINGS[i].draw(dt);
+    requestAnimationFrame(f); })(last);
+})();
+
+/* 开战页今日环：基数 54%（今天已玩），计时中跟着这一局往上走 */
+var tkRing=null;
+function paintTodayRing(){
+  var cv=document.getElementById('tkRing');
+  if(!cv) return;
+  if(!tkRing) tkRing=new LiveRing(cv,{ratio:.54, onTick:function(p){
+    var b=document.getElementById('tkRingPct'); if(b) b.textContent=Math.round(p*100)+'%'; }});
+  var locked=deckState==='timing'||deckState==='warn';
+  var r=locked?Math.max(.54,tkRatio):.54;
+  var col = r>=.85||deckState==='warn' ? '255,59,78' : locked ? '255,107,44' : '61,220,255';
+  tkRing.set({ratio:r, color:col, comet:locked,
+    speed: locked ? (MOOD_WSPD[tkMood]||1)*1.0 : 1});
+}
+
+/* c = 兜底主色（App 的 GameModel.brandColor）；真色从封面像素里提（brandOf） */
+window.GAMES=window.GAMES||[
+  {f:'hsr', n:'崩坏：星穹铁道', s:'RPG · 昨日 2 局', c:'124,140,255'},
+  {f:'ys',  n:'原神',          s:'RPG · 今日 1 局', c:'232,196,120'},
+  {f:'zzz', n:'绝区零',        s:'ACT · 3 天前',    c:'200,240,60'},
+  {f:'wzry',n:'王者荣耀',      s:'MOBA · 上周',     c:'90,150,255'},
+  {f:'mrfz',n:'明日方舟',      s:'TAC · 上周',      c:'120,200,230'},
+  {f:'mc',  n:'我的世界',      s:'沙盒 · 上月',     c:'110,200,90'}
+];
+
+/* 用户的单次上限（小时）。App 从「时长管家」读。 */
+var kWaterLimitHours = 3;
+
+/**
+ * 封面主色 —— 与 App `brandColorOf` 同一算法：
+ * 32×32 采样，丢掉过暗/近白像素，按饱和度² 加权平均，
+ * 再把亮度钳到 0.45~0.72、饱和度钳到 0.35~0.95。
+ * file:// 打开时画布会被污染（读不了像素），那就留兜底色。
+ */
+function brandOf(img, done){
+  try{
+    var cv=document.createElement('canvas'); cv.width=cv.height=32;
+    var cx=cv.getContext('2d'); cx.drawImage(img,0,0,32,32);
+    var px=cx.getImageData(0,0,32,32).data, R=0,G=0,B=0,W=0;
+    for(var i=0;i<px.length;i+=4){
+      if(px[i+3]<200) continue;
+      var r=px[i],g=px[i+1],b=px[i+2];
+      var l=(0.2126*r+0.7152*g+0.0722*b)/255;
+      if(l<0.08||l>0.92) continue;
+      var mx=Math.max(r,g,b)/255, mn=Math.min(r,g,b)/255;
+      var s=mx<=0?0:(mx-mn)/mx, w=0.05+s*s;
+      R+=r*w; G+=g*w; B+=b*w; W+=w;
+    }
+    if(W<=0) return;
+    done(clampHsl(R/W,G/W,B/W));
+  }catch(e){ /* 画布被污染：保留兜底色 */ }
+}
+function clampHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  var mx=Math.max(r,g,b), mn=Math.min(r,g,b), h=0, s=0, l=(mx+mn)/2, d=mx-mn;
+  if(d){ s=d/(1-Math.abs(2*l-1));
+    h = mx===r ? ((g-b)/d)%6 : mx===g ? (b-r)/d+2 : (r-g)/d+4; h*=60; if(h<0) h+=360; }
+  l=Math.min(.72,Math.max(.45,l)); s=Math.min(.95,Math.max(.35,s));
+  var c=(1-Math.abs(2*l-1))*s, x=c*(1-Math.abs((h/60)%2-1)), m=l-c/2, o;
+  o = h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];
+  return o.map(function(v){return Math.round((v+m)*255);}).join(',');
+}
+
+window.deckIdx=window.deckIdx||0;
+window.tkCards=[];
+window.TK_N=window.GAMES.length;
+
+/* 卡片只建一次（懒建）：开战页一开始是 display:none，
+   在那之前建卡会因为 stage 尺寸为 0 而算出错误的几何。
+   `enter('timer')` 里调 ensureDeck()，那时它已经可见。 */
+function ensureDeck(){
+  var stage=document.getElementById('stage');
+  if(!stage || tkCards.length) return;
+  GAMES.forEach(function(g,i){
+    var d=document.createElement('div');
+    d.className='disc'; d.dataset.i=i;
+    d.innerHTML='<img src="assets/games/'+g.f+'.webp" alt="">'
+      + '<div class="veil"></div>'
+      // 水：整张卡像杯子一样被灌满（见 CSS 里的 .water）
+      + waterMarkup()
+      // 名字在水的**上面**（z-index 6），水漫上来也不挡字
+      + '<div class="nm"><div class="t">'+g.n+'</div><div class="s">'+g.s+'</div></div>';
+    d.style.setProperty('--brand', g.c||'61,220,255');
+    var im=d.querySelector('img');
+    var pick=function(){ brandOf(im,function(c){ d.style.setProperty('--brand',c); }); };
+    if(im.complete) pick(); else im.addEventListener('load',pick);
+    d.addEventListener('click',function(){
+      if(deckLocked()) return;
+      var t=parseInt(d.dataset.i,10);
+      if(t!==window.deckIdx){ window.deckIdx=t; layout(); if(navigator.vibrate) navigator.vibrate(6); }
+    });
+    stage.appendChild(d);
+    tkCards.push(d);
+  });
+}
+
+/* 转盘几何：x 线性 + y 抛物线 + 各自自转 —— 三项叠加才从"一排"变"一圈" */
+function layout(){
+  ensureDeck();
+  if(!tkCards.length) return;
+  var W=window.innerWidth;
+  // 0.26（App deck_layout 同值）：手机宽上露出 5 张；0.37 只露 3 张
+  var gap=Math.min(W*0.26,148);
+  tkCards.forEach(function(c,i){
+    // 环形最短路径：不折这个，idx=0 时左边那张会被甩到画布外
+    var off=i-window.deckIdx;
+    if(off> TK_N/2) off-=TK_N;
+    if(off<-TK_N/2) off+=TK_N;
+    var a=Math.abs(off);
+    var x=off*gap, y=a*a*9, rot=off*9;
+    var scale=Math.max(.54,1-a*0.19);
+    var op=a>2.6?0:Math.max(.10,1-a*0.40);
+    // 不用 -50% 居中（见 CSS 注释），这里只负责位移 + 旋转 + 缩放
+    c.style.transform='translate('+x+'px, '+y+'px) rotate('+rot+'deg) scale('+scale+')';
+    c.style.opacity=String(op);
+    c.style.filter='brightness('+Math.max(.30,1-a*0.32)+') blur('+(a*2.4)+'px)';
+    c.style.zIndex=String(100-Math.round(a*10));
+    c.classList.toggle('sel', off===0);
+  });
+  var ix=document.getElementById('tkIdx');
+  if(ix) ix.textContent=(window.deckIdx+1)+' / '+TK_N;
+  // 换卡后水位跟着走（水层每张卡一份）
+  setWater(deckLocked() ? tkRatio : 0);
+}
+
+
+/* ═══ 水：整张卡像杯子一样灌满 ═══════════════════════════════════
+   ## 为什么要这么多层
+
+   一层色块 = "半透明遮罩"；加上"起伏的液面 + 水面反光 + 气泡"
+   才开始读成"有液体在里面"。
+
+   ## 水位怎么涨
+
+   `--fill` 由 `setWater(ratio)` 写，CSS 用 1.6s 缓动去追 ——
+   所以看起来是"慢慢涨"，而不是每 5 秒跳一格。
+
+   **封顶 0.86**：再高液面会穿到卡顶那行状态字上（版面约束）。 */
+function waterMarkup(){
+  var bubbles = '';
+  // 6 粒气泡：大小、位置、速度全不一样，否则一眼看出是循环
+  // [直径, 左边%, delay, 时长, 横向漂移]
+  var conf = [[13,14,0.0,7.2,4],[9,9,0.18,9.4,-5],[17,22,0.34,6.1,6],
+              [10,12,0.52,8.3,-4],[14,17,0.68,7.7,5],[7,30,0.84,10.2,-6]];
+  for (var i=0;i<conf.length;i++){
+    var c = conf[i];
+    bubbles += '<i class="bub" style="left:'+c[1]+'%;width:'+c[0]+'px;height:'+c[0]+'px;'
+      + 'animation-duration:'+c[3]+'s;--d:'+c[3]+'s;animation-delay:'+c[2]+'s;'
+      + '--rise:'+(120+c[0]*9)+'px;--sway:'+c[4]+'px;"></i>';
+  }
+  return '<div class="water">'
+    + '<div class="wbody"></div>'
+    + '<div class="halo"></div>'
+    + '<div class="glint"></div>'
+    + '<div class="surface">'
+    +   '<svg viewBox="0 0 200 20" preserveAspectRatio="none">'
+    +     '<path class="w1" d="M0 12 Q25 2 50 12 T100 12 T150 12 T200 12 V20 H0 Z"/>'
+    +     '<path class="w2" d="M0 15 Q25 7 50 15 T100 15 T150 15 T200 15 V20 H0 Z"/>'
+    +   '</svg>'
+    + '</div>'
+    + bubbles
+    + '</div>';
+}
+
+/* ratio = 已用 / 上限。水位 = ratio × 0.86：上限正好落在刻度线上，超了顶在线上 */
+var tkRatio = 0;
+function setWater(ratio){
+  var w = document.querySelector('#stage .disc.sel .water');
+  if(!w) return;
+  var r = Math.max(0, Math.min(1, ratio)) * 0.86;
+  w.parentElement.style.setProperty('--fill', r.toFixed(4));
+}
+
+/* 已用时间（秒）→ 已用 / 上限 */
+function waterFromSeconds(sec){
+  return sec / (kWaterLimitHours * 3600);
+}
+
+/* 火档（App 的 TimingMood.of）：<50% 稳 / ≥50% 过半 / ≥85% 快到 / ≥100% 已超 */
+function moodOf(r){ return r>=1?'over' : r>=.85?'near' : r>=.5?'focus' : 'calm'; }
+var MOOD_RIM ={calm:'3.4s', focus:'2.6s', near:'1.5s', over:'1.1s'};
+var MOOD_WSPD={calm:1, focus:1.25, near:1.7, over:2.2};
+
+/* ═══ 开战：三态三色 + 收工 ═══════════════════════════════════════
+   与 App 一致（deck_phase.dart）：
+   · idle   待机      青      「选游戏」
+   · timing 开战      暖橙    「开战中」
+   · warn   接近上限  熔红    「接近上限」/ 已超时「已超上限」（≥85% 即亮，不等超限）
+   · done   收工      青      「已收工」（记录进下方「今日记录」）
+   只改 body 一个 class + 两个情绪变量，各层各读它做过渡 → 天然同步。 */
+var deckState='idle';
+var tkMood=null;
+
+function setState(next){
+  deckState=next;
+  document.body.classList.remove('s-timing','s-warn','s-done');
+  if(next==='timing') document.body.classList.add('s-timing');
+  if(next==='warn')   document.body.classList.add('s-warn');
+  if(next==='done')   document.body.classList.add('s-done');
+  if(next==='idle'||next==='done') setMood(null);
+  paintHeader();
+  paintTodayRing();
+}
+
+/* 情绪 = 速度（卡边呼吸 / 刻度闪烁 / 水的倍速）。 */
+function setMood(m){
+  tkMood=m;
+  var st=document.body.style;
+  if(m){ st.setProperty('--rim',MOOD_RIM[m]); st.setProperty('--wspd',MOOD_WSPD[m]); }
+  else { st.removeProperty('--rim'); st.removeProperty('--wspd'); }
+}
+
+function paintHeader(){
+  var sb=document.getElementById('tkSub');
+  if(!sb) return;
+  sb.textContent = deckState==='idle' ? '选游戏'
+    : deckState==='timing' ? '开战中'
+    : deckState==='warn' ? (tkMood==='over' ? '已超上限' : '接近上限')
+    : '已收工';
+}
+
+/* 已用比例 → 情绪 + 态（计时中 ≥85% 自动转「接近上限」）。 */
+function applyRatio(r){
+  tkRatio=r;
+  setWater(r);
+  var m=moodOf(r);
+  if(m!==tkMood) setMood(m);
+  var want=(m==='near'||m==='over')?'warn':'timing';
+  if(want!==deckState) setState(want); else { paintHeader(); paintTodayRing(); }
+}
+
+function deckLocked(){ return deckState==='timing'||deckState==='warn'; }
+function step(dir){
+  if(deckLocked()) return;
+  if(deckState==='done') setState('idle');
+  window.deckIdx=(window.deckIdx+dir+TK_N)%TK_N;
+  layout();
+  if(navigator.vibrate) navigator.vibrate(6);
+}
+
+/* 控制台演示用：applyPhase('timing' | 'warn' | 'over' | 'idle') */
+function applyPhase(st){
+  var btn=document.querySelector('#page-timer [data-go]');
+  if(st==='idle'){ tkRatio=0; setWater(0); setState('idle');
+    if(btn){ btn.classList.remove('tim');
+      btn.innerHTML='<span class="rip"></span><span class="lb">开 战</span>'; }
+    return; }
+  var r = st==='over' ? 1.1 : st==='warn' ? 0.9 : 0.35;
+  if(btn){ btn.classList.add('tim');
+    btn.innerHTML='<span class="rip"></span>'
+      +'<span style="display:flex;flex:1;justify-content:space-between;align-items:center">'
+      +'<span>收工</span><span class="tm">'+tkFmt(Math.round(r*kWaterLimitHours*3600))+'</span></span>'; }
+  setState('timing');
+  applyRatio(r);
+}
+
+function tkFmt(s){
+  var h=Math.floor(s/3600), m=Math.floor(s%3600/60), r=s%60;
+  var p=function(n){return (n<10?'0':'')+n;};
+  return h ? h+':'+p(m)+':'+p(r) : p(m)+':'+p(r);
+}
+
+/* 箭头 / 横滑 */
+(function(){
+  var sc=document.getElementById('page-timer');
+  var stage=document.getElementById('stage');
+  if(!sc||!stage) return;
+  sc.querySelectorAll('.arr[data-dir]').forEach(function(a){
+    a.onclick=function(){ step(parseInt(a.dataset.dir,10)); };
+  });
+  var sx=null;
+  stage.addEventListener('pointerdown',function(e){ sx=e.clientX; });
+  stage.addEventListener('pointerup',function(e){
+    if(sx===null) return;
+    var dx=e.clientX-sx;
+    if(Math.abs(dx)>38) step(dx<0?1:-1);
+    sx=null;
+  });
+})();
+
+/* CTA：按住充能 → 开战 → （≥85%）接近上限 → 点一下收工 */
+(function(){
+  var btn=document.querySelector('#page-timer [data-go]');
+  if(!btn) return;
+  var t=null, sec=0, tick=null;
+  // 演示加速：1 秒 = 3 分钟（3h 上限 ≈ 51 秒进「接近上限」、60 秒超）
+  var SPEED=180;
+
+  btn.addEventListener('pointerdown',function(){
+    if(deckLocked()) return;
+    if(deckState==='done') setState('idle');
+    btn.classList.add('press');
+    t=setTimeout(function(){
+      sec=0; setState('timing'); applyRatio(0);
+      btn.classList.add('tim');
+      btn.innerHTML='<span class="rip"></span>'
+        +'<span style="display:flex;flex:1;justify-content:space-between;align-items:center">'
+        +'<span>收工</span><span class="tm">00:00</span></span>';
+      var tmLb=btn.querySelector('.tm');
+      tick=setInterval(function(){
+        sec+=SPEED;
+        if(tmLb) tmLb.textContent=tkFmt(sec);
+        applyRatio(waterFromSeconds(sec));
+      },1000);
+      if(navigator.vibrate) navigator.vibrate(24);
+    },850);
+  });
+  var cancel=function(){ clearTimeout(t); btn.classList.remove('press'); };
+  btn.addEventListener('pointerup',cancel);
+  btn.addEventListener('pointerleave',cancel);
+  btn.addEventListener('pointercancel',cancel);
+
+  btn.addEventListener('click',function(){
+    if(!deckLocked()) return;
+    clearInterval(tick);
+    tkRatio=0; setWater(0);
+    setState('done');
+    btn.classList.remove('tim');
+    btn.innerHTML='<span class="rip"></span><span class="lb">再 开 一 局</span>';
+    sec=0;
+  });
+})();
+
+window.addEventListener('resize',function(){ if(tkCards.length) layout(); });
+paintTodayRing();
+/* ── 开战页：箭头 / 点卡 / 横滑 ─────────────────────────────
+   ⚠️ 箭头用的是 `data-dir`（不是 id）—— 三个方案对比时共用过一套结构，
+   所以按钮上是 data-dir="-1"/"1"。这里按属性找，不要再依赖 id。 */
+(function(){
+  var stage=document.getElementById('stage');
+  if(!stage) return;
+  var sc=document.getElementById('page-timer');
+  sc.querySelectorAll('.arr[data-dir]').forEach(function(a){
+    a.onclick=function(){ step(parseInt(a.dataset.dir,10)); };
+  });
+})();
+
+/* ═══ 个人中心 ·「我的一角」═══════════════════════════════════
+   ## 环绕图标的排布
+
+   6 个图标围一圈，但**不是等分圆周**：等分读起来像"环形菜单"。
+   真实感来自"疏密不均"——像随手摆在桌上的东西。
+   所以每个角度加一点随机偏移（固定种子，刷新不变）。
+
+   ## 每个图标的漂浮相位要错开
+
+   `animation-delay` 全不一样 → 永不同步。
+   同步的漂浮一眼就能看出是 CSS 循环，整页立刻"假"。 */
+/* ═══ 行星系统 ═══════════════════════════════════════════════════
+   ## 为什么不用 CSS 的 rotate 动画
+
+   CSS `animation: rotate` 是**匀速、同一圈、没有远近**的。
+   那样出来的东西就是"六个图标在转圈"，一眼是加载动画。
+
+   真行星的三件事，CSS 单靠 keyframes 做不到：
+   1. **近大远小**：`sin(θ)` 决定"在轨道前还是后"，
+      前面放大加亮，后面缩小变暗
+   2. **轨道半径各不相同**：每颗有自己的一圈
+   3. **速度内快外慢**：开普勒第二定律的视觉版
+
+   所以这里用 `requestAnimationFrame` 自己算角度，逐帧写 `transform`。
+   6 个元素 × 60fps 是可接受的代价（`will-change` 已开，只改 transform）。
+
+   ## 什么时候暂停
+
+   页面不可见（`display:none`）时 rAF 不回调 —— 这恰好是对的：
+   离开这一页就自动停，回来自己继续。不额外写 visibility 逻辑。 */
+
+var mePlanets = [];
+
+/* 把这一页建起来。由 `enter('me')` 调用 ——
+   页面 `display:none` 时算不出轨道半径（clientWidth = 0），
+   所以必须等切过来、尺寸确定之后再建。 */
+function buildMe(){
+  initMeAvatar();
+  buildMeOrbit();
+  buildMeWeek();
+  // count-up 要等页面可见才跑（rAF 在 display:none 不回调）
+  setTimeout(runMeCounts, 120);
+}
+
+function buildMeOrbit(){
+  var orbit = document.getElementById('meOrbit');
+  if (!orbit) return;
+  // ⚠️ **每次都清空重建**，不要用 `children.length` 去重。
+  // 踩过：`buildMe` 在 DOMContentLoaded 和 enter('me') 各调一次，
+  // 第一次（页面隐藏、clientWidth=0）只建了 1 个就 return 了，
+  // 第二次看到"非空"直接跳过 —— 结果永远只有 1 颗行星、还没位置。
+  //
+  // 重建 + rAF 去重（`window.__meRaf`）才是幂等的正确组合：
+  // 建 DOM 是无害的，重复的**动画循环**才要防。
+  if (window.__meRaf){ cancelAnimationFrame(window.__meRaf); window.__meRaf = null; }
+  mePlanets = [];
+  orbit.replaceChildren();
+
+  // 用的是真实游戏图标（assets/games 里有 21 款）
+  // [文件名, 轨道半径比例, 角速度(度/秒), 初始角度, 基准大小]
+  // 半径别太靠内：主星是 104px，轨道容器 352px（半径 176）。
+  // 0.52 时行星中心距主星中心 ~91px，刚好在光晕外沿 —— 再近就"贴脸上"了。
+  var conf = [
+    ['ys',   0.52, 13.0,  20, 40],
+    ['hsr',  0.78,  9.5, 145, 36],
+    ['zzz',  0.60, 11.5, 262, 34],
+    ['wzry', 0.86,  8.2,  55, 32],
+    ['aqtw', 0.56, 12.4, 200, 30],
+    ['bh3',  0.72, 10.1, 315, 34]
+  ];
+
+  conf.forEach(function(c, i){
+    var el = document.createElement('div');
+    el.className = 'oi';
+    el.innerHTML = '<img src="assets/games/' + c[0] + '.webp" alt="">';
+    orbit.appendChild(el);
+
+    mePlanets.push({
+      el: el,
+      r: c[1],          // 轨道半径（相对轨道容器宽度的一半）
+      w: c[2],          // 角速度 度/秒
+      a: c[3],          // 初始角度
+      base: c[4],       // 基准尺寸
+      // 每颗行星有自己的"呼吸"相位，避免整齐划一
+      pulse: Math.random() * Math.PI * 2
+    });
+  });
+
+  startPlanets();
+}
+
+function startPlanets(){
+  if (mePlanets.length === 0) return;
+  if (window.__meRaf) return;   // 已在跑
+
+  var orbit = document.getElementById('meOrbit');
+  if (!orbit) return;
+
+  // 尊重系统的"减少动效"：直接摆成静态
+  var reduced = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced){
+    placePlanets(orbit, 0, true);
+    return;
+  }
+
+  // 尺寸还没算出来（页面刚显示）→ 下一帧再来
+  if (!orbit.clientWidth){
+    setTimeout(startPlanets, 60);
+    return;
+  }
+
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000); // 秒；封顶防跳帧
+    last = now;
+
+    mePlanets.forEach(function(p){ p.a = (p.a + p.w * dt) % 360; });
+    placePlanets(orbit, now / 1000, false);
+
+    window.__meRaf = requestAnimationFrame(frame);
+  }
+  window.__meRaf = requestAnimationFrame(frame);
+}
+
+/* 把角度换算成位置 + 缩放 + 亮度 */
+function placePlanets(orbit, t, staticMode){
+  var W = orbit.clientWidth;       // 轨道容器是正方形
+  if (!W) return;
+  var half = W / 2;
+
+  mePlanets.forEach(function(p){
+    var rad = p.a * Math.PI / 180;
+    // 角度 → 位置。0° 在右侧，顺时针。
+    var x = Math.cos(rad) * p.r * half;
+    var y = Math.sin(rad) * p.r * half;
+
+    // ⭐ 近大远小：sin 为 +1 时在"前方"（下方），-1 时在"后方"（上方）。
+    var depth = (Math.sin(rad) + 1) / 2;        // 0(远) ~ 1(近)
+    var scale = 0.62 + depth * 0.62;            // 0.62 ~ 1.24
+
+    // 前方的更亮更实，后方更暗更虚 —— "大气透视"
+    var opacity = 0.34 + depth * 0.60;          // 0.34 ~ 0.94
+
+    // 极轻微的呼吸（不同相位），让"停在那一刻"的也觉得是活的
+    var breathe = staticMode ? 1 : (1 + Math.sin(t * 1.6 + p.pulse) * 0.03);
+
+    // 前方略微上浮一点（视差），后方略压 —— 强化"绕着走"
+    var lift = (depth - 0.5) * 6;
+
+    p.el.style.transform =
+      'translate(' + x.toFixed(1) + 'px,' + (y + lift).toFixed(1) + 'px) ' +
+      'scale(' + (scale * breathe).toFixed(3) + ')';
+    p.el.style.opacity = opacity.toFixed(2);
+    // 前方的行星盖住后方的（z 序也跟着深度走）
+    p.el.style.zIndex = String(Math.round(depth * 100));
+  });
+}
+
+function buildMeWeek(){
+  var bars = document.getElementById('meBars');
+  var days = document.getElementById('meDays');
+  if (!bars || !days || bars.children.length) return;
+
+  // 单位：分钟。0 = 那天没玩（给一根"空"条，不是"没有条"——
+   // 空白有条才能看出"这一天缺席"，没有条只会以为布局坏了）
+  var mins = [95, 160, 0, 210, 120, 240, 34];
+  var max = Math.max.apply(null, mins);
+  var labels = ['一','二','三','四','五','六','日'];
+  var t = new Date().getDay(); // 0=周日
+  var todayIdx = (t + 6) % 7;
+
+  mins.forEach(function(m, i){
+    var b = document.createElement('div');
+    b.className = 'b' + (m === 0 ? ' empty' : '') + (i === todayIdx ? ' today' : '');
+    // 空的给 8% 高，够看出一条"缺席"
+    // ⚠️ 用**像素**不用 %：flex 子项的 % 高度依赖父级确定高度，
+    // 在 align-items:flex-end 下会塌成 0（真机上"只有一根柱子"就是它）。
+    var H = 64;
+    var h = m === 0 ? 6 : Math.max(10, (m / max) * H);
+    b.style.height = h.toFixed(0) + 'px';
+    b.style.animationDelay = (i * 60) + 'ms';
+    bars.appendChild(b);
+
+    var d = document.createElement('span');
+    d.textContent = labels[i];
+    if (i === todayIdx) d.className = 'today';
+    days.appendChild(d);
+  });
+}
+
+/* 数字 count-up：900ms，spring 过冲（beUI 规范）
+   ⚠️ 不用 IntersectionObserver：页面是 SPA，`display:none` 时
+   观察器永远不触发（真实踩过：数字一直是 0）。改成 enter('me') 时主动跑。 */
+function runMeCounts(){
+  var els = document.querySelectorAll('.me2 .nums b[data-count]');
+  if (!els.length) return;
+  // ⚠️ 不设"只跑一次"的标记：SPA 每次进页面都该重播一次。
+  // 之前用 data-ran 去重，结果首次（页面还 display:none）就把标记设上了，
+  // 真正显示时反而跳过 —— 数字停在 0。
+
+  // cubic-bezier(.34,1.56,.64,1) 的近似（带轻微过冲）
+  function ease(t){
+    var c = 1.56;
+    var u = t - 1;
+    return 1 + (c + 1) * u * u * u + c * u * u;
+  }
+
+  els.forEach(function(el){
+    var target = parseInt(el.dataset.count, 10) || 0;
+    el.textContent = '0';
+
+    var t0 = performance.now();
+    function step(now){
+      var p = Math.min(1, (now - t0) / 900);
+      // ⚠️ 过冲曲线在 p 很小时会返回**负数**（真实踩过：数字跑出 -26285）。
+      // 必须两头都 clamp：下界 0，上界 1（倍率，不是值）。
+      var k = Math.max(0, Math.min(1, ease(p)));
+      el.textContent = String(Math.round(target * k));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+/* 主星 = 用户头像。
+   水獭动图按用户要求去掉 —— 头像才是"我"，水獭是"她"。
+   （"我的一角"要的是"这就是我的位置"，不是"有个卡通角色站在那儿"。） */
+function setMeAvatar(path){
+  var el = document.getElementById('meStar');
+  if (!el) return;
+  el.style.backgroundImage = 'url("' + path + '")';
+}
+
+/* 默认头像：进页面就用上 */
+function initMeAvatar(){
+  setMeAvatar('assets/avatars/avatar_01.webp');
+}
+
+</script>
+<script src="empty.js?v=e1"></script>
+<script src="share.js?v=w6"></script>
+<script src="link.js"></script>
+<script src="drafts.js"></script>
+<script src="alive.js"></script>
+<script src="battle.js"></script>
+<script src="mine.js"></script>
+<script src="memory.js"></script>
+<script src="brand.js?v=w6"></script>
+<script src="v3.js"></script>
+<script src="theme.js?v=l8"></script>
+<script src="glass.js?v=l8"></script>
+<script src="pet.js?v=p1"></script>
+<script src="scroll.js?v=p1"></script>
+<script src="assets/gsap.min.js"></script>
+<script src="motion.js?v=m1"></script>
+<script src="embed.js"></script>
+</body>
+</html>

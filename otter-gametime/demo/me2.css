@@ -1,0 +1,206 @@
+/* ═══════════════════════════════════════════════════════════════
+   个人中心 · 「我的一角」v2
+
+   ## 为什么推倒重来
+
+   旧版是「头像 + 一圈 7 天刻度弧 + 三块数据 + 三个入口」。
+   问题是：**它在记录数据，没在讲这个人**。
+
+   一圈刻度弧技术上没错（7 天打了几天，弧画多长），
+   但它把"我"变成了一个仪表盘上的百分比 —— 读起来是报表，不是"我"。
+
+   ## 新叙事：角色 + 空间
+
+   ```
+   ┌────────────────────────────┐
+   │         ·  ✦      ·        │   ← 光尘（时长化成粒子）
+   │      ╭──────────╮          │
+   │      │  [游戏]  │          │   ← 玩过的图标绕着水獭转
+   │      │   🦦     │          │   ← 水獭（61 帧动图，会呼吸会眨眼）
+   │      │ [头像]   │          │   ← 头像做她的"底座"
+   │      ╰──────────╯          │
+   │      第 128 天 · 一直在    │   ← 情绪文案，不是数字
+   └────────────────────────────┘
+   ```
+
+   ## 三个"情绪锚点"
+
+   1. **水獭的表情跟着状态变** —— 今天玩得多 → 欢呼；没玩 → 思考；
+      连续 7 天 → 开心。表情是这一页唯一"会说话"的东西。
+   2. **光尘的密度 = 本周时长** —— 玩得越多，空气里越亮。这个映射
+      没人会去逐帧验证，但"这周很充实"的感觉是直接传达的。
+   3. **一句话，不是数字** —— "第 128 天，你一直在" 比 "128" 有温度。
+      tubik 的做法就是：数据负责真实，文案负责情绪。
+
+   ## 动效（beUI 的 spring 规范）
+
+   - 水獭：8s 极缓呼吸（scale 1→1.02），比任何人眼能"看到在动"都慢
+   - 游戏图标：各自不同相位绕轨道漂浮（12~18s），**永不同步**
+   - 光尘：dust_field.webp 直接当贴图，40s 转一圈
+   - 数字：count-up，900ms，spring 过冲
+   - 卡片进入：stagger 60ms
+   ═══════════════════════════════════════════════════════════════ */
+
+.me2{
+  padding-bottom:calc(env(safe-area-inset-bottom,0px) + 96px);
+  box-sizing:border-box;
+  /* ⚠️ 整页横向不溢出。轨道用了 translate(-50%,-50%) 的绝对定位，
+     再加上 88vw 的宽度，某些机型会算出"比视口宽 1px"→ 出现横向滚动条，
+     于是右侧内容被推出去（真机截图里数字卡片被切掉就是它）。 */
+  overflow-x: clip;
+  width:100%;
+}
+
+/* ── 一、角色区（我的"房间"）──────────────────────────────── */
+.me2 .stage{
+  position:relative;
+  height:min(96vw,392px);
+  margin:calc(env(safe-area-inset-top,0px) + 8px) 0 0;
+  overflow:hidden;
+}
+
+/* 背景光：一束从上方来的、偏暖的光（不是冷色聚光） */
+
+/* 光尘：整个空间里飘的粒子 */
+.me2 .stage .dust{
+  position:absolute;left:50%;top:50%;
+  width:min(150vw,640px);aspect-ratio:1;
+  margin:min(-75vw,-320px) 0 0 min(-75vw,-320px);
+  background:url("assets/dust_field.webp") center/contain no-repeat;
+  opacity:.55;
+  animation:dustSpin 40s linear infinite;
+  pointer-events:none;
+}
+@keyframes dustSpin{to{transform:rotate(360deg)}}
+
+/* ═══ 主星：用户头像 ═══════════════════════════════════════════
+   ## 为什么是"行星系统"而不是"环形排布"
+
+   环形排布（图标等分圆周、肉眼不转身）读起来像**加载动画**——
+   因为它是静态对称的，没有方向、没有远近。
+
+   行星系统有三件事让它有生命：
+   1. **近大远小**：图标转到前面（下方）时更大更亮，转到后面（上方）时
+      更小更暗。这是"绕"的唯一可信证据。
+   2. **轨道不是一个圆**：每个图标有自己略微不同的半径，视觉上是
+      "几颗行星各自的轨道"，不是"一串珠子穿在一个环上"。
+   3. **速度不同**：内圈快、外圈慢（开普勒定律的直觉）。
+
+   ## 怎么在 CSS 里做"近大远小"
+
+   每颗行星整体绕主星转（`rotate`），但图标自身**反向转回来**
+   （`rotate(-θ)`）—— 这样图标永远正着。
+   远近靠 `translateZ` + `perspective`，或者更便宜的做法：
+   用 `scale` 随角度插值。这里选后者（不建 3D 上下文，也不掉帧）。
+
+   代价：scale 要在 JS 里逐帧算。6 个元素 × 60fps 可接受。 */
+
+/* 主星：用户头像 */
+
+/* 恒星的光晕：一层会呼吸的更大光斑 */
+
+@keyframes starPulse{
+  0%,100%{transform:scale(1);opacity:.85}
+  50%{transform:scale(1.12);opacity:1}
+}
+/* 恒星的自转：头像缓慢转一圈（8 分钟，几乎看不出，但"它不是静止的"） */
+
+@keyframes starSpin{to{transform:rotate(360deg)}}
+
+/* 轨道容器：不裁切，让行星转到边缘也不被切 */
+.me2 .stage .orbit{
+  position:absolute;left:50%;top:50%;
+  width:min(94vw,384px);aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  contain:layout;
+}
+
+/* 一颗行星 */
+.me2 .stage .oi{
+  position:absolute;
+  left:50%;top:50%;
+  width:36px;height:36px;
+  margin:-18px 0 0 -18px;
+  border-radius:11px;
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.10);
+  will-change:transform,opacity;
+}
+.me2 .stage .oi img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* 轨道线：极淡的一圈，暗示"这里是轨道"，但别抢 */
+.me2 .stage .ring{
+  position:absolute;left:50%;top:50%;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.045);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+
+/* 降低动效偏好：行星停在静态位置（JS 会读这个） */
+
+/* ── 二、身份行（在水獭下面，不在最顶上）─────────────────── */
+.me2 .who{
+  position:relative;z-index:4;
+  text-align:center;
+  margin-top:-6px;
+  padding:0 24px;
+}
+.me2 .who .n{
+  font-size:24px;font-weight:800;letter-spacing:-.6px;
+  color:var(--hi);
+}
+.me2 .who .line{
+  margin-top:7px;
+  font-size:12.5px;line-height:1.5;color:var(--mid);
+}
+.me2 .who .line em{
+  font-style:normal;color:var(--accent);font-weight:600;
+}
+/* ID 行：**不再重复头像** —— 它已经在上面当主星了。
+   同一个头像出现两次，会让人以为"这两个是不是不是同一个人"。 */
+.me2 .who .uid{
+  margin-top:9px;
+  font-size:10.5px;letter-spacing:1.6px;
+  color:var(--lo);
+  font-variant-numeric:tabular-nums;
+}
+.me2 .who .uid::before{
+  content:"";display:inline-block;vertical-align:middle;
+  width:5px;height:5px;margin-right:7px;border-radius:50%;
+  background:var(--accent);opacity:.65;
+}
+
+/* ── 三、本周节律（条形，不是刻度弧）──────────────────────── */
+
+@keyframes barGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+/* ── 四、三个数字（克制，不抢戏）──────────────────────────── */
+.me2 .nums{
+  display:flex;gap:10px;margin:24px 24px 0;
+  box-sizing:border-box;
+}
+.me2 .nums .n{
+  flex:1;padding:14px 12px;border-radius:14px;
+  background:var(--well);
+  border:1px solid var(--sep);
+  text-align:center;
+}
+.me2 .nums .n .v{
+  font-size:20px;font-weight:800;letter-spacing:-.5px;
+  font-variant-numeric:tabular-nums;color:var(--hi);
+}
+.me2 .nums .n .v small{font-size:11px;font-weight:600;color:var(--lo);margin-left:2px}
+.me2 .nums .n .l{
+  margin-top:5px;font-size:10px;color:var(--lo);letter-spacing:.4px;
+}
+
+/* ── 五、入口（保留，但收薄）──────────────────────────────── */
+
+/* 降低动效偏好 */
+@media (prefers-reduced-motion: reduce){
+  .me2 .stage .dust,
+  .me2 .stage .oi{animation:none!important}
+  
+}

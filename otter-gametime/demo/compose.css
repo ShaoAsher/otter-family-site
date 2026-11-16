@@ -1,0 +1,80 @@
+/* ═══ 发布页：关联对局卡 · 对局选择弹层（link.js）· 草稿箱（drafts.js）══════════ */
+
+/* 关联卡：未选 = 虚线占位（必选）；刚收工 = 游戏色边光；小獭猜的 = 小角标 */
+.cp-link.empty{border:1.5px dashed var(--dash); background:var(--well)}
+.cp-link.empty .ic{background:var(--raise); box-shadow:var(--raise-sh); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.cp-link.empty .ic svg{width:20px; height:20px; fill:none; stroke:var(--mid); stroke-width:2; stroke-linecap:round}
+.cp-link.empty .sw{color:#0B0A14; background:rgb(61,220,255); font-weight:700}
+.cp-link.fresh{box-shadow:inset 0 0 0 1px rgba(var(--b),.45)}
+.cp-link.fresh small{color:color-mix(in srgb, rgb(var(--b)) var(--tx-mix), var(--hi))}
+.cp-guess{display:inline-block; margin-left:6px; padding:1px 6px; border-radius:8px; font-size:10.5px; font-style:normal; font-weight:700; vertical-align:2px;
+  color:#D9CCFF; background:rgba(155,123,240,.2)}
+.cp-link.nudge{animation:dlgNudge .36s ease}
+
+/* 选择弹层 */
+.lk-why{display:flex; align-items:center; gap:8px; margin:-4px 0 0; font-size:12.5px; color:var(--mid)}
+.lk-why img{width:26px; height:26px; object-fit:contain}
+.lk-cats .chip{display:inline-flex; align-items:center; gap:5px; flex:none}
+.lk-cats .lk-gc img{width:18px; height:18px; border-radius:5px}
+.lk-list{min-height:280px; padding-bottom:6px}
+.lk-day{position:sticky; top:-8px; z-index:1; padding:12px 2px 6px; font-size:12px; font-weight:700; letter-spacing:1px; color:var(--lo); background:#15131F}
+.lk-row{position:relative; display:flex; align-items:center; gap:12px; width:100%; margin-top:8px; padding:11px 14px; border:0; border-radius:16px; text-align:left;
+  font:inherit; color:var(--hi); cursor:pointer; background:var(--raise); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+  transition:background-color .26s, box-shadow .26s, transform .26s var(--ease-spring); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.lk-row:active{transform:scale(.98)}
+.lk-row .gi{width:40px; height:40px; border-radius:12px; flex:none}
+.lk-row .tx{flex:1; min-width:0}
+.lk-row b{display:block; font-size:14.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.lk-row small{display:block; margin-top:3px; font-size:12px; color:var(--mid); font-variant-numeric:tabular-nums}
+.lk-row em{flex:none; font-style:normal; font-size:11px; color:var(--lo); padding:2px 7px; border-radius:8px; background:rgba(255,255,255,.05)}
+.lk-row em.cur{color:color-mix(in srgb, rgb(var(--b)) var(--tx-mix), var(--hi)); background:rgba(var(--b),.14)}
+.lk-row .rd{flex:none; width:20px; height:20px; border-radius:50%; box-shadow:inset 0 0 0 2px rgba(255,255,255,.18); transition:box-shadow .26s, background-color .26s}
+.lk-row.on{background:rgba(var(--b),.12); box-shadow:inset 0 0 0 1.5px rgba(var(--b),.7)}
+.lk-row.on .rd{background:rgb(var(--b)); box-shadow:inset 0 0 0 5px #15131F, 0 0 0 2px rgb(var(--b))}
+.lk-row.fresh small{color:color-mix(in srgb, rgb(var(--b)) var(--tx-mix), var(--hi))}
+.lk-list.in .lk-row{animation:riseIn .42s var(--ease-spring) both; animation-delay:calc(var(--i,0)*32ms)}
+.lk-empty{display:flex; flex-direction:column; align-items:center; padding:36px 0 20px; text-align:center; color:var(--mid); font-size:14px; line-height:1.6}
+.lk-empty img{width:96px; height:96px; object-fit:contain}
+.lk-empty small{font-size:12px; color:var(--lo)}
+
+/* 草稿箱 */
+.df-hd{display:flex; align-items:center; gap:12px; padding:4px 2px 6px}
+.df-hd img{width:64px; height:64px; object-fit:contain; flex:none}
+.df-hd b{display:block; font-size:18px; font-weight:800}
+.df-hd small{display:block; margin-top:4px; font-size:12px; color:var(--mid)}
+.df-card{position:relative; display:flex; gap:12px; margin-top:12px; padding:12px; border-radius:20px; cursor:pointer;
+  background:var(--raise); box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+  transition:transform .26s var(--ease-spring), opacity .26s, background-color .26s; -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.df-card::before{content:""; position:absolute; left:0; top:16px; bottom:16px; width:3px; border-radius:2px; background:rgb(var(--mc, 255,255,255)); opacity:.7}
+.df-card:active, .df-card.pick{transform:scale(.97); background:var(--press)}
+.df-card.gone{opacity:0; transform:translateX(-30px) scale(.96)}
+.df-card .cv{position:relative; width:76px; height:96px; flex:none; border-radius:14px; overflow:hidden; background:var(--well)}
+.df-card .cv img{width:100%; height:100%; object-fit:cover}
+.df-card .cv b{position:absolute; right:5px; bottom:5px; min-width:18px; height:18px; padding:0 5px; border-radius:9px; font-size:10.5px; text-align:center; line-height:18px;
+  color:#fff; background:rgba(11,10,20,.65)}
+.df-card .cv.txt{display:grid; place-items:center; background:rgba(var(--mc, 150,140,255),.14)}
+.df-card .cv .q{font-style:normal; font-size:40px; font-weight:900; color:color-mix(in srgb, rgb(var(--mc, 150,140,255)) var(--tx-mix), var(--hi)); opacity:.7; line-height:1; margin:0 18px 6px 0}
+.df-card .tx{flex:1; min-width:0; padding-right:26px}
+.df-card .tx > b{display:block; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.df-card .tx p{margin:5px 0 0; font-size:13px; line-height:1.5; color:var(--mid); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.df-card .no{color:var(--lo); font-weight:500}
+.df-card .mt{display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-top:8px; font-size:11px; color:var(--lo)}
+.df-card .rl{padding:1px 7px; border-radius:8px; font-weight:700; color:#0B0A14; background:rgb(61,220,255)}
+.df-card .rl.life{background:rgb(255,138,184)}
+.df-card .lk{display:inline-flex; align-items:center; gap:4px; color:var(--mid)}
+.df-card .lk img{width:16px; height:16px; border-radius:4px}
+.df-card .lk.miss{color:#FFB86B}
+.df-card .tg{display:inline-flex}
+.df-card .tg img{width:20px; height:20px; object-fit:contain; margin-right:-4px}
+.df-card .mt small{margin-left:auto; font-size:11px}
+.df-card .del{position:absolute; right:8px; top:8px; width:32px; height:32px; border:0; border-radius:50%; background:none; cursor:pointer; display:grid; place-items:center}
+.df-card .del svg{width:17px; height:17px; fill:none; stroke:var(--lo); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+.df-card .del:active{background:rgba(255,255,255,.08)}
+#dfList.in .df-card{animation:riseIn .46s var(--ease-spring) both; animation-delay:calc(var(--i,0)*45ms + 60ms)}
+.df-empty{display:flex; flex-direction:column; align-items:center; padding:60px 0; text-align:center; color:var(--mid); font-size:14px; line-height:1.7}
+.df-empty img{width:120px; height:120px; object-fit:contain}
+.df-empty small{font-size:12px; color:var(--lo)}
+
+@media (prefers-reduced-motion: reduce){
+  .lk-list.in .lk-row, #dfList.in .df-card, .cp-link.nudge{animation:none}
+}

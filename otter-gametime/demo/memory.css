@@ -1,0 +1,108 @@
+/* 记忆页 + 「我」页的精彩 / 入口卡（见 memory.js） */
+:root{--spring:cubic-bezier(.34,1.45,.64,1)}
+
+/* ── 「我」：最近的精彩 ── */
+.me-hl .mh-big{position:relative; height:200px; border-radius:var(--r-lg); overflow:hidden; cursor:pointer; isolation:isolate}
+.me-hl .ph{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+.me-hl .shade{position:absolute; inset:0; background:linear-gradient(180deg,rgba(11,10,20,0) 40%,rgba(11,10,20,.86))}
+.me-hl .mh-big .ph{animation:mhPan 26s ease-in-out infinite alternate}
+@keyframes mhPan{from{transform:scale(1.04)} to{transform:scale(1.12) translate(-2%,-2%)}}
+.me-hl .mh-tag{position:absolute; left:14px; top:14px; padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700;
+  color:#0B0A14; background:#FFD27A}
+.me-hl .mh-big .ot{position:absolute; right:10px; bottom:46px; width:76px; height:76px; object-fit:contain}
+.me-hl .mh-big .tx{position:absolute; left:16px; right:16px; bottom:14px}
+.me-hl .mh-big .tx b{display:block; font-size:19px; font-weight:800}
+.me-hl .mh-big .tx span{display:block; margin-top:2px; font-size:12px; color:var(--mid)}
+.me-hl .mh-row{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:8px}
+.me-hl .mh-s{position:relative; height:112px; padding:0; border:0; border-radius:var(--r-md); overflow:hidden; cursor:pointer; background:#1B1829; color:var(--hi); text-align:left}
+.me-hl .mh-s .ot{position:absolute; right:4px; top:4px; width:30px; height:30px; object-fit:contain}
+.me-hl .mh-s span{position:absolute; left:8px; right:8px; bottom:7px; font-size:11.5px; font-weight:600; line-height:1.3;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.me-hl :is(.mh-big,.mh-s){transition:scale .15s ease-out}
+.me-hl :is(.mh-big,.mh-s):active{scale:.97}
+.me-hl.in .mh-big{animation:mhUp .62s var(--spring) both}
+.me-hl.in .mh-s{animation:mhUp .62s var(--spring) both; animation-delay:calc(120ms + var(--i)*60ms)}
+.me-hl.in .mh-big .ot{animation:mhPop .62s var(--spring) .26s both}
+@keyframes mhUp{from{opacity:0; transform:translateY(16px) scale(.97)}}
+@keyframes mhPop{from{opacity:0; transform:translateY(10px) scale(.6) rotate(-8deg)}}
+
+/* ── 「我」：记忆入口卡 ── */
+.me-mem{position:relative; margin-top:var(--gap); padding:var(--pad); overflow:hidden; cursor:pointer; isolation:isolate; transition:scale .15s ease-out}
+.me-mem:active{scale:.98}
+.me-mem .sky,.mm-hero .sky{position:absolute; inset:0; z-index:-1;
+  background:radial-gradient(120% 90% at 100% 0%,rgba(155,123,240,.22),transparent 60%),radial-gradient(90% 80% at 0% 100%,rgba(61,220,255,.10),transparent 60%)}
+.me-mem .hd{display:flex; align-items:flex-start; gap:8px}
+.me-mem .tx{flex:1; min-width:0}
+.me-mem small{display:block; font-size:11.5px; font-weight:700; letter-spacing:2px; color:#B9A2FF}
+.me-mem .tx b{display:block; margin-top:4px; font-size:21px; font-weight:800; letter-spacing:-.4px}
+.me-mem .tx span{display:block; margin-top:2px; font-size:12px; color:var(--mid)}
+.me-mem .ot{width:64px; height:64px; object-fit:contain; margin:-10px -6px -14px 0}
+.me-mem .spark{display:flex; align-items:flex-end; gap:4px; height:40px; margin-top:12px}
+.me-mem .spark i{flex:1; height:var(--h); border-radius:3px; background:rgba(155,123,240,.38); transform-origin:bottom}
+.me-mem .spark i.over{background:rgba(255,154,77,.55)}
+.me-mem .spark i.now{background:#3DDCFF}
+.me-mem.in .spark i{animation:mmBar .62s var(--ease) both; animation-delay:calc(var(--i)*30ms + 200ms)}
+@keyframes mmBar{from{transform:scaleY(0)}}
+.me-mem .mm-go{display:flex; align-items:center; gap:6px; margin-top:12px}
+.me-mem .mm-go button{height:28px; padding:0 10px; border-radius:99px; border:1px solid var(--raise-edge); background:var(--raise);
+  color:var(--mid); font-size:12px; cursor:pointer; box-shadow:var(--raise-sh); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.me-mem .mm-go .ar{margin-left:auto; color:var(--lo); font-size:18px}
+.me-mem.in{animation:mhUp .62s var(--spring) .18s both}
+
+/* ── 记忆页 ── */
+.mm-hero{position:relative; display:flex; align-items:center; gap:12px; padding:var(--pad) var(--pad) var(--pad) 8px; overflow:hidden; isolation:isolate}
+.mm-hero .ot{width:96px; height:96px; object-fit:contain; flex:none}
+.mm-hero small{display:block; font-size:12px; color:var(--mid)}
+.mm-hero b{display:block; margin-top:2px; font-size:30px; font-weight:800; letter-spacing:-.8px; font-variant-numeric:tabular-nums}
+.mm-hero b em{font-style:normal; color:#B9A2FF}
+.mm-hero p{margin:4px 0 0; font-size:13px; color:var(--hi)}
+
+.mm-doors{display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); margin-top:var(--gap)}
+.mm-doors .dr{display:flex; flex-direction:column; align-items:flex-start; gap:4px; padding:var(--pad-s); color:var(--hi); text-align:left; cursor:pointer; transition:scale .15s ease-out}
+.mm-doors .dr:active{scale:.97}
+.mm-doors .k{font-size:11.5px; color:var(--mid)}
+.mm-doors b{font-size:17px; font-weight:800}
+.mm-doors .cal b em{font-style:normal; color:#FFB066}
+.mm-doors .ft b em{font-style:normal; color:#6EE7A8}
+.mm-doors .dots{display:flex; gap:5px; margin-top:6px}
+.mm-doors .dots i{width:12px; height:12px; border-radius:50%; background:var(--well)}
+.mm-doors .dots i.on{background:#FFB066}
+.mm-doors .dots i.now{background:transparent; border:2px solid #FFB066}
+.mm-doors .heat{display:grid; grid-template-columns:repeat(12,1fr); gap:2px; width:100%; margin-top:6px}
+.mm-doors .heat i{aspect-ratio:1; border-radius:2px; background:var(--well)}
+.mm-doors .heat i.l1{background:rgba(110,231,168,.28)}
+.mm-doors .heat i.l2{background:rgba(110,231,168,.55)}
+.mm-doors .heat i.l3{background:#6EE7A8}
+
+/* 一路走来 */
+.mm-line .v3-card{padding:8px var(--pad) 4px}
+.mm-line ol{list-style:none; margin:0; padding:0; position:relative}
+.mm-line ol::before{content:''; position:absolute; left:52px; top:22px; bottom:22px; width:2px; border-radius:1px;
+  background:linear-gradient(180deg,#B9A2FF,rgba(155,123,240,.12)); transform-origin:top}
+.mm-line ol.in::before{animation:mmDraw .9s var(--ease) both}
+@keyframes mmDraw{from{transform:scaleY(0)}}
+.mm-line li{position:relative; display:flex; align-items:center; gap:10px; min-height:56px; padding:6px 0}
+.mm-line li.tap{cursor:pointer}
+.mm-line .dt{width:40px; flex:none; font-size:12px; font-weight:700; color:var(--mid); text-align:right; font-variant-numeric:tabular-nums}
+.mm-line .dt small{display:block; font-size:10.5px; font-weight:500; color:var(--lo)}
+.mm-line .pt{width:10px; height:10px; flex:none; margin:0 2px; border-radius:50%; background:#13111E; border:2px solid rgb(var(--c)); position:relative; z-index:1}
+.mm-line li:first-child .pt{background:rgb(var(--c))}
+.mm-line li.warn .pt{border-color:var(--live)}
+.mm-line li.first .pt{width:14px; height:14px; margin:0; background:#B9A2FF; border-color:#B9A2FF}
+.mm-line .tx{flex:1; min-width:0}
+.mm-line .tx b{display:block; font-size:14px; font-weight:700}
+.mm-line .tx span{display:block; margin-top:2px; font-size:11.5px; color:var(--mid); line-height:1.4}
+.mm-line .ot{width:36px; height:36px; object-fit:contain; flex:none}
+.mm-line ol.in li{animation:mmNode .42s var(--ease) both; animation-delay:calc(var(--i)*90ms + 120ms)}
+@keyframes mmNode{from{opacity:0; transform:translateX(-8px)}}
+.mm-line .more-b{display:block; width:100%; height:40px; margin-top:2px; border:0; border-top:1px solid rgba(255,255,255,.06); background:none;
+  color:var(--mid); font-size:12.5px; cursor:pointer}
+.mm-line .more-b[hidden]{display:none}
+
+.mm .mn{margin-top:var(--sec)}
+.mm-end{margin-top:var(--sec); text-align:center; font-size:11.5px; color:var(--lo)}
+
+@media (prefers-reduced-motion:reduce){
+  .me-hl .mh-big .ph{animation:none}
+  .me-hl.in *, .me-mem.in, .me-mem.in *, .mm-line ol.in::before, .mm-line ol.in li{animation:none}
+}

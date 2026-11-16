@@ -1,0 +1,82 @@
+/* 滚动联动（见 scroll.js）。--hp 大标题进栏进度 0→1 · --pull 顶部下拉距离
+   尺寸按 iOS：导航栏 = 状态栏安全区 + 44pt，栏内标题 17pt 居中，栏按钮视觉 32pt / 热区 44pt；底导最小化后仍 ≥ 49pt */
+:root{--sat:max(env(safe-area-inset-top,0px), var(--sat-min,0px))}
+body.sx .v3{padding-top:calc(var(--sat) + 20px)}
+
+/* ── 大标题：不缩放，跟内容走、进栏前渐隐；只在顶部下拉时被拉大一点（同系统） ── */
+body.sx .page.on .v3-head .ttl{transform-origin:0 100%;
+  translate:0 calc(var(--pull,0px) * .45); scale:calc(1 + var(--pull,0px) / 900);
+  opacity:clamp(0, calc(1 - var(--hp,0) * 1.1), 1)}
+body.sx .page.on .v3-head .eyebrow{opacity:clamp(0, calc(1 - var(--hp,0) * 1.8), 1)}
+body.sx .page.on .v3-head > :not(.ttl){opacity:clamp(0, calc(1 - var(--hp,0) * 1.6), 1)}
+body.sx .page.on .v3-head .ttl{transition:translate .42s var(--ease-spring), scale .42s var(--ease-spring)}
+body.sx-pulling .page.on .v3-head .ttl, body.sx-pulling .sx-peek{transition:none}
+
+/* ── 顶栏 ── */
+body.sx .topbar{display:block; height:calc(var(--sat) + 44px); min-height:0; padding:var(--sat) 0 0; transform:none; animation:none;
+  background:none; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; pointer-events:none}
+body.sx .topbar.on{pointer-events:auto; background:none; box-shadow:none}
+body.sx .topbar > img, body.sx .topbar > b, body.sx .topbar > .right{display:none}
+/* 材质：一开始滚就出现；细线等大标题完全进栏才出 */
+/* 材质带一点本页主题色（--bt）的顶光；底边不是灰线，是从中间亮起的主题色光线 */
+body.sx .topbar{--bt:var(--accent)}
+body.sx .topbar::before{content:''; position:absolute; inset:0; z-index:-1; opacity:clamp(0, calc(var(--hp,0) * 1.6), 1);
+  -webkit-backdrop-filter:blur(20px) saturate(1.6); backdrop-filter:blur(20px) saturate(1.6);
+  background:radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, var(--bt) 14%, transparent), transparent 60%), rgba(11,10,20,.8)}
+body.sx .topbar::after{content:''; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--bt) 55%, transparent) 50%, transparent), rgba(255,255,255,.06);
+  opacity:clamp(0, calc((var(--hp,0) - .9) * 10), 1); scale:clamp(.3, calc(var(--hp,0) * 1.2), 1) 1; transition:background .45s}
+body.light.sx .topbar::before{background:radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, var(--bt) 12%, transparent), transparent 60%), rgba(246,244,250,.82)}
+body.light.sx .topbar::after{background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--bt) 50%, transparent) 50%, transparent), rgba(23,21,31,.08)}
+
+/* 栏：左右等宽列 → 标题始终在屏幕正中；左右各留 --gx 减按钮热区外扩 */
+.sx-bar{height:44px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; padding:0 calc(var(--gx,20px) - 6px)}
+/* 标题 = 原大标题（17pt）+ 原眉题（11pt），双行仍在 44pt 内 */
+.sx-tt{grid-column:2; display:flex; flex-direction:column; align-items:center; max-width:calc(100vw - 210px); min-width:0;
+  opacity:clamp(0, calc((var(--hp,0) - .7) * 3.4), 1); translate:0 calc((1 - clamp(0, calc((var(--hp,0) - .7) * 3.4), 1)) * 6px)}
+.sx-tt .t, .sx-tt small{max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.sx-tt .t{font-size:17px; line-height:21px; font-weight:800; letter-spacing:-.3px; color:var(--hi)}
+.sx-tt em{font-style:normal}
+.sx-tt small{font-size:11px; line-height:14px; font-weight:600; letter-spacing:.4px; color:var(--mid);
+  opacity:clamp(0, calc((var(--hp,0) - .85) * 6.6), 1)}
+.sx-acts{grid-column:3; justify-self:end; display:flex; align-items:center; opacity:clamp(0, calc((var(--hp,0) - .55) * 2.6), 1)}
+
+/* 原头部控件缩到栏内：同款玻璃圆钮，视觉 32pt，热区 ::after 补到 44pt */
+.sx-acts .sx-clone{animation:none !important; opacity:1; translate:none; scale:none; margin:0}
+.sx-acts .acts{display:flex; align-items:center; gap:0}
+.sx-acts .ib{position:relative; display:block; width:32px; height:32px; margin:0 6px; padding:0; border-radius:50%;
+  background:var(--raise); box-shadow:inset 0 0 0 .5px rgba(255,255,255,.12); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.sx-acts .ib > svg, .sx-acts .ib > img{position:absolute; left:50%; top:50%; translate:-50% -50%; margin:0}
+.sx-acts .ib > svg{width:17px; height:17px}
+.sx-acts .ib.ib-ot > img{width:24px; height:24px; max-width:none}
+.sx-acts .ib::after, .sx-acts .h3-streak::after{content:''; position:absolute; inset:-6px}
+.sx-acts .h3-streak{position:relative; height:32px; padding:0 11px 0 7px; gap:3px; margin:0 6px 0 0; border-radius:16px}
+.sx-acts .h3-streak .flame{width:18px; height:18px}
+.sx-acts .h3-streak svg{width:16px; height:16px}
+.sx-acts .h3-streak b{font-size:14px; font-variant-numeric:tabular-nums}
+body.light .sx-acts .ib{background:rgba(23,21,31,.05); box-shadow:inset 0 0 0 .5px rgba(23,21,31,.1)}
+
+/* ── 底导：最小化（同 iOS 26 tab bar minimize） ── */
+body.sx nav{transform:none !important; transition:left .42s var(--ease-spring), right .42s var(--ease-spring), height .42s var(--ease-spring), background-color .26s}
+nav.sx-compact{left:calc(50% - 116px) !important; right:calc(50% - 116px) !important; height:50px}
+nav.sx-compact button{min-width:44px; height:44px; padding:0 10px}
+nav.sx-compact button .lb{max-width:0 !important; margin-left:0 !important; opacity:0 !important}
+nav.sx-compact button.on{background:rgba(255,255,255,.1); box-shadow:none; color:var(--accent)}
+
+/* ── 顶部下拉：小獭探头 ── */
+.sx-peek{position:fixed; z-index:35; left:50%; top:calc(var(--sat) + 6px); display:flex; align-items:center; gap:8px; pointer-events:none;
+  translate:-50% calc(min(var(--pull,0px), 110px) * .5 - 70px); opacity:0; transition:translate .42s var(--ease-spring), opacity .26s}
+.sx-peek img{width:52px; height:52px; object-fit:contain}
+.sx-peek span{padding:6px 11px; border-radius:14px 14px 14px 4px; background:#F4F2FA; color:#1B1829; font-size:12.5px; font-weight:700; white-space:nowrap;
+  scale:.8; opacity:0; transition:scale .42s var(--ease-spring), opacity .2s}
+.sx-peek.on{opacity:1}
+.sx-peek.on span{scale:1; opacity:1}
+
+/* ── 此刻：水跟着滚动晃 ── */
+.h3-pond .water{rotate:var(--tilt,0deg); transition:rotate .9s cubic-bezier(.34,1.8,.64,1)}
+
+@media (prefers-reduced-motion:reduce){
+  body.sx .page.on .v3-head .ttl{translate:none; scale:none}
+  .sx-tt{translate:none}
+  body.sx nav, .sx-peek, .h3-pond .water{transition:none}
+}

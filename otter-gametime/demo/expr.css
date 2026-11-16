@@ -1,0 +1,92 @@
+/* ═══ 表情 = 心情 = 标签：标签胶囊 · 藏品筛选 · 发布贴标签 · 表情选择器 · 表情馆 ═══ */
+
+/* 标签胶囊：左边一枚小獭，颜色跟表情走 */
+.chip.tg{position:relative; padding:0 12px 0 4px; gap:4px; overflow:visible; color:var(--hi);
+  border-color:rgba(var(--c),.3); background:rgba(var(--c),.08)}
+.chip.tg .av{width:34px; height:34px; object-fit:contain; margin:-8px -2px -2px -2px; align-self:flex-end;
+  transition:transform .26s var(--ease-spring)}
+.chip.tg small{font-size:11px; color:var(--lo); margin-left:2px; font-variant-numeric:tabular-nums}
+.chip.tg.on{background:rgb(var(--c)); border-color:transparent; color:#0B0A14}
+.chip.tg.on small{color:rgba(11,10,20,.6)}
+.chip.tg.on .av{transform:scale(1.14) rotate(-6deg)}
+.chip.tg.pop .av{animation:tgPop .42s var(--ease-spring)}
+.chip.tg.sug{animation:tgSug 1.1s ease-in-out 2}
+@keyframes tgPop{0%{transform:scale(.6) rotate(8deg)}60%{transform:scale(1.25) rotate(-8deg)}100%{transform:scale(1.14) rotate(-6deg)}}
+@keyframes tgSug{50%{border-color:rgba(var(--c),.9); background:rgba(var(--c),.22)}}
+
+/* 藏品筛选：时间一行 + 标签一行 */
+.g3-filter{transition:opacity .26s var(--ease), transform .26s var(--ease), filter .26s}
+.g3-filter.realm-out{opacity:0; transform:translateX(calc(var(--dir,1)*-28px)) scale(.98); filter:blur(3px)}
+.g3-filter.realm-in .chip{animation:realmChipIn .42s var(--ease-spring) both}
+.g3-filter .g3-chips{margin-top:var(--gap)}
+.g3-tags{display:flex; gap:8px; overflow-x:auto; margin:10px calc(-1*var(--gx)) 0; padding:8px var(--gx) 2px; scrollbar-width:none}
+.g3-tags::-webkit-scrollbar{display:none}
+.g3-tags .chip.tg{flex:none; height:30px}
+
+/* 藏品页头部「表情」入口：一枚小獭替代图标 */
+.ib.ib-ot{overflow:visible}
+.ib.ib-ot img{width:30px; height:30px; object-fit:contain; transition:transform .26s var(--ease-spring)}
+.ib.ib-ot:active img{transform:scale(.88) rotate(-8deg)}
+
+/* 发布：贴标签 */
+.cp-tags{display:flex; flex-wrap:wrap; gap:12px 8px; padding-top:8px}
+.cp-tags .chip.tg.main::after{content:'主'; position:absolute; top:-7px; right:-5px; height:16px; padding:0 5px; border-radius:8px;
+  font-size:10px; font-weight:800; line-height:16px; color:#0B0A14; background:var(--hi)}
+.cp-tags .tg-add{gap:4px; color:var(--mid); border-style:dashed; background:transparent; cursor:pointer}
+.cp-tags .tg-add b{font-size:15px; font-weight:600}
+.cp-tags .tg-add small{font-size:11px; color:var(--lo); font-variant-numeric:tabular-nums}
+.cp-tags.full .chip.tg:not(.on){opacity:.42}
+.cp-tags.full .tg-add{opacity:.42}
+.cp3 .lb3 .opt.talk{color:color-mix(in srgb, rgb(var(--rc)) var(--tx-mix), var(--hi))}
+
+/* 表情选择器：分组页签 + 网格（贴标签 / 设心情 / 表情馆共用） */
+.xp{display:block}
+.xp-tabs{display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; padding:2px 0}
+.xp-tabs::-webkit-scrollbar{display:none}
+.xp-tabs .chip{flex:none; gap:4px}
+.xp-tabs .chip small{font-size:11px; opacity:.6; font-variant-numeric:tabular-nums}
+.xp-grid{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; margin-top:var(--gap)}
+.xp-grid button{position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0 7px;
+  border-radius:var(--r-sm); border:1px solid transparent; background:var(--raise); color:var(--mid); font:inherit; cursor:pointer;
+  transition:transform .12s var(--ease), background .26s var(--ease), border-color .26s var(--ease); box-shadow:var(--raise-sh); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.xp-grid button:active{transform:scale(.92)}
+.xp-grid img{width:46px; height:46px; object-fit:contain; transition:transform .26s var(--ease-spring)}
+.xp-grid span{font-size:11px; white-space:nowrap}
+.xp-grid button.on{background:rgba(var(--mc),.16); border-color:rgba(var(--mc),.55); color:var(--hi)}
+.xp-grid button.on img{transform:scale(1.15) translateY(-2px)}
+.xp-grid button.mk::after{content:''; position:absolute; top:6px; right:8px; width:6px; height:6px; border-radius:50%; background:rgb(var(--mc))}
+.xp-grid.in button{animation:xpIn .42s var(--ease-spring) both; animation-delay:calc(var(--i,0)*16ms)}
+@keyframes xpIn{from{opacity:0; transform:translateY(8px) scale(.9)}}
+
+/* 贴标签弹层：预览 + 可改名 */
+.tg-prev{position:relative; display:flex; align-items:center; gap:12px; padding:12px var(--pad-s); margin-top:4px; border-radius:var(--r-lg); overflow:hidden;
+  background:rgba(var(--mc,255,255,255),.08); border:1px solid rgba(var(--mc,255,255,255),.2)}
+.tg-prev .halo{position:absolute; left:-20px; top:50%; width:160px; height:160px; margin-top:-80px; border-radius:50%;
+  background:radial-gradient(circle, rgba(var(--mc,255,255,255),.28), transparent 70%)}
+.tg-prev img{position:relative; width:92px; height:92px; object-fit:contain; flex:none; margin:-10px -4px -10px -8px}
+.tg-prev .tx{position:relative; flex:1; min-width:0}
+.tg-prev small{display:block; font-size:11px; color:var(--lo)}
+.tg-prev input{display:block; width:100%; margin-top:4px; padding:4px 0; border:0; border-bottom:1px dashed rgba(var(--mc,255,255,255),.5);
+  background:none; font:inherit; font-size:20px; font-weight:800; color:color-mix(in srgb, rgb(var(--mc,255,255,255)) var(--tx-mix), var(--hi)); outline:none}
+.tg-prev p{font-size:12.5px; color:var(--mid); margin-top:6px}
+.tg-prev.pop img{animation:exPop .5s cubic-bezier(.3,1.5,.5,1)}
+.tg-pick{margin-top:var(--gap); max-height:44vh; overflow-y:auto; scrollbar-width:none}
+.tg-pick::-webkit-scrollbar{display:none}
+.md-pick{margin-top:var(--gap); max-height:34vh; overflow-y:auto; scrollbar-width:none}
+.md-pick::-webkit-scrollbar{display:none}
+.tg-pick .xp-tabs, .md-pick .xp-tabs{position:sticky; top:0; z-index:1; background:#15131F; padding:2px 0 6px}
+
+/* 表情馆 */
+.ex-go{margin-top:10px; font-size:12.5px; color:var(--mid); cursor:pointer}
+.ex-go.off{color:var(--lo); cursor:default}
+.ex-pick .xp-grid{grid-template-columns:repeat(4,minmax(0,1fr)); gap:var(--gap)}
+.ex-pick .xp-grid button{padding:10px 0 9px; border-radius:var(--r-md); background:var(--raise); box-shadow:var(--raise-sh); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.ex-pick .xp-grid img{width:64px; height:64px}
+.ex-pick .xp-grid span{font-size:12.5px}
+
+/* 分享卡上的副标签 */
+.sc3 .gm .sc-ln.tg .av{width:26px; height:26px; margin:-6px -2px -2px -2px}
+
+@media (prefers-reduced-motion: reduce){
+  .chip.tg.pop .av, .chip.tg.sug, .xp-grid.in button, .tg-prev.pop img, .g3-filter.realm-in .chip{animation:none}
+}

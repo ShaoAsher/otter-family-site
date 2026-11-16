@@ -1,0 +1,79 @@
+/* 开战页的陪伴层（见 battle.js） */
+.timer .nav .idx{display:none}
+.timer .nav{justify-content:space-between; padding:0 24px; gap:8px}
+body.s-timing .timer .nav, body.s-warn .timer .nav{opacity:1; pointer-events:auto}
+body.s-timing .timer .nav .arr, body.s-warn .timer .nav .arr{opacity:.24; pointer-events:none}
+.tk-buddy{--c:255,200,150; flex:1; min-width:0; display:flex; align-items:center; justify-content:center; gap:6px; height:48px}
+.tk-buddy img{width:40px; height:40px; object-fit:contain; flex:none}
+.tk-buddy .say{min-width:0; padding:6px 11px; border-radius:14px 14px 14px 4px; background:rgba(var(--c),.12);
+  font-size:12.5px; line-height:1.35; color:var(--hi); overflow-wrap:anywhere;
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; transition:background .42s var(--ease)}
+.tk-buddy.pop img{animation:tkHop .42s var(--ease-spring)}
+.tk-buddy.pop .say{animation:tkSay .26s var(--ease)}
+@keyframes tkHop{0%{transform:translateY(4px) scale(.85)} 100%{transform:none}}
+@keyframes tkSay{from{opacity:0; transform:translateX(-4px)}}
+
+.tk-plan{position:relative; height:34px; margin:12px 24px 0}
+.tk-plan .pick, .tk-plan .run{position:absolute; inset:0; display:flex; align-items:center; gap:10px; transition:opacity .26s var(--ease), transform .26s var(--ease)}
+.tk-plan .k{flex:none; font-size:12px; color:var(--lo)}
+.tk-plan .ops{flex:1; display:flex; gap:6px}
+.tk-plan .ops button{flex:1; height:32px; border:0; border-radius:12px; background:var(--raise); color:var(--mid); font:inherit; font-size:12px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; cursor:pointer; transition:background .26s var(--ease), color .26s var(--ease); box-shadow:var(--raise-sh); -webkit-backdrop-filter:var(--raise-blur); backdrop-filter:var(--raise-blur)}
+.tk-plan .ops button small{font-size:9.5px; color:var(--lo); margin-top:1px}
+.tk-plan .ops button.on{background:rgba(61,220,255,.14); color:var(--accent); box-shadow:inset 0 0 0 1px rgba(61,220,255,.4)}
+.tk-plan .ops button.on small{color:rgba(61,220,255,.75)}
+.tk-plan .ops button:active{transform:scale(.95)}
+.tk-plan .run{opacity:0; transform:translateY(6px); pointer-events:none; flex-direction:column; align-items:stretch; justify-content:center; gap:6px}
+.tk-plan .run span{font-size:12px; color:var(--mid); text-align:center}
+.tk-plan .run b{color:var(--hi); font-variant-numeric:tabular-nums}
+.tk-plan .bar{display:block; height:4px; border-radius:2px; background:var(--well); overflow:hidden; box-shadow:var(--well-sh)}
+.tk-plan .bar b{display:block; height:100%; width:0; border-radius:2px; background:#FF9A4D; transition:width .9s var(--ease)}
+.tk-plan.free .bar{display:none}
+.tk-plan.past .bar b{background:#FFB86B}
+.tk-plan.past .run span b{color:#FFB86B}
+#page-timer.tk-run .tk-plan .pick{opacity:0; transform:translateY(-6px); pointer-events:none}
+#page-timer.tk-run .tk-plan .run{opacity:1; transform:none}
+.timer .cta{padding-top:12px}
+
+.timer .today .row .mf{width:30px; height:30px; object-fit:contain; margin-left:auto; margin-right:-4px}
+.timer .today .row .mf + .du{margin-left:6px}
+.tk-done .chips .pl{color:#FFB86B}
+.tk-done .chips .pl.ok{color:#6EE7A8}
+
+/* 计时中小獭坐到卡片右肩当主角（卡宽 --disc；卡的 z-index 最高 100）；搭子那一行只留话，不出两只獭 */
+.tk-perch{--c:255,200,150; position:absolute; left:50%; top:0; z-index:120; width:78px; height:78px;
+  margin-left:calc(var(--disc) / 2 - 54px); margin-top:-50px; pointer-events:none;
+  opacity:0; transform:translateY(22px) scale(.5); transform-origin:50% 100%;
+  transition:opacity .2s var(--ease), transform .5s var(--ease-spring)}
+.tk-perch img{display:block; width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+.tk-perch::after{content:""; position:absolute; left:22%; right:22%; bottom:2px; height:8px; border-radius:50%;
+  background:radial-gradient(rgba(0,0,0,.45), transparent 70%); z-index:-1}
+#page-timer.tk-run .tk-perch{opacity:1; transform:none}
+#page-timer.tk-run .tk-perch img{animation:otterBob 3.4s ease-in-out infinite}
+.tk-perch.pop{animation:tkPerchHop .52s var(--ease-spring)}
+@keyframes tkPerchHop{0%{translate:0 0; scale:1} 30%{translate:0 -16px; scale:.94 1.08} 62%{translate:0 0; scale:1.08 .92} 100%{translate:0 0; scale:1}}
+/* 接近 / 超上限：小獭坐不住，左右晃 */
+body.s-warn #page-timer.tk-run .tk-perch img{animation:tkFidget 1.4s ease-in-out infinite}
+@keyframes tkFidget{0%,100%{transform:rotate(0)} 20%{transform:rotate(-6deg)} 40%{transform:rotate(5deg)} 60%{transform:rotate(-3deg)} 80%{transform:rotate(0)}}
+#page-timer.tk-run .tk-buddy img{display:none}
+#page-timer.tk-run .tk-buddy .say{border-radius:14px}
+
+/* 收工里程碑：小獭换成庆祝脸、个头更大，名字上方多一枚火苗勋章（晚于卡片 1s 才亮，是这一幕的高潮） */
+.tk-done .ml{display:none}
+.tk-done .cd.mile{padding-top:76px}
+.tk-done .cd.mile .ot{width:136px; top:-84px}
+.tk-done .cd.mile .ml{position:relative; display:flex; flex-direction:column; align-items:center; gap:2px; margin:0 auto 12px}
+.tk-done.on .cd.mile .ml{animation:tdMile .62s var(--ease-spring) 1.05s both}
+.tk-done .ml .fl{width:36px; height:36px}
+.tk-done .ml .fl svg{width:100%; height:100%; fill:#FF9F43}
+.tk-done.on .ml .fl{animation:tdFlick 1.6s ease-in-out 1.7s infinite; transform-origin:50% 90%}
+.tk-done .ml b{font-size:22px; font-weight:900; letter-spacing:1px; color:#FFB86B}
+.tk-done .ml small{font-size:12px; color:var(--mid)}
+@keyframes tdMile{0%{opacity:0; transform:scale(.3)} 60%{opacity:1; transform:scale(1.14)} 100%{opacity:1; transform:none}}
+@keyframes tdFlick{0%,100%{transform:scale(1) rotate(0)} 30%{transform:scale(1.08,.94) rotate(-3deg)} 60%{transform:scale(.96,1.06) rotate(2deg)}}
+
+@media (prefers-reduced-motion: reduce){
+  .tk-buddy.pop img, .tk-buddy.pop .say, .tk-perch.pop, #page-timer.tk-run .tk-perch img,
+  body.s-warn #page-timer.tk-run .tk-perch img, .tk-done.on .cd.mile .ml, .tk-done.on .ml .fl{animation:none}
+  .tk-perch{transition:opacity .2s}
+}

@@ -1,0 +1,74 @@
+/* 「我」页的游戏档案（见 mine.js） */
+.m3-nums .n{cursor:pointer}
+.mn-sub{margin-top:4px; font-size:10.5px; color:#6EE7A8; font-variant-numeric:tabular-nums}
+.mn .v3-card + .v3-card{margin-top:var(--gap)}
+.mn .hd{display:flex; align-items:center; justify-content:space-between}
+.mn .hd b{font-size:14px}
+.mn .hd span{font-size:11.5px; color:var(--lo)}
+
+.mn-one{padding:var(--pad)}
+.mn-one .hd img{width:34px; height:34px; object-fit:contain; margin:-8px -4px -8px 0}
+.mn-one .cols{display:grid; grid-template-columns:1fr 1fr auto; gap:12px; margin-top:12px; align-items:end}
+.mn-one small{display:block; font-size:11px; color:var(--lo)}
+.mn-one .cols > div:not(.ring) > b{display:block; margin-top:4px; font-size:24px; font-weight:800; letter-spacing:-.5px; font-variant-numeric:tabular-nums}
+.mn-one b i{font-style:normal; font-size:12px; font-weight:600; color:var(--mid); margin-left:1px}
+.mn-one b em{font-style:normal}
+.mn-one .cols span{display:block; margin-top:2px; font-size:11px; color:var(--mid)}
+.mn-one .ring{position:relative; width:64px; text-align:center}
+.mn-one .ring svg{width:56px; height:56px; transform:rotate(-90deg)}
+.mn-one .ring circle{fill:none; stroke:rgba(255,255,255,.07); stroke-width:4.5}
+.mn-one .ring circle.v{stroke:#6EE7A8; stroke-linecap:round; stroke-dasharray:113.1; stroke-dashoffset:113.1; transition:stroke-dashoffset 1.1s var(--ease)}
+.mn-one.in .ring circle.v{stroke-dashoffset:calc(113.1 * (1 - var(--p)))}
+.mn-one .ring > b{position:absolute; left:0; right:0; top:19px; font-size:13px; font-weight:800}
+.mn-one .ring > b em{font-style:normal}
+
+.mn-rhythm{display:flex; align-items:center; gap:12px; padding:12px var(--pad) 12px 10px}
+.mn-rhythm .clock{width:128px; height:128px; flex:none}
+.mn-rhythm svg{width:100%; height:100%}
+.mn-rhythm .bg{fill:rgba(255,255,255,.03)}
+.mn-rhythm line{stroke:rgba(155,123,240,.45); stroke-width:4.2; stroke-linecap:round; cursor:pointer; transition:stroke .26s var(--ease)}
+.mn-rhythm line.pk{stroke:#9B7BF0}
+.mn-rhythm line.on{stroke:#F4F2FA}
+.mn-rhythm.in line{animation:mnRay .62s var(--ease) both; animation-delay:calc(var(--i)*22ms); transform-origin:70px 70px}
+@keyframes mnRay{from{opacity:0; transform:scale(.6)}}
+.mn-rhythm text{fill:var(--lo); font-size:8px; text-anchor:middle}
+.mn-rhythm .rt{flex:1; min-width:0}
+.mn-rhythm .rt small{display:block; font-size:11px; color:var(--lo)}
+.mn-rhythm .rt > b{display:block; margin-top:2px; font-size:19px; font-weight:800; color:#B9A2FF}
+.mn-rhythm .rt > span{display:block; margin-top:1px; font-size:11.5px; color:var(--mid)}
+.mn-rhythm .wk{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; height:50px; margin-top:10px; align-items:end}
+.mn-rhythm .wk div{display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:3px; height:100%}
+.mn-rhythm .wk i{display:block; width:100%; max-width:12px; height:var(--h); min-height:3px; border-radius:4px; background:var(--well); transform-origin:bottom}
+.mn-rhythm .wk .hi i{background:#9B7BF0}
+.mn-rhythm .wk .lo i{background:rgba(110,231,168,.6)}
+.mn-rhythm.in .wk i{animation:mnGrow .62s var(--ease) both; animation-delay:calc(var(--i)*50ms + 200ms)}
+@keyframes mnGrow{from{transform:scaleY(0)}}
+.mn-rhythm .wk span{font-size:9.5px; color:var(--lo)}
+.mn-rhythm .mn-say{display:flex; align-items:center; gap:4px; margin:8px 0 0; font-size:11.5px; color:var(--mid); white-space:nowrap}
+.mn-rhythm .mn-say img{width:24px; height:24px; object-fit:contain; flex:none}
+
+.mn-mood{padding:var(--pad)}
+.mn-mood .seg{display:flex; gap:3px; height:12px; margin-top:12px; border-radius:6px; overflow:hidden}
+.mn-mood .seg i{display:block; width:var(--w); background:rgb(var(--c)); border-radius:3px}
+.mn-mood .seg i.rest{background:var(--well)}
+.mn-mood.in .seg i{animation:mnSeg .62s var(--ease) both; animation-delay:calc(var(--i)*70ms); transform-origin:left}
+@keyframes mnSeg{from{transform:scaleX(0)}}
+.mn-mood .lg{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px; margin-top:10px}
+.mn-mood .lg button{display:flex; flex-direction:column; align-items:center; gap:1px; padding:6px 0 4px; border:0; border-radius:12px; background:rgba(var(--c),.08);
+  color:var(--hi); font:inherit; cursor:pointer; transition:transform .12s var(--ease)}
+.mn-mood .lg button:active{transform:scale(.94)}
+.mn-mood .lg img{width:36px; height:36px; object-fit:contain}
+.mn-mood .lg span{font-size:11px}
+.mn-mood .lg b{font-size:11px; color:color-mix(in srgb, rgb(var(--c)) var(--tx-mix), var(--hi)); font-variant-numeric:tabular-nums}
+
+.mn-first{display:flex; align-items:center; gap:10px; padding:12px var(--pad) 12px 8px;
+  background:linear-gradient(135deg, rgba(255,160,170,.1), var(--wash) 60%), var(--card-base)}
+.mn-first .ot{width:68px; height:68px; object-fit:contain; flex:none}
+.mn-first small{display:block; font-size:11px; color:var(--lo)}
+.mn-first b{display:block; margin-top:2px; font-size:14.5px}
+.mn-first span{display:block; margin-top:2px; font-size:12px; color:var(--mid)}
+
+@media (prefers-reduced-motion: reduce){
+  .mn-rhythm.in line, .mn-rhythm.in .wk i, .mn-mood.in .seg i{animation:none}
+  .mn-one .ring circle.v{transition:none}
+}

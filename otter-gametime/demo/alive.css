@@ -1,0 +1,142 @@
+/* 有数据的二级页：日历 · 足迹 · 编辑资料 · 游戏管理（见 alive.js） */
+.al-pop{animation:alPop .42s var(--ease-spring)}
+@keyframes alPop{0%{transform:scale(.86)} 100%{transform:none}}
+.al-hero{position:relative; display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; margin-top:8px; padding:var(--pad); overflow:hidden}
+.al-hero .tx small{display:block; font-size:12px; color:var(--mid)}
+.al-hero .tx b{display:block; margin-top:2px; font-size:30px; font-weight:800; letter-spacing:-.5px; font-variant-numeric:tabular-nums}
+.al-hero .tx b em{font-style:normal}
+.al-hero .tx p{margin:4px 0 0; font-size:12.5px; line-height:1.5; color:var(--mid)}
+.al-hero .ot{width:84px; height:84px; object-fit:contain; margin:-8px -6px -8px 0}
+.al-chips{grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:6px}
+.al-chips span{padding:5px 10px; border-radius:10px; background:var(--well); font-size:12px; color:var(--mid)}
+.al-chips b{color:var(--hi); font-variant-numeric:tabular-nums}
+.al-chips b.hot{color:var(--live)}
+
+/* ── 日历 ── */
+.ca-hero{background:linear-gradient(135deg, rgba(255,150,70,.14), var(--wash) 60%), var(--card-base)}
+.ca-fl{width:52px; height:52px; border-radius:18px; display:grid; place-items:center; background:rgba(255,160,80,.14); cursor:pointer}
+.ca-fl svg{width:30px; height:30px; fill:#FFB066; transform-origin:50% 90%; animation:caFlick 1.1s ease-in-out infinite alternate}
+.ca-fl svg .in{fill:#FFE2B0}
+@keyframes caFlick{0%{transform:scale(1) rotate(-2deg)} 100%{transform:scale(1.06,1.1) rotate(2deg)}}
+.ca-hero .tx b{color:#FFB066}
+.ca-rec{position:relative; height:6px; margin-top:10px; border-radius:3px; background:var(--well)}
+.ca-rec i{position:absolute; left:0; top:0; bottom:0; width:0; border-radius:3px; background:#FFB066; transition:width .9s var(--ease)}
+.ca-rec span{position:absolute; top:50%; left:0; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:#FFE2B0; border:2px solid #15131F; transition:left .9s var(--ease)}
+.ca-rec.go i{width:var(--w)} .ca-rec.go span{left:var(--x)}
+#calDay.rich{flex-wrap:wrap; row-gap:12px; background:linear-gradient(160deg, rgba(var(--c),.12), var(--wash) 55%), var(--card-base); transition:background .42s var(--ease)}
+.ca-more{flex-basis:100%; display:flex; align-items:center; gap:10px; padding-top:12px; border-top:1px solid rgba(255,255,255,.06)}
+.ca-more .ot{width:46px; height:46px; object-fit:contain; flex:none}
+.ca-more .mt{flex:1; min-width:0}
+.ca-more .mt b{display:block; font-size:13.5px; color:color-mix(in srgb, rgb(var(--c)) var(--tx-mix), var(--hi))}
+.ca-more .mt small{display:block; margin-top:2px; font-size:12px; color:var(--mid)}
+.ca-more .it{display:flex; flex-direction:column; align-items:center; gap:4px; border:0; padding:0; background:none; color:var(--mid); font:inherit; font-size:10.5px; cursor:pointer}
+.ca-more .it img{width:44px; height:44px; border-radius:12px; object-fit:cover; box-shadow:0 0 0 2px rgba(var(--c),.5)}
+.ca-more .it:active img{transform:scale(.94)}
+.ca-more .none{font-size:11.5px; color:var(--lo)}
+.ca-sum{margin-top:var(--gap); padding:var(--pad)}
+.ca-sum .k{display:flex; justify-content:space-between; font-size:12px; color:var(--mid)}
+.ca-sum .k span{color:var(--hi); font-weight:700; font-variant-numeric:tabular-nums}
+.ca-bars{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; height:120px; margin-top:12px; align-items:end}
+.ca-bars .w{display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:4px}
+.ca-bars i{display:block; width:100%; max-width:30px; height:var(--h); min-height:6px; border-radius:8px; background:rgba(155,123,240,.35);
+  transform-origin:bottom; animation:caGrow .62s var(--ease) both; animation-delay:calc(var(--i)*60ms)}
+.ca-bars .top i{background:#9B7BF0}
+.ca-bars em{font-style:normal; font-size:10.5px; color:var(--lo); font-variant-numeric:tabular-nums}
+.ca-bars .top em{color:var(--hi); font-weight:700}
+.ca-bars span{font-size:10.5px; color:var(--lo)}
+@keyframes caGrow{from{transform:scaleY(0)}}
+.ca-say, .ca-new{display:flex; align-items:center; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,.06)}
+.ca-new{border-top:0; padding-top:0}
+.ca-say > img, .ca-new > img{width:52px; height:52px; object-fit:contain; flex:none}
+.ca-say p, .ca-new p{margin:0; font-size:13.5px; line-height:1.5}
+.ca-say small, .ca-new small{display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-top:2px; font-size:12px; color:var(--mid)}
+.ca-new b{display:block; font-size:15px}
+.ca-say small img{width:16px; height:16px; border-radius:4px}
+
+/* ── 足迹 ── */
+.fp-hero{grid-template-columns:1fr auto; background:linear-gradient(135deg, rgba(61,220,255,.12), rgba(255,138,184,.08) 55%, rgba(255,255,255,.02)), #15131F}
+.fp-hero .ot{width:96px; height:96px}
+.ft-year i{cursor:pointer; transition:transform .12s var(--ease)}
+.ft-year i:active{transform:scale(.8)}
+.ft-year i.sel{outline:2px solid #fff; outline-offset:1px}
+.ft-year.fp-in i{animation:fpIn .42s var(--ease) both; animation-delay:calc(var(--col)*14ms)}
+@keyframes fpIn{from{opacity:0; transform:scale(.3)}}
+.fp-lg{display:flex; align-items:center; gap:4px; margin:8px 2px 0; font-size:11px; color:var(--lo)}
+.fp-lg i{width:10px; height:10px; border-radius:3px; background:var(--well)}
+.fp-lg i.l1{background:rgba(61,220,255,.25)} .fp-lg i.l2{background:rgba(61,220,255,.5)} .fp-lg i.l3{background:rgba(61,220,255,.8)} .fp-lg i.l4{background:#3DDCFF}
+.fp-lg i.life{margin-left:8px; background:rgba(255,138,184,.7)}
+.fp-lg em{margin-left:auto; font-style:normal}
+.fp-tip{position:absolute; z-index:5; width:232px; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:16px;
+  background:#1B1829; border:1px solid rgba(var(--c),.4); pointer-events:none; opacity:0; transform:translateY(-4px) scale(.96); transition:opacity .26s var(--ease), transform .26s var(--ease)}
+.fp-tip.on{opacity:1; transform:none}
+.fp-tip::before{content:""; position:absolute; top:-6px; left:var(--ax); width:10px; height:10px; margin-left:-5px; background:#1B1829;
+  border-left:1px solid rgba(var(--c),.4); border-top:1px solid rgba(var(--c),.4); transform:rotate(45deg)}
+.fp-tip img{width:42px; height:42px; object-fit:contain; flex:none}
+.fp-tip small{display:block; font-size:11px; color:var(--lo)}
+.fp-tip b{display:block; font-size:13.5px; margin-top:1px}
+.fp-tip span{display:block; font-size:11.5px; color:color-mix(in srgb, rgb(var(--c)) var(--tx-mix), var(--hi)); margin-top:1px}
+.fp-months .rw{cursor:pointer}
+.fp-months .xf{width:34px; height:34px; object-fit:contain; flex:none; margin:-4px 0}
+.fp-months .r{transition:transform .26s var(--ease)}
+.fp-mo.on .r{transform:rotate(90deg)}
+.fp-mo + .fp-mo{border-top:1px solid rgba(255,255,255,.05)}
+.fp-ex{display:grid; grid-template-rows:0fr; transition:grid-template-rows .42s var(--ease)}
+.fp-ex > div{overflow:hidden; padding:0 var(--pad)}
+.fp-mo.on .fp-ex{grid-template-rows:1fr}
+.fp-mo.on .fp-ex > div{padding-bottom:var(--pad)}
+.fp-tops{display:flex; flex-wrap:wrap; gap:6px}
+.fp-tops span{display:inline-flex; align-items:center; gap:4px; padding:3px 9px 3px 4px; border-radius:12px; background:rgba(var(--c),.12); font-size:12px}
+.fp-tops img{width:22px; height:22px; object-fit:contain}
+.fp-tops b{color:var(--mid); font-weight:600; font-size:11px}
+.fp-ims{display:flex; gap:6px; margin-top:10px}
+.fp-ims img{width:72px; height:72px; border-radius:14px; object-fit:cover}
+.fp-ex p{display:flex; align-items:center; flex-wrap:wrap; gap:0 8px; margin:10px 0 0; font-size:13px; line-height:1.5}
+.fp-ex p img{width:36px; height:36px; object-fit:contain}
+.fp-ex p small{flex-basis:100%; padding-left:44px; font-size:11.5px; color:var(--lo)}
+.fp-mem{display:flex; align-items:center; gap:12px; padding:12px; cursor:pointer; overflow:hidden; transition:transform .12s var(--ease)}
+.fp-mem:active{transform:scale(.98)}
+.fp-mem .cv{width:72px; height:88px; border-radius:14px; object-fit:cover; flex:none}
+.fp-mem .tx{flex:1; min-width:0}
+.fp-mem small{display:block; font-size:11.5px; color:var(--lo)}
+.fp-mem b{display:block; margin-top:3px; font-size:15px}
+.fp-mem span{display:block; margin-top:3px; font-size:12px; color:rgb(255,138,184)}
+.fp-mem .ot{width:60px; height:60px; object-fit:contain; flex:none}
+
+/* ── 编辑资料 ── */
+.pf-card{position:relative; display:flex; align-items:center; gap:12px; margin-top:8px; padding:var(--pad); padding-right:100px; min-height:104px;
+  background:linear-gradient(135deg, rgba(61,220,255,.12), var(--wash) 60%), var(--card-base); overflow:visible}
+.pf-card .av{width:60px; height:60px; border-radius:50%; flex:none; box-shadow:0 0 0 3px #15131F, 0 0 0 5px var(--accent)}
+.pf-card .tx{min-width:0}
+.pf-card .tx b{display:block; font-size:18px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.pf-card .tt{display:inline-block; margin-top:4px; padding:1px 8px; border-radius:8px; font-size:11px; color:var(--accent); background:rgba(61,220,255,.12)}
+.pf-card p{margin:5px 0 0; font-size:12.5px; color:var(--mid); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+.pf-card .no{color:var(--lo); font-weight:500}
+.pf-ot{position:absolute; right:6px; bottom:0; width:92px; display:flex; flex-direction:column; align-items:center}
+.pf-ot img{width:76px; height:76px; object-fit:contain}
+.pf-ot .say{position:absolute; bottom:72px; right:4px; max-width:150px; padding:5px 9px; border-radius:12px 12px 4px 12px; background:#F4F2FA; color:#0B0A14;
+  font-size:11.5px; font-weight:600; line-height:1.4; white-space:nowrap}
+.pf-cnt{flex:none; margin-left:8px; font-size:11px; color:var(--lo); font-variant-numeric:tabular-nums}
+.pf-cnt.warn{color:#FFB86B}
+
+/* ── 游戏管理 ── */
+.gm-top{display:flex; align-items:center; gap:12px; margin-top:8px; padding:var(--pad); overflow:hidden;
+  background:linear-gradient(135deg, rgba(124,140,255,.14), var(--wash) 60%), var(--card-base)}
+.gm-top .st{position:relative; width:76px; height:56px; flex:none}
+.gm-top .st img{position:absolute; top:calc(var(--i)*4px); left:calc(var(--i)*14px); width:44px; height:44px; border-radius:13px;
+  box-shadow:0 0 0 2px #15131F; z-index:calc(3 - var(--i)); opacity:calc(1 - var(--i)*.22)}
+.gm-top .tx{flex:1; min-width:0}
+.gm-top small{display:block; font-size:11.5px; color:var(--mid)}
+.gm-top b{display:block; margin-top:2px; font-size:16px; font-weight:800}
+.gm-top span{display:block; margin-top:2px; font-size:11.5px; color:var(--mid)}
+.gm-top span em{font-style:normal; font-weight:700; color:var(--hi); font-variant-numeric:tabular-nums}
+.gm-top .ot{width:58px; height:58px; object-fit:contain; flex:none}
+.gm3 .g{cursor:pointer}
+.gm3 .g .bx{transition:transform .12s var(--ease)}
+.gm3 .g:active .bx{transform:scale(.92)}
+.gm-bar{width:42px; height:3px; margin:4px auto 2px; border-radius:2px; background:var(--well); overflow:hidden; box-shadow:var(--well-sh)}
+.gm-bar i{display:block; height:100%; width:var(--w); border-radius:2px; background:rgb(var(--b, 61,220,255))}
+.gm3.al-in .g{animation:riseIn .42s var(--ease-spring) both; animation-delay:calc(var(--i,0)*24ms)}
+
+@media (prefers-reduced-motion: reduce){
+  .ca-fl svg, .ca-bars i, .ft-year.fp-in i, .gm3.al-in .g, .al-pop{animation:none}
+}
