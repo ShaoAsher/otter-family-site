@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>水獭游时｜记下游戏与生活的时间</title>
-  <meta name="description" content="开战计时、今日水位、把高光收进藏品。小獭陪着你。不用注册，数据只在这台手机。" />
+  <meta name="description" content="水獭游时：开战计时、今日水位与安心剩余、藏品墙与小獭陪伴。不用注册，数据留在本机；iOS / Android。" />
   <meta name="theme-color" content="#0B0A14" />
   <meta property="og:title" content="水獭游时 · 记下游戏与生活的时间" />
-  <meta property="og:description" content="开战计时、今日水位、把高光收进藏品。小獭陪着你。不用注册，数据只在这台手机。" />
+  <meta property="og:description" content="开战计时、今日水位、藏品墙与小獭陪伴。本地优先，不用注册。" />
   <meta property="og:image" content="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-gametime/icon.png" />
   <link rel="icon" type="image/png" href="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-gametime/icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,7 +38,7 @@
         <a href="#demo">试用</a>
         <a href="#companion">陪伴</a>
         <a href="#features">功能</a>
-        <a href="#scenes">沉浸</a>
+        <a href="#scenes">场景</a>
         <a href="#film">影片</a>
         <button type="button" class="theme-btn" id="themeToggle" aria-label="切换深浅色">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -58,15 +58,15 @@
           <p class="eyebrow"><i></i> Otter Family · GameTime</p>
           <button type="button" class="greet" id="greet" aria-label="小獭问候，点一下换一句">
             <img id="greetFace" data-expr="anim/270/wave.webp" alt="" />
-            <span id="greetText">今晚开一局？我帮你记着。</span>
+            <span id="greetText">你好，我是小獭</span>
           </button>
           <h1 class="hero-title">
             <span class="line" data-line>水獭游时<em>。</em></span>
-            <span class="line" data-line>今晚这局，</span>
-            <span class="line accent" data-line>留得住。</span>
+            <span class="line" data-line>记下游戏与</span>
+            <span class="line accent" data-line>生活的时间。</span>
           </h1>
-          <p class="hero-lead">开战计时，看见今日水位，把高光收进藏品。她就在池边——不用注册，数据只在这台手机。</p>
-          <div class="pond" aria-label="今晚池情">
+          <p class="hero-lead">会陪你记录游戏与生活时间的手机 App。开战计时、今日水位与安心剩余、藏品墙保存高光；小獭用表情跟着你的节奏换脸。不用注册，数据留在本机。</p>
+          <div class="pond" aria-label="示例数据：今日时长">
             <div class="pond-cell">
               <span>今日水位</span>
               <b><em data-count="136" data-suffix="m">0</em><small>/ 3h</small></b>
@@ -84,38 +84,39 @@
             </div>
           </div>
           <div class="hero-cta">
-            <a class="btn btn-solid" href="#demo">真机里试用</a>
-            <a class="btn btn-ghost" href="#features">看看功能</a>
+            <a class="btn btn-solid" href="#demo">在线试用</a>
+            <a class="btn btn-ghost" href="#features">了解功能</a>
           </div>
-          <p class="hero-note">iOS / Android · 本地优先 · 可选自备 AI Key</p>
+          <p class="hero-note">iOS / Android · 免费 · 本地优先 · 可选自备 AI Key</p>
         </div>
         <div class="hero-art" data-in id="heroArt">
           <img data-media="scenes/scene-pond-data.webp" alt="今日水位与小獭" />
-          <div class="hero-chip chip-a" aria-hidden="true"><b>2h 16m</b><span>池水刚涨到这</span></div>
-          <div class="hero-chip chip-b" aria-hidden="true"><b>开战中</b><span>橙环在烧</span></div>
+          <div class="hero-chip chip-a" aria-hidden="true"><b>2h 16m</b><span>今日已记录</span></div>
+          <div class="hero-chip chip-b" aria-hidden="true"><b>开战中</b><span>计时进行中</span></div>
         </div>
       </div>
     </section>
 
-    <button type="button" class="peek" id="peek" aria-label="小獭陪看，点一下换表情">
+    <button type="button" class="peek" id="peek" aria-label="小獭，点一下换表情">
       <img id="peekFace" data-expr="anim/270/wave.webp" alt="" width="96" height="96" />
-      <span id="peekSay">点我，我陪你往下看</span>
+      <span id="peekSay" class="peek-bubble">点我换个表情</span>
     </button>
 
     <section class="band band-demo" id="demo" data-tone="play">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker"><span class="sec-idx">01</span> 真机试用</p>
-          <h2 class="sec-title">不用安装，<span class="hl">先点进这台手机</span>。</h2>
-          <p class="sec-lead">样板里是与 App 同源的交互原型。点屏幕直接操作，也可用右侧切换页面与深浅色。</p>
+          <p class="sec-kicker"><span class="sec-idx">01</span> 试用</p>
+          <h2 class="sec-title">不用安装，<span class="hl">先在浏览器里点一点</span>。</h2>
+          <p class="sec-lead">真机框里是可操作的演示。切换页面与深浅主题，感受开战、水位、藏品和「我的」。</p>
         </div>
         <div class="device" data-in>
-          <div class="device-phone" aria-label="水獭游时真机样板">
+          <div class="device-phone" aria-label="水獭游时演示">
+            <div class="device-shine" aria-hidden="true"></div>
             <div class="device-notch" aria-hidden="true"></div>
             <div class="device-screen" id="device-view">
-              <button type="button" class="device-poster" id="demo-start" aria-label="启动真机演示">
+              <button type="button" class="device-poster" id="demo-start" aria-label="启动演示">
                 <img data-media="shots/home.webp" alt="" />
-                <span class="btn btn-solid">点亮这台手机</span>
+                <span class="btn btn-solid pulse-cta">启动演示</span>
               </button>
             </div>
           </div>
@@ -136,7 +137,7 @@
                 <button type="button" class="chip" data-a="theme" data-v="day" aria-pressed="false" disabled>浅色</button>
               </div>
             </div>
-            <div class="readout" aria-live="polite"><i id="ro-dot"></i><span id="ro-text">样板未点亮</span></div>
+            <div class="readout" aria-live="polite"><i id="ro-dot"></i><span id="ro-text">演示未启动</span></div>
             <button type="button" class="btn btn-ghost btn-sm" data-a="reset" disabled>重置</button>
           </div>
         </div>
@@ -146,25 +147,25 @@
     <section class="band band-companion" id="companion" data-tone="warm">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker"><span class="sec-idx">02</span> 陪伴节奏</p>
+          <p class="sec-kicker"><span class="sec-idx">02</span> 陪伴</p>
           <h2 class="sec-title">你玩的每一刻，<span class="hl">她都在</span>。</h2>
-          <p class="sec-lead">从开战到收工，再到翻藏品——表情跟着节奏换，不是说明书，是并肩。</p>
+          <p class="sec-lead">开战时专注，水位上涨时开心，收工庆祝，忙完了提醒休息。表情读的是你的节奏，不是装饰。</p>
         </div>
         <div class="day" id="day" data-in>
-          <div class="day-list" role="tablist" aria-label="时段">
-            <button type="button" role="tab" aria-selected="true" data-i="0"><time>开战</time><i></i><b>点下去</b></button>
+          <div class="day-list" role="tablist" aria-label="一天里的小獭">
+            <button type="button" role="tab" aria-selected="true" data-i="0"><time>开战</time><i></i><b>开始计时</b></button>
             <button type="button" role="tab" aria-selected="false" data-i="1"><time>水位</time><i></i><b>看见今天</b></button>
-            <button type="button" role="tab" aria-selected="false" data-i="2"><time>藏品</time><i></i><b>留下来</b></button>
-            <button type="button" role="tab" aria-selected="false" data-i="3"><time>晚安</time><i></i><b>歇一歇</b></button>
+            <button type="button" role="tab" aria-selected="false" data-i="2"><time>藏品</time><i></i><b>保存高光</b></button>
+            <button type="button" role="tab" aria-selected="false" data-i="3"><time>晚安</time><i></i><b>提醒休息</b></button>
           </div>
           <article class="day-card" id="day-card" role="tabpanel">
             <div class="day-face"><img id="day-face" data-expr="anim/270/focus.webp" alt="" /></div>
             <div>
-              <p class="day-cmd" id="day-cmd">focus · 开战</p>
+              <p class="day-cmd" id="day-cmd">开战 · 计时</p>
               <h3 id="day-title">专心打完这局</h3>
-              <p class="say" id="day-say">计时在烧，她坐在旁边。收工时，一眼能看见你刚刚走完的路。</p>
-              <ul class="day-pool" id="day-pool" aria-label="这一刻的标签">
-                <li class="on">开战</li><li>计时</li><li>并肩</li>
+              <p class="say" id="day-say">点开战开始计时。收工后，首页水位与小结会立刻更新，小獭换成庆祝或放松的表情。</p>
+              <ul class="day-pool" id="day-pool" aria-label="相关能力">
+                <li class="on">开战计时</li><li>收工小结</li><li>表情反馈</li>
               </ul>
               <div class="day-shots" id="day-shots">
                 <img data-media="shots/timer.webp" alt="" />
@@ -179,17 +180,17 @@
 
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
-        <span>开战</span><span>水位</span><span>安心</span><span>藏品</span><span>并肩</span><span>本机</span><span>晚安</span>
-        <span>开战</span><span>水位</span><span>安心</span><span>藏品</span><span>并肩</span><span>本机</span><span>晚安</span>
+        <span>开战计时</span><span>今日水位</span><span>安心剩余</span><span>藏品墙</span><span>小獭陪伴</span><span>本地优先</span><span>深浅主题</span>
+        <span>开战计时</span><span>今日水位</span><span>安心剩余</span><span>藏品墙</span><span>小獭陪伴</span><span>本地优先</span><span>深浅主题</span>
       </div>
     </div>
 
     <section class="band band-features" id="features" data-tone="cool">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker"><span class="sec-idx">03</span> 功能叙事</p>
-          <h2 class="sec-title">先读字，<span class="hl">再看屏</span>。</h2>
-          <p class="sec-lead">每一段一个主视觉、一句口令、一条水位——不是截图墙。</p>
+          <p class="sec-kicker"><span class="sec-idx">03</span> 功能</p>
+          <h2 class="sec-title">该有的能力，<span class="hl">都清楚</span>。</h2>
+          <p class="sec-lead">计时、水位、藏品、陪伴与本地安全——四块核心，对应 App 里真实可用的功能。</p>
         </div>
 
         <div class="feats">
@@ -197,8 +198,8 @@
             <p class="stage-mark" aria-hidden="true">01</p>
             <div class="stage-copy">
               <p class="feat-num">时间 · TIME</p>
-              <h3>开战，让时间<br /><em>有形状</em></h3>
-              <p class="stage-lead">青是此刻，橙是开战，红是快到上限。选好这一局，计时开始烧。</p>
+              <h3>开战计时<br /><em>让时长可见</em></h3>
+              <p class="stage-lead">为这一局开始计时。青色表示此刻，橙色表示开战中，红色提示接近上限。收工后给出本局小结，并写入今日水位。</p>
               <ol class="stage-steps">
                 <li><b>01</b><span>一键开战 / 收工小结</span></li>
                 <li><b>02</b><span>今日水位与安心剩余</span></li>
@@ -206,12 +207,12 @@
               </ol>
             </div>
             <figure class="stage-shot">
-              <img data-media="shots/timer.webp" alt="开战计时" data-shot-dark="shots/timer.webp" data-shot-light="shots/timer-light.webp" />
-              <figcaption>开战页 · 时长在烧</figcaption>
+              <img data-media="shots/timer.webp" alt="开战计时页" data-shot-dark="shots/timer.webp" data-shot-light="shots/timer-light.webp" />
+              <figcaption>开战页 · 计时进行中</figcaption>
             </figure>
             <aside class="stage-aside">
               <img data-media="shots/home.webp" alt="" data-shot-dark="shots/home.webp" data-shot-light="shots/home-light.webp" />
-              <p>水位一眼懂</p>
+              <p>首页水位</p>
             </aside>
           </article>
 
@@ -219,21 +220,21 @@
             <p class="stage-mark" aria-hidden="true">02</p>
             <figure class="stage-shot">
               <img data-media="shots/gallery.webp" alt="藏品墙" data-shot-dark="shots/gallery.webp" data-shot-light="shots/gallery-light.webp" />
-              <figcaption>藏品墙 · 当晚温度还在</figcaption>
+              <figcaption>藏品墙 · 保存高光</figcaption>
             </figure>
             <div class="stage-copy">
               <p class="feat-num">记忆 · KEEP</p>
               <h3>高光收进<br /><em>藏品墙</em></h3>
-              <p class="stage-lead">通关、宵夜、雨停。贴上墙，翻开仍有那晚的温度。</p>
+              <p class="stage-lead">通关、宵夜、日常片段都可以保存。支持图文与语音，并可关联到某一局的时长，方便之后回顾。</p>
               <ol class="stage-steps">
-                <li><b>01</b><span>瀑布流浏览</span></li>
-                <li><b>02</b><span>图文与语音一条</span></li>
-                <li><b>03</b><span>挂回那一局时长</span></li>
+                <li><b>01</b><span>瀑布流浏览藏品</span></li>
+                <li><b>02</b><span>图文 / 语音一条记录</span></li>
+                <li><b>03</b><span>关联该局时长</span></li>
               </ol>
             </div>
             <aside class="stage-aside">
               <img data-media="memories/life_ramen.webp" alt="" />
-              <p>宵夜也算高光</p>
+              <p>生活片段也可入藏</p>
             </aside>
           </article>
 
@@ -241,21 +242,21 @@
             <p class="stage-mark" aria-hidden="true">03</p>
             <div class="stage-copy">
               <p class="feat-num">陪伴 · BOND</p>
-              <h3>表情接住<br /><em>你的节奏</em></h3>
-              <p class="stage-lead">开战、收工、翻相册——她用一整套表情并肩，不是说明书。</p>
+              <h3>小獭表情<br /><em>跟着节奏换</em></h3>
+              <p class="stage-lead">开战、收工、翻藏品时，小獭切换对应表情。可更换头像与装扮；关于页可进入水獭家族官网。</p>
               <ol class="stage-steps">
-                <li><b>01</b><span>家族表情节奏</span></li>
+                <li><b>01</b><span>情境表情反馈</span></li>
                 <li><b>02</b><span>头像与装扮</span></li>
                 <li><b>03</b><span>关于页 · 家族入口</span></li>
               </ol>
             </div>
             <figure class="stage-shot">
               <img data-media="shots/me.webp" alt="我的页面" data-shot-dark="shots/me.webp" data-shot-light="shots/me-light.webp" />
-              <figcaption>我的页 · 表情在场</figcaption>
+              <figcaption>我的 · 陪伴与装扮</figcaption>
             </figure>
             <aside class="stage-aside face">
               <img data-expr="anim/270/celebrate.webp" alt="" />
-              <p>庆祝这一局</p>
+              <p>收工庆祝</p>
             </aside>
           </article>
 
@@ -263,38 +264,38 @@
             <p class="stage-mark" aria-hidden="true">04</p>
             <figure class="stage-shot">
               <img data-media="shots/settings.webp" alt="设置" />
-              <figcaption>设置 · 数据在这台手机</figcaption>
+              <figcaption>设置 · 本机与主题</figcaption>
             </figure>
             <div class="stage-copy">
               <p class="feat-num">本地 · LOCAL</p>
-              <h3>不用注册，<br /><em>也可选 AI</em></h3>
-              <p class="stage-lead">本机优先。想聊两句时，自备 Key，请求直连你的服务商。</p>
+              <h3>不用注册，<br /><em>数据在本机</em></h3>
+              <p class="stage-lead">默认本地优先，可备份。支持日 / 夜 / 跟随系统。需要对话时，可自备 AI Key，请求直连你选择的服务商。</p>
               <ol class="stage-steps">
                 <li><b>01</b><span>本机优先 · 可备份</span></li>
-                <li><b>02</b><span>日 / 夜 / 自动</span></li>
-                <li><b>03</b><span>隐私与协议外链</span></li>
+                <li><b>02</b><span>日 / 夜 / 自动主题</span></li>
+                <li><b>03</b><span>隐私政策与用户协议</span></li>
               </ol>
             </div>
             <aside class="stage-aside">
               <img data-media="scenes/scene-local-safe.webp" alt="" />
-              <p>护盾在你手里</p>
+              <p>数据由你掌控</p>
             </aside>
           </article>
         </div>
 
         <div class="compare-block" data-in>
           <div class="sec-head sec-head-center">
-            <p class="sec-kicker">深浅一瞥</p>
-            <h2 class="sec-title">同一套界面，两种呼吸。</h2>
-            <p class="sec-lead">拖动中间把手，对照日夜两种皮肤。</p>
+            <p class="sec-kicker">主题</p>
+            <h2 class="sec-title">浅色、深色，各有一份。</h2>
+            <p class="sec-lead">拖动手柄对比两套主题。App 内支持日 / 夜 / 跟随系统。</p>
           </div>
           <div class="compare" id="compare" aria-label="深浅主题对比">
-            <img data-media="shots/home-light.webp" alt="浅色" />
-            <img class="top" data-media="shots/home.webp" alt="深色" />
+            <img data-media="shots/home-light.webp" alt="浅色主题首页" />
+            <img class="top" data-media="shots/home.webp" alt="深色主题首页" />
             <span class="lab l">浅色</span>
             <span class="lab d">深色</span>
             <div class="handle" aria-hidden="true"><i class="knob"></i></div>
-            <input type="range" min="8" max="92" value="52" aria-label="拖动对比深浅主题" />
+            <input type="range" min="8" max="92" value="52" aria-label="对比深浅主题" />
           </div>
         </div>
       </div>
@@ -303,41 +304,41 @@
     <section class="band band-scenes" id="scenes" data-tone="glow">
       <div class="wrap" data-in>
         <div class="sec-head">
-          <p class="sec-kicker"><span class="sec-idx">04</span> 沉浸场景</p>
-          <h2 class="sec-title">功能长什么样，<span class="hl">情绪也长什么样</span>。</h2>
-          <p class="sec-lead">立绘走进场景：水位数字、开战计时、藏品光点、心情星座、本地护盾——一眼读懂特色。</p>
+          <p class="sec-kicker"><span class="sec-idx">04</span> 场景</p>
+          <h2 class="sec-title">功能对应的<span class="hl">氛围画面</span>。</h2>
+          <p class="sec-lead">水位、开战、藏品、陪伴与本地安全——用场景图概括各能力的气质。</p>
         </div>
-        <div class="scene-rail" tabindex="0" aria-label="沉浸场景横滑">
+        <div class="scene-rail" tabindex="0" aria-label="场景画廊，可横向滚动">
           <article class="scene-card">
-            <img data-media="scenes/scene-pond-data.webp" alt="水位" />
-            <div class="cap"><b>水位</b><span>2h 16m 就在池里</span></div>
+            <img data-media="scenes/scene-pond-data.webp" alt="今日水位" />
+            <div class="cap"><b>水位</b><span>今日时长一眼可见</span></div>
           </article>
           <article class="scene-card">
-            <img data-media="scenes/scene-battle-timer.webp" alt="开战" />
-            <div class="cap"><b>开战</b><span>时间烧起来</span></div>
+            <img data-media="scenes/scene-battle-timer.webp" alt="开战计时" />
+            <div class="cap"><b>开战</b><span>计时进行中</span></div>
           </article>
           <article class="scene-card">
             <img data-media="scenes/scene-memory-keep.webp" alt="藏品" />
-            <div class="cap"><b>藏品</b><span>高光留下来</span></div>
+            <div class="cap"><b>藏品</b><span>高光保存在墙里</span></div>
           </article>
           <article class="scene-card">
             <img data-media="scenes/scene-companion-mood.webp" alt="陪伴" />
-            <div class="cap"><b>陪伴</b><span>表情接住节奏</span></div>
+            <div class="cap"><b>陪伴</b><span>表情跟随情境</span></div>
           </article>
           <article class="scene-card">
             <img data-media="scenes/scene-local-safe.webp" alt="本地" />
-            <div class="cap"><b>本地</b><span>数据在你手里</span></div>
+            <div class="cap"><b>本地</b><span>数据留在本机</span></div>
           </article>
         </div>
-        <p class="scene-hint">按住横滑 · 像翻一整卷情绪胶卷</p>
+        <p class="scene-hint">横向滑动查看</p>
       </div>
     </section>
 
     <section class="band band-film" id="film" data-tone="cinema">
       <div class="wrap" data-in>
-        <p class="sec-kicker"><span class="sec-idx">05</span> Film</p>
+        <p class="sec-kicker"><span class="sec-idx">05</span> 影片</p>
         <h2 class="sec-title">一局时间。</h2>
-        <p class="sec-lead">从空池到开战，再到藏品。片子还在剪——先用这一帧把情绪定住。</p>
+        <p class="sec-lead">产品宣传片制作中。上线后将展示从空池、开战到收藏的完整流程。</p>
         <div class="player is-soon" id="promo-wrap">
           <img class="poster" data-media="scenes/scene-battle-timer.webp" alt="" />
           <video id="promo" playsinline controls preload="none" hidden></video>
@@ -351,8 +352,8 @@
 
     <section id="download" class="close">
       <div class="wrap" data-in>
-        <h2>把今晚留下来。</h2>
-        <p>水獭游时 · 游戏与生活的时间伴侣。本地优先，她陪着。</p>
+        <h2>下载水獭游时</h2>
+        <p>记下游戏与生活的时间。本地优先，小獭陪伴。免费，不用注册。</p>
         <div class="dl-row">
           <a class="btn btn-solid store" data-store="ios" href="#download" aria-label="App Store">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3.5c-.8.1-1.8.6-2.4 1.2-.5.6-1 1.5-.8 2.4 1 .1 1.9-.5 2.5-1.1.6-.6 1-1.5.7-2.5zM19.2 12c0-2.2 1.8-3.2 1.9-3.3-1-.1.5-2.5-2.2-3.4-1.1-.5-2.3-.4-2.9-.3-.9.4-1.9 1.1-2.4 1.1-.6 0-1.5-.9-2.5-.9-1.9.1-3.7 1.3-4.6 3.2-2 3.4-.5 8.4 1.4 11.2.9 1.3 2 2.8 3.4 2.7 1.4 0 1.9-.8 3.5-.8s2.1.8 3.5.8 2.3-1.3 3.2-2.6c.6-.9 1.1-1.9 1.4-2.9-3.3-1.3-3.7-5.8-.7-7.8z"/></svg>

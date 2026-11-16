@@ -33,12 +33,19 @@
 
   // greet
   const greets = [
-    { t: "今晚开一局？我帮你记着。", f: "wave" },
-    { t: "水位刚刚好，可以安心玩一会儿。", f: "happy" },
-    { t: "收工了就把高光收进来吧。", f: "celebrate" },
-    { t: "忙完了也记得歇一歇。", f: "sleep" },
+    { t: "你好，我是小獭", f: "hi" },
+    { t: "开战吧，我帮你记时长", f: "focus" },
+    { t: "水位刚好，可以安心玩一会儿", f: "happy" },
+    { t: "这局值得收进藏品墙", f: "celebrate" },
+    { t: "忙完了，也记得休息", f: "sleep" },
   ];
   let gi = 0;
+  const popFace = (el) => {
+    if (!el || reduce) return;
+    el.classList.remove("is-pop");
+    void el.offsetWidth;
+    el.classList.add("is-pop");
+  };
   $("#greet")?.addEventListener("click", () => {
     gi = (gi + 1) % greets.length;
     $("#greetText").textContent = greets[gi].t;
@@ -46,16 +53,17 @@
     if (el) {
       el.dataset.expr = `anim/270/${greets[gi].f}.webp`;
       el.src = face(greets[gi].f);
+      popFace(el);
     }
   });
 
-  // peek otter
+  // peek otter — Tubik: mascot as living UI, not decoration
   const peeks = [
-    { f: "wave", s: "点我，我陪你往下看" },
-    { f: "focus", s: "先开战，我帮你记" },
-    { f: "happy", s: "水位刚好，放心玩" },
-    { f: "celebrate", s: "这局值得收进墙" },
-    { f: "sleep", s: "忙完了，歇一歇" },
+    { f: "wave", s: "点我换个表情" },
+    { f: "focus", s: "开战，我帮你记" },
+    { f: "happy", s: "水位刚好" },
+    { f: "celebrate", s: "收进藏品墙" },
+    { f: "sleep", s: "记得休息" },
   ];
   let pi = 0;
   $("#peek")?.addEventListener("click", () => {
@@ -65,42 +73,51 @@
     if (img) {
       img.dataset.expr = `anim/270/${p.f}.webp`;
       img.src = face(p.f);
+      popFace(img);
     }
-    if ($("#peekSay")) $("#peekSay").textContent = p.s;
+    const bubble = $("#peekSay");
+    if (bubble) {
+      bubble.textContent = p.s;
+      if (!reduce) {
+        bubble.classList.remove("is-pop");
+        void bubble.offsetWidth;
+        bubble.classList.add("is-pop");
+      }
+    }
   });
 
   // companion day
   const DAYS = [
     {
       title: "专心打完这局",
-      cmd: "focus · 开战",
-      say: "计时在烧，她坐在旁边。收工时，一眼能看见你刚刚走完的路。",
+      cmd: "开战 · 计时",
+      say: "点开战开始计时。收工后，首页水位与小结会立刻更新，小獭换成庆祝或放松的表情。",
       face: "focus",
-      tags: ["开战", "计时", "并肩"],
+      tags: ["开战计时", "收工小结", "表情反馈"],
       shots: ["shots/timer.webp", "shots/home.webp", "shots/compose.webp"],
     },
     {
       title: "今天花在哪",
-      cmd: "pond · 水位",
-      say: "池水慢慢涨起来。不是报表，是一眼就懂的水位。",
+      cmd: "水位 · 今日",
+      say: "首页用「水位」展示今日已记录时长与安心剩余。日历与桌面小组件也能看到同一份今日数据。",
       face: "happy",
-      tags: ["水位", "安心", "日历"],
+      tags: ["今日水位", "安心剩余", "小组件"],
       shots: ["shots/home.webp", "shots/calendar.webp", "shots/desk.webp"],
     },
     {
       title: "把高光留下来",
-      cmd: "keep · 藏品",
-      say: "通关、宵夜、雨停——贴上墙，翻开还有当晚的温度。",
+      cmd: "藏品 · 保存",
+      say: "通关、宵夜或日常片段都可以写入藏品墙，支持图文与语音，并可关联某一局的时长。",
       face: "celebrate",
-      tags: ["藏品", "宵夜", "温度"],
+      tags: ["藏品墙", "图文语音", "关联时长"],
       shots: ["shots/gallery.webp", "shots/compose.webp", "memories/life_ramen.webp"],
     },
     {
       title: "道一声晚安",
-      cmd: "rest · 晚安",
-      say: "忙完了，她也记得歇一歇。明天的池水，从零再涨。",
+      cmd: "休息 · 晚安",
+      say: "忙完后小獭会提醒休息。明天的水位重新累计，记录与藏品都还在本机。",
       face: "sleep",
-      tags: ["晚安", "休息", "明天"],
+      tags: ["休息提醒", "本机数据", "明日续记"],
       shots: ["shots/me.webp", "shots/about.webp", "scenes/scene-companion-mood.webp"],
     },
   ];
@@ -114,6 +131,7 @@
     if (faceEl) {
       faceEl.dataset.expr = `anim/270/${d.face}.webp`;
       faceEl.src = face(d.face);
+      popFace(faceEl);
     }
     const pool = $("#day-pool");
     if (pool) {
@@ -242,7 +260,7 @@
     frame.title = "水獭游时真机演示";
     frame.setAttribute("allow", "autoplay; clipboard-write");
     view.appendChild(frame);
-    $("#ro-text").textContent = "正在点亮…";
+    $("#ro-text").textContent = "正在启动…";
     frame.addEventListener("load", () => {
       startBtn.remove();
       $$("button[disabled]", panel).forEach((b) => {
@@ -261,7 +279,7 @@
     const b = e.target.closest("button[data-a]");
     if (!b || b.disabled) return;
     if (b.dataset.a === "reset") {
-      $("#ro-text").textContent = "正在点亮…";
+      $("#ro-text").textContent = "正在重置…";
       frame.src = frame.src;
       return;
     }
