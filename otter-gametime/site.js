@@ -1,16 +1,14 @@
 (() => {
   const root = document.documentElement;
   const nav = document.getElementById("nav");
-  const phone = document.getElementById("phone3d");
-  const stage = document.getElementById("stage");
   const themeBtn = document.getElementById("themeToggle");
   const meta = document.querySelector('meta[name="theme-color"]');
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const $ = (s, el) => (el || document).querySelector(s);
   const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+  let frame = null;
 
-  const theme = () => root.getAttribute("data-theme") === "light" ? "light" : "dark";
-
+  const theme = () => (root.getAttribute("data-theme") === "light" ? "light" : "dark");
   const applyTheme = (next) => {
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("gt_site_theme", next); } catch (_) {}
@@ -19,19 +17,72 @@
       const src = next === "light" ? img.dataset.shotLight : img.dataset.shotDark;
       if (src) img.src = src;
     });
-    const hero = $("#heroFrame");
-    if (hero && hero.contentWindow) {
-      hero.contentWindow.postMessage({ type: "otter-demo", action: "theme", value: next === "light" ? "day" : "night" }, "*");
+    if (frame && frame.contentWindow) {
+      frame.contentWindow.postMessage({ type: "otter-demo", action: "theme", value: next === "light" ? "day" : "night" }, "*");
     }
   };
-
-  if (themeBtn) {
-    themeBtn.addEventListener("click", () => {
-      applyTheme(theme() === "light" ? "dark" : "light");
-    });
-  }
+  themeBtn?.addEventListener("click", () => applyTheme(theme() === "light" ? "dark" : "light"));
   applyTheme(theme());
 
+  // greet
+  const greets = [
+    { t: "今晚开一局？我帮你记着。", f: "media/expr/wave.webp" },
+    { t: "水位刚刚好，可以安心玩一会儿。", f: "media/expr/happy.webp" },
+    { t: "收工了就把高光收进来吧。", f: "media/expr/celebrate.webp" },
+    { t: "忙完了也记得歇一歇。", f: "media/expr/sleep.webp" },
+  ];
+  let gi = 0;
+  $("#greet")?.addEventListener("click", () => {
+    gi = (gi + 1) % greets.length;
+    $("#greetText").textContent = greets[gi].t;
+    $("#greetFace").src = greets[gi].f;
+  });
+
+  // companion day
+  const DAYS = [
+    {
+      title: "专心打完这局",
+      say: "计时在烧，她坐在旁边。收工时，一眼能看见你刚刚走完的路。",
+      face: "media/expr/focus.webp",
+      shots: ["media/shots/timer.webp", "media/shots/home.webp", "media/shots/compose.webp"],
+    },
+    {
+      title: "今天花在哪",
+      say: "池水慢慢涨起来。不是报表，是一眼就懂的水位。",
+      face: "media/expr/happy.webp",
+      shots: ["media/shots/home.webp", "media/shots/calendar.webp", "media/shots/desk.webp"],
+    },
+    {
+      title: "把高光留下来",
+      say: "通关、宵夜、雨停——贴上墙，翻开还有当晚的温度。",
+      face: "media/expr/celebrate.webp",
+      shots: ["media/shots/gallery.webp", "media/shots/compose.webp", "media/memories/life_ramen.webp"],
+    },
+    {
+      title: "道一声晚安",
+      say: "忙完了，她也记得歇一歇。明天的池水，从零再涨。",
+      face: "media/expr/sleep.webp",
+      shots: ["media/shots/me.webp", "media/shots/about.webp", "media/scenes/scene-companion-mood.webp"],
+    },
+  ];
+  let dayCur = 0;
+  const dayShow = (i) => {
+    dayCur = i;
+    const d = DAYS[i];
+    $$(".day-list button").forEach((b, idx) => b.setAttribute("aria-selected", String(idx === i)));
+    $("#day-title").textContent = d.title;
+    $("#day-say").textContent = d.say;
+    $("#day-face").src = d.face;
+    $("#day-shots").innerHTML = d.shots.map((s) => `<img src="${s}" alt="" loading="lazy" />`).join("");
+  };
+  $(".day-list")?.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-i]");
+    if (!b) return;
+    dayShow(+b.dataset.i);
+  });
+  dayShow(0);
+
+  // reveal
   const reveal = () => {
     const nodes = [...document.querySelectorAll("[data-in]")];
     if (!root.classList.contains("motion") || reduce) {
@@ -41,8 +92,8 @@
     }
     nodes.forEach((n) => {
       n.style.opacity = "0";
-      n.style.transform = "translateY(24px) scale(.98)";
-      n.style.transition = "opacity 820ms cubic-bezier(.22,1,.36,1), transform 820ms cubic-bezier(.22,1,.36,1)";
+      n.style.transform = "translateY(22px) scale(.985)";
+      n.style.transition = "opacity 780ms cubic-bezier(.22,1,.36,1), transform 780ms cubic-bezier(.22,1,.36,1)";
       n.style.visibility = "visible";
     });
     const io = new IntersectionObserver((entries) => {
@@ -54,39 +105,13 @@
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -5% 0px" });
     nodes.forEach((n, i) => {
-      n.style.transitionDelay = `${Math.min(i % 5, 4) * 55}ms`;
+      n.style.transitionDelay = `${Math.min(i % 5, 4) * 50}ms`;
       io.observe(n);
     });
     root.classList.add("ready");
   };
 
-  const onScroll = () => {
-    if (nav) nav.classList.toggle("scrolled", window.scrollY > 8);
-  };
-
-  // subtle tilt — disabled while pointer is over iframe to keep clicks crisp
-  if (phone && stage && !reduce) {
-    let tx = 0, ty = 0, cx = 0, cy = 0, over = false;
-    stage.addEventListener("pointerenter", () => { over = true; });
-    stage.addEventListener("pointerleave", () => { over = false; tx = 0; ty = 0; });
-    stage.addEventListener("pointermove", (e) => {
-      if (e.target.closest("iframe")) { tx = 0; ty = 0; return; }
-      const r = stage.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
-      tx = x * 8;
-      ty = -y * 6;
-    });
-    const loop = () => {
-      cx += (tx - cx) * 0.1;
-      cy += (ty - cy) * 0.1;
-      phone.style.transform = over ? `rotateX(${cy}deg) rotateY(${cx}deg)` : "none";
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-  }
-
-  // compare slider
+  // compare
   const compare = $("#compare");
   if (compare) {
     const input = $("input", compare);
@@ -95,64 +120,48 @@
     sync();
   }
 
-  // live demo iframe
-  const view = $("#demo-view");
+  // device demo
+  const view = $("#device-view");
   const panel = $("#panel");
   const startBtn = $("#demo-start");
-  let frame = null;
   const PAGE = { home: "此刻", timer: "开战", gallery: "藏品", me: "我" };
 
   const send = (action, value) => {
-    if (frame && frame.contentWindow) {
-      frame.contentWindow.postMessage({ type: "otter-demo", action, value }, "*");
-    }
+    if (frame?.contentWindow) frame.contentWindow.postMessage({ type: "otter-demo", action, value }, "*");
   };
 
-  if (startBtn && view && panel) {
-    startBtn.addEventListener("click", () => {
-      frame = document.createElement("iframe");
-      const th = theme() === "light" ? "light" : "dark";
-      frame.src = `demo/index.html?embed&nosplash&theme=${th}&p=home`;
-      frame.title = "水獭游时交互演示";
-      frame.setAttribute("allow", "autoplay; clipboard-write");
-      view.appendChild(frame);
-      $("#ro-text").textContent = "正在载入…";
-      frame.addEventListener("load", () => {
-        startBtn.remove();
-        $$("button[disabled]", panel).forEach((b) => { b.disabled = false; });
-        frame.focus();
-      });
+  startBtn?.addEventListener("click", () => {
+    frame = document.createElement("iframe");
+    const th = theme() === "light" ? "light" : "dark";
+    frame.src = `demo/index.html?embed&nosplash&theme=${th}&p=home`;
+    frame.title = "水獭游时真机演示";
+    frame.setAttribute("allow", "autoplay; clipboard-write");
+    view.appendChild(frame);
+    $("#ro-text").textContent = "正在点亮…";
+    frame.addEventListener("load", () => {
+      startBtn.remove();
+      $$("button[disabled]", panel).forEach((b) => { b.disabled = false; });
+      frame.focus();
     });
+  });
 
-    panel.addEventListener("click", (e) => {
-      const b = e.target.closest("button[data-a]");
-      if (!b || b.disabled) return;
-      if (b.dataset.a === "reset") {
-        frame.src = frame.src;
-        return;
-      }
-      send(b.dataset.a, b.dataset.v);
-    });
-  }
+  panel?.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-a]");
+    if (!b || b.disabled) return;
+    if (b.dataset.a === "reset") { frame.src = frame.src; return; }
+    send(b.dataset.a, b.dataset.v);
+  });
 
   addEventListener("message", (e) => {
     const d = e.data;
-    if (!d || d.type !== "otter-demo-state") return;
-    if (frame && e.source === frame.contentWindow) {
-      $$('[data-group="page"] .chip').forEach((c) => {
-        c.setAttribute("aria-pressed", String(c.dataset.v === d.page));
-      });
-      $$('[data-group="theme"] .chip').forEach((c) => {
-        c.setAttribute("aria-pressed", String(c.dataset.v === d.theme));
-      });
-      $("#ro-text").textContent = `${PAGE[d.page] || d.page} · ${d.theme === "day" ? "浅色" : "深色"}`;
-    }
+    if (!d || d.type !== "otter-demo-state" || !frame || e.source !== frame.contentWindow) return;
+    $$('[data-group="page"] .chip').forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.v === d.page)));
+    $$('[data-group="theme"] .chip').forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.v === d.theme)));
+    $("#ro-text").textContent = `${PAGE[d.page] || d.page} · ${d.theme === "day" ? "浅色" : "深色"}`;
   });
 
   $$("[data-store]").forEach((a) => {
-    a.addEventListener("click", (e) => {
-      if (!a.dataset.hrefReady) e.preventDefault();
-    });
+    a.addEventListener("click", (e) => { if (!a.dataset.hrefReady) e.preventDefault(); });
   });
 
   const list = $("#changelog");
@@ -163,16 +172,12 @@
         const rows = d?.apps?.["otter-gametime"]?.changelog;
         if (!Array.isArray(rows) || !rows.length) return;
         list.innerHTML = rows.slice(0, 5).map((c) => `
-          <li>
-            <b>v${c.version}</b>
-            <time datetime="${c.date}">${String(c.date).slice(5)}</time>
-            <span>${c.zh}</span>
-          </li>`).join("");
+          <li><b>v${c.version}</b><time datetime="${c.date}">${String(c.date).slice(5)}</time><span>${c.zh}</span></li>`).join("");
       })
       .catch(() => {});
   }
 
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  window.addEventListener("scroll", () => nav?.classList.toggle("scrolled", scrollY > 8), { passive: true });
+  nav?.classList.toggle("scrolled", scrollY > 8);
   reveal();
 })();
