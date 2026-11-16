@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-15",
+  "updated": "2026-11-16",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -19,7 +19,7 @@
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
-    "libraryVersion": "3.0.7",
+    "libraryVersion": "3.0.9",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -149,7 +149,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.0.0",
+      "latest": "3.0.1",
       "download": {
         "version": "3.0.0",
         "files": {
@@ -160,6 +160,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.0.1",
+          "date": "2026-11-16",
+          "zh": "养护会等扫描告一段落再请你确认，避免还没扫完就弹出；启动页不再误报「可清理 0.0 GB」。macOS 增强开机项与未用语言包清理。官网换上约三分钟上手全攻略宣传片。",
+          "en": "Care waits for the junk scan before asking; splash no longer shows “0.0 GB cleanable.” macOS startup items and unused language-pack cleanup improved. Site promo is a ~3-minute getting-started film."
+        },
         {
           "version": "3.0.0",
           "date": "2026-11-14",
