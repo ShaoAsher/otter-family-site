@@ -402,12 +402,15 @@ html[data-theme="light"] .device-phone {
   position: relative; height: 100%; border-radius: 34px; overflow: hidden; background: #0B0A14;
 }
 .device-screen iframe,
+.device-screen .device-frame,
 .device-screen .device-poster {
   position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
 }
+.device-screen .device-frame { z-index: 2; background: #0B0A14; }
 .device-poster {
-  display: grid; place-items: center; padding: 0; cursor: pointer; background: #09080f;
+  display: grid; place-items: center; padding: 0; cursor: pointer; background: #09080f; z-index: 1;
 }
+.device-poster[hidden] { display: none !important; }
 .device-poster img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: top; filter: brightness(.55);

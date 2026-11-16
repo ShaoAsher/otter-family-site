@@ -1686,8 +1686,20 @@ nav button:active .dot{transform:scale(.88)}
 
 /* 播放器 */
 .gp{position:absolute; inset:0; z-index:3; overflow:hidden; --p:0; --b:0}
-.gp video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000}
+.gp-cover{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; pointer-events:none; background:#15131F}
+.gp video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:transparent; z-index:1}
+/* 仅 idle（未播过）藏黑帧、露封面；播放/暂停/scrub 显示真实画面 */
+.gp[data-st="idle"] video{opacity:0}
+.gp[data-st="play"] video,
+.gp[data-st="pause"] video,
+.gp.ended video,
+.gp.scrub video{opacity:1}
+.gp[data-st="play"] .gp-cover,
+.gp[data-st="pause"] .gp-cover,
+.gp.ended .gp-cover,
+.gp.scrub .gp-cover{opacity:0; transition:opacity .2s}
 .vw-m .gp video{object-fit:contain}
+.vw-m .gp-cover{object-fit:contain; background:#000}
 .gp::before{content:""; position:absolute; inset:auto 0 0; height:110px; pointer-events:none; z-index:1;
   background:linear-gradient(180deg, transparent, rgba(8,7,16,.72)); opacity:0; transition:opacity .3s}
 .gp.ui::before{opacity:1}

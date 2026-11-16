@@ -1875,7 +1875,10 @@ function vwLand(on){
 window.vwLand=vwLand;
 function GtPlayer(host, m, o){
   o=o||{}; var el=document.createElement('div'); el.className='gp ui'+(o.compact?' compact':''); el.dataset.st='idle';
-  el.innerHTML='<video playsinline muted preload="metadata" poster="'+(m.poster||m.src)+'" src="'+m.clip+'"></video>'
+  /* 单独封面层：部分浏览器在 preload=metadata 后用黑帧盖住 poster，idle 时改露封面图 */
+  var cover=m.poster||m.src||'';
+  el.innerHTML=(cover?'<img class="gp-cover" src="'+cover+'" alt="">':'')
+    +'<video playsinline muted preload="metadata" poster="'+cover+'" src="'+m.clip+'"></video>'
     +'<button class="gp-big" aria-label="播放"><i class="rp"></i><i class="rp r2"></i><span class="ic">'+MD_IC.play+'</span></button>'
     +'<div class="gp-bar">'
     +  '<button class="gp-pp" aria-label="播放或暂停">'+MD_IC.play+'</button><span class="gp-t">0:00</span>'
@@ -2069,11 +2072,13 @@ function recMedia(it){
   return [it.img].concat(pool.filter(function(f){ return f!==it.img; }).slice(0,2)).map(mediaOf);
 }
 function heroMedia(it){
-  var box=$('#s3-record .rd-hero'); if(!box) return;
+  var box=$('#s3-record .rd-hero'), hero=$('#rdImg'); if(!box) return;
   if(HERO.p){ HERO.p.destroy(); HERO.p=null; }
   $$('.rd-cnt, .gl, .gp', box).forEach(function(x){ x.remove(); }); box.classList.remove('playing','live-on');
   HERO.list=recMedia(it); if(!HERO.list.length || (it.note && !it.img)) return;
   var m=HERO.list[0];
+  /* 视频播放器自带封面；实况仍靠底层 img，未播时 video 透明 */
+  if(hero) hero.style.visibility=m.kind==='video'?'hidden':'';
   if(m.kind==='video') HERO.p=GtPlayer(box, m, {compact:true, onExpand:function(t, was, ri){ vwOpen(HERO.list, 0, box.querySelector('video'), {cap:$('#rdT').textContent, at:t, rate:ri, autoplay:true}); }});
   else if(m.kind==='live') HERO.p=GtLive(box, m, {hint:true});
   if(HERO.list.length>1) box.insertAdjacentHTML('beforeend', '<span class="rd-cnt"><svg viewBox="0 0 24 24"><rect x="3.5" y="6.5" width="13" height="13" rx="2.5"/><path d="M7.5 3.5h10a3 3 0 0 1 3 3v10"/></svg>1 / '+HERO.list.length+'</span>');

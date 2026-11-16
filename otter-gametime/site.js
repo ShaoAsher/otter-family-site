@@ -252,6 +252,10 @@
   };
 
   startBtn?.addEventListener("click", () => {
+    if (frame) return;
+    // 立刻拿掉海报层，避免 iframe 未绘制时仍透出「启动演示」
+    startBtn.hidden = true;
+    startBtn.setAttribute("aria-hidden", "true");
     frame = document.createElement("iframe");
     const th = theme() === "light" ? "light" : "dark";
     demoTheme = th === "light" ? "day" : "night";
@@ -259,9 +263,10 @@
     frame.src = `demo/index.html?embed&nosplash&theme=${th}&p=home`;
     frame.title = "水獭游时真机演示";
     frame.setAttribute("allow", "autoplay; clipboard-write");
+    frame.className = "device-frame";
     view.appendChild(frame);
     $("#ro-text").textContent = "正在启动…";
-    frame.addEventListener("load", () => {
+    const arm = () => {
       startBtn.remove();
       $$("button[disabled]", panel).forEach((b) => {
         b.disabled = false;
@@ -272,13 +277,26 @@
         send("theme", demoTheme);
       } catch (_) {}
       frame.focus();
-    });
+    };
+    frame.addEventListener("load", arm, { once: true });
+    frame.addEventListener(
+      "error",
+      () => {
+        frame.remove();
+        frame = null;
+        startBtn.hidden = false;
+        startBtn.removeAttribute("aria-hidden");
+        if ($("#ro-text")) $("#ro-text").textContent = "启动失败，再试一次";
+      },
+      { once: true }
+    );
   });
 
   panel?.addEventListener("click", (e) => {
     const b = e.target.closest("button[data-a]");
     if (!b || b.disabled) return;
     if (b.dataset.a === "reset") {
+      if (!frame) return;
       $("#ro-text").textContent = "正在重置…";
       frame.src = frame.src;
       return;
