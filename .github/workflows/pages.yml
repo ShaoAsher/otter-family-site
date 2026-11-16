@@ -21,7 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     env:
-      WEB: index.html family.json shared otter-git otter-tools
+      WEB: index.html family.json shared otter-git otter-tools otter-gametime
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,6 +32,7 @@ jobs:
             /shared/
             /otter-git/
             /otter-tools/
+            /otter-gametime/
 
       - name: 收集网页
         run: |
