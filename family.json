@@ -260,6 +260,10 @@
         "#5CF2DE"
       ],
       "latest": "3.0.0",
+      "legal": {
+        "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
+        "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html"
+      },
       "download": null,
       "changelog": [
         {
