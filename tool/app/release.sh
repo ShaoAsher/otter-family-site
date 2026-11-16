@@ -91,7 +91,8 @@ if [[ "${OTTER_RELEASE_ANY_BRANCH:-0}" != "1" ]]; then
     exit 1
   }
   [[ "$(git rev-parse -q --verify "refs/tags/$TAG^{commit}" || true)" == "$(git rev-parse HEAD)" ]] || {
-    echo "当前提交没有 $TAG 标签。在 main 上 git tag $TAG；版本号见 pubspec.yaml" >&2
+    # 必须用 ${TAG}：全角「；」会粘进变量名，set -u 下报 unbound
+    echo "当前提交没有 ${TAG} 标签。在 main 上 git tag ${TAG}；版本号见 pubspec.yaml" >&2
     exit 1
   }
 fi
