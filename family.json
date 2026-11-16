@@ -155,7 +155,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.0.1",
+      "latest": "3.0.2",
       "download": {
         "version": "3.0.1",
         "files": {
@@ -166,6 +166,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.0.2",
+          "date": "2026-11-16",
+          "zh": "小獭表情编排升级：120 枚表情按情境轮换，戳一戳、闲置冒泡、扫描清理都会换脸，更有生命力。",
+          "en": "Otter expression cast: all 120 faces rotate by context—pokes, idle chatter, scans and cleans feel more alive."
+        },
         {
           "version": "3.0.1",
           "date": "2026-11-16",
