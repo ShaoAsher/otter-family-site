@@ -26,17 +26,13 @@
   const _m=markConsole;markConsole=()=>{_m();report()};
 
   if(q.get('theme')==='day')setTheme('day');
-  if(q.has('nosplash')||q.has('embed')){
-    const sp=document.getElementById('splash');
-    if(sp){sp.classList.remove('on');sp.style.display='none';sp.style.pointerEvents='none'}
-  }
+  if(q.has('nosplash')){const sp=document.getElementById('splash');sp.classList.remove('on');sp.style.opacity=0}
   const p=q.get('page');if(p)go(p);
 
   if(q.has('embed')){
     document.documentElement.classList.add('embed');
-    document.head.insertAdjacentHTML('beforeend','<style>.embed #console{display:none}.embed #stage{padding:0}.embed,.embed body{background:transparent}.embed #win{box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.08)}.embed #splash{display:none!important;pointer-events:none!important}</style>');
-    const win=document.getElementById('win');
-    const fit2=()=>{if(!win)return;const k=Math.max(.2,Math.min((innerWidth-2)/1280,(innerHeight-2)/800,1.25));win.style.transform=`scale(${k})`};
+    document.head.insertAdjacentHTML('beforeend','<style>.embed #console{display:none}.embed #stage{padding:0}.embed,.embed body{background:transparent}.embed #win{box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.08)}</style>');
+    const fit2=()=>{const k=Math.max(.2,Math.min((innerWidth-2)/1280,(innerHeight-2)/800,1.25));document.getElementById('win').style.transform=`scale(${k})`};
     addEventListener('resize',fit2);fit2();
   }
   report();

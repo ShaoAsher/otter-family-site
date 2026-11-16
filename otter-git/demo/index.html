@@ -100,7 +100,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .cardp{background:var(--pane);border:.5px solid var(--line);border-radius:var(--r-md);box-shadow:0 8px 24px rgba(0,0,0,.18);overflow:hidden;position:relative}
 .cardp{isolation:isolate}
 .cardp::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--card);pointer-events:none;border-radius:inherit}
-.bottom{display:none;flex-direction:column;height:280px;min-height:140px;max-height:55%;border-top:.5px solid var(--line);background:var(--pane);position:relative}
+.bottom{display:none;flex-direction:column;height:280px;min-height:140px;border-top:.5px solid var(--line);background:var(--pane);position:relative}
 .bottom::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--card);pointer-events:none}
 #workspace.bottom-on .bottom{display:flex}
 .bottom .bsplit{height:5px;cursor:ns-resize;flex:none;position:relative;z-index:2}
@@ -113,6 +113,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .bottom .bbody{flex:1;min-height:0;display:flex}
 .bottom .bfiles{width:260px;flex:none;border-right:.5px solid var(--line);overflow:auto;padding:4px 6px}
 .bottom .bdiff{flex:1;min-width:0;display:flex;flex-direction:column}
+.vsplit{width:5px;margin-left:-3px;cursor:ew-resize;flex:none;position:relative;z-index:2}
+.hsplit{height:5px;margin:-3px 0 -2px;cursor:ns-resize;flex:none;position:relative;z-index:2}
+.vsplit:hover,.vsplit.drag,.hsplit:hover,.hsplit.drag{background:color-mix(in srgb,var(--accent) 35%,transparent)}
 .panel-toggles{display:flex;gap:2px;margin-right:4px}
 .ptog{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--lo);transition:background .12s,color .12s}
 .ptog:hover{background:rgba(var(--ink),.07);color:var(--hi)}
@@ -615,6 +618,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
           </div>
           <div class="bbody">
             <div class="bfiles" id="bottomFiles" style="display:none"></div>
+            <div class="vsplit" id="bfilesSplit" title="拖动调整宽度" style="display:none"></div>
             <div class="bdiff">
               <div class="cardp diff" style="border:0;border-radius:0;box-shadow:none;background:transparent">
                 <div class="dl" id="diffView"></div>
@@ -1037,10 +1041,11 @@ function renderDetail(){
   const title=document.getElementById('bottomTitle');if(title)title.textContent=c[0];
   renderBottomFiles();
   document.getElementById('detail').innerHTML=`
-  <div class="dt-head"><div class="who"><span class="av" style="background:${au[0]}">${c[1][0].toUpperCase()}</span>${c[1]} &lt;${au[1]}&gt;<span style="margin-left:auto;color:var(--lo)">${c[2]}</span></div>
+  <div class="dt-head"${S.noteH?` style="height:${S.noteH}px;overflow:auto"`:''}><div class="who"><span class="av" style="background:${au[0]}">${c[1][0].toUpperCase()}</span>${c[1]} &lt;${au[1]}&gt;<span style="margin-left:auto;color:var(--lo)">${c[2]}</span></div>
     <h3 style="margin-top:8px;user-select:text">${c[0]}</h3>${BODY[hsel]?`<div class="body" style="user-select:text">${BODY[hsel]}</div>`:''}
     <div class="dt-kv"><span>提交</span><b>${HASH[hsel]}</b><span>父提交</span><b>${c[5]?HASH[hsel+1]+' · '+HASH[hsel+2]:(HASH[hsel+1]||'—')}</b>${(c[4]||c[6])?`<span>引用</span><b>${[...(c[4]||[]),...(c[6]||[])].join(', ')}</b>`:''}</div></div>
   <div class="dt-stat"><span>${fs.length} 个文件变更</span><span style="color:var(--add);font-family:var(--mono)">+${add}</span><span style="color:var(--del);font-family:var(--mono)">−${del}</span><div class="bar"><i style="width:${add+del?add/(add+del)*100:50}%"></i></div></div>
+  <div class="hsplit" data-hsplit title="拖动调整高度"></div>
   <div class="dt-diff" style="border-top:0;flex:1"><div class="fh"><span class="st ${f[0]}" style="width:18px;height:18px;border-radius:6px;font:800 10.5px var(--sans,inherit);display:grid;place-items:center">${f[0]}</span>${full}<span class="sp"></span><button class="ghost rp" data-full style="height:26px;padding:0 10px;font-size:12px" title="全屏查看">⤢ 全屏</button></div>
     ${dif?`<div class="dl">${dif.map(([k,n,t])=>`<div class="${k}">${k==='h'?'':`<i>${n}</i>`}${(k==='h'?n:t).replace(/</g,'&lt;')}</div>`).join('')}</div>`:miniPreview(f)}</div>`;
   syncBottom();
@@ -1142,6 +1147,7 @@ function syncBottom(){
   const tabs=document.getElementById('bottomTabs');
   if(tabs)tabs.style.display=hist?'flex':'none';
   if(bf)bf.style.display=hist?'block':'none';
+  const vs=document.getElementById('bfilesSplit');if(vs)vs.style.display=hist?'block':'none';
   if(dv)dv.style.display=hist?'none':'block';
   if(dt)dt.style.display=hist?'flex':'none';
   document.getElementById('wcStage')?.classList.toggle('hide',hist);
@@ -1187,6 +1193,7 @@ function markConsole(){
 document.addEventListener('click',e=>{
   const p=e.target.closest('[data-panel]');if(p){e.preventDefault();return togglePanel(p.dataset.panel)}
   const rel=e.target.closest('[data-relocate]');if(rel){e.stopPropagation();return DLG.relocate(rel.dataset.relocate)}
+  const br=e.target.closest('#sidebar [data-branch]');if(br&&!e.target.closest('button,.ha')){if(S.page!=='history')go('history');hsel=0;hfile=0;S.panel.bottom=true;syncPanels();renderHistory();return}
   const g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);
   const d=e.target.closest('[data-dlg]');if(d)return DLG[d.dataset.dlg]();
   const a=e.target.closest('[data-act]');if(a){const k=a.dataset.act;if(k==='commit')go('files');else if(k==='push'){ahead?doPush():moment({scene:'info',title:'没有可推送的提交',sub:'本地分支与 origin/dev 一致'})}else if(k==='pull')DLG.ask();else if(k==='branch')DLG.branch();else if(k==='fetch'){S.tone='busy';syncTone();setTimeout(()=>{S.tone=files.length?'warm':'calm';syncTone();moment({scene:'clean',title:'获取完成',sub:'远程仓库没有新的提交'})},1400)}return}
@@ -1202,12 +1209,29 @@ document.getElementById('console').addEventListener('click',e=>{const b=e.target
   else if(k==='tone'){S.tone=v;if(S.page==='home')go('files');syncTone()}else if(k==='theme')setTheme(v);else if(k==='dlg')DLG[v]();
   else if(k==='moment'){if(v==='commit'){if(S.page!=='files')go('files');if(!files.length)files=[['M','lib/','app.dart']],checked=new Set([0]),renderFiles();doCommit()}else if(v==='push'){ahead=ahead||1;doPush()}else{S.tone='alert';if(S.page!=='files')go('files');syncTone();setTimeout(()=>document.getElementById('resolveBtn').click(),900)}}});
 
-/* 底栏拖高 */
-(()=>{const split=document.getElementById('bottomSplit'),pane=document.getElementById('bottomPane');if(!split||!pane)return;
-  let drag=0,startY=0,startH=0;
-  split.addEventListener('pointerdown',e=>{drag=1;startY=e.clientY;startH=pane.offsetHeight;split.classList.add('drag');split.setPointerCapture(e.pointerId)});
-  split.addEventListener('pointermove',e=>{if(!drag)return;const k=(document.getElementById('win').getBoundingClientRect().width/1280)||1;pane.style.height=Math.max(140,Math.min(420,startH+(startY-e.clientY)/k))+'px'});
-  split.addEventListener('pointerup',()=>{drag=0;split.classList.remove('drag')});
+/* 底栏拖拽：整体高度（主区至少留 120）、文件清单宽度、提交说明高度 */
+(()=>{const pane=document.getElementById('bottomPane');if(!pane)return;
+  const k=()=>(document.getElementById('win').getBoundingClientRect().width/1280)||1;
+  const drag=(el,axis,start,apply)=>{
+    el.addEventListener('pointerdown',e=>{
+      const s0=start(),p0=axis==='x'?e.clientX:e.clientY;e.preventDefault();el.classList.add('drag');el.setPointerCapture(e.pointerId);
+      const mv=ev=>apply(s0+((axis==='x'?ev.clientX:ev.clientY)-p0)/k());
+      const up=()=>{el.classList.remove('drag');el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up)};
+      el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up);
+    });
+  };
+  const body=()=>pane.parentElement.offsetHeight;
+  drag(document.getElementById('bottomSplit'),'y',()=>-pane.offsetHeight,v=>pane.style.height=Math.max(140,Math.min(body()-120,-v))+'px');
+  const bf=document.getElementById('bottomFiles');
+  drag(document.getElementById('bfilesSplit'),'x',()=>bf.offsetWidth,v=>bf.style.width=Math.max(140,Math.min(pane.offsetWidth-240,v))+'px');
+  pane.addEventListener('pointerdown',e=>{
+    const h=e.target.closest('[data-hsplit]');if(!h)return;
+    const head=pane.querySelector('.dt-head'),dt=document.getElementById('detail');if(!head)return;
+    const h0=head.offsetHeight,y0=e.clientY;e.preventDefault();h.classList.add('drag');h.setPointerCapture(e.pointerId);
+    const mv=ev=>{S.noteH=Math.max(40,Math.min(dt.offsetHeight-120,h0+(ev.clientY-y0)/k()));head.style.height=S.noteH+'px';head.style.overflow='auto'};
+    const up=()=>{h.classList.remove('drag');h.removeEventListener('pointermove',mv);h.removeEventListener('pointerup',up)};
+    h.addEventListener('pointermove',mv);h.addEventListener('pointerup',up);
+  });
 })();
 
 /* ═══ 缩放与启动 ═══ */
@@ -1215,16 +1239,15 @@ function fit(){const w=innerWidth-240,h=innerHeight,k=Math.max(.3,Math.min((w-40
 addEventListener('resize',fit);fit();
 face(document.getElementById('tbOtter'),'greet');
 document.querySelectorAll('#app img[data-scene]').forEach(im=>face(im,im.dataset.scene));
-S.tone='warm';renderSidebar();renderFiles();go('home');syncPanels();envFrom=envTo=envSlots();requestAnimationFrame(drawAmbient);
-(function(){const q=new URLSearchParams(location.search);if(q.has('nosplash')||q.has('embed')){const sp=document.getElementById('splash');if(sp){sp.classList.remove('on');sp.style.display='none';sp.style.pointerEvents='none'}}else splash();const p=q.get('page');if(p)go(p)})();
+S.tone='warm';renderSidebar();renderFiles();go('home');syncPanels();envFrom=envTo=envSlots();requestAnimationFrame(drawAmbient);splash();
 </script>
-<script src="palette.js?v=3.0.0"></script>
-<script src="viewer.js?v=3.0.0"></script>
-<script src="menus.js?v=3.0.0"></script>
-<script src="edit.js?v=3.0.0"></script>
-<script src="flow.js?v=3.0.0"></script>
-<script src="forms.js?v=3.0.0"></script>
-<script src="tray.js?v=3.0.0"></script>
-<script src="ai.js?v=3.0.0"></script>
-<script src="embed.js?v=3.0.0"></script>
+<script src="palette.js?v=3.0.2"></script>
+<script src="viewer.js?v=3.0.2"></script>
+<script src="menus.js?v=3.0.2"></script>
+<script src="edit.js?v=3.0.2"></script>
+<script src="flow.js?v=3.0.2"></script>
+<script src="forms.js?v=3.0.2"></script>
+<script src="tray.js?v=3.0.2"></script>
+<script src="ai.js?v=3.0.2"></script>
+<script src="embed.js?v=3.0.2"></script>
 </body>

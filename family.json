@@ -19,7 +19,7 @@
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
-    "libraryVersion": "3.0.9",
+    "libraryVersion": "3.0.10",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -38,7 +38,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.0.1",
+      "latest": "3.0.2",
       "download": {
         "version": "3.0.1",
         "files": {
@@ -48,6 +48,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.0.2",
+          "date": "2026-11-16",
+          "zh": "修复 macOS 长时间使用后偶发闪退（Process.start / SIGPIPE）；git 子进程并发限流；官网宣传片、封面、交互演示与图标同步 3.0 新 UI。",
+          "en": "Fix rare macOS crash after long sessions (Process.start / SIGPIPE); throttle concurrent git processes; refresh site promo, covers, interactive demo and icons for the 3.0 UI."
+        },
         {
           "version": "3.0.1",
           "date": "2026-11-15",
