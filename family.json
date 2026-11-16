@@ -20,7 +20,7 @@
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
-    "libraryVersion": "3.0.14",
+    "libraryVersion": "3.0.15",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {

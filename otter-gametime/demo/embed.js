@@ -69,6 +69,12 @@
     if (p) go(p);
     else if (typeof window.enter === "function") go("home");
     report();
+    // 首屏多报几次，避免父页监听尚未就绪
+    let n = 0;
+    const tick = setInterval(() => {
+      report();
+      if (++n >= 8) clearInterval(tick);
+    }, 200);
   };
 
   const wait = () => {

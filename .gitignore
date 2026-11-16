@@ -8,6 +8,9 @@ shared/icons/*.png
 shared/icons/*.jpg
 shared/icons/*.webp
 
+# 本地校对截图不上云、不进 Pages
+**/media/qa/
+
 # 构建缓存
 packages/*/build/
 packages/*/.dart_tool/

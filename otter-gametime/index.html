@@ -9,7 +9,7 @@
   <meta property="og:title" content="水獭游时 · 记下游戏与生活的时间" />
   <meta property="og:description" content="开战计时、今日水位、把高光收进藏品。小獭陪着你。不用注册，数据只在这台手机。" />
   <meta property="og:image" content="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-gametime/icon.png" />
-  <link rel="icon" type="image/png" href="media/brand/gt_icon.png" />
+  <link rel="icon" type="image/png" href="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-gametime/icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -31,7 +31,7 @@
   <header class="nav" id="nav">
     <div class="wrap nav-in">
       <a class="brand" href="./">
-        <img src="media/brand/gt_icon.png" alt="" width="34" height="34" />
+        <img data-brand="otter-gametime/icon.png" alt="" width="34" height="34" />
         水獭游时
       </a>
       <nav class="nav-links" aria-label="页面">
@@ -57,7 +57,7 @@
         <div class="copy" data-in>
           <p class="eyebrow"><i></i> Otter Family · GameTime</p>
           <button type="button" class="greet" id="greet" aria-label="小獭问候，点一下换一句">
-            <img id="greetFace" src="media/expr/wave.webp" alt="" />
+            <img id="greetFace" data-expr="anim/270/wave.webp" alt="" />
             <span id="greetText">今晚开一局？我帮你记着。</span>
           </button>
           <h1>水獭游时<em>。</em><br />今晚这局，留得住。</h1>
@@ -69,15 +69,15 @@
           <p class="hero-note">iOS / Android · 本地优先 · 可选自备 AI Key</p>
         </div>
         <div class="hero-art" data-in>
-          <img src="media/scenes/scene-pond-data.webp" alt="今日水位与小獭" />
+          <img data-media="scenes/scene-pond-data.webp" alt="今日水位与小獭" />
         </div>
       </div>
     </section>
 
-    <section class="demo-sec" id="demo">
+    <section class="band band-demo" id="demo" data-tone="play">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker">真机试用</p>
+          <p class="sec-kicker"><span class="sec-idx">01</span> 真机试用</p>
           <h2 class="sec-title">不用安装，<span class="hl">先点进这台手机</span>。</h2>
           <p class="sec-lead">样板里是与 App 同源的交互原型。点屏幕直接操作，也可用右侧切换页面与深浅色。</p>
         </div>
@@ -86,7 +86,7 @@
             <div class="device-notch" aria-hidden="true"></div>
             <div class="device-screen" id="device-view">
               <button type="button" class="device-poster" id="demo-start" aria-label="启动真机演示">
-                <img src="media/shots/home.webp" alt="" />
+                <img data-media="shots/home.webp" alt="" />
                 <span class="btn btn-solid">点亮这台手机</span>
               </button>
             </div>
@@ -115,10 +115,10 @@
       </div>
     </section>
 
-    <section id="companion">
+    <section class="band band-companion" id="companion" data-tone="warm">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker">陪伴</p>
+          <p class="sec-kicker"><span class="sec-idx">02</span> 陪伴节奏</p>
           <h2 class="sec-title">你玩的每一刻，<span class="hl">她都在</span>。</h2>
           <p class="sec-lead">从开战到收工，再到翻藏品——表情跟着节奏换，不是说明书，是并肩。</p>
         </div>
@@ -130,14 +130,15 @@
             <button type="button" role="tab" aria-selected="false" data-i="3"><time>晚安</time><i></i><b>歇一歇</b></button>
           </div>
           <article class="day-card" id="day-card" role="tabpanel">
-            <div class="day-face"><img id="day-face" src="media/expr/focus.webp" alt="" /></div>
+            <div class="day-face"><img id="day-face" data-expr="anim/270/focus.webp" alt="" /></div>
             <div>
+              <p class="day-cmd" id="day-cmd">focus · 开战</p>
               <h3 id="day-title">专心打完这局</h3>
               <p class="say" id="day-say">计时在烧，她坐在旁边。收工时，一眼能看见你刚刚走完的路。</p>
               <div class="day-shots" id="day-shots">
-                <img src="media/shots/timer.webp" alt="" />
-                <img src="media/shots/home.webp" alt="" />
-                <img src="media/shots/compose.webp" alt="" />
+                <img data-media="shots/timer.webp" alt="" />
+                <img data-media="shots/home.webp" alt="" />
+                <img data-media="shots/compose.webp" alt="" />
               </div>
             </div>
           </article>
@@ -145,16 +146,16 @@
       </div>
     </section>
 
-    <section id="features">
+    <section class="band band-features" id="features" data-tone="cool">
       <div class="wrap">
         <div class="sec-head" data-in>
-          <p class="sec-kicker">功能</p>
+          <p class="sec-kicker"><span class="sec-idx">03</span> 功能分组</p>
           <h2 class="sec-title">时间、记忆、陪伴，<span class="hl">各归各位</span>。</h2>
-          <p class="sec-lead">说明都用真机截图说话——你看到的，就是 App 里的样子。</p>
+          <p class="sec-lead">四块各说各的事——每组用真机截图，不再挤成一锅。</p>
         </div>
 
         <div class="feats">
-          <article class="feat" data-in>
+          <article class="feat feat-time" data-in data-cat="time">
             <div class="feat-copy">
               <div class="feat-num">01 · 时间</div>
               <h3>开战，让时间有形状</h3>
@@ -166,16 +167,16 @@
               </ul>
             </div>
             <div class="shot-board">
-              <figure class="main"><img src="media/shots/timer.webp" alt="开战计时" loading="lazy" data-shot-dark="media/shots/timer.webp" data-shot-light="media/shots/timer-light.webp" /></figure>
+              <figure class="main"><img data-media="shots/timer.webp" alt="开战计时" data-shot-dark="shots/timer.webp" data-shot-light="shots/timer-light.webp" /></figure>
               <div class="side">
-                <figure><img src="media/shots/home.webp" alt="此刻水位" loading="lazy" data-shot-dark="media/shots/home.webp" data-shot-light="media/shots/home-light.webp" /></figure>
-                <figure><img src="media/shots/calendar.webp" alt="日历" loading="lazy" /></figure>
-                <figure><img src="media/shots/desk.webp" alt="桌面小组件" loading="lazy" /></figure>
+                <figure><img data-media="shots/home.webp" alt="此刻水位" data-shot-dark="shots/home.webp" data-shot-light="shots/home-light.webp" /></figure>
+                <figure><img data-media="shots/calendar.webp" alt="日历" /></figure>
+                <figure><img data-media="shots/desk.webp" alt="桌面小组件" /></figure>
               </div>
             </div>
           </article>
 
-          <article class="feat" data-in>
+          <article class="feat feat-memory" data-in data-cat="memory">
             <div class="feat-copy">
               <div class="feat-num">02 · 记忆</div>
               <h3>高光收进藏品墙</h3>
@@ -187,16 +188,16 @@
               </ul>
             </div>
             <div class="shot-board">
-              <figure class="main"><img src="media/shots/gallery.webp" alt="藏品墙" loading="lazy" data-shot-dark="media/shots/gallery.webp" data-shot-light="media/shots/gallery-light.webp" /></figure>
+              <figure class="main"><img data-media="shots/gallery.webp" alt="藏品墙" data-shot-dark="shots/gallery.webp" data-shot-light="shots/gallery-light.webp" /></figure>
               <div class="side">
-                <figure><img src="media/shots/compose.webp" alt="记一条" loading="lazy" /></figure>
-                <figure><img src="media/shots/note.webp" alt="记一条细节" loading="lazy" /></figure>
-                <figure><img src="media/memories/life_ramen.webp" alt="宵夜记忆" loading="lazy" /></figure>
+                <figure><img data-media="shots/compose.webp" alt="记一条" /></figure>
+                <figure><img data-media="shots/note.webp" alt="记一条细节" /></figure>
+                <figure><img data-media="memories/life_ramen.webp" alt="宵夜记忆" /></figure>
               </div>
             </div>
           </article>
 
-          <article class="feat" data-in>
+          <article class="feat feat-bond" data-in data-cat="bond">
             <div class="feat-copy">
               <div class="feat-num">03 · 陪伴</div>
               <h3>表情接住你的节奏</h3>
@@ -208,16 +209,16 @@
               </ul>
             </div>
             <div class="shot-board">
-              <figure class="main"><img src="media/shots/me.webp" alt="我的页面" loading="lazy" data-shot-dark="media/shots/me.webp" data-shot-light="media/shots/me-light.webp" /></figure>
+              <figure class="main"><img data-media="shots/me.webp" alt="我的页面" data-shot-dark="shots/me.webp" data-shot-light="shots/me-light.webp" /></figure>
               <div class="side">
-                <figure><img src="media/shots/about.webp" alt="关于" loading="lazy" /></figure>
-                <figure><img src="media/expr/celebrate.webp" alt="庆祝表情" loading="lazy" /></figure>
-                <figure><img src="media/avatars/avatar_05.webp" alt="头像" loading="lazy" /></figure>
+                <figure><img data-media="shots/about.webp" alt="关于" /></figure>
+                <figure><img data-expr="anim/270/celebrate.webp" alt="庆祝表情" /></figure>
+                <figure><img data-media="avatars/avatar_05.webp" alt="头像" /></figure>
               </div>
             </div>
           </article>
 
-          <article class="feat" data-in>
+          <article class="feat feat-local" data-in data-cat="local">
             <div class="feat-copy">
               <div class="feat-num">04 · 本地</div>
               <h3>不用注册，也可选 AI</h3>
@@ -229,72 +230,78 @@
               </ul>
             </div>
             <div class="shot-board">
-              <figure class="main"><img src="media/shots/settings.webp" alt="设置" loading="lazy" /></figure>
+              <figure class="main"><img data-media="shots/settings.webp" alt="设置" /></figure>
               <div class="side">
-                <figure><img src="media/shots/home-light.webp" alt="浅色主题" loading="lazy" /></figure>
-                <figure><img src="media/scenes/scene-local-safe.webp" alt="本地优先" loading="lazy" /></figure>
-                <figure><img src="media/shots/about.webp" alt="关于与合规" loading="lazy" /></figure>
+                <figure><img data-media="shots/home-light.webp" alt="浅色主题" /></figure>
+                <figure><img data-media="scenes/scene-local-safe.webp" alt="本地优先" /></figure>
+                <figure><img data-media="shots/about.webp" alt="关于与合规" /></figure>
               </div>
             </div>
           </article>
         </div>
 
-        <div data-in style="margin-top:64px;text-align:center">
-          <p class="sec-kicker">深浅一瞥</p>
-          <h2 class="sec-title" style="margin-inline:auto">同一套界面，两种呼吸。</h2>
+        <div class="compare-block" data-in>
+          <div class="sec-head sec-head-center">
+            <p class="sec-kicker">深浅一瞥</p>
+            <h2 class="sec-title">同一套界面，两种呼吸。</h2>
+            <p class="sec-lead">拖动中间把手，对照日夜两种皮肤。</p>
+          </div>
           <div class="compare" id="compare" aria-label="深浅主题对比">
-            <img src="media/shots/home-light.webp" alt="浅色" />
-            <img class="top" src="media/shots/home.webp" alt="深色" />
+            <img data-media="shots/home-light.webp" alt="浅色" />
+            <img class="top" data-media="shots/home.webp" alt="深色" />
             <span class="lab l">浅色</span>
             <span class="lab d">深色</span>
-            <div class="bar" aria-hidden="true"></div>
+            <div class="handle" aria-hidden="true"><i class="knob"></i></div>
             <input type="range" min="8" max="92" value="52" aria-label="拖动对比深浅主题" />
           </div>
         </div>
       </div>
     </section>
 
-    <section id="scenes">
+    <section class="band band-scenes" id="scenes" data-tone="glow">
       <div class="wrap" data-in>
         <div class="sec-head">
-          <p class="sec-kicker">沉浸</p>
+          <p class="sec-kicker"><span class="sec-idx">04</span> 沉浸场景</p>
           <h2 class="sec-title">功能长什么样，<span class="hl">情绪也长什么样</span>。</h2>
           <p class="sec-lead">立绘走进场景：水位数字、开战计时、藏品光点、心情星座、本地护盾——一眼读懂特色。</p>
         </div>
         <div class="scene-grid">
           <article class="scene-card">
-            <img src="media/scenes/scene-pond-data.webp" alt="水位" loading="lazy" />
+            <img data-media="scenes/scene-pond-data.webp" alt="水位" />
             <div class="cap"><b>水位</b><span>2h 16m 就在池里</span></div>
           </article>
           <article class="scene-card">
-            <img src="media/scenes/scene-battle-timer.webp" alt="开战" loading="lazy" />
+            <img data-media="scenes/scene-battle-timer.webp" alt="开战" />
             <div class="cap"><b>开战</b><span>时间烧起来</span></div>
           </article>
           <article class="scene-card">
-            <img src="media/scenes/scene-memory-keep.webp" alt="藏品" loading="lazy" />
+            <img data-media="scenes/scene-memory-keep.webp" alt="藏品" />
             <div class="cap"><b>藏品</b><span>高光留下来</span></div>
           </article>
           <article class="scene-card">
-            <img src="media/scenes/scene-companion-mood.webp" alt="陪伴" loading="lazy" />
+            <img data-media="scenes/scene-companion-mood.webp" alt="陪伴" />
             <div class="cap"><b>陪伴</b><span>表情接住节奏</span></div>
           </article>
           <article class="scene-card">
-            <img src="media/scenes/scene-local-safe.webp" alt="本地" loading="lazy" />
+            <img data-media="scenes/scene-local-safe.webp" alt="本地" />
             <div class="cap"><b>本地</b><span>数据在你手里</span></div>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="film">
+    <section class="band band-film" id="film" data-tone="cinema">
       <div class="wrap" data-in>
-        <p class="sec-kicker">Film</p>
+        <p class="sec-kicker"><span class="sec-idx">05</span> Film</p>
         <h2 class="sec-title">一局时间。</h2>
-        <p class="sec-lead">从空池到开战，再到藏品。把游时的呼吸，用一条 16:9 的片子讲完。</p>
-        <div class="player">
-          <img class="poster" src="media/scenes/scene-battle-timer.webp" alt="" />
-          <video id="promo" playsinline controls preload="none" poster="media/scenes/scene-battle-timer.webp"></video>
-          <div class="player-mark">一局时间</div>
+        <p class="sec-lead">从空池到开战，再到藏品。片子还在剪——先用这一帧把情绪定住。</p>
+        <div class="player is-soon" id="promo-wrap">
+          <img class="poster" data-media="scenes/scene-battle-timer.webp" alt="" />
+          <video id="promo" playsinline controls preload="none" hidden></video>
+          <div class="player-mark">
+            <b>一局时间</b>
+            <span>宣传片制作中</span>
+          </div>
         </div>
       </div>
     </section>
@@ -338,6 +345,7 @@
       </div>
     </div>
   </footer>
+  <script src="../shared/family.js" data-app="otter-gametime" defer></script>
   <script src="site.js" defer></script>
 </body>
 </html>
