@@ -21,7 +21,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.0.2",
-    "libraryBuild": "18",
+    "libraryBuild": "19",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
