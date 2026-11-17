@@ -54,8 +54,8 @@
         {
           "version": "3.0.2",
           "date": "2026-11-16",
-          "zh": "修复 macOS 长时间使用后偶发闪退（Process.start / SIGPIPE）；git 子进程并发限流；官网宣传片、封面、交互演示与图标同步 3.0 新 UI。",
-          "en": "Fix rare macOS crash after long sessions (Process.start / SIGPIPE); throttle concurrent git processes; refresh site promo, covers, interactive demo and icons for the 3.0 UI."
+          "zh": "修复 macOS 长时间使用后偶发闪退（Process.start / SIGPIPE）；git 子进程并发限流；Windows 临时关闭托盘/第二引擎并错开首页冷启动，修复首页后卡住闪退；官网宣传片、封面、交互演示与图标同步 3.0；Windows 主下载改为安装包。",
+          "en": "Fix rare macOS crash after long sessions (Process.start / SIGPIPE); throttle concurrent git processes; temporarily disable Windows tray/second engine and stagger home cold start to fix post-home freeze/crash; refresh site promo for 3.0; Windows primary download is now the installer."
         },
         {
           "version": "3.0.1",
