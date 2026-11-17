@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-16",
+  "updated": "2026-11-17",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -21,7 +21,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.0.2",
-    "libraryBuild": "17",
+    "libraryBuild": "18",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -46,7 +46,8 @@
         "files": {
           "macos": "OtterGit-macos-arm64.dmg",
           "macos_zip": "OtterGit-macos-arm64.zip",
-          "windows": "OtterGit-windows-x64.zip"
+          "windows": "OtterGit-windows-x64-setup.exe",
+          "windows_zip": "OtterGit-windows-x64.zip"
         }
       },
       "changelog": [
