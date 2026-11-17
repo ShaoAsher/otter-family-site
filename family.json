@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.0.2",
+      "latest": "3.0.3",
       "download": {
         "version": "3.0.2",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.0.3",
+          "date": "2026-11-17",
+          "zh": "侧栏分区层级重做：仓库 / 分支 / 远程一眼可分，字号与行高更易读；当前分支高亮更清晰。关于页更新说明最多展示 10 条并可折叠。",
+          "en": "Sidebar hierarchy refresh: repositories, branches and remotes scan clearer with larger type and row height; current branch highlight is stronger. About changelog shows up to 10 foldable entries."
+        },
         {
           "version": "3.0.2",
           "date": "2026-11-16",
