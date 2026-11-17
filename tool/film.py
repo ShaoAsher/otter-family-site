@@ -46,12 +46,12 @@ def pull(app: str) -> None:
     gsap = hub / "shared" / "vendor" / "gsap.min.js"
     if gsap.is_file():
         shutil.copy2(gsap, brand / "gsap.min.js")
-    # 立绘：master/ip/{app}/{full,half}.png；写出兼容名 ip_full / ip_half 供片子 HTML
-    ip_dir = lib / "master" / "ip" / app
+    # 立绘：一律主立绘 master/ip/main/；特色装扮在 outfits/，片子暂不用
+    ip_dir = lib / "master" / "ip" / "main"
     for kind, out_name in (("full", "ip_full.png"), ("half", "ip_half.png")):
         src = ip_dir / f"{kind}.png"
         if not src.is_file():
-            src = lib / "master" / out_name  # 根目录兼容软链（默认 gametime）
+            src = lib / "master" / out_name
         if src.is_file():
             shutil.copy2(src, brand / out_name)
     icon = brand / "icon.png"
