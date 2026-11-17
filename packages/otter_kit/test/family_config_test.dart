@@ -4,10 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:otter_kit/otter_kit.dart';
 
 void main() {
-  test('本仓 family.json 能解析，三个 App 都在', () {
+  test('本仓 family.json 能解析，三个 App 都在；短名与 otter- 全名互通', () {
     final cfg = FamilyConfig.parse(File('../../family.json').readAsStringSync())!;
     for (final id in ['git', 'tools', 'gametime']) {
-      expect(cfg.app(id), isNotNull, reason: id);
+      final short = cfg.app(id);
+      final full = cfg.app('otter-$id');
+      expect(short, isNotNull, reason: id);
+      expect(full, isNotNull, reason: 'otter-$id');
+      expect(short!.latest, full!.latest);
     }
   });
 

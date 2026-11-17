@@ -87,7 +87,8 @@
     if (!list || !app.changelog || !app.changelog.length) return;
     list.textContent = "";
     app.changelog.forEach(function (r) {
-      var li = document.createElement("li"), row = document.createElement("a");
+      // 用 div 而不是无 href 的 <a>，避免看起来可点却没反应。
+      var li = document.createElement("li"), row = document.createElement("div");
       [["b", "v" + r.version], ["span.vd", (r.date || "").slice(5)], ["span.vt", r.zh || ""]].forEach(function (p) {
         var t = p[0].split("."), el = document.createElement(t[0]);
         if (t[1]) el.className = t[1];

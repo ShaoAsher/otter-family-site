@@ -100,9 +100,17 @@ class FamilyConfig {
   String members(String from) =>
       _str(_family['members']).replaceAll('{from}', from);
 
+  /// 取某个 App。[id] 支持短名（`git` / `tools` / `gametime`）与
+  /// `family.json` 里的全名（`otter-git` / `otter-tools` / `otter-gametime`）。
   FamilyApp? app(String id) {
-    final a = _map(_raw['apps'])[id];
-    return a is Map<String, Object?> ? FamilyApp._(a) : null;
+    final apps = _map(_raw['apps']);
+    Object? raw = apps[id];
+    if (raw == null) {
+      raw = id.startsWith('otter-')
+          ? apps[id.substring('otter-'.length)]
+          : apps['otter-$id'];
+    }
+    return raw is Map<String, Object?> ? FamilyApp._(raw) : null;
   }
 }
 
