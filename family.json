@@ -54,8 +54,8 @@
         {
           "version": "3.0.2",
           "date": "2026-11-16",
-          "zh": "修复 macOS 长时间使用后偶发闪退（Process.start / SIGPIPE）；git 子进程并发限流；Windows 去掉托盘/浮窗（关窗即退出），封死第二引擎入口并错开首页冷启动，修复首页后卡住闪退；官网宣传片、封面、交互演示与图标同步 3.0；Windows 主下载改为安装包。",
-          "en": "Fix rare macOS crash after long sessions (Process.start / SIGPIPE); throttle concurrent git processes; remove Windows tray/flyout (close quits), seal second-engine entry points and stagger home cold start to fix post-home freeze/crash; refresh site promo for 3.0; Windows primary download is now the installer."
+          "zh": "修复 macOS 长时间使用后偶发闪退（Process.start / SIGPIPE）；git 子进程并发限流；Windows 去掉托盘/浮窗（关窗即退出），封死第二引擎入口并错开首页冷启动，修复首页后卡住闪退；官网宣传片、封面、交互演示与图标同步 3.0；Windows 主下载改为安装包；修复关于页更新说明因 family.json App id 对不上而空白。",
+          "en": "Fix rare macOS crash after long sessions (Process.start / SIGPIPE); throttle concurrent git processes; remove Windows tray/flyout (close quits), seal second-engine entry points and stagger home cold start to fix post-home freeze/crash; refresh site promo for 3.0; Windows primary download is now the installer Fixed About changelog blank caused by family.json app id mismatch."
         },
         {
           "version": "3.0.1",
@@ -172,8 +172,8 @@
         {
           "version": "3.0.2",
           "date": "2026-11-16",
-          "zh": "小獭表情编排升级：120 枚表情按情境轮换，戳一戳、闲置冒泡、扫描清理都会换脸，更有生命力。Windows 去掉托盘/浮窗（关窗即退出），封死第二引擎入口，剪贴板监控错开首页。",
-          "en": "Otter expression cast: all 120 faces rotate by context—pokes, idle chatter, scans and cleans feel more alive. Windows tray/flyout removed (close quits); second-engine entry points sealed; clipboard monitor staggered past home."
+          "zh": "小獭表情编排升级：120 枚表情按情境轮换，戳一戳、闲置冒泡、扫描清理都会换脸，更有生命力。Windows 去掉托盘/浮窗（关窗即退出），封死第二引擎入口，剪贴板监控错开首页；修复关于页更新说明因 family.json App id 对不上而空白。",
+          "en": "Otter expression cast: all 120 faces rotate by context—pokes, idle chatter, scans and cleans feel more alive. Windows tray/flyout removed (close quits); second-engine entry points sealed; clipboard monitor staggered past home Fixed About changelog blank caused by family.json app id mismatch."
         },
         {
           "version": "3.0.1",
