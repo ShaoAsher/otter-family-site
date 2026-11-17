@@ -238,8 +238,15 @@ notary_submit_wait() {
   id="$(/usr/libexec/PlistBuddy -c 'Print :id' /dev/stdin <<<"$out")"
   echo "    submission id: $id"
   for i in $(seq 1 10); do
-    if xcrun notarytool wait "$id" --keychain-profile "$NOTARY_PROFILE" --timeout 30m; then
-      xcrun notarytool info "$id" --keychain-profile "$NOTARY_PROFILE" | grep -q "status: Accepted" && return 0
+    if out_wait="$(xcrun notarytool wait "$id" --keychain-profile "$NOTARY_PROFILE" --timeout 30m 2>&1)"; then
+      echo "$out_wait"
+      # wait 已打印 Accepted 就够；再查 info 偶发 keychain 瞬断会误杀整次发版。
+      if echo "$out_wait" | grep -q "status: Accepted"; then
+        return 0
+      fi
+      if xcrun notarytool info "$id" --keychain-profile "$NOTARY_PROFILE" 2>/dev/null | grep -q "status: Accepted"; then
+        return 0
+      fi
       xcrun notarytool log "$id" --keychain-profile "$NOTARY_PROFILE" || true
       return 1
     fi
