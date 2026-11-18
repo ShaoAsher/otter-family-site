@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-17",
+  "updated": "2026-11-18",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -21,7 +21,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.0.2",
-    "libraryBuild": "20",
+    "libraryBuild": "21",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {

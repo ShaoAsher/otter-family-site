@@ -16,6 +16,9 @@ BRAND = library_root()
 MASTER = f"{BRAND}/master"
 FAMILY_JSON = f"{family_site()}/family.json"
 INK = (11, 10, 20)
+WHITE = (255, 255, 255)
+# App 图标 / 产品标上的剪影与角标用白色（色底上更干净）；菜单栏模板仍用墨色。
+ICON_GLYPH = WHITE
 APPS = {"otter-git": "desktop", "otter-tools": "desktop", "otter-gametime": "mobile"}
 
 RADIUS = 0.225
@@ -189,7 +192,13 @@ def gradient_background(side: int, edge: tuple[int, int, int], center: tuple[int
     return im.convert("RGBA")
 
 
-def _place_silhouette(canvas: Image.Image, silhouette: Image.Image, side: int, fill_ratio: float = 0.84) -> None:
+def _place_silhouette(
+    canvas: Image.Image,
+    silhouette: Image.Image,
+    side: int,
+    fill_ratio: float = 0.84,
+    fill: tuple[int, int, int] = INK,
+) -> None:
     sil = silhouette.convert("RGBA")
     bbox = sil.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
     if not bbox:
@@ -199,7 +208,7 @@ def _place_silhouette(canvas: Image.Image, silhouette: Image.Image, side: int, f
     sc = target / max(sil.size)
     nw, nh = max(1, round(sil.width * sc)), max(1, round(sil.height * sc))
     sil = sil.resize((nw, nh), Image.LANCZOS)
-    layer = Image.new("RGBA", (nw, nh), INK + (0,))
+    layer = Image.new("RGBA", (nw, nh), fill + (0,))
     layer.putalpha(sil.getchannel("A"))
     ox = (side - nw) // 2
     oy = (side - nh) // 2 + int(side * 0.035)
@@ -309,12 +318,22 @@ def load_badge(app: str, extracted: Image.Image) -> Image.Image:
     return silhouette_stamp(extracted)
 
 
-def _place_badge(canvas: Image.Image, badge_layer: Image.Image, side: int, app: str | None = None) -> None:
+def _place_badge(
+    canvas: Image.Image,
+    badge_layer: Image.Image,
+    side: int,
+    app: str | None = None,
+    fill: tuple[int, int, int] | None = None,
+) -> None:
     bb = badge_layer.convert("RGBA")
     bbox = bb.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
     if not bbox:
         return
     bb = bb.crop(bbox)
+    if fill is not None:
+        tinted = Image.new("RGBA", bb.size, fill + (0,))
+        tinted.putalpha(bb.getchannel("A"))
+        bb = tinted
     cfg = ICON_BADGE.get(app or "otter-git", ICON_BADGE["otter-git"])
     target = int(side * cfg["scale"])
     sc = target / max(bb.size)
@@ -332,31 +351,33 @@ def compose_app_icon(
     side: int = 1024,
     app: str | None = None,
 ) -> Image.Image:
-    """无圆盘：渐变色 = 图标底，水獭剪影居中，右上角墨色符号角标。"""
+    """无圆盘：渐变色 = 图标底，白色剪影居中，右上角白色符号角标。"""
     edge, center = colors
     canvas = gradient_background(side, edge, center)
-    _place_silhouette(canvas, silhouette, side)
-    _place_badge(canvas, badge_layer, side, app)
+    _place_silhouette(canvas, silhouette, side, fill=ICON_GLYPH)
+    _place_badge(canvas, badge_layer, side, app, fill=ICON_GLYPH)
     return rounded(canvas, side * RADIUS)
 
 
 def product_mark(silhouette: Image.Image, badge_layer: Image.Image, side: int = 512, app: str | None = None) -> Image.Image:
-    """透明底产品标：剪影 + 徽章（渐变由 App / 官网代码绘制）。"""
+    """透明底产品标：白色剪影 + 角标（色底由 App / 自适应图标绘制）。"""
     canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-    _place_silhouette(canvas, silhouette, side, fill_ratio=0.8)
-    _place_badge(canvas, badge_layer, side, app)
+    _place_silhouette(canvas, silhouette, side, fill_ratio=0.8, fill=ICON_GLYPH)
+    _place_badge(canvas, badge_layer, side, app, fill=ICON_GLYPH)
     return canvas
 
 
 def logo_silhouette_layer(silhouette: Image.Image, side: int = 512) -> Image.Image:
+    """通用 logo 层：墨色剪影（浅底/文档用）。"""
     canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-    _place_silhouette(canvas, silhouette, side, fill_ratio=0.8)
+    _place_silhouette(canvas, silhouette, side, fill_ratio=0.8, fill=INK)
     return canvas
 
 
 def logo_badge_plate(badge_layer: Image.Image, side: int = 512, app: str | None = None) -> Image.Image:
+    """角标板：墨色（浅底用）。"""
     canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
-    _place_badge(canvas, badge_layer, side, app)
+    _place_badge(canvas, badge_layer, side, app, fill=INK)
     return canvas
 
 
