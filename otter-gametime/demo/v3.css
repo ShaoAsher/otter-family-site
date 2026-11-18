@@ -1686,20 +1686,8 @@ nav button:active .dot{transform:scale(.88)}
 
 /* 播放器 */
 .gp{position:absolute; inset:0; z-index:3; overflow:hidden; --p:0; --b:0}
-.gp-cover{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; pointer-events:none; background:#15131F}
-.gp video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:transparent; z-index:1}
-/* 仅 idle（未播过）藏黑帧、露封面；播放/暂停/scrub 显示真实画面 */
-.gp[data-st="idle"] video{opacity:0}
-.gp[data-st="play"] video,
-.gp[data-st="pause"] video,
-.gp.ended video,
-.gp.scrub video{opacity:1}
-.gp[data-st="play"] .gp-cover,
-.gp[data-st="pause"] .gp-cover,
-.gp.ended .gp-cover,
-.gp.scrub .gp-cover{opacity:0; transition:opacity .2s}
+.gp video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000}
 .vw-m .gp video{object-fit:contain}
-.vw-m .gp-cover{object-fit:contain; background:#000}
 .gp::before{content:""; position:absolute; inset:auto 0 0; height:110px; pointer-events:none; z-index:1;
   background:linear-gradient(180deg, transparent, rgba(8,7,16,.72)); opacity:0; transition:opacity .3s}
 .gp.ui::before{opacity:1}
@@ -1719,8 +1707,10 @@ nav button:active .dot{transform:scale(.88)}
 .gp[data-st="pause"] .gp-big .rp{animation:none; opacity:0}
 .gp-bar{position:absolute; left:10px; right:10px; bottom:10px; z-index:2; display:flex; align-items:center; gap:8px; height:40px; padding:0 8px; border-radius:20px;
   color:#fff; font-size:11.5px; font-weight:700; font-variant-numeric:tabular-nums;
-  background:rgba(14,12,26,.45); backdrop-filter:blur(14px) saturate(1.4); -webkit-backdrop-filter:blur(14px) saturate(1.4); box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);
-  transition:opacity .3s, transform .35s var(--ease-spring)}
+  background:linear-gradient(165deg,rgba(28,24,42,.55),rgba(14,12,26,.42) 55%,rgba(18,16,30,.52));
+  backdrop-filter:blur(16px) saturate(1.55) brightness(1.04); -webkit-backdrop-filter:blur(16px) saturate(1.55) brightness(1.04);
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18), inset 0 1px 0 rgba(255,255,255,.22), 0 8px 24px -12px rgba(0,0,0,.45);
+  transition:opacity .28s, transform .42s var(--ease-liquid, var(--ease-spring))}
 .gp:not(.ui) .gp-bar{opacity:0; transform:translateY(14px); pointer-events:none}
 .gp[data-st="idle"] .gp-bar{opacity:0; transform:translateY(14px); pointer-events:none}
 .gp-bar button{flex:none; border:0; background:none; color:#fff; width:28px; height:28px; border-radius:14px; display:grid; place-items:center; cursor:pointer; font:inherit; font-weight:800}
@@ -1854,10 +1844,11 @@ nav button:active .dot{transform:scale(.88)}
 
 /* 倍速选择层 */
 .gp-spd{position:absolute; right:10px; bottom:58px; z-index:6; width:min(300px, calc(100% - 20px)); padding:12px; border-radius:20px; color:#fff;
-  background:rgba(20,18,34,.82); backdrop-filter:blur(18px) saturate(1.5); -webkit-backdrop-filter:blur(18px) saturate(1.5);
-  box-shadow:0 16px 40px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.12);
+  background:linear-gradient(165deg,rgba(32,28,48,.78),rgba(20,18,34,.68) 55%,rgba(18,16,30,.76));
+  backdrop-filter:blur(20px) saturate(1.6) brightness(1.03); -webkit-backdrop-filter:blur(20px) saturate(1.6) brightness(1.03);
+  box-shadow:0 16px 40px rgba(0,0,0,.45), inset 0 0 0 .5px rgba(255,255,255,.18), inset 0 1px 0 rgba(255,255,255,.2);
   transform-origin:calc(100% - 70px) 100%; transform:translateY(10px) scale(.85); opacity:0; pointer-events:none;
-  transition:opacity .2s, transform .35s cubic-bezier(.3,1.4,.5,1)}
+  transition:opacity .2s, transform .42s var(--ease-liquid, cubic-bezier(.22,1.28,.36,1))}
 .gp.compact .gp-spd{bottom:122px; right:var(--gx)}
 .gp.compact .gp-spd{transform-origin:calc(100% - 46px) 100%}
 .gp.spd-on .gp-spd{opacity:1; transform:none; pointer-events:auto}
@@ -1871,7 +1862,7 @@ nav button:active .dot{transform:scale(.88)}
 .gp-spd .opts{position:relative; display:grid; grid-template-columns:repeat(6,1fr); gap:2px; padding:3px; border-radius:14px; background:rgba(255,255,255,.08)}
 .gp-spd .pill{position:absolute; top:3px; bottom:3px; left:3px; width:calc((100% - 6px - 10px)/6); border-radius:11px;
   transform:translateX(calc(var(--i,2)*(100% + 2px))); background:linear-gradient(135deg,#3DDCFF,#6EE7A8); box-shadow:0 4px 14px rgba(61,220,255,.4);
-  transition:transform .4s cubic-bezier(.3,1.4,.5,1)}
+  transition:transform .42s var(--ease-liquid, cubic-bezier(.22,1.28,.36,1))}
 .gp-spd .opts button{position:relative; z-index:1; height:34px; border:0; background:none; color:#fff; font:inherit; font-size:12.5px; font-weight:800; cursor:pointer;
   font-variant-numeric:tabular-nums; border-radius:11px; transition:color .25s, transform .15s}
 .gp-spd .opts button:active{transform:scale(.9)}
@@ -1880,7 +1871,10 @@ nav button:active .dot{transform:scale(.88)}
 .gp.slow .gp-sp{background:rgba(150,140,255,.35) !important}
 /* 选完倍速，画面中间闪一下 */
 .gp-flash{position:absolute; left:50%; top:38%; z-index:5; transform:translate(-50%,-50%); padding:8px 16px; border-radius:18px; pointer-events:none;
-  font-size:22px; font-weight:900; color:#fff; background:rgba(10,9,20,.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); opacity:0}
+  font-size:22px; font-weight:900; color:#fff;
+  background:linear-gradient(165deg,rgba(28,24,42,.55),rgba(10,9,20,.4));
+  backdrop-filter:blur(12px) saturate(1.4); -webkit-backdrop-filter:blur(12px) saturate(1.4);
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.16); opacity:0}
 .gp-flash.on{animation:gpFlash .9s ease-out}
 @keyframes gpFlash{0%{opacity:0; transform:translate(-50%,-50%) scale(.6)} 25%{opacity:1; transform:translate(-50%,-50%) scale(1.08)} 70%{opacity:1; transform:translate(-50%,-50%) scale(1)} 100%{opacity:0; transform:translate(-50%,-60%) scale(.95)}}
 .gp-bar .gp-rot svg{width:19px; height:19px}

@@ -42,18 +42,29 @@ body.s-warn .sky i:nth-child(3){--skc:#FFC6D2} body.s-warn .sky i:nth-child(4){-
 body.reduce .sky i{animation:none}
 @media (prefers-reduced-motion:reduce){ .sky i{animation:none} }
 
-/* ── 玻璃令牌 ── */
+/* ── 玻璃令牌（对齐 iOS 26/27 Liquid Glass：更黏的折射感、Fresnel 边光、色差微边） ── */
+:root{
+  --ease-liquid:cubic-bezier(.22,1.28,.36,1);
+  --liquid-rim:inset 0 0 0 .5px rgba(255,255,255,.22), inset 0 1px 0 rgba(255,255,255,.35);
+}
 body.light{
-  --glass:linear-gradient(170deg,rgba(255,255,255,.8) 0%,rgba(255,255,255,.5) 52%,rgba(255,255,255,.62) 100%);
-  --glass-edge:rgba(255,255,255,.75);
-  /* 边缘：左上亮、右下暗的双色描边 + 底部内聚光（像水滴底部的聚光）+ 极淡外轮廓 + 两层柔影 */
-  --glass-sh:inset 1px 1.5px 0 rgba(255,255,255,.98), inset -1px -1px 0 rgba(255,255,255,.4),
+  --glass:linear-gradient(170deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.52) 48%,rgba(255,255,255,.68) 100%);
+  --glass-edge:rgba(255,255,255,.78);
+  /* 边缘：左上亮、右下暗的双色描边 + 底部内聚光 + Fresnel 微边 + 两层柔影 */
+  --glass-sh:inset 1px 1.5px 0 rgba(255,255,255,.98), inset -1px -1px 0 rgba(255,255,255,.42),
              inset 0 -16px 24px -20px #fff, inset 0 0 0 .5px rgba(120,110,170,.12),
              0 1px 2px rgba(60,50,96,.05), 0 18px 40px -22px rgba(60,50,96,.3);
-  --glass-blur:blur(18px) saturate(1.8) brightness(1.03);
+  --glass-blur:blur(20px) saturate(1.9) brightness(1.04);
   /* 镜面：跟随指针的主高光 + 顶部一条细细的环境反光 */
-  --spec:radial-gradient(150px 100px at var(--lx,22%) var(--ly,0%), rgba(255,255,255,.72), transparent 70%),
-         linear-gradient(180deg, rgba(255,255,255,.5), transparent 18%);
+  --spec:radial-gradient(150px 100px at var(--lx,22%) var(--ly,0%), rgba(255,255,255,.78), transparent 68%),
+         linear-gradient(180deg, rgba(255,255,255,.55), transparent 18%);
+}
+/* 夜色液态玻璃：深底 + 真模糊 + 饱和 + 边光（与 App GtLiquid._night* 对齐） */
+body:not(.light){
+  --liquid-night:linear-gradient(165deg,rgba(28,24,42,.72) 0%,rgba(14,12,26,.58) 55%,rgba(18,16,30,.7) 100%);
+  --liquid-night-blur:blur(18px) saturate(1.45) brightness(1.02);
+  --liquid-night-sh:var(--liquid-rim), inset 0 -12px 20px -18px rgba(255,255,255,.06),
+                    0 12px 40px -16px rgba(0,0,0,.55);
 }
 
 /* 玻璃卡片（圆钮 / chip 等凸起控件走 --raise 角色令牌，见 light.css） */
@@ -81,27 +92,37 @@ body.light .si:not(.logo):not(.av){background:linear-gradient(180deg, rgba(255,2
   color:color-mix(in srgb, rgb(var(--c)) 52%, #1A1726)}
 body.light .si:not(.logo):not(.av) svg{stroke:currentColor}
 
-/* 悬浮玻璃：更透、更糊、更亮 */
+/* 悬浮玻璃：更透、更糊、更亮（liquid morph） */
 body.light nav, body.light .sh3 .sh-panel, body.light .dlg-card, body.light .tip3{
-  background:var(--spec), linear-gradient(170deg,rgba(255,255,255,.7),rgba(255,255,255,.4) 55%,rgba(255,255,255,.55));
-  -webkit-backdrop-filter:blur(26px) saturate(2) brightness(1.06); backdrop-filter:blur(26px) saturate(2) brightness(1.06);
-  border:1px solid rgba(255,255,255,.8); box-shadow:var(--glass-sh), 0 24px 48px -24px rgba(60,50,96,.32)}
+  background:var(--spec), linear-gradient(170deg,rgba(255,255,255,.72),rgba(255,255,255,.42) 55%,rgba(255,255,255,.58));
+  -webkit-backdrop-filter:blur(28px) saturate(2.05) brightness(1.07); backdrop-filter:blur(28px) saturate(2.05) brightness(1.07);
+  border:1px solid rgba(255,255,255,.82); box-shadow:var(--glass-sh), 0 24px 48px -24px rgba(60,50,96,.32);
+  transition:transform .42s var(--ease-liquid), opacity .28s var(--ease)}
 /* 底导常压在照片上：玻璃要够厚（白 86–92%）、不叠折射，图标才看得清 */
 body.light nav{background:var(--spec), linear-gradient(170deg,rgba(255,255,255,.92),rgba(255,255,255,.84) 55%,rgba(255,255,255,.9));
-  -webkit-backdrop-filter:blur(30px) saturate(1.6) brightness(1.1); backdrop-filter:blur(30px) saturate(1.6) brightness(1.1)}
+  -webkit-backdrop-filter:blur(32px) saturate(1.7) brightness(1.1); backdrop-filter:blur(32px) saturate(1.7) brightness(1.1);
+  transition:left .42s var(--ease-liquid), right .42s var(--ease-liquid), height .42s var(--ease-liquid), width .42s var(--ease-liquid)}
+/* 夜色底导 / Sheet / tip：液态深玻璃 */
+body:not(.light) nav, body:not(.light) .sh3 .sh-panel, body:not(.light) .dlg-card, body:not(.light) .tip3{
+  background:var(--liquid-night); -webkit-backdrop-filter:var(--liquid-night-blur); backdrop-filter:var(--liquid-night-blur);
+  border:1px solid rgba(255,255,255,.1); box-shadow:var(--liquid-night-sh)}
+body:not(.light) nav{
+  background:linear-gradient(165deg,rgba(28,24,42,.82),rgba(19,17,30,.78) 55%,rgba(16,14,26,.84));
+  -webkit-backdrop-filter:blur(26px) saturate(1.5); backdrop-filter:blur(26px) saturate(1.5)}
+body:not(.light) .sh3 .sh-panel{border-bottom:0; background:linear-gradient(180deg,rgba(28,24,42,.92),rgba(21,19,31,.9))}
 /* 分享页底部面板（版式 / 主题 / 文案）：和底部弹层同一块厚玻璃；卡片本身保持自己的主题 */
 body.light .sc-dock{background:var(--spec), linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.8));
-  -webkit-backdrop-filter:blur(26px) saturate(1.8); backdrop-filter:blur(26px) saturate(1.8);
+  -webkit-backdrop-filter:blur(28px) saturate(1.9); backdrop-filter:blur(28px) saturate(1.9);
   border:1px solid rgba(255,255,255,.85); border-bottom:0; box-shadow:var(--glass-sh), 0 -12px 32px -18px rgba(60,50,96,.3)}
 body.light .sc-seg{background:rgba(23,21,31,.06); box-shadow:inset 0 1px 2px rgba(60,50,96,.1)}
 body.light .sc-seg .pill{background:linear-gradient(180deg,#fff,rgba(255,255,255,.88)); box-shadow:inset 0 0 0 .5px rgba(255,255,255,.9), 0 1px 2px rgba(60,50,96,.1), 0 4px 10px -4px rgba(60,50,96,.2)}
 body.light .sc-seg button.on{color:var(--hi)}
-body.light .sh3 .sh-panel{background:var(--spec), linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.78)); border-bottom:0}
+body.light .sh3 .sh-panel{background:var(--spec), linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.8)); border-bottom:0}
 body.light .tip3{color:var(--hi)}
 body.light .tip3 .ar{background:rgba(255,255,255,.9)}
 body.light .s3 .bar3, body.light .topbar.on{
-  background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.45));
-  -webkit-backdrop-filter:blur(22px) saturate(1.9); backdrop-filter:blur(22px) saturate(1.9);
+  background:linear-gradient(180deg, rgba(255,255,255,.76), rgba(255,255,255,.48));
+  -webkit-backdrop-filter:blur(24px) saturate(2); backdrop-filter:blur(24px) saturate(2);
   box-shadow:inset 0 -1px 0 rgba(255,255,255,.8), 0 1px 0 rgba(60,50,96,.05)}
 /* toast 在白天也是一块深色玻璃（反差最大，最先被看到） */
 body.light .toast3{background:linear-gradient(100deg, rgba(var(--tc),.28), rgba(var(--tc),.06) 38%, transparent 70%), rgba(30,27,44,.82);
