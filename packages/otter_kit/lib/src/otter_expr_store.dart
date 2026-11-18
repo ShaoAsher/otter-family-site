@@ -15,7 +15,10 @@ abstract final class OtterExprStore {
   /// 本地缓存目录名（与远端路径无关；历史兼容保留 `v3`）。
   static String _version = 'v3';
   static Map<String, String>? _manifestMd5;
-  static final Map<String, Future<File?>> _inflight = {};
+
+  /// 进行中 + 已成功的 Future 都留在这里：父组件每帧 rebuild 时必须拿到同一个
+  /// [Future]，否则 [FutureBuilder] 会反复回到 waiting，界面永远停在静帧。
+  static final Map<String, Future<File?>> _anim = {};
 
   /// App 启动时调用（`otter.json` → `expr.version`）。
   static void configure({required String version}) {
@@ -39,7 +42,8 @@ abstract final class OtterExprStore {
     Map<String, dynamic> json;
     if (manifestFile.existsSync()) {
       try {
-        json = jsonDecode(await manifestFile.readAsString()) as Map<String, dynamic>;
+        json =
+            jsonDecode(await manifestFile.readAsString()) as Map<String, dynamic>;
         final files = json['files'] as Map<String, dynamic>? ?? {};
         _manifestMd5 = {
           for (final e in files.entries)
@@ -72,8 +76,10 @@ abstract final class OtterExprStore {
   }
 
   /// 本地动图文件；失败返回 null（界面应回退静帧）。
+  ///
+  /// 同一 [key] 始终返回同一个 [Future]（成功后也保留），避免上层 rebuild 重开下载。
   static Future<File?> animFile(String key) {
-    return _inflight.putIfAbsent(key, () => _fetchAnim(key));
+    return _anim.putIfAbsent(key, () => _fetchAnim(key));
   }
 
   static Future<File?> _fetchAnim(String key) async {
@@ -86,16 +92,25 @@ abstract final class OtterExprStore {
       if (dest.existsSync() && dest.lengthSync() > 512) return dest;
       final url = Uri.parse('$_remoteBase$name');
       final r = await http.get(url).timeout(const Duration(seconds: 45));
-      if (r.statusCode != 200) return null;
+      if (r.statusCode != 200) {
+        debugPrint('[OtterExprStore] $name → HTTP ${r.statusCode}');
+        _anim.remove(key); // 允许下次再试
+        return null;
+      }
       await dest.parent.create(recursive: true);
       final tmp = '${dest.path}.part';
       await File(tmp).writeAsBytes(r.bodyBytes);
       await File(tmp).rename(dest.path);
+      debugPrint('[OtterExprStore] $name cached ${r.bodyBytes.length}B');
       return dest;
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('[OtterExprStore] $name failed: $e');
+      assert(() {
+        debugPrint('$st');
+        return true;
+      }());
+      _anim.remove(key); // 允许下次再试
       return null;
-    } finally {
-      _inflight.remove(key);
     }
   }
 }

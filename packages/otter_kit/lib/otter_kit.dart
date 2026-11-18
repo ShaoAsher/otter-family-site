@@ -4,3 +4,4 @@ library;
 export 'src/family_config.dart';
 export 'src/otter_expr_image.dart';
 export 'src/otter_expr_store.dart';
+export 'src/otter_webp_loop.dart';
