@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.0.4",
+      "latest": "3.0.5",
       "download": {
         "version": "3.0.3",
         "files": {
@@ -52,7 +52,7 @@
       },
       "changelog": [
         {
-          "version": "3.0.4",
+          "version": "3.0.5",
           "date": "2026-11-18",
           "zh": "仓库分组管理器：双栏多选移动，像书签一样整理仓库。侧栏 B+ 层级与折叠箭头更清晰；操作反馈统一——失败单通道、历史空/载分态，「去提交」名实一致。",
           "en": "Bookmark-style group manager with two-pane multi-select moves. Clearer B+ sidebar hierarchy and carets; unified feedback—single-channel failures, distinct history empty/loading states, and an honest Go Commit control."
