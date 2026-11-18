@@ -21,7 +21,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.0.2",
-    "libraryBuild": "21",
+    "libraryBuild": "22",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.0.5",
+      "latest": "3.0.6",
       "download": {
         "version": "3.0.5",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.0.6",
+          "date": "2026-11-19",
+          "zh": "应用图标改为白色剪影与白色角标，色底上更干净；菜单栏 / 托盘模板仍为墨色。",
+          "en": "App icon switches to a white silhouette and badge on the brand gradient; menu bar / tray templates stay ink."
+        },
         {
           "version": "3.0.5",
           "date": "2026-11-18",
@@ -170,7 +176,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.0.2",
+      "latest": "3.0.3",
       "download": {
         "version": "3.0.2",
         "files": {
@@ -181,6 +187,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.0.3",
+          "date": "2026-11-19",
+          "zh": "应用图标改为白色剪影与白色角标，色底上更干净；菜单栏 / 托盘模板仍为墨色。",
+          "en": "App icon switches to a white silhouette and badge on the brand gradient; menu bar / tray templates stay ink."
+        },
         {
           "version": "3.0.2",
           "date": "2026-11-16",
@@ -280,7 +292,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "3.0.0",
+      "latest": "1.0.0",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -289,15 +301,10 @@
       "download": null,
       "changelog": [
         {
-          "version": "3.0.0",
-          "date": "2026-11-16",
-          "zh": "官网上线：真机样板试用、功能叙事分区、沉浸场景与深浅主题；素材同步家族 library（宣传片稍后更新）。",
-          "en": "Site launch: interactive phone demo, narrative feature stages, immersion scenes and theme compare; assets synced to family library (promo film to follow)."
-        },
-        {
-          "version": "3.0.0",
-          "date": "2026-11-14",
-          "zh": "水獭家族 3.0：图标换成三端统一模板的磁青；小獭表情升级为家族 120 套，心情、标签按心情 / 社交 / 游戏 / 生活 / 学习 / 美食 / 出行分组；关于页接入家族公共配置，可以检查新版本。"
+          "version": "1.0.0",
+          "date": "2026-11-19",
+          "zh": "首发准备：图标改为白色剪影；接入家族表情与公共配置。App 版本仍为 1.0.0。",
+          "en": "Prep for first release: white silhouette icon; family expressions and shared config. App remains 1.0.0."
         }
       ]
     }
