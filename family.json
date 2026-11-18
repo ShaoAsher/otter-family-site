@@ -21,7 +21,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.0.2",
-    "libraryBuild": "22",
+    "libraryBuild": "23",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -54,8 +54,8 @@
         {
           "version": "3.0.6",
           "date": "2026-11-19",
-          "zh": "应用图标改为白色剪影与白色角标，色底上更干净；菜单栏 / 托盘模板仍为墨色。",
-          "en": "App icon switches to a white silhouette and badge on the brand gradient; menu bar / tray templates stay ink."
+          "zh": "应用图标改为白色剪影与白色角标；启动页改为成品 icon + 单圈波纹 +「这只水獭，住在你的 Git 里」。菜单栏 / 托盘模板仍为墨色。",
+          "en": "App icon switches to a white silhouette and badge; splash becomes the finished icon, one ripple, and “This otter lives in your Git.” Menu bar / tray templates stay ink."
         },
         {
           "version": "3.0.5",
@@ -190,8 +190,8 @@
         {
           "version": "3.0.3",
           "date": "2026-11-19",
-          "zh": "应用图标改为白色剪影与白色角标，色底上更干净；菜单栏 / 托盘模板仍为墨色。",
-          "en": "App icon switches to a white silhouette and badge on the brand gradient; menu bar / tray templates stay ink."
+          "zh": "应用图标改为白色剪影与白色角标；启动页改为成品 icon + 单圈波纹 +「慢一点，刚刚好」，原生层同构图接棒。菜单栏 / 托盘模板仍为墨色。",
+          "en": "App icon switches to a white silhouette and badge; splash becomes the finished icon, one ripple, and “A bit slower, just right,” handed off from the native layer. Menu bar / tray templates stay ink."
         },
         {
           "version": "3.0.2",

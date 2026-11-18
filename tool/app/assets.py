@@ -25,6 +25,8 @@ BRAND_MAP = {
     "otter-git": [
         ("otter-git/icon.png", "assets/brand/otter_git_icon.png"),
         ("otter-git/mark.png", "assets/brand/otter_git_mark.png"),
+        ("otter-git/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("otter-git/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
         ("otter-git/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
@@ -33,6 +35,8 @@ BRAND_MAP = {
     "otter-tools": [
         ("otter-tools/icon.png", "assets/brand/tools_icon.png"),
         ("otter-tools/logo_badge.png", "assets/brand/tools_badge.png"),
+        ("otter-tools/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("otter-tools/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/logo_otter.png", "assets/brand/tools_otter.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
@@ -41,6 +45,8 @@ BRAND_MAP = {
     "otter-gametime": [
         ("otter-gametime/icon.png", "assets/brand/gt_icon.png"),
         ("otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
+        ("otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/logo_otter.png", "assets/brand/gt_logo_otter.png"),
         ("common/otter_white.png", "assets/brand/gt_otter_w.png"),
         ("common/otter_black.png", "assets/brand/gt_otter_k.png"),
