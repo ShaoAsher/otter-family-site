@@ -18,7 +18,8 @@ KIT_FAMILY = ROOT / "packages" / "otter_kit" / "lib" / "src" / "family_config.da
 
 LEGACY = ("still_270", "anim_270", "still_540", "anim_540", "expr/v3/")
 OK_STILL = "assets/otter/expr/still/270/"
-OK_ANIM = "anim/270/"
+# 默认 270；高清开关为 540（OtterExprStore 用 anim/$size/）
+OK_ANIM = ("anim/270/", "anim/$size/")
 OK_FAMILY = "library/family.json"
 
 
@@ -94,8 +95,8 @@ def check_family(errors: list[str]) -> list[str]:
         store = KIT_STORE.read_text(encoding="utf-8")
         if OK_STILL not in store:
             fail(f"otter_kit stillAssetPath 未含 {OK_STILL}", errors)
-        if OK_ANIM not in store:
-            fail(f"otter_kit anim 路径未含 {OK_ANIM}", errors)
+        if not any(p in store for p in OK_ANIM):
+            fail(f"otter_kit anim 路径未含 {' 或 '.join(OK_ANIM)}", errors)
         if "library/latest/expr/" not in store:
             fail("otter_kit fallbackBase 应为 library/latest/expr/", errors)
         for bad in ("still_270", "anim_270", "/expr/v3/"):
