@@ -38,7 +38,7 @@ const I = (n, cls = 'i') => `<svg class="${cls}" viewBox="0 0 24 24">${P[n]}</sv
 
 /* ── 表情（家族 120；全量动图，减弱动效时用 _s 静帧） ───────── */
 const ANIM = new Set('happy laugh smile cheer great proud love shy calm relief sleepy nap goodnight morning cry sad scared shock bashful angry pout speechless hi bye ok please thanks hug friends solo coop wave salute gg welcome sorry start loading victory defeat rank highlight gacha queue grind focus rage win lose pause retry quest bath stroll sport movie music story night clear weekend clean outfit sleep drink relax rot sick study think write read busy deadline done review note ask idea plan meeting overtime cook cafe milktea eat burger noodles rice dessert fruit tea feast snack hungry yum travel hike beach mountain city photo souvenir luggage sunset camping map arrive jog stretch yoga ball sweat heal rain snow wind birthday celebrate lucky'.split(' '));
-const ex = (n, still) => (ANIM.has(n) && !still && !RM() ? `https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/anim/270/${n}.webp` : `https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/still/270/${n}.webp`);
+const ex = (n, still) => (ANIM.has(n) && !still && !RM() ? `https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/anim/270/${n}.webp` : `https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/still/270/${n}.webp`);
 
 /* ── 状态 ─────────────────────────────────────────────── */
 const PRESETS = {
@@ -81,7 +81,7 @@ const NAV = [
 
 function renderShell() {
   $('#side').innerHTML = `
-    <div class="brand"><img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" alt=""><b>水獭工具</b><span class="fam">水獭家族</span></div>
+    <div class="brand"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" alt=""><b>水獭工具</b><span class="fam">水獭家族</span></div>
     <div class="me" data-act="poke"><img id="meImg" alt=""><div style="min-width:0"><div class="n">小獭</div><div class="tone" id="meTone"><i></i><span></span></div><div class="say" id="meSay"></div></div></div>
     <button class="cmdk" data-act="pal">${I('search')}<span class="sp">搜索功能或操作</span><kbd>⌘</kbd><kbd>K</kbd></button>
     <nav class="nav" id="nav">${NAV.map((n) => `<div class="nv${n.id === 'home' ? ' on' : ''}" data-act="go" data-arg="${n.id}" data-nav="${n.id}" style="--c:${n.c}"><span class="b">${I(n.i)}</span><span class="t">${n.t}</span><span class="m num" data-m="${n.id}"></span></div>`).join('')}</nav>

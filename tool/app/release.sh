@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 水獭家族 macOS App 共用发版：打包（默认公证）后交给 tool/release/release.py 上传（国内 TOS + 海外 GitHub Release）。
+# 水獭家族 macOS App 共用发版：打包（默认公证）后交给 tool/release/release.py 上传（国内 OSS + 官网仓 GitHub Release）。
 # 在 App 根目录执行 ./tool/otter release，App 标识与产物名读 otter.json 的 id、package.file。
 #
 # 用法：
@@ -9,7 +9,7 @@
 #   ./tool/otter release --zip-only       # 只上传 ZIP
 #   ./tool/otter release --use-dist       # 不再打包，直接上传 dist 里本版本的已公证产物（含 Windows 包）
 #
-# 需已 gh auth login，并先 source ~/.config/devkeys/env.sh（TOS_*）。
+# 需已 gh auth login；OSS 凭证在 ~/.config/devkeys/config.json。
 #
 # 只能在 App 仓库 main 上运行：工作区干净、已与 origin/main 同步、
 # 当前提交已打 v<版本> 标签。自测可设 OTTER_RELEASE_ANY_BRANCH=1 跳过。
@@ -169,7 +169,7 @@ if [[ -n "$WIN_SETUP_SRC" ]]; then
   echo "==> WIN  $WIN_SETUP_SRC → $STABLE_WIN_SETUP"
 fi
 
-echo "==> 发布到 TOS + GitHub（${APP}-v${VERSION}）"
+echo "==> 发布到 OSS + 官网仓 GitHub Release（${APP}-v${VERSION}）"
 python3 "$RELEASE_PY" publish "$APP" "$VERSION" "${UPLOAD_FILES[@]}"
 
 # 上传成功后清理 dist：只保留本次上传的包，旧版本与中间目录清掉。

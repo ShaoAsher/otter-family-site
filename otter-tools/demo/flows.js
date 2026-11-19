@@ -91,7 +91,7 @@ ACTS.tray = () => {
   closeDlg(); ACTS.palClose();
   const now = new Date();
   t.innerHTML = `<div class="mb"><span>${I('wifi').replace('class="i"', 'class="i" style="width:14px;height:14px"')}</span><span>82% ${I('battery').replace('class="i"', 'class="i" style="width:16px;height:16px;vertical-align:-3px"')}</span>
-    <span class="me2" data-act="trayClose"><img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png" style="filter:none" alt=""><span class="num">${Math.round(S.cpu)}%</span></span><span>${'日一二三四五六'[now.getDay()] ? '周' + '日一二三四五六'[now.getDay()] : ''} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}</span></div>
+    <span class="me2" data-act="trayClose"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/common/otter_white.png" style="filter:none" alt=""><span class="num">${Math.round(S.cpu)}%</span></span><span>${'日一二三四五六'[now.getDay()] ? '周' + '日一二三四五六'[now.getDay()] : ''} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}</span></div>
     <div class="cover" data-act="trayClose"></div><div class="fly"></div>`;
   t.classList.add('on');
   trayDraw();
@@ -183,7 +183,7 @@ const SPANE = {
   alert: () => `<div class="sgroup">${srow('disk', '#FF6B6B', '磁盘快满时提醒', '剩余空间低于', mseg('diskAt', ['10 GB', '20 GB', '50 GB']))}${srow('clean', '#5FC9E8', '垃圾攒多了提醒', '可清理超过 5 GB 时', ssw('junkAlert'))}${srow('mem', '#FFAA5A', '内存紧张提醒', '压力持续「紧张」1 分钟以上', ssw('memAlert'))}${srow('pulse', '#6EE7A8', '每周小结', '周日 20:00 · 这周清了多少、石头罐多了几颗', ssw('weekly'))}</div>
     <div class="slabel">勿扰</div><div class="sgroup">${srow('moon', '#9B8BE8', '夜间不打扰', '23:00 – 08:00 只在菜单栏变色，不弹通知', sw(true, 'flashMsg', '原型里固定开启'))}</div>`,
   menubar: () => `<div class="sgroup">${srow('up', '#9B8BE8', '菜单栏显示', '', mseg('mbShow', ['只有小獭', '小獭 + CPU', '小獭 + 网速']))}${srow('apps', '#5FC9E8', '点击菜单栏图标', '', mseg('mbClick', ['浮窗', '主窗口']))}</div>
-    <div class="slabel">小獭的样子</div><div class="sgroup">${srow('', '', '状态会写在小獭脸上', '平静时睡觉 · 忙时睁眼 · 内存告急时冒汗 · 防止休眠时一直睁着眼', '<img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png" style="width:22px;height:22px;background:#1b1829;border-radius:6px;padding:3px" alt="">')}</div>
+    <div class="slabel">小獭的样子</div><div class="sgroup">${srow('', '', '状态会写在小獭脸上', '平静时睡觉 · 忙时睁眼 · 内存告急时冒汗 · 防止休眠时一直睁着眼', '<img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/common/otter_white.png" style="width:22px;height:22px;background:#1b1829;border-radius:6px;padding:3px" alt="">')}</div>
     <button class="ghost lg" data-act="setTray">预览菜单栏浮窗</button>`,
   scope: () => `<div class="slabel">扫描这些</div><div class="sgroup">${Object.entries(SET.scope).map(([k, v]) => srow('', '', k, k === '邮件附件' || k === '旧的 iOS 设备备份' ? '默认关闭 · 扫出来也不会默认勾选' : '', sw(v, 'setScope', k))).join('')}</div>
     <div class="slabel">白名单 · 永远不碰</div><div class="sgroup">${['~/Projects', '~/Library/Caches/com.figma.Desktop', '~/Movies/Final Cut 素材'].map((p) => srow('folder', '#6EE7A8', `<span style="font-family:var(--mono);font-size:12.5px">${p}</span>`, '', ib('x', 'flashMsg', `已从白名单移除 ${p}`, '移除'))).join('')}${srow('', '', '', '', '<button class="ghost" data-act="flashMsg" data-arg="已添加到白名单">添加文件夹…</button>')}</div>`,
@@ -194,7 +194,7 @@ const SPANE = {
       ${srow('lock', '#5FC9E8', 'API Key', aiNoModel ? '还没填' : '存在钥匙串里', `<div class="srch" style="min-width:220px"><input value="${aiNoModel ? '' : 'ark-••••••••••••3f9a'}" placeholder="粘贴 API Key"></div>`)}
       ${srow('spark', '#E8B04B', '模型', '', `<span class="chip on">Doubao‑Seed‑1.6 ▾</span>`)}${srow('', '', '', '', `<button class="ghost" data-act="aiTest">测试连接</button>`)}</div>
     <div class="slabel">小獭能做什么</div><div class="sgroup">${srow('eye', '#6EE7A8', '读取本机状态', '内存、磁盘、启动项、电池、网络', ssw('aiRead'))}${srow('hand', '#FF6B6B', '动手前先问你', '清理、结束进程这类操作，每次都会弹确认卡', tag(`${I('lock').replace('class="i"', 'class="i" style="width:10px;height:10px"')}一直开启`, 'acc'))}</div>`,
-  about: () => `<div style="text-align:center;padding:10px 0 4px"><img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" data-act="aboutLogo" style="width:96px;height:96px;cursor:pointer" alt=""><h2 style="font-size:20px;font-weight:800;margin-top:10px">水獭工具</h2><div class="muted">v2.0.3（2611）· 小獭帮你看着这台 Mac</div>
+  about: () => `<div style="text-align:center;padding:10px 0 4px"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" data-act="aboutLogo" style="width:96px;height:96px;cursor:pointer" alt=""><h2 style="font-size:20px;font-weight:800;margin-top:10px">水獭工具</h2><div class="muted">v2.0.3（2611）· 小獭帮你看着这台 Mac</div>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:12px"><button class="ghost" data-act="flashMsg" data-arg="已是最新版本">检查更新</button><button class="ghost" data-act="flashMsg" data-arg="已打开更新日志">更新日志</button><button class="ghost" data-act="flashMsg" data-arg="已打开反馈页">反馈</button></div></div>
     ${aboutIntro}${familyHtml()}<div class="muted" style="text-align:center;margin-top:14px">© 2026 水獭家族 · 石头罐里 ${S.pebbles} 颗石子，一共帮你清掉 ${S.freed.toFixed(1)} GB</div>`,
 };
@@ -209,7 +209,7 @@ function sKnot() { const on = $('.settings .ni.on'), k = $('.settings .knot'); i
 ACTS.settings = (pane) => {
   if (pane && SPANE[pane]) sPane = pane;
   ACTS.palClose(); ACTS.trayClose();
-  openDlg(`<div class="snav"><div class="home-card"><img src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" alt=""><div><b>水獭工具</b><span class="v">v2.0.3 · 水獭家族</span></div></div>
+  openDlg(`<div class="snav"><div class="home-card"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" alt=""><div><b>水獭工具</b><span class="v">v2.0.3 · 水獭家族</span></div></div>
       <div class="navlist"><span class="rail"></span><span class="knot"></span>${SPANES.map(([k, t, ic, c]) => `<div class="ni${k === sPane ? ' on' : ''}" data-act="sPane" data-arg="${k}" style="--c:${c}"><span class="b">${I(ic)}</span>${t}</div>`).join('')}</div></div>
     <div class="smain">${sMain()}</div>`, 'settings');
   requestAnimationFrame(sKnot);
@@ -229,7 +229,7 @@ ACTS.aiTest = async (a, el) => { el.innerHTML = '<span class="spin"></span>连�
 /* ══ 关于 ═══════════════════════════════════════════ */
 ACTS.about = () => {
   openDlg(`<button class="ibs xbtn" data-act="close">${I('x')}</button>
-    <div class="logo" id="abLogo" data-act="aboutLogo" style="position:relative;cursor:pointer"><img class="l1" src="https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png" style="width:120px;height:120px;position:absolute;inset:0" alt=""></div>
+    <div class="logo" id="abLogo" data-act="aboutLogo" style="position:relative;cursor:pointer"><img class="l1" src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" style="width:120px;height:120px;position:absolute;inset:0" alt=""></div>
     <h2>水獭工具</h2><div class="tg">小獭帮你看着这台 Mac</div><div class="muted num" style="margin-top:4px">v2.0.3（2611）· macOS 14 及以上</div>
     ${aboutIntro}${familyHtml()}<div style="display:flex;gap:8px;justify-content:center;margin-top:18px"><button class="ghost" data-act="flashMsg" data-arg="已是最新版本">检查更新</button><button class="ghost" data-act="flashMsg" data-arg="已打开官网">官网</button><button class="ghost" data-act="close">关闭</button></div>
     <div class="muted" style="margin-top:12px;font-size:11.5px">点图标可以再看一次小獭醒来</div>`, 'about');

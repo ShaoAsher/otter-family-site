@@ -7,12 +7,12 @@ import 'package:path_provider/path_provider.dart';
 
 import 'family_config.dart';
 
-/// 启动静图 / 视频：优先 TOS `library/latest/{app}/splash/`，失败回落安装包 asset。
+/// 启动静图 / 视频：优先 OSS 公开区 `library/latest/{app}/splash/`，失败回落安装包 asset。
 ///
 /// 三端一致：`OtterSplashStore.stillFile(appId)` / [animFile]。
 abstract final class OtterSplashStore {
   static const _fallbackBrand =
-      'https://otter-family-site.tos-cn-beijing.volces.com/library/latest/';
+      'https://otter.oss-cn-beijing.aliyuncs.com/library/latest/';
 
   static final Map<String, Future<File?>> _still = {};
   static final Map<String, Future<File?>> _anim = {};

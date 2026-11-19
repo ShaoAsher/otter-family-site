@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""TOS 唯一根 library/
+"""OSS 唯一根 library/（公开 latest/release/keep + family；母版 private）
 
 母版 library/private/：
   master/brand/{app}/  master/ip/  master/avatars/  source/  expr/
 
 对外 library/latest/：
-  common/  otter-*/  shots/  expr/*/270/ + manifest.json
+  common/  otter-*/  shots/  expr/*/270|540/ + manifest.json
 
 另：keep/v{libraryVersion}+{libraryBuild}/、release/、current.json、family.json
 
 家族资源世代：
   libraryVersion  — 家族主版本（如 3.1.0），--version 对齐
-  libraryBuild    — 仅 TOS 素材树发版；--bump 只涨这一位
+  libraryBuild    — 仅 OSS 素材树发版；--bump 只涨这一位
   展示            — 3.1.0+1（加号后是 libraryBuild，不是 pubspec +N）
 
   ./tool/otter lib publish|pull
@@ -21,27 +21,23 @@ from __future__ import annotations
 
 import hashlib
 import json
-import mimetypes
 import os
 import sys
-import warnings
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Iterable
 
-warnings.filterwarnings("ignore")
-import tos  # noqa: E402
-
+import oss_store
 from paths import family_site, library_root  # noqa: E402
 
 SITE = family_site()
 FAMILY_JSON = f"{SITE}/family.json"
 LIB = library_root()
-BUCKET_BASE = "https://otter-family-site.tos-cn-beijing.volces.com"
+BUCKET_BASE = oss_store.BUCKET_BASE
 SKIP = {".DS_Store", "__pycache__"}
 SKIP_DIRS = {"__pycache__", "master._bak", "_keep", "_preview_icon_white", "_preview_splash"}
 
-# 本地顶层 → TOS 分区
+# 本地顶层 → OSS 分区
 # shots/ 下再按 app 分子目录，避免各端截图文件名撞车
 PUBLIC_TOP = {"common", "otter-git", "otter-tools", "otter-gametime", "shots"}
 PRIVATE_TOP = {"master", "source", "expr"}  # 三档表情整树属母版
@@ -52,10 +48,6 @@ LATEST_PREFIX = "library/latest/"
 PRIVATE_PREFIX = "library/private/"
 KEEP_PREFIX = "library/keep/"
 RELEASE_PREFIX = "library/release/"
-
-mimetypes.add_type("image/webp", ".webp")
-mimetypes.add_type("application/json", ".json")
-mimetypes.add_type("video/mp4", ".mp4")
 
 
 def load_family() -> dict:
@@ -68,11 +60,8 @@ def save_family(data: dict) -> None:
 
 
 def client_env():
-    names = ("TOS_AK", "TOS_SK", "TOS_BUCKET", "TOS_REGION", "TOS_ENDPOINT")
-    env = {k: os.environ.get(k) for k in names}
-    if not all(env.values()):
-        sys.exit("缺少 TOS_*，先 source ~/.config/devkeys/env.sh")
-    return tos.TosClientV2(env["TOS_AK"], env["TOS_SK"], env["TOS_ENDPOINT"], env["TOS_REGION"]), env
+    """返回 (oss Bucket, 兼容旧调用的假 env)。"""
+    return oss_store.bucket(), {"OSS_BUCKET": "otter"}
 
 
 def sha256_file(path: str) -> str:
@@ -84,28 +73,12 @@ def sha256_file(path: str) -> str:
 
 
 def put_object(client, bucket, key: str, data: bytes, *, public: bool, cache: str | None = None):
-    ctype = "application/json" if key.endswith(".json") else (mimetypes.guess_type(key)[0] or "application/octet-stream")
-    kw = {
-        "content_type": ctype,
-        "acl": tos.ACLType.ACL_Public_Read if public else tos.ACLType.ACL_Private,
-        "storage_class": tos.StorageClassType.Storage_Class_Standard
-        if public
-        else tos.StorageClassType.Storage_Class_Ia,
-    }
-    if public:
-        kw["cache_control"] = cache or ("no-cache" if key.endswith(".json") else "public, max-age=86400")
-    client.put_object(bucket, key, content=data, **kw)
+    # bucket 参数保留兼容；实际用 client（oss2.Bucket）
+    oss_store.put_bytes(client, key, data, public=public, cache=cache)
 
 
 def list_keys(client, bucket, prefix: str) -> list[str]:
-    out, token = [], None
-    while True:
-        r = client.list_objects_type2(bucket, prefix=prefix, continuation_token=token, list_only_once=True)
-        out.extend(o.key for o in (r.contents or []))
-        if not r.is_truncated:
-            return out
-        token = r.next_continuation_token
-
+    return oss_store.list_keys(client, prefix)
 
 def is_public_expr_delivery(rel: str) -> bool:
     """expr/still|anim/270/… 与 expr/manifest.json 对外交付。"""
@@ -150,7 +123,7 @@ def delivery_mirrors(rel: str, path: str) -> list[tuple[str, str, bool]]:
 
 
 def library_id(version: str, build: str | int | None) -> str:
-    """家族 TOS 世代：version+libraryBuild。build 空则只返回 version。"""
+    """家族 OSS 世代：version+libraryBuild。build 空则只返回 version。"""
     b = "" if build is None else str(build).strip()
     return f"{version}+{b}" if b else version
 
@@ -171,14 +144,14 @@ def bump_library_build(build: str | int | None) -> str:
         return "1"
 
 
-def load_current_json(client, bucket) -> dict | None:
+def load_current_json(client, bucket=None) -> dict | None:
     try:
-        return json.loads(client.get_object(bucket, "library/current.json").read())
+        return json.loads(oss_store.get_bytes(client, "library/current.json"))
     except Exception:
         return None
 
 
-def remote_index(client, bucket) -> dict[str, str]:
+def remote_index(client, bucket=None) -> dict[str, str]:
     out = {}
     for prefix in (LATEST_PREFIX, PRIVATE_PREFIX):
         for k in list_keys(client, bucket, prefix):
@@ -187,7 +160,7 @@ def remote_index(client, bucket) -> dict[str, str]:
     return out
 
 
-def load_prev_files(client, bucket) -> dict[str, str]:
+def load_prev_files(client, bucket=None) -> dict[str, str]:
     cur = load_current_json(client, bucket) or {}
     out = {}
     for rel, meta in (cur.get("files") or {}).items():
@@ -311,10 +284,10 @@ def library_publish(argv: list[str]):
         sys.exit(f"缺少 {LIB}")
 
     client, env = client_env()
-    bucket = env["TOS_BUCKET"]
+    bucket = env.get("OSS_BUCKET", "otter")
     print(
         f"==> publish library {new_id}  (libraryVersion={version} 与 App 同号；"
-        f"libraryBuild={build} 仅 TOS，≠ App build)  lib={LIB}"
+        f"libraryBuild={build} 仅 OSS，≠ App build)  lib={LIB}"
     )
 
     # uploads: list of (key, path, public_acl)
@@ -404,7 +377,7 @@ def library_publish(argv: list[str]):
         src = f"{LATEST_PREFIX}{rel}"
         if src in remote or True:
             try:
-                data = client.get_object(bucket, src).read()
+                data = oss_store.get_bytes(client, src)
                 # keep 目录用完整世代 id（含 libraryBuild），避免与 App 版本目录混淆
                 put_object(client, bucket, f"{KEEP_PREFIX}v{old_id}/{rel}", data, public=True)
             except Exception as e:
@@ -417,14 +390,14 @@ def library_publish(argv: list[str]):
     with ThreadPoolExecutor(int(os.environ.get("JOBS", 8))) as pool:
         list(pool.map(up, todo))
     for k in extras:
-        client.delete_object(bucket, k)
+        oss_store.delete(client, k)
 
     cur_meta = load_current_json(client, bucket) or {}
     keep_list = list(dict.fromkeys(list(cur_meta.get("keep") or []) + ([old_id] if keep_rels else [])))
     current = {
         "schema": 7,
         "version": version,  # = libraryVersion，与 App 版本号一致
-        "build": build,  # = libraryBuild，仅 TOS 素材世代（≠ App pubspec build）
+        "build": build,  # = libraryBuild，仅 OSS 素材世代（≠ App pubspec build）
         "id": new_id,
         "parent": old_id if old_id != new_id else cur_meta.get("parent"),
         "publishedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -461,8 +434,7 @@ def library_publish(argv: list[str]):
 
 
 def library_pull(argv: list[str]):
-    client, env = client_env()
-    bucket = env["TOS_BUCKET"]
+    client, _env = client_env()
     keep_ver = None
     i = 0
     while i < len(argv):
@@ -473,11 +445,11 @@ def library_pull(argv: list[str]):
     if keep_ver:
         prefix = f"{KEEP_PREFIX}v{keep_ver}/"
         dest = f"{LIB}/_keep/v{keep_ver}"
-        keys = [k for k in list_keys(client, bucket, prefix) if not k.endswith("/")]
+        keys = [k for k in list_keys(client, None, prefix) if not k.endswith("/")]
         def get(item):
             key, path = item
             os.makedirs(os.path.dirname(path), exist_ok=True)
-            client.get_object_to_file(bucket, key, path)
+            client.get_object_to_file(key, path)
         with ThreadPoolExecutor(8) as pool:
             list(pool.map(get, [(k, f"{dest}/{k[len(prefix):]}") for k in keys]))
         print(f"keep → {dest}")
@@ -485,19 +457,17 @@ def library_pull(argv: list[str]):
 
     todo = []
     for prefix in (LATEST_PREFIX, PRIVATE_PREFIX):
-        for k in list_keys(client, bucket, prefix):
+        for k in list_keys(client, None, prefix):
             if k.endswith("/"):
                 continue
             rel = k[len(prefix) :]
-            # latest 里的 expr/270 与 private 里的 expr 可能重叠；private 优先写满母版
             path = f"{LIB}/{rel}"
             todo.append((k, path, prefix == PRIVATE_PREFIX))
-    # private 后写，覆盖同路径的 latest 交付档 → 本地仍是完整母版
     todo.sort(key=lambda x: (0 if x[2] else 1))
     def get(item):
         key, path, _ = item
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        client.get_object_to_file(bucket, key, path)
+        client.get_object_to_file(key, path)
     with ThreadPoolExecutor(8) as pool:
         list(pool.map(get, todo))
     print(f"pull → {LIB} ({len(todo)})")
@@ -505,18 +475,16 @@ def library_pull(argv: list[str]):
 
 def wipe_legacy(argv: list[str]):
     dry = "--dry-run" in argv
-    client, env = client_env()
-    bucket = env["TOS_BUCKET"]
+    client, _env = client_env()
     doomed = []
     for prefix in ("config/", "release/"):
-        doomed.extend(list_keys(client, bucket, prefix))
-    for k in list_keys(client, bucket, "library/"):
+        doomed.extend(list_keys(client, None, prefix))
+    for k in list_keys(client, None, "library/"):
         if k in ("library/current.json", "library/family.json"):
             continue
         if k.startswith(LATEST_PREFIX) or k.startswith(PRIVATE_PREFIX) or k.startswith(KEEP_PREFIX) or k.startswith(RELEASE_PREFIX):
             continue
         doomed.append(k)
-    # latest 下误放的母版档（1080/540、source、master）清掉——由本次 publish extras 处理；这里扫旧 config
     doomed = sorted(set(doomed))
     print(f"wipe-legacy {len(doomed)}" + (" dry-run" if dry else ""))
     if dry:
@@ -524,22 +492,22 @@ def wipe_legacy(argv: list[str]):
             print(" ", k)
         return
     with ThreadPoolExecutor(16) as pool:
-        list(pool.map(lambda k: client.delete_object(bucket, k), doomed))
+        list(pool.map(lambda k: oss_store.delete(client, k), doomed))
 
 
-def migrate_release_into_library(client, bucket, *, dry: bool):
-    keys = list_keys(client, bucket, "release/")
+def migrate_release_into_library(client, bucket=None, *, dry: bool):
+    keys = list_keys(client, None, "release/")
     print(f"migrate release → library/release: {len(keys)}")
     if dry:
         return
     for k in keys:
-        put_object(client, bucket, "library/" + k, client.get_object(bucket, k).read(), public=True)
-        client.delete_object(bucket, k)
+        put_object(client, None, "library/" + k, oss_store.get_bytes(client, k), public=True)
+        oss_store.delete(client, k)
 
 
 def push_config():
-    client, env = client_env()
-    put_object(client, env["TOS_BUCKET"], "library/family.json", open(FAMILY_JSON, "rb").read(), public=True, cache="no-cache")
+    client, _env = client_env()
+    put_object(client, None, "library/family.json", open(FAMILY_JSON, "rb").read(), public=True, cache="no-cache")
     print("library/family.json ok")
 
 
@@ -557,8 +525,8 @@ def main():
         if sub in ("wipe-legacy", "cleanup"):
             return wipe_legacy(rest)
         if sub == "migrate-release":
-            client, env = client_env()
-            return migrate_release_into_library(client, env["TOS_BUCKET"], dry="--dry-run" in rest)
+            client, _env = client_env()
+            return migrate_release_into_library(client, dry="--dry-run" in rest)
         sys.exit("library：publish | pull | wipe-legacy | migrate-release")
     if argv[0] == "config":
         return push_config()

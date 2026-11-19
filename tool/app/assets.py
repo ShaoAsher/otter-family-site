@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 otter-library（优先）或 TOS library/latest 拉 App 运行时素材。
+"""从 otter-library（优先）或 OSS 公开区 library/latest 拉 App 运行时素材。
 
   ./tool/otter assets [pull]
   ./tool/otter assets pull bundle   # brand + still/270

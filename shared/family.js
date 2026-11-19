@@ -25,10 +25,10 @@
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
   var LIB_VER = "3.0.2"; // fallback = libraryVersion（与 App 同号），不是 libraryBuild
-  var MEDIA = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/{app}/";
-  var SHOTS = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/shots/{app}/";
-  var EXPR = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/";
-  var BRAND = "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/";
+  var MEDIA = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/{app}/";
+  var SHOTS = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/shots/{app}/";
+  var EXPR = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/";
+  var BRAND = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/";
 
   function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
   function expand(tpl, ver) {

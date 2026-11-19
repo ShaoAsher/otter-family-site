@@ -5,13 +5,14 @@
                     [--no-notarize] [--zip-only] [--no-push-main]     （在 App 根目录）
   python3 tool/release/ship.py <App 根目录> [同上]                        （直接调用）
 
-1. 检查：版本、changelog、gh/TOS；可选先 push origin main（触发 Windows CI）。
-2. tool/app/release.sh（main 分支检查、打包公证、release.py publish 传 TOS + GitHub）。
-3. 等 Windows CI 把包传到 GitHub Release（每 12 秒查一次，最多 35 分钟；main 快车道 CI 通常约 15 分钟；--no-wait 跳过）。
-4. release.py mirror：Windows 包补到 TOS；全平台两处齐了就切换 download.version，family.json 推到 TOS。
-5. 本仓提交 family.json；带 --push 时推 main（Pages 上的 family.json 与产品官网随之更新）。
+1. 检查：版本、changelog、gh/OSS；可选先 push Codeup main（Windows CI 暂可跳过）。
+2. tool/app/release.sh（打包公证、release.py publish → OSS + 官网仓 GitHub Release）。
+3. 等 Windows 包到官网仓 Release（--no-wait 可跳过；Win 未就绪时不切换 download.version）。
+4. release.py mirror：Windows 包补到 OSS；全平台齐了就切换 download.version，family.json 推 OSS。
+5. 官网仓提交 family.json；带 --push 时推 main（Pages 更新）。
 
-需要 gh auth login 与 source ~/.config/devkeys/env.sh（TOS_*）。
+需要 gh auth login；OSS 读 ~/.config/devkeys/config.json 的 oss 段。
+旧火山 TOS 仅存档，本流程不再访问。
 """
 
 import json
@@ -64,14 +65,24 @@ def main(argv):
 
     if subprocess.run(["gh", "auth", "status", "-h", "github.com"], capture_output=True).returncode:
         sys.exit("请先 gh auth login")
-    if not os.environ.get("TOS_BUCKET"):
-        sys.exit("请先 source ~/.config/devkeys/env.sh（TOS_*）")
+    sys.path.insert(0, str(ROOT / "tool"))
+    try:
+        import oss_store
 
-    # TOS 走直连，其余可走本机代理（避免 sqlite3/GitHub 下载挂死）
+        oss_store.bucket()
+    except Exception as e:
+        sys.exit(f"OSS 不可用：{e}（检查 ~/.config/devkeys/config.json 的 oss）")
+
+    # OSS / 阿里云走直连，其余可走本机代理
     no_proxy = os.environ.get("NO_PROXY") or os.environ.get("no_proxy") or ""
-    if ".volces.com" not in no_proxy:
+    if ".aliyuncs.com" not in no_proxy:
         merged = ",".join(
-            x for x in (no_proxy, "localhost,127.0.0.1,::1,.local,.volces.com,.volcengine.com") if x
+            x
+            for x in (
+                no_proxy,
+                "localhost,127.0.0.1,::1,.local,.aliyuncs.com,otter-cn-hangzhou.devops.aliyuncs.com",
+            )
+            if x
         )
         os.environ["NO_PROXY"] = merged
         os.environ["no_proxy"] = merged

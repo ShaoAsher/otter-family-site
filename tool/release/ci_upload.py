@@ -4,7 +4,7 @@
   python3 tool/release/ci_upload.py <app> <版本> <文件> [文件 ...]
 
 Release 不存在就建（不标 latest，说明留给 macOS 发布脚本补）；已存在就 --clobber 覆盖同名文件。
-传完在本机跑 ./tool/otter mirror <app> <版本> 补到 TOS 并切换下载版本。
+传完在本机跑 ./tool/otter mirror <app> <版本> 补到 OSS 并切换下载版本。
 """
 
 import json

@@ -12,7 +12,7 @@ function famIcon(k,s=40,extra=''){return `<span class="ficon k-${k} ${extra}" st
 document.head.insertAdjacentHTML('beforeend',`<style>
 .ficon{width:var(--s);height:var(--s);border-radius:calc(var(--s)*.225);background:radial-gradient(circle at 50% 45%,#17152a,#0B0A14);position:relative;flex:none;display:inline-block;vertical-align:middle}
 .ficon .d{position:absolute;inset:7.5%;border-radius:50%;background:linear-gradient(45deg,var(--c1),var(--c2));box-shadow:inset calc(var(--s)*-.05) calc(var(--s)*-.07) calc(var(--s)*.15) rgba(0,0,0,.18),inset calc(var(--s)*.05) calc(var(--s)*.05) calc(var(--s)*.12) rgba(255,255,255,.18);transition:background .62s}
-.ficon .o{position:absolute;left:20%;top:20%;width:60%;height:60%;background:#0B0A14;-webkit-mask:url(https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png) center/contain no-repeat;mask:url(https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png) center/contain no-repeat}
+.ficon .o{position:absolute;left:20%;top:20%;width:60%;height:60%;background:#0B0A14;-webkit-mask:url(https://otter.oss-cn-beijing.aliyuncs.com/library/latest/common/otter_white.png) center/contain no-repeat;mask:url(https://otter.oss-cn-beijing.aliyuncs.com/library/latest/common/otter_white.png) center/contain no-repeat}
 .ficon .g{position:absolute;left:72.5%;top:72.5%;width:21%;height:21%;border-radius:50%;background:#fff;box-shadow:0 0 0 calc(var(--s)*.02) #0B0A14;display:grid;place-items:center}
 .ficon .g svg{width:64%;height:64%;stroke:#0B0A14;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .k-git{--c1:var(--git1);--c2:var(--git2)} .k-gt{--c1:var(--gt1);--c2:var(--gt2)} .k-tl{--c1:var(--tl1);--c2:var(--tl2)}

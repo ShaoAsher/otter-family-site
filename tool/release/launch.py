@@ -2,7 +2,7 @@
 """家族发版一键入口（在家族仓执行 ./tool/otter launch）。
 
   ./tool/otter launch scan              预检三端 + family.json + 各 App status（不发包）
-  ./tool/otter launch sync              library publish（上传品牌/表情等到 TOS library）
+  ./tool/otter launch sync              library publish（上传品牌/表情等到 OSS library）
   ./tool/otter launch git|tools [--push] [ship 参数…]
   ./tool/otter launch all [--push]      依次 ship 水獭 Git、水獭工具
 
@@ -93,8 +93,13 @@ def preflight_app(app: str, root: Path) -> list[str]:
 
 def scan():
     print("=== 家族发版预检 ===\n")
-    if not os.environ.get("TOS_BUCKET"):
-        print("⚠ 未 source devkeys（TOS_*）")
+    sys.path.insert(0, str(ROOT / "tool"))
+    try:
+        import oss_store
+
+        oss_store.bucket()
+    except Exception as e:
+        print(f"⚠ OSS 不可用：{e}")
     if subprocess.run(["gh", "auth", "status", "-h", "github.com"], capture_output=True).returncode:
         print("⚠ gh 未登录")
     for app in ("otter-git", "otter-tools"):

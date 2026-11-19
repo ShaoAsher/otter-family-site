@@ -6,23 +6,23 @@
     "en": "Otter Family",
     "site": "https://shaoasher.github.io/otter-family-site/",
     "members": "https://shaoasher.github.io/otter-family-site/?from={from}#members",
-    "assets": "https://otter-family-site.tos-cn-beijing.volces.com/",
-    "media": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/{app}/",
-    "shots": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/shots/{app}/",
-    "brand": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/",
-    "expr": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/",
+    "assets": "https://otter.oss-cn-beijing.aliyuncs.com/",
+    "media": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/{app}/",
+    "shots": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/shots/{app}/",
+    "brand": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/",
+    "expr": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/",
     "config": [
-      "https://otter-family-site.tos-cn-beijing.volces.com/library/family.json",
+      "https://otter.oss-cn-beijing.aliyuncs.com/library/family.json",
       "https://shaoasher.github.io/otter-family-site/family.json"
     ],
     "releases": {
-      "cn": "https://otter-family-site.tos-cn-beijing.volces.com/library/release/{app}/v{version}/{file}",
+      "cn": "https://otter.oss-cn-beijing.aliyuncs.com/library/release/{app}/v{version}/{file}",
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.1.0",
     "libraryBuild": "3",
-    "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
+    "library": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/"
   },
   "apps": {
     "otter-git": {
@@ -35,7 +35,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/otter-git/",
       "demo": "https://shaoasher.github.io/otter-family-site/otter-git/demo/",
-      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-git/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-git/icon.png",
       "colors": [
         "#E89B0C",
         "#FFD66B"
@@ -183,7 +183,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/otter-tools/",
       "demo": "https://shaoasher.github.io/otter-family-site/otter-tools/#demo",
-      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-tools/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png",
       "colors": [
         "#FA5A1E",
         "#FFB04A"
@@ -311,7 +311,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/otter-gametime/",
       "demo": "https://shaoasher.github.io/otter-family-site/otter-gametime/demo/",
-      "icon": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/otter-gametime/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-gametime/icon.png",
       "colors": [
         "#1FB6FF",
         "#5CF2DE"

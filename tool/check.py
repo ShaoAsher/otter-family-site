@@ -141,7 +141,7 @@ def check_app(app_root: Path, keys: list[str], errors: list[str]) -> None:
     elif ac == n:
         ok(f"App anim/270 = {ac}（全量包）")
     elif ac == 0 or ac < 0:
-        print("· App 无 anim/270（瘦包 OK，运行时 TOS 拉）")
+        print("· App 无 anim/270（瘦包 OK，运行时 OSS 公开区拉）")
 
     # 源码遗留路径（排除 gen、build）
     scan_roots = [app_root / "lib", app_root / "macos", app_root / "windows", app_root / "mockup"]

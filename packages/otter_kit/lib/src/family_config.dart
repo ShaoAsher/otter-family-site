@@ -9,9 +9,10 @@ import 'package:path_provider/path_provider.dart';
 /// 水獭家族公共配置（otter-family-site 仓库根目录 `family.json`）：
 /// 版本记录、官网 / 下载地址、家族官网三端共用，改一处三端生效。
 ///
-/// 不内置：先读上次缓存，再拉远端（TOS，失败再 GitHub Pages）；都没有时 [current] 为 null，界面不显示相关内容。
+/// 不内置：先读上次缓存，再拉远端（OSS 公开 family.json，失败再 GitHub Pages）；都没有时 [current] 为 null。
 /// 远端 `schema` 高于 [FamilyConfig.schema] 说明字段不兼容，忽略，继续用手上那份。
 /// 三端都依赖本包（otter-family-site/packages/otter_kit），改这里、打 kit-v 标签、各 App 升 ref。
+/// 公开资源：library/latest|release|family；母版 library/private 不公开、App 不直链。
 class FamilyConfig {
   FamilyConfig._(this._raw);
 
@@ -19,7 +20,7 @@ class FamilyConfig {
 
   static const schema = 1;
   static const remotes = [
-    'https://otter-family-site.tos-cn-beijing.volces.com/library/family.json',
+    'https://otter.oss-cn-beijing.aliyuncs.com/library/family.json',
     'https://shaoasher.github.io/otter-family-site/family.json',
   ];
 
@@ -136,7 +137,7 @@ class FamilyApp {
 
   Map<String, Object?> get _download => _map(_raw['download']);
 
-  /// 能下载到的版本：发布到 TOS 与 GitHub 都齐了才会切过来；没有安装包的 App 就是 [latest]。
+  /// 能下载到的版本：发布到 OSS 与（官网仓）GitHub Release 都齐了才会切过来；没有安装包的 App 就是 [latest]。
   String get available {
     final v = _str(_download['version']);
     return v.isEmpty ? latest : v;

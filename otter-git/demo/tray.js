@@ -22,7 +22,7 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 .mbar b{font-weight:700} .mbar .sp{flex:1} .mbar svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
 .sitem{display:flex;align-items:center;gap:4px;height:22px;padding:0 7px;border-radius:6px;cursor:pointer;color:inherit}
 .sitem:hover,.sitem.open{background:rgba(var(--ink),.16)} [data-theme=day] .sitem:hover,[data-theme=day] .sitem.open{background:rgba(23,21,31,.12)}
-.sitem .glyph{width:17px;height:17px;background:currentColor;-webkit-mask:url(https://otter-family-site.tos-cn-beijing.volces.com/library/latest/common/otter_white.png) center/contain no-repeat;position:relative}
+.sitem .glyph{width:17px;height:17px;background:currentColor;-webkit-mask:url(https://otter.oss-cn-beijing.aliyuncs.com/library/latest/common/otter_white.png) center/contain no-repeat;position:relative}
 .sitem .lbl{font:600 12px var(--mono);min-width:0}
 .sitem .lbl:empty{display:none}
 .sitem .lbl.bump{animation:bump .5s var(--pop)} @keyframes bump{40%{transform:scale(1.35)}}

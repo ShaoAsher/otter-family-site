@@ -7,12 +7,12 @@ import 'package:path_provider/path_provider.dart';
 
 import 'family_config.dart';
 
-/// 动图按需从家族 TOS `library/latest/expr/anim/{270|540}/` 拉取，静帧走安装包 [stillAssetPath]。
+/// 动图按需从 OSS 公开区 `library/latest/expr/anim/{270|540}/` 拉取，静帧走安装包 [stillAssetPath]。
 ///
 /// 默认 **270**；用户在设置打开「高清动图」后走 **540**（[hdAnim]）。
 abstract final class OtterExprStore {
   static const _fallbackBase =
-      'https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/';
+      'https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/';
 
   /// 本地缓存目录名（与远端路径无关；历史兼容保留 `v3`）。
   static String _version = 'v3';
