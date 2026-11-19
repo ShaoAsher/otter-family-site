@@ -52,6 +52,12 @@
       },
       "changelog": [
         {
+          "version": "3.1.3",
+          "date": "2026-11-19",
+          "zh": "启动层接 sys 原生闪屏；图标圆角；静图垫底再播 OSS 视频。",
+          "en": "Native sys splash, rounded icons, still underlay then OSS splash video."
+        },
+        {
           "version": "3.1.2",
           "zh": "启动页改为 OSS 超清视频（失败回落包内静图）；品牌启动图更新。",
           "en": "Splash plays ultra HD video from OSS (still image fallback in package); refreshed splash art.",
@@ -206,6 +212,12 @@
       },
       "changelog": [
         {
+          "version": "3.1.3",
+          "date": "2026-11-19",
+          "zh": "启动层接 sys 原生闪屏；图标圆角；静图垫底再播 OSS 视频。",
+          "en": "Native sys splash, rounded icons, still underlay then OSS splash video."
+        },
+        {
           "version": "3.1.2",
           "zh": "启动页改为 OSS 超清视频（失败回落包内静图）；品牌启动图更新。",
           "en": "Splash plays ultra HD video from OSS (still image fallback in package); refreshed splash art.",
@@ -336,6 +348,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "1.1.3",
+          "date": "2026-11-19",
+          "zh": "应用图标圆角并写入 iOS/Android；启动静图垫底再播 OSS 视频。",
+          "en": "Rounded app icons for iOS/Android; still underlay then OSS splash video."
+        },
         {
           "version": "1.1.2",
           "zh": "启动页改为 OSS 超清视频（失败回落包内静图）；品牌启动图更新。",

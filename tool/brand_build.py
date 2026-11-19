@@ -63,6 +63,21 @@ def rounded(im: Image.Image, radius: float) -> Image.Image:
     return out
 
 
+def ensure_rounded(im: Image.Image, radius_frac: float = RADIUS) -> Image.Image:
+    """母版已是透明圆角则不再套一层，避免图标越缩越小。"""
+    im = im.convert("RGBA")
+    if im.getpixel((0, 0))[3] < 16:
+        return im
+    return rounded(im, im.width * radius_frac)
+
+
+def flatten_opaque(im: Image.Image, rgb: tuple[int, int, int]) -> Image.Image:
+    """iOS Marketing 1024 禁止透明：圆角图铺到品牌色实底上。"""
+    im = im.convert("RGBA")
+    bg = Image.new("RGBA", im.size, rgb + (255,))
+    return Image.alpha_composite(bg, im).convert("RGB")
+
+
 def square(im: Image.Image, margin: float) -> Image.Image:
     """按 alpha 贴边裁切，再居中放进带 margin 的透明方图。"""
     im = im.crop(im.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox())
@@ -469,20 +484,27 @@ ANDROID_DENSITY = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4
 
 
 def mobile(out: str, hero: Image.Image, mark: Image.Image, edge_rgb: tuple[int, int, int]) -> None:
+    # 圆角母版进各尺寸；Marketing 1024 必须不透明。
+    hero_r = ensure_rounded(hero)
+    mark_r = ensure_rounded(mark)
+    ios_store = flatten_opaque(hero_r, edge_rgb)
     icons = f"{out}/ios/AppIcon.appiconset"
     images = []
     for idiom, pt, scales in IOS_ICONS:
         label = f"{pt:g}x{pt:g}"
         for sc in scales:
             name = f"Icon-App-{label}@{sc}x.png"
-            write(hero, f"{icons}/{name}", round(pt * sc))
+            px = round(pt * sc)
+            src = ios_store if idiom == "ios-marketing" else hero_r
+            write(src, f"{icons}/{name}", px)
             images.append({"size": label, "idiom": idiom, "filename": name, "scale": f"{sc}x"})
     write_json({"images": images, "info": {"version": 1, "author": "xcode"}}, f"{icons}/Contents.json")
 
     res = f"{out}/android/res"
     for name, k in ANDROID_DENSITY.items():
-        write(hero, f"{res}/mipmap-{name}/ic_launcher.png", round(48 * k))
-        write(mark, f"{res}/drawable-{name}/ic_launcher_foreground.png", round(108 * k))
+        write(hero_r, f"{res}/mipmap-{name}/ic_launcher.png", round(48 * k))
+        # adaptive foreground：整幅圆角图，系统再套遮罩
+        write(mark_r, f"{res}/drawable-{name}/ic_launcher_foreground.png", round(108 * k))
     os.makedirs(f"{res}/mipmap-anydpi-v26", exist_ok=True)
     with open(f"{res}/mipmap-anydpi-v26/ic_launcher.xml", "w") as f:
         f.write(
@@ -583,6 +605,8 @@ def main() -> None:
         hero = Image.open(src["icon"]).convert("RGBA")
         if hero.size != (1024, 1024):
             hero = hero.resize((1024, 1024), Image.LANCZOS)
+        # 母版应为圆角；若仍是直角实底则补圆角，再派生各端 icon
+        hero = ensure_rounded(hero)
         mark = hero.resize((512, 512), Image.LANCZOS)
         write(mark, f"{out}/icon.png")
         # mark 与 icon 同图：硬链，不双写
