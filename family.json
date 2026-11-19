@@ -21,7 +21,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.1.0",
-    "libraryBuild": "3",
+    "libraryBuild": "4",
     "library": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/"
   },
   "apps": {
@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.1.3",
+      "latest": "3.1.4",
       "download": {
         "version": "3.1.3",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.4",
+          "date": "2026-11-20",
+          "zh": "关于页改用产品圆角图标（无白四角）；家族剪影重生图对齐姿态；版本更新提示统一。",
+          "en": "About uses the product rounded icon (no white corners); family silhouette regenerated to match pose; update prompts unified."
+        },
         {
           "version": "3.1.3",
           "date": "2026-11-19",
@@ -200,7 +206,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.3",
+      "latest": "3.1.4",
       "download": {
         "version": "3.1.3",
         "files": {
@@ -211,6 +217,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.4",
+          "date": "2026-11-20",
+          "zh": "关于页改用产品圆角图标（无白四角）；家族剪影重生图对齐姿态；版本更新提示统一。",
+          "en": "About uses the product rounded icon (no white corners); family silhouette regenerated to match pose; update prompts unified."
+        },
         {
           "version": "3.1.3",
           "date": "2026-11-19",
@@ -340,7 +352,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "1.1.1",
+      "latest": "1.1.4",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -348,6 +360,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "1.1.4",
+          "date": "2026-11-20",
+          "zh": "关于页改用产品圆角图标（无白四角）；家族剪影重生图对齐姿态；版本更新提示统一。",
+          "en": "About uses the product rounded icon (no white corners); family silhouette regenerated to match pose; update prompts unified."
+        },
         {
           "version": "1.1.3",
           "date": "2026-11-19",

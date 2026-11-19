@@ -44,7 +44,11 @@ DISC_THRESHOLD = 150
 
 def write(im: Image.Image, path: str, size: int | None = None) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    (im.resize((size, size), Image.LANCZOS) if size else im).save(path, optimize=True)
+    out = im.resize((size, size), Image.LANCZOS) if size else im
+    # LANCZOS 会把不透明色渗进透明边，保存前清掉，避免白四角
+    if out.mode == "RGBA" or "A" in out.getbands():
+        out = clear_transparent_rgb(out.convert("RGBA"))
+    out.save(path, optimize=True)
 
 
 def write_json(data: dict, path: str) -> None:
@@ -63,12 +67,21 @@ def rounded(im: Image.Image, radius: float) -> Image.Image:
     return out
 
 
+def clear_transparent_rgb(im: Image.Image, thresh: int = 8) -> Image.Image:
+    """透明像素 RGB 清零，避免圆角外残留白底在合成时冒出「白四角」。"""
+    im = im.convert("RGBA")
+    r, g, b, a = im.split()
+    gone = a.point(lambda v: 255 if v <= thresh else 0)
+    empty = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    return Image.composite(empty, im, gone)
+
+
 def ensure_rounded(im: Image.Image, radius_frac: float = RADIUS) -> Image.Image:
     """母版已是透明圆角则不再套一层，避免图标越缩越小。"""
     im = im.convert("RGBA")
     if im.getpixel((0, 0))[3] < 16:
-        return im
-    return rounded(im, im.width * radius_frac)
+        return clear_transparent_rgb(im)
+    return clear_transparent_rgb(rounded(im, im.width * radius_frac))
 
 
 def flatten_opaque(im: Image.Image, rgb: tuple[int, int, int]) -> Image.Image:
@@ -588,8 +601,18 @@ def write_avatars() -> None:
 def main() -> None:
     colors = app_colors()
     black = square(Image.open(f"{MASTER}/silhouette.png").convert("RGBA"), 0.02)
-    white = Image.new("RGBA", black.size, (255, 255, 255, 0))
-    white.putalpha(black.getchannel("A"))
+    # 白剪影：仅不透明处为白，透明处 RGB 必须为 0，否则方框合成会冒白四角
+    white = Image.merge(
+        "RGBA",
+        (
+            Image.new("L", black.size, 255),
+            Image.new("L", black.size, 255),
+            Image.new("L", black.size, 255),
+            black.getchannel("A"),
+        ),
+    )
+    white = clear_transparent_rgb(white)
+    black = clear_transparent_rgb(black)
     write(black, f"{BRAND}/common/otter_black.png", 512)
     write(white, f"{BRAND}/common/otter_white.png", 512)
     write(logo_silhouette_layer(black, 512), f"{BRAND}/common/logo_otter.png")
