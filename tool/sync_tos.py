@@ -45,7 +45,8 @@ SKIP_DIRS = {"__pycache__", "master._bak", "_keep", "_preview_icon_white", "_pre
 # shots/ 下再按 app 分子目录，避免各端截图文件名撞车
 PUBLIC_TOP = {"common", "otter-git", "otter-tools", "otter-gametime", "shots"}
 PRIVATE_TOP = {"master", "source", "expr"}  # 三档表情整树属母版
-PUBLIC_EXPR_SIZES = {"270"}  # 对外只挂交付档
+# 270=默认；540=设置里「高清动图」；1080 仍只进 private
+PUBLIC_EXPR_SIZES = {"270", "540"}
 
 LATEST_PREFIX = "library/latest/"
 PRIVATE_PREFIX = "library/private/"
@@ -437,11 +438,15 @@ def library_publish(argv: list[str]):
         client, bucket, "library/current.json",
         json.dumps(current, ensure_ascii=False, indent=2).encode(), public=True, cache="no-cache",
     )
-    # 公开 expr manifest 只列 270 交付档
+    # 公开 expr manifest：270（默认）+ 540（高清动图开关）
     try:
         full = json.loads(open(f"{LIB}/expr/manifest.json", encoding="utf-8").read())
-        files = {k: v for k, v in (full.get("files") or {}).items() if "/270/" in k}
-        slim = {**full, "files": files, "publicSizes": [270]}
+        files = {
+            k: v
+            for k, v in (full.get("files") or {}).items()
+            if "/270/" in k or "/540/" in k
+        }
+        slim = {**full, "files": files, "publicSizes": [270, 540]}
         put_object(
             client, bucket, f"{LATEST_PREFIX}expr/manifest.json",
             json.dumps(slim, ensure_ascii=False, indent=1).encode(), public=True, cache="no-cache",

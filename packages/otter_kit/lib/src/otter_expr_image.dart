@@ -10,6 +10,7 @@ import 'otter_webp_loop.dart';
 /// 小獭表情：静帧走 asset；动图走 [OtterExprStore] + 统一 [OtterWebpLoop]。
 ///
 /// 播放实现与 xspay `YyWebpLoopAnimation` 同路：引擎 codec 自驱，不拆帧、不花屏。
+/// [OtterExprStore.hdAnim] 切换时会重新按当前档位拉取。
 class OtterExprImage extends StatefulWidget {
   const OtterExprImage({
     super.key,
@@ -47,17 +48,34 @@ class _OtterExprImageState extends State<OtterExprImage> {
   @override
   void initState() {
     super.initState();
+    OtterExprStore.hdAnim.addListener(_onHdAnim);
     _kick();
+  }
+
+  @override
+  void dispose() {
+    OtterExprStore.hdAnim.removeListener(_onHdAnim);
+    super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant OtterExprImage old) {
     super.didUpdateWidget(old);
     if (old.exprKey != widget.exprKey || old.still != widget.still) {
-      _file = null;
-      _bytes = null;
-      _kick();
+      _reload();
     }
+  }
+
+  void _onHdAnim() {
+    if (!mounted || widget.still) return;
+    _reload();
+  }
+
+  void _reload() {
+    _file = null;
+    _bytes = null;
+    _kick();
+    setState(() {});
   }
 
   void _kick() {
@@ -65,7 +83,9 @@ class _OtterExprImageState extends State<OtterExprImage> {
       debugPrint('[OtterExprImage] ${widget.exprKey} still=true skip');
       return;
     }
-    debugPrint('[OtterExprImage] ${widget.exprKey} load anim…');
+    debugPrint(
+      '[OtterExprImage] ${widget.exprKey} load anim/${OtterExprStore.animSize}…',
+    );
     _file ??= OtterExprStore.animFile(widget.exprKey);
     _file!.then((f) {
       if (!mounted) return;

@@ -7,7 +7,9 @@ import 'package:path_provider/path_provider.dart';
 
 import 'family_config.dart';
 
-/// 动图按需从家族 TOS `library/latest/expr/anim/270/` 拉取，静帧走安装包 [stillAssetPath]。
+/// 动图按需从家族 TOS `library/latest/expr/anim/{270|540}/` 拉取，静帧走安装包 [stillAssetPath]。
+///
+/// 默认 **270**；用户在设置打开「高清动图」后走 **540**（[hdAnim]）。
 abstract final class OtterExprStore {
   static const _fallbackBase =
       'https://otter-family-site.tos-cn-beijing.volces.com/library/latest/expr/';
@@ -16,8 +18,10 @@ abstract final class OtterExprStore {
   static String _version = 'v3';
   static Map<String, String>? _manifestMd5;
 
-  /// 进行中 + 已成功的 Future 都留在这里：父组件每帧 rebuild 时必须拿到同一个
-  /// [Future]，否则 [FutureBuilder] 会反复回到 waiting，界面永远停在静帧。
+  /// 高清动图（540）。默认关 = 270。
+  static final ValueNotifier<bool> hdAnim = ValueNotifier<bool>(false);
+
+  /// 进行中 + 已成功的 Future：按 `size/key` 区分，避免 270/540 互相污染。
   static final Map<String, Future<File?>> _anim = {};
 
   /// App 启动时调用（`otter.json` → `expr.version`）。
@@ -25,6 +29,18 @@ abstract final class OtterExprStore {
     _version = version;
     _manifestMd5 = null;
   }
+
+  /// 从本机偏好恢复高清开关（各 App 启动时调一次）。
+  static void setHdAnim(bool value, {bool clearCache = true}) {
+    if (hdAnim.value == value) return;
+    hdAnim.value = value;
+    if (clearCache) {
+      _anim.clear();
+      _manifestMd5 = null;
+    }
+  }
+
+  static int get animSize => hdAnim.value ? 540 : 270;
 
   static String stillAssetPath(String key) =>
       'assets/otter/expr/still/270/$key.webp';
@@ -77,14 +93,16 @@ abstract final class OtterExprStore {
 
   /// 本地动图文件；失败返回 null（界面应回退静帧）。
   ///
-  /// 同一 [key] 始终返回同一个 [Future]（成功后也保留），避免上层 rebuild 重开下载。
+  /// 同一 `size/key` 始终返回同一个 [Future]（成功后也保留）。
   static Future<File?> animFile(String key) {
-    return _anim.putIfAbsent(key, () => _fetchAnim(key));
+    final slot = '${animSize}/$key';
+    return _anim.putIfAbsent(slot, () => _fetchAnim(key, animSize));
   }
 
-  static Future<File?> _fetchAnim(String key) async {
+  static Future<File?> _fetchAnim(String key, int size) async {
     if (kIsWeb) return null;
-    final name = 'anim/270/$key.webp';
+    final name = 'anim/$size/$key.webp';
+    final slot = '$size/$key';
     try {
       await _manifest();
       final root = await _cacheRoot();
@@ -94,7 +112,13 @@ abstract final class OtterExprStore {
       final r = await http.get(url).timeout(const Duration(seconds: 45));
       if (r.statusCode != 200) {
         debugPrint('[OtterExprStore] $name → HTTP ${r.statusCode}');
-        _anim.remove(key); // 允许下次再试
+        // 高清失败回落 270；成功则保留本 slot 的 Future，避免反复重试 540
+        if (size != 270) {
+          final fallback = await animFileAt(key, 270);
+          if (fallback == null) _anim.remove(slot);
+          return fallback;
+        }
+        _anim.remove(slot);
         return null;
       }
       await dest.parent.create(recursive: true);
@@ -109,8 +133,19 @@ abstract final class OtterExprStore {
         debugPrint('$st');
         return true;
       }());
-      _anim.remove(key); // 允许下次再试
+      if (size != 270) {
+        final fallback = await animFileAt(key, 270);
+        if (fallback == null) _anim.remove(slot);
+        return fallback;
+      }
+      _anim.remove(slot);
       return null;
     }
+  }
+
+  /// 指定档位拉取（高清失败回落用）。
+  static Future<File?> animFileAt(String key, int size) {
+    final slot = '$size/$key';
+    return _anim.putIfAbsent(slot, () => _fetchAnim(key, size));
   }
 }
