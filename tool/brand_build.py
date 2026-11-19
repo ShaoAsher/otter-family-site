@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""master/ → common/ + otter-*/ 品牌成品。母版变了再跑。
+"""master/brand/{app}/ → common/ + otter-*/（含 splash、平台套件）。
+
+母版唯一源：`master/brand/{app}/{icon,dart,anim}`。
+派生（sys、AppIcon、icon.png…）只写对外树，禁止回写 master/。
 
   ./tool/otter lib brand
 """
@@ -7,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
@@ -14,9 +18,11 @@ from paths import family_site, library_root
 
 BRAND = library_root()
 MASTER = f"{BRAND}/master"
+MASTER_BRAND = f"{MASTER}/brand"
 FAMILY_JSON = f"{family_site()}/family.json"
 INK = (11, 10, 20)
 WHITE = (255, 255, 255)
+SPLASH_BG = (11, 10, 20)  # #0B0A14
 # App 图标 / 产品标上的剪影与角标用白色（色底上更干净）；菜单栏模板仍用墨色。
 ICON_GLYPH = WHITE
 APPS = {"otter-git": "desktop", "otter-tools": "desktop", "otter-gametime": "mobile"}
@@ -496,6 +502,67 @@ def mobile(out: str, hero: Image.Image, mark: Image.Image, edge_rgb: tuple[int, 
                 f'    <color name="ic_launcher_background">{ground}</color>\n</resources>\n')
 
 
+def require_brand_src(app: str) -> dict[str, str]:
+    root = f"{MASTER_BRAND}/{app}"
+    paths = {
+        "icon": f"{root}/icon.png",
+        "dart": f"{root}/dart.png",
+        "anim": f"{root}/anim.mp4",
+    }
+    missing = [k for k, p in paths.items() if not os.path.isfile(p)]
+    if missing:
+        raise SystemExit(f"缺少 master/brand/{app}/{{{','.join(missing)}}} — 品牌母版三件套必须齐全")
+    return paths
+
+
+def make_sys(icon: Image.Image, size: tuple[int, int]) -> Image.Image:
+    canvas = Image.new("RGB", size, SPLASH_BG)
+    side = int(min(size) * 0.28)
+    glyph = icon.convert("RGBA").resize((side, side), Image.LANCZOS)
+    canvas.paste(glyph, ((size[0] - side) // 2, (size[1] - side) // 2), glyph)
+    return canvas
+
+
+def link_or_copy(src: str, dst: str) -> None:
+    """对外树与母版同内容时硬链，避免磁盘双份；跨卷失败则 copy。"""
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    if os.path.lexists(dst):
+        os.remove(dst)
+    try:
+        os.link(src, dst)
+    except OSError:
+        shutil.copy2(src, dst)
+
+
+def write_splash(out: str, src: dict[str, str], icon: Image.Image) -> None:
+    splash = f"{out}/splash"
+    os.makedirs(splash, exist_ok=True)
+    link_or_copy(src["dart"], f"{splash}/dart.png")
+    link_or_copy(src["anim"], f"{splash}/anim.mp4")
+    dart = Image.open(src["dart"]).convert("RGB")
+    make_sys(icon, dart.size).save(f"{splash}/sys.png", optimize=True)
+
+
+def write_avatars() -> None:
+    """master/avatars/*.png → otter-gametime/avatars/*.webp（对外只留 webp）。"""
+    src_dir = f"{MASTER}/avatars"
+    dst_dir = f"{BRAND}/otter-gametime/avatars"
+    if not os.path.isdir(src_dir):
+        return
+    os.makedirs(dst_dir, exist_ok=True)
+    for name in sorted(os.listdir(src_dir)):
+        if not name.endswith(".png") or not name.startswith("avatar_"):
+            continue
+        im = Image.open(f"{src_dir}/{name}").convert("RGBA")
+        out = f"{dst_dir}/{name[:-4]}.webp"
+        im.save(out, "WEBP", quality=90, method=6)
+    # 清掉对外树残留 png / 旧 roster
+    for name in os.listdir(dst_dir):
+        if name.endswith(".png") or name == "ROSTER.md":
+            os.remove(f"{dst_dir}/{name}")
+    print("avatars → otter-gametime/avatars/*.webp")
+
+
 def main() -> None:
     colors = app_colors()
     black = square(Image.open(f"{MASTER}/silhouette.png").convert("RGBA"), 0.02)
@@ -508,31 +575,33 @@ def main() -> None:
     for app, kind in APPS.items():
         if app not in colors:
             raise SystemExit(f"family.json 缺少 apps.{app}.colors")
+        if app not in GLYPHS:
+            raise SystemExit(f"缺少矢量角标 GLYPHS[{app}]")
+        src = require_brand_src(app)
         out = f"{BRAND}/{app}"
-        # 默认矢量角标；仅 BRAND_USE_GEN_BADGE=1 或无矢量字形时，才从旧母版/生图稿抠角标。
-        if app in GLYPHS and os.environ.get("BRAND_USE_GEN_BADGE") != "1":
-            badge = vector_badge(app)
-        else:
-            src = f"{MASTER}/badge_{app}.png" if os.environ.get("BRAND_USE_GEN_BADGE") == "1" else f"{MASTER}/{app}.png"
-            if not os.path.isfile(src):
-                raise SystemExit(f"缺少角标来源：{src}")
-            if src.endswith(f"badge_{app}.png"):
-                badge = load_badge(app, Image.new("RGBA", (64, 64), (0, 0, 0, 0)))
-            else:
-                _, _, badge_raw = mark_and_layers(full_bleed(Image.open(src)))
-                badge = load_badge(app, badge_raw)
-        hero = compose_app_icon(black, badge, colors[app], 1024, app=app)
-        mark = product_mark(black, badge, 512, app=app)
-        write(hero.resize((512, 512), Image.LANCZOS), f"{out}/icon.png")
-        write(mark, f"{out}/mark.png", 512)
+        badge = vector_badge(app)
+        hero = Image.open(src["icon"]).convert("RGBA")
+        if hero.size != (1024, 1024):
+            hero = hero.resize((1024, 1024), Image.LANCZOS)
+        mark = hero.resize((512, 512), Image.LANCZOS)
+        write(mark, f"{out}/icon.png")
+        # mark 与 icon 同图：硬链，不双写
+        mark_path = f"{out}/mark.png"
+        if os.path.lexists(mark_path):
+            os.remove(mark_path)
+        try:
+            os.link(f"{out}/icon.png", mark_path)
+        except OSError:
+            write(mark, mark_path)
         write(logo_badge_plate(badge, 512, app=app), f"{out}/logo_badge.png", 512)
-        # master/<app>.png = 最新成品快照，避免文件夹里留着旧圆盘母版。
-        write(hero.resize((1024, 1024), Image.LANCZOS), f"{MASTER}/{app}.png")
+        write_splash(out, src, hero)
         if kind == "desktop":
             desktop(out, hero, badge, colors[app][0])
         else:
             mobile(out, hero, mark, colors[app][0])
-        print(app, "ok")
+        print(app, "ok ←", f"master/brand/{app}/")
+
+    write_avatars()
 
 
 if __name__ == "__main__":

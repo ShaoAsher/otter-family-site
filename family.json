@@ -20,8 +20,8 @@
       "global": "https://github.com/ShaoAsher/otter-family-site/releases/download/{app}-v{version}/{file}",
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
-    "libraryVersion": "3.0.2",
-    "libraryBuild": "24",
+    "libraryVersion": "3.1.0",
+    "libraryBuild": "1",
     "library": "https://otter-family-site.tos-cn-beijing.volces.com/library/latest/"
   },
   "apps": {
@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.0.6",
+      "latest": "3.1.0",
       "download": {
         "version": "3.0.5",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.0",
+          "date": "2026-11-19",
+          "zh": "全新桌面图标与启动流程：静帧 dart → 启动视频 anim；家族素材库整理为唯一母版 master/brand，无旧兼容路径。",
+          "en": "New desktop icon and splash: still dart then anim video; family library restructured to a single master/brand source with no legacy paths."
+        },
         {
           "version": "3.0.6",
           "date": "2026-11-19",
@@ -176,7 +182,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.0.3",
+      "latest": "3.1.0",
       "download": {
         "version": "3.0.2",
         "files": {
@@ -187,6 +193,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.0",
+          "date": "2026-11-19",
+          "zh": "全新桌面图标与启动流程：静帧 dart → 启动视频 anim；家族素材库整理为唯一母版 master/brand，无旧兼容路径。",
+          "en": "New desktop icon and splash: still dart then anim video; family library restructured to a single master/brand source with no legacy paths."
+        },
         {
           "version": "3.0.3",
           "date": "2026-11-19",
@@ -292,7 +304,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "1.0.0",
+      "latest": "1.1.0",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -300,6 +312,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "1.1.0",
+          "date": "2026-11-19",
+          "zh": "全新应用图标与启动流程：静帧 dart → 启动视频 anim；品牌母版与官网素材去重，场景只保留 webp。",
+          "en": "New app icon and splash: still dart then anim video; brand masters deduped, scene art webp-only."
+        },
         {
           "version": "1.0.0",
           "date": "2026-11-19",

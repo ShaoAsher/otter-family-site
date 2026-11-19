@@ -2,21 +2,20 @@
 """TOS 唯一根 library/
 
 母版 library/private/：
-  master/  source/still/  source/video/  expr/{still,anim}/{1080,540,270}/
+  master/brand/{app}/  master/ip/  master/avatars/  source/  expr/
 
 对外 library/latest/：
-  common/  otter-*/  expr/*/270/ + manifest.json
+  common/  otter-*/  shots/  expr/*/270/ + manifest.json
 
 另：keep/v{libraryVersion}+{libraryBuild}/、release/、current.json、family.json
 
-家族资源世代（与 App 安装包 build 无关）：
-  libraryVersion  — 与当前 App 版本号一致（如 3.0.2），App 升版时用 --version 对齐
-  libraryBuild    — 仅标识 TOS 素材树发版；小改素材 --bump 只涨这一位
-  展示形态        — 3.0.2+16（加号后是 libraryBuild，不是 pubspec +N）
+家族资源世代：
+  libraryVersion  — 家族主版本（如 3.1.0），--version 对齐
+  libraryBuild    — 仅 TOS 素材树发版；--bump 只涨这一位
+  展示            — 3.1.0+1（加号后是 libraryBuild，不是 pubspec +N）
 
   ./tool/otter lib publish|pull
   python3 tool/sync_tos.py library publish|pull|wipe-legacy
-  python3 tool/sync_tos.py config
 """
 from __future__ import annotations
 
@@ -40,7 +39,7 @@ FAMILY_JSON = f"{SITE}/family.json"
 LIB = library_root()
 BUCKET_BASE = "https://otter-family-site.tos-cn-beijing.volces.com"
 SKIP = {".DS_Store", "__pycache__"}
-SKIP_DIRS = {"__pycache__", "master._bak", "_keep"}
+SKIP_DIRS = {"__pycache__", "master._bak", "_keep", "_preview_icon_white", "_preview_splash"}
 
 # 本地顶层 → TOS 分区
 # shots/ 下再按 app 分子目录，避免各端截图文件名撞车
