@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.1.0",
+      "latest": "3.1.1",
       "download": {
         "version": "3.0.5",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.1",
+          "date": "2026-11-19",
+          "zh": "设置新增「高清动图」开关：默认拉 TOS 270，开启后改拉更高清 540。",
+          "en": "Settings: HD otter animations toggle—default TOS 270, optional sharper 540."
+        },
         {
           "version": "3.1.0",
           "date": "2026-11-19",
@@ -182,7 +188,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.0",
+      "latest": "3.1.1",
       "download": {
         "version": "3.0.2",
         "files": {
@@ -193,6 +199,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.1",
+          "date": "2026-11-19",
+          "zh": "设置新增「高清动图」开关：默认拉 TOS 270，开启后改拉更高清 540。",
+          "en": "Settings: HD otter animations toggle—default TOS 270, optional sharper 540."
+        },
         {
           "version": "3.1.0",
           "date": "2026-11-19",
@@ -304,7 +316,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "1.1.0",
+      "latest": "1.1.1",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -312,6 +324,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "1.1.1",
+          "date": "2026-11-19",
+          "zh": "设置新增「高清动图」开关：默认拉 TOS 270，开启后改拉更高清 540。",
+          "en": "Settings: HD otter animations toggle—default TOS 270, optional sharper 540."
+        },
         {
           "version": "1.1.0",
           "date": "2026-11-19",
