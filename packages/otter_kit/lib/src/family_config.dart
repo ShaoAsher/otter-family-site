@@ -96,6 +96,15 @@ class FamilyConfig {
     return s.endsWith('/') ? s : '$s/';
   }
 
+  /// 品牌 / App 媒体根 URL（`…/library/latest/`，下接 `{app}/splash/…`）。
+  String get brandAssetsBase {
+    final s = _str(_family['brand']).isNotEmpty
+        ? _str(_family['brand'])
+        : _str(_family['library']);
+    if (s.isEmpty) return '';
+    return s.endsWith('/') ? s : '$s/';
+  }
+
   /// 家族官网成员页，`from` 让官网标出「你从这里来」。
   String members(String from) =>
       _str(_family['members']).replaceAll('{from}', from);
