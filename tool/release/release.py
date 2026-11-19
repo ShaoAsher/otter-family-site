@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import json
 import mimetypes
+import os
 import subprocess
 import sys
 import tempfile
@@ -99,7 +100,12 @@ def sha256(path):
 
 
 def missing(cfg, app, version, bkt):
-    files = app_of(cfg, app)["download"]["files"].values()
+    files_map = app_of(cfg, app)["download"]["files"]
+    # OTTER_SKIP_WIN=1：只校验 mac 包，允许先切 download.version（Win 稍后 mirror）
+    if os.environ.get("OTTER_SKIP_WIN", "").strip() in ("1", "true", "yes"):
+        files = [n for k, n in files_map.items() if not str(k).startswith("windows")]
+    else:
+        files = list(files_map.values())
     on_gh = gh_assets(app, version) or set()
     return [
         (n, w)

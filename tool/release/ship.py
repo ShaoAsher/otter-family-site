@@ -113,7 +113,9 @@ def main(argv):
                 sys.exit(f"等不到 Windows 包；CI 好了以后跑：./tool/otter mirror {app} {version}")
             time.sleep(POLL_SEC)
     if win and "--no-wait" in flags:
-        print(f"跳过等待；Windows 包传完后跑：./tool/otter mirror {app} {version}")
+        os.environ["OTTER_SKIP_WIN"] = "1"
+        print(f"跳过 Windows：仅用 mac 切换下载版本；Win 好了再 ./tool/otter mirror {app} {version}")
+        run(sys.executable, ROOT / "tool/release/release.py", "mirror", app, version)
     else:
         run(sys.executable, ROOT / "tool/release/release.py", "mirror", app, version)
 
