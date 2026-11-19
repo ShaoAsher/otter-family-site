@@ -27,7 +27,6 @@ BRAND_MAP = {
         ("otter-git/mark.png", "assets/brand/otter_git_mark.png"),
         ("otter-git/splash/sys.png", "assets/brand/splash/sys.png"),
         ("otter-git/splash/dart.png", "assets/brand/splash/dart.png"),
-        ("otter-git/splash/anim.mp4", "assets/brand/splash/anim.mp4"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
         ("otter-git/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
@@ -38,7 +37,6 @@ BRAND_MAP = {
         ("otter-tools/logo_badge.png", "assets/brand/tools_badge.png"),
         ("otter-tools/splash/sys.png", "assets/brand/splash/sys.png"),
         ("otter-tools/splash/dart.png", "assets/brand/splash/dart.png"),
-        ("otter-tools/splash/anim.mp4", "assets/brand/splash/anim.mp4"),
         ("common/logo_otter.png", "assets/brand/tools_otter.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
@@ -49,7 +47,6 @@ BRAND_MAP = {
         ("otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
         ("otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
         ("otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
-        ("otter-gametime/splash/anim.mp4", "assets/brand/splash/anim.mp4"),
         # 原生闪屏用：flutter_native_splash 读 tool/brand/splash_icon.png
         ("otter-gametime/icon.png", "tool/brand/splash_icon.png"),
         ("common/logo_otter.png", "assets/brand/gt_logo_otter.png"),

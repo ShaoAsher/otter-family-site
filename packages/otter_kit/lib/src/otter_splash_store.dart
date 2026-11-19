@@ -7,9 +7,10 @@ import 'package:path_provider/path_provider.dart';
 
 import 'family_config.dart';
 
-/// 启动静图 / 视频：优先 OSS 公开区 `library/latest/{app}/splash/`，失败回落安装包 asset。
+/// 启动素材：OSS `library/latest/{app}/splash/`。
 ///
-/// 三端一致：`OtterSplashStore.stillFile(appId)` / [animFile]。
+/// - `anim.mp4`：仅远端（不进安装包）
+/// - `dart.png`：远端优先，失败回落安装包 asset
 abstract final class OtterSplashStore {
   static const _fallbackBrand =
       'https://otter.oss-cn-beijing.aliyuncs.com/library/latest/';
@@ -36,22 +37,22 @@ abstract final class OtterSplashStore {
     return root;
   }
 
-  /// TOS / 缓存中的 `dart.png`；失败返回 null（界面用 asset）。
+  /// OSS / 缓存中的 `dart.png`；失败返回 null（界面用 asset）。
   static Future<File?> stillFile(String appId) {
     final id = _normApp(appId);
     return _still.putIfAbsent(id, () => _fetch(id, 'dart.png'));
   }
 
-  /// TOS / 缓存中的 `anim.mp4`；失败返回 null（界面用 asset）。
+  /// OSS / 缓存中的 `anim.mp4`；失败返回 null（界面落静图，无包内视频）。
   static Future<File?> animFile(String appId) {
     final id = _normApp(appId);
     return _anim.putIfAbsent(id, () => _fetch(id, 'anim.mp4'));
   }
 
-  /// 冷启动并行预热（不阻塞首帧 asset）。
+  /// 冷启动并行预热视频；静图可按需再取。
   static void prefetch(String appId) {
-    unawaited(stillFile(appId));
     unawaited(animFile(appId));
+    unawaited(stillFile(appId));
   }
 
   static Future<File?> _fetch(String appId, String name) async {
@@ -59,8 +60,13 @@ abstract final class OtterSplashStore {
     try {
       final root = await _cacheRoot(appId);
       final dest = File('${root.path}/$name');
-      if (dest.existsSync() && dest.lengthSync() > 512) return dest;
       final url = Uri.parse('$_brandBase$appId/splash/$name');
+      final remoteLen = await _remoteLength(url);
+      if (dest.existsSync() &&
+          dest.lengthSync() > 512 &&
+          (remoteLen == null || remoteLen == dest.lengthSync())) {
+        return dest;
+      }
       final r = await http.get(url).timeout(const Duration(seconds: 45));
       if (r.statusCode != 200) {
         debugPrint('[OtterSplashStore] $appId/$name → HTTP ${r.statusCode}');
@@ -80,6 +86,16 @@ abstract final class OtterSplashStore {
         return true;
       }());
       _drop(appId, name);
+      return null;
+    }
+  }
+
+  static Future<int?> _remoteLength(Uri url) async {
+    try {
+      final r = await http.head(url).timeout(const Duration(seconds: 8));
+      if (r.statusCode != 200) return null;
+      return int.tryParse(r.headers['content-length'] ?? '');
+    } catch (_) {
       return null;
     }
   }

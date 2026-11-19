@@ -2,7 +2,7 @@
 """master/brand/{app}/ → common/ + otter-*/（含 splash、平台套件）。
 
 母版唯一源：`master/brand/{app}/{icon,dart,anim}`。
-派生（sys、AppIcon、icon.png…）只写对外树，禁止回写 master/。
+`anim.mp4` 上 OSS，不进 App 安装包；包内只 pull `dart.png` 作兜底。
 
   ./tool/otter lib brand
 """
@@ -511,7 +511,7 @@ def require_brand_src(app: str) -> dict[str, str]:
     }
     missing = [k for k, p in paths.items() if not os.path.isfile(p)]
     if missing:
-        raise SystemExit(f"缺少 master/brand/{app}/{{{','.join(missing)}}} — 品牌母版三件套必须齐全")
+        raise SystemExit(f"缺少 master/brand/{app}/{{{','.join(missing)}}} — 品牌母版 icon+dart+anim 必须齐全")
     return paths
 
 
