@@ -50,6 +50,8 @@ BRAND_MAP = {
         ("otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
         ("otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
         ("otter-gametime/splash/anim.mp4", "assets/brand/splash/anim.mp4"),
+        # 原生闪屏用：flutter_native_splash 读 tool/brand/splash_icon.png
+        ("otter-gametime/icon.png", "tool/brand/splash_icon.png"),
         ("common/logo_otter.png", "assets/brand/gt_logo_otter.png"),
         ("common/otter_white.png", "assets/brand/gt_otter_w.png"),
         ("common/otter_black.png", "assets/brand/gt_otter_k.png"),
@@ -253,15 +255,25 @@ def brand(app_root: Path, pull: bool) -> bool:
         dest_root = app_root / dst_dir
         src_local = local_brand / src_dir if local_brand else None
         if src_local and src_local.is_dir():
-            if dest_root.exists():
-                shutil.rmtree(dest_root)
-            shutil.copytree(src_local, dest_root)
+            # 合并覆盖：勿 rmtree。游时 android/res 还含 flutter_native_splash 生成的
+            # launch_background / styles，整树替换会冲掉系统启动图。
+            _merge_tree(src_local, dest_root)
             print(f"  树 {src_dir} ← 本地")
             continue
         print(f"  ⚠ 缺树 {src_dir}", file=sys.stderr)
 
     print(f"{label}：已更新")
     return True
+
+
+def _merge_tree(src: Path, dest: Path) -> None:
+    dest.mkdir(parents=True, exist_ok=True)
+    for path in src.rglob("*"):
+        if not path.is_file() or path.name == ".DS_Store":
+            continue
+        out = dest / path.relative_to(src)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, out)
 
 
 def main(argv: list[str]):
