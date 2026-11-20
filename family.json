@@ -226,7 +226,7 @@
       ],
       "latest": "3.1.7",
       "download": {
-        "version": "3.1.6",
+        "version": "3.1.7",
         "files": {
           "macos": "OtterTools-macos-arm64.dmg",
           "macos_zip": "OtterTools-macos-arm64.zip",
