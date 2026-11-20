@@ -206,7 +206,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.4",
+      "latest": "3.1.5",
       "download": {
         "version": "3.1.4",
         "files": {
@@ -217,6 +217,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.5",
+          "date": "2026-11-20",
+          "zh": "修复关于页/状态栏版本号写死为 3.0.2，改为跟随安装包版本；版本更新提示不再误报。",
+          "en": "About/status bar version no longer stuck at 3.0.2; follows the installed package so update prompts are correct."
+        },
         {
           "version": "3.1.4",
           "date": "2026-11-20",
