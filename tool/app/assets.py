@@ -47,8 +47,8 @@ BRAND_MAP = {
         ("otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
         ("otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
         ("otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
-        # 原生闪屏用：flutter_native_splash 读 tool/brand/splash_icon.png
-        ("otter-gametime/icon.png", "tool/brand/splash_icon.png"),
+        # 母版 icon；Android12 启动图由 fit_native_splash 缩成带透明边距的 splash_icon.png
+        ("otter-gametime/icon.png", "tool/brand/icon_src.png"),
         ("common/logo_otter.png", "assets/brand/gt_logo_otter.png"),
         ("common/otter_white.png", "assets/brand/gt_otter_w.png"),
         ("common/otter_black.png", "assets/brand/gt_otter_k.png"),
