@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.1.7",
+      "latest": "3.2.0",
       "download": {
         "version": "3.1.7",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.2.0",
+          "date": "2026-11-21",
+          "zh": "启动图加大铺满；首次启动静图垫底；启动故事放下道具发光后「欢迎回来」。",
+          "en": "Larger full-bleed splash; still-first cold start; place-prop glow then Welcome Back."
+        },
         {
           "version": "3.1.7",
           "date": "2026-11-21",
@@ -224,7 +230,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.9",
+      "latest": "3.2.0",
       "download": {
         "version": "3.1.8",
         "files": {
@@ -235,6 +241,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.2.0",
+          "date": "2026-11-21",
+          "zh": "版本号只跟 pubspec；关于页/状态栏不再写死。启动图与静图优先等体验一并发布。",
+          "en": "Version comes only from pubspec; About/status bar no longer hardcode it. Ships splash still-first fixes."
+        },
         {
           "version": "3.1.9",
           "date": "2026-11-21",
