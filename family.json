@@ -224,7 +224,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.8",
+      "latest": "3.1.9",
       "download": {
         "version": "3.1.7",
         "files": {
@@ -235,6 +235,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.9",
+          "date": "2026-11-21",
+          "zh": "关于页与状态栏版本号改为只读 pubspec（package_info），不再写死。",
+          "en": "About and status bar version now come only from pubspec via package_info."
+        },
         {
           "version": "3.1.8",
           "date": "2026-11-21",
