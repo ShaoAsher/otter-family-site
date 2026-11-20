@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.1.5",
+      "latest": "3.1.6",
       "download": {
         "version": "3.1.4",
         "files": {
@@ -52,10 +52,16 @@
       },
       "changelog": [
         {
+          "version": "3.1.6",
+          "date": "2026-11-21",
+          "zh": "设置「高清动图」文案改为表情更细腻（去掉 TOS）。",
+          "en": "HD animations settings copy: finer expressions (no TOS wording)."
+        },
+        {
           "version": "3.1.5",
           "date": "2026-11-21",
-          "zh": "系统启动图 icon 加大并铺满窗口；首次启动用静图垫底，后台预取视频；启动故事放下道具发光后「欢迎回来」。设置「高清动图」文案改为表情更细腻（去掉 TOS）。",
-          "en": "Larger full-bleed system splash; first launch still + background video prefetch; splash places prop then Welcome Back. HD animations copy: finer expressions (no TOS wording)."
+          "zh": "系统启动图 icon 加大并铺满窗口；首次启动用静图垫底，后台预取视频；启动故事放下道具发光后「欢迎回来」。",
+          "en": "Larger full-bleed system splash; first launch still + background video prefetch; splash places prop then Welcome Back."
         },
         {
           "version": "3.1.4",
