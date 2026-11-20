@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-20",
+  "updated": "2026-11-21",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -40,7 +40,7 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.1.6",
+      "latest": "3.1.7",
       "download": {
         "version": "3.1.6",
         "files": {
@@ -51,6 +51,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.7",
+          "date": "2026-11-21",
+          "zh": "设置「高清动图」文案改为表情更细腻（去掉 TOS）。",
+          "en": "Settings HD-anim copy now says finer expressions (no TOS wording)."
+        },
         {
           "version": "3.1.6",
           "date": "2026-11-21",
