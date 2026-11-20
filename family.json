@@ -54,8 +54,8 @@
         {
           "version": "3.1.5",
           "date": "2026-11-21",
-          "zh": "系统启动图 icon 加大并铺满窗口；首次启动用静图垫底，后台预取视频，有缓存再播；启动故事改为放下道具发光后「欢迎回来」。",
-          "en": "Larger full-bleed system splash icon; first launch uses still while video prefetches; splash story places the prop, glows, then Welcome Back."
+          "zh": "系统启动图 icon 加大并铺满窗口；首次启动用静图垫底，后台预取视频；启动故事放下道具发光后「欢迎回来」。设置「高清动图」文案改为表情更细腻（去掉 TOS）。",
+          "en": "Larger full-bleed system splash; first launch still + background video prefetch; splash places prop then Welcome Back. HD animations copy: finer expressions (no TOS wording)."
         },
         {
           "version": "3.1.4",
@@ -212,7 +212,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.6",
+      "latest": "3.1.7",
       "download": {
         "version": "3.1.6",
         "files": {
@@ -223,6 +223,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.7",
+          "date": "2026-11-21",
+          "zh": "设置「高清动图」文案改为表情更细腻（去掉 TOS）。",
+          "en": "HD animations settings copy: finer expressions (no TOS wording)."
+        },
         {
           "version": "3.1.6",
           "date": "2026-11-21",
@@ -370,7 +376,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "1.1.5",
+      "latest": "1.1.6",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -378,6 +384,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "1.1.6",
+          "date": "2026-11-21",
+          "zh": "隐藏设置里高清动图入口（功能保留）；AI 用量页与对话宿主；桌面小组件资源补齐；启动视频出画前静图垫底防闪黑；记录/分享/路由与陪伴体验改进。",
+          "en": "Hide HD animations toggle in settings (feature kept); AI usage page and chat host; desk widget assets; still underlay until splash video paints; compose/share/routing and companion polish."
+        },
         {
           "version": "1.1.5",
           "date": "2026-11-21",
