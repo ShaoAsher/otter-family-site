@@ -9,7 +9,7 @@ import 'family_config.dart';
 
 /// 启动素材：OSS `library/latest/{app}/splash/`。
 ///
-/// - `anim.mp4`：仅远端（不进安装包）
+/// - `anim.mp4`：仅远端（不进安装包）；**冷启动只用本地缓存**，首次无缓存则静图
 /// - `dart.png`：远端优先，失败回落安装包 asset
 abstract final class OtterSplashStore {
   static const _fallbackBrand =
@@ -43,13 +43,26 @@ abstract final class OtterSplashStore {
     return _still.putIfAbsent(id, () => _fetch(id, 'dart.png'));
   }
 
-  /// OSS / 缓存中的 `anim.mp4`；失败返回 null（界面落静图，无包内视频）。
+  /// 仅本地已缓存的 `anim.mp4`；没有则立刻返回 null，**不发起下载**。
+  ///
+  /// 冷启动请用这个，避免首次等 OSS。后台用 [prefetch] / [animFile] 拉下次用。
+  static Future<File?> cachedAnimFile(String appId) async {
+    if (kIsWeb) return null;
+    try {
+      final root = await _cacheRoot(_normApp(appId));
+      final dest = File('${root.path}/anim.mp4');
+      if (dest.existsSync() && dest.lengthSync() > 512) return dest;
+    } catch (_) {}
+    return null;
+  }
+
+  /// OSS / 缓存中的 `anim.mp4`；会下载。界面冷启动请用 [cachedAnimFile]。
   static Future<File?> animFile(String appId) {
     final id = _normApp(appId);
     return _anim.putIfAbsent(id, () => _fetch(id, 'anim.mp4'));
   }
 
-  /// 冷启动并行预热视频；静图可按需再取。
+  /// 后台预热：拉静图 + 视频到缓存，供下次启动播放。
   static void prefetch(String appId) {
     unawaited(animFile(appId));
     unawaited(stillFile(appId));

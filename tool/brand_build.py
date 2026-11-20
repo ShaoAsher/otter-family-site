@@ -527,7 +527,7 @@ def mobile(out: str, hero: Image.Image, mark: Image.Image, edge_rgb: tuple[int, 
             "  <foreground>\n"
             '      <inset\n'
             '          android:drawable="@drawable/ic_launcher_foreground"\n'
-            '          android:inset="16%" />\n'
+            '          android:inset="8%" />\n'
             "  </foreground>\n"
             "</adaptive-icon>\n")
     ground = "#%02X%02X%02X" % edge_rgb
@@ -551,8 +551,9 @@ def require_brand_src(app: str) -> dict[str, str]:
 
 
 def make_sys(icon: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """系统启动垫图：色底 + 居中 icon。比例约 42%，避免桌面/手机上显得过小。"""
     canvas = Image.new("RGB", size, SPLASH_BG)
-    side = int(min(size) * 0.28)
+    side = int(min(size) * 0.42)
     glyph = icon.convert("RGBA").resize((side, side), Image.LANCZOS)
     canvas.paste(glyph, ((size[0] - side) // 2, (size[1] - side) // 2), glyph)
     return canvas

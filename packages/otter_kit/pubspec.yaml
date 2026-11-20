@@ -1,6 +1,6 @@
 name: otter_kit
 description: Shared Dart library for Otter Family desktop apps (family config, etc.).
-version: 1.0.6
+version: 1.0.9
 publish_to: none
 
 environment:
