@@ -224,7 +224,7 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.1.7",
+      "latest": "3.1.8",
       "download": {
         "version": "3.1.7",
         "files": {
@@ -235,6 +235,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.1.8",
+          "date": "2026-11-21",
+          "zh": "修复关于页与状态栏版本号仍显示 3.1.5 的问题，改为跟随安装包版本。",
+          "en": "About and status bar version no longer stuck at 3.1.5; follows the installed package."
+        },
         {
           "version": "3.1.7",
           "date": "2026-11-21",
