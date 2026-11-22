@@ -6,7 +6,7 @@
   ./tool/otter publish <app> <版本> 文件...   # 上传 OSS +（官网仓）GitHub Release；齐了就切换
   ./tool/otter mirror  <app> <版本> [--force] # 把 GitHub 上已有的包补到 OSS，齐了就切换
   ./tool/otter status  [app]
-  python3 tool/release/release.py site <app> <目录>  # 官网素材 → OSS library/latest/<app>/
+  python3 tool/release/release.py site <app> <目录>  # 官网素材 → OSS library/<app>/
 
 OSS 路径 `library/release/<app>/v<版本>/<文件名>`，public-read。
 「切换」= 改 family.json 的 download.version，并推 library/family.json 到 OSS。
@@ -234,7 +234,7 @@ def site(app, folder):
     if not folder.is_dir():
         sys.exit(f"找不到目录 {folder}")
     bkt = oss_store.bucket()
-    prefixes = [f"library/latest/media/{app}/"]
+    prefixes = [f"library/{app}/"]
 
     def sync_prefix(prefix):
         remote = {obj.key: obj.etag.strip('"') for obj in __import__("oss2").ObjectIterator(bkt, prefix=prefix)}

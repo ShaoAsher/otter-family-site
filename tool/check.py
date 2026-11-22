@@ -66,20 +66,20 @@ def check_family(errors: list[str]) -> list[str]:
     # 本地 library（可缺，缺则只警告）
     try:
         sys.path.insert(0, str(ROOT / "tool"))
-        from paths import library_latest, library_private  # type: ignore
+        from paths import library_private, library_public  # type: ignore
 
-        latest = Path(library_latest())
+        public = Path(library_public())
         private = Path(library_private())
     except Exception:
-        latest = private = None  # type: ignore
-    if latest and latest.is_dir():
+        public = private = None  # type: ignore
+    if public and public.is_dir():
         for kind in ("still", "anim"):
-            d = latest / "expr" / kind / "270"
+            d = public / "expr" / kind / "270"
             c = count_webp(d)
             if c < 0:
-                fail(f"本地 library 缺 latest/expr/{kind}/270", errors)
+                fail(f"本地 library 缺 expr/{kind}/270", errors)
             elif c != n:
-                fail(f"library latest/expr/{kind}/270 有 {c} 张，清单 {n}（先 lib export）", errors)
+                fail(f"library expr/{kind}/270 有 {c} 张，清单 {n}（先 lib export）", errors)
             else:
                 ok(f"library expr/{kind}/270 = {c}")
         src = (private / "source" / "still") if private else None
@@ -90,7 +90,7 @@ def check_family(errors: list[str]) -> list[str]:
             elif jpgs:
                 ok(f"source/still = {jpgs}")
     else:
-        print("· 跳过本地 library（未找到 otter-library/latest）")
+        print("· 跳过本地 library（未找到 otter-library）")
 
     if KIT_STORE.is_file():
         store = KIT_STORE.read_text(encoding="utf-8")
@@ -98,8 +98,8 @@ def check_family(errors: list[str]) -> list[str]:
             fail(f"otter_kit stillAssetPath 未含 {OK_STILL}", errors)
         if not any(p in store for p in OK_ANIM):
             fail(f"otter_kit anim 路径未含 {' 或 '.join(OK_ANIM)}", errors)
-        if "library/latest/expr/" not in store:
-            fail("otter_kit fallbackBase 应为 library/latest/expr/", errors)
+        if "library/expr/" not in store:
+            fail("otter_kit fallbackBase 应为 library/expr/", errors)
         for bad in ("still_270", "anim_270", "/expr/v3/"):
             if re.search(rf"['\"][^'\"]*{re.escape(bad)}", store):
                 fail(f"otter_kit 仍引用遗留路径 {bad}", errors)
@@ -181,8 +181,11 @@ def check_app(app_root: Path, keys: list[str], errors: list[str]) -> None:
             m = re.search(r"otter_kit:.*?ref:\s*(\S+)", yaml, re.S)
             if m:
                 ok(f"otter_kit ref = {m.group(1)}")
-            if "kit-v1.0.2" in yaml or "kit-v1.0.1" in yaml or "kit-v1.0.0" in yaml:
-                fail("otter_kit ref 过旧（需 ≥ kit-v1.0.3，含 still/270）", errors)
+            ref_m = re.search(r"ref:\s*kit-v(\d+)\.(\d+)\.(\d+)", yaml)
+            if ref_m:
+                ver = tuple(int(x) for x in ref_m.groups())
+                if ver < (1, 0, 3):
+                    fail("otter_kit ref 过旧（需 ≥ kit-v1.0.3，含 still/270）", errors)
 
 
 def main(argv: list[str]) -> int:

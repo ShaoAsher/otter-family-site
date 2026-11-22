@@ -18,9 +18,9 @@ from paths import code_root, family_site, films_root, library_root
 
 
 def pull(app: str) -> None:
-    from paths import library_latest, library_private
+    from paths import library_private, library_public
 
-    latest = Path(library_latest())
+    public = Path(library_public())
     private = Path(library_private())
     films = Path(films_root()) / app
     hub = Path(family_site())
@@ -31,17 +31,26 @@ def pull(app: str) -> None:
     expr = dest / "expr"
     expr.mkdir(parents=True, exist_ok=True)
 
-    app_brand = latest / "brand" / app
+    app_brand = public / app
     if app_brand.is_dir():
         subprocess.run(
             [
                 "rsync", "-a", "--delete",
                 "--exclude", "splash/",
+                "--exclude", "macos/",
+                "--exclude", "windows/",
+                "--exclude", "ios/",
+                "--exclude", "android/",
+                "--exclude", "shots/",
+                "--exclude", "badges/",
+                "--exclude", "games/",
+                "--exclude", "ai/",
+                "--exclude", "store/",
                 f"{app_brand}/", f"{brand}/",
             ],
             check=True,
         )
-    still270 = latest / "expr" / "still" / "270"
+    still270 = public / "expr" / "still" / "270"
     if still270.is_dir():
         subprocess.run(["rsync", "-a", "--delete", f"{still270}/", f"{expr}/"], check=True)
     gsap = hub / "shared" / "vendor" / "gsap.min.js"
@@ -66,7 +75,7 @@ def pull(app: str) -> None:
         else:
             still_link.unlink(missing_ok=True)
     still_link.symlink_to("expr")
-    print(f"shared ← library latest/private ({app})")
+    print(f"shared ← library public/private ({app})")
 
 
 def _app_cfg(app: str) -> tuple[Path, dict]:
@@ -81,14 +90,14 @@ def _app_cfg(app: str) -> tuple[Path, dict]:
 
 
 def ingest(app: str) -> None:
-    from paths import library_latest
+    from paths import library_public
 
     _, cfg = _app_cfg(app)
     site = cfg.get("site") or {}
     promo = site.get("promo") or {}
     art = site.get("art") or {}
     factory = Path(films_root()) / app
-    dest = Path(library_latest()) / "media" / app
+    dest = Path(library_public()) / app
     dest.mkdir(parents=True, exist_ok=True)
 
     video_rel = promo.get("video")

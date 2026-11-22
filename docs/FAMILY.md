@@ -14,21 +14,21 @@
 
 **原则**：家族流程与路径只维护本文；进安装包的说明写在 App 仓；不进包的素材只在 `otter-library` / OSS。
 
-## 本地 ↔ OSS（同构）
+## 本地 ↔ OSS（同构，无 `latest/`）
 
 ```
-otter-library/latest/   ↔  library/latest/     # 公开
-otter-library/private/  ↔  library/private/    # 母版
+otter-library/{expr,common,catalog,otter-*}/  ↔  library/{same}/
+otter-library/private/                        ↔  library/private/
 ```
 
 | 区 | 路径 | 说明 |
 |----|------|------|
-| 公用 | `latest/common` · `latest/expr/{still,anim}/{270,540}` · `latest/catalog` | 家族共用 |
-| App | `latest/{brand,media,badges,platform,shots}/{app}/` | 按项目分 |
+| 公用 | `expr/{still,anim}/{270,540}` · `common` · `catalog` | 家族共用 |
+| App | `{app}/`（icon · splash · shots · macos/windows/ios/android · games/ai/store…） | 按项目分 |
 | 母版 | `private/master` · `private/source` · `private/expr`（含 1080） | 仅发版机 |
 | 安装包 | `library/release/{app}/v{ver}/` | 只留当前 download 版 |
 
-同内容**硬链**，禁止再拷一份。旧顶栏 `library/games|ai|gametime` 已废弃；游时 games/ai 在 `latest/media/otter-gametime/`。
+同内容**硬链**，禁止再拷一份。不保留旧 `library/latest/` 或类型顶栏 `brand|media|badges|…`。
 
 ### 版本字段（勿混）
 
@@ -47,8 +47,8 @@ otter-library/private/  ↔  library/private/    # 母版
 ./tool/otter check .            # 再查当前 App（瘦包无 anim）
 
 ./tool/otter lib pull           # OSS → 本地 library
-./tool/otter lib brand          # private/master → latest/brand|platform
-./tool/otter lib export         # source → private/expr，270/540 硬链到 latest
+./tool/otter lib brand          # private/master → {app}/ + common/
+./tool/otter lib export         # source → private/expr，270/540 硬链到 expr/
 ./tool/otter lib publish --bump --keep-none --notes "…"
 
 ./tool/otter assets             # 默认：brand + still/270（进包）
@@ -77,10 +77,10 @@ otter-library/private/  ↔  library/private/    # 母版
 | 用途 | 路径 |
 |------|------|
 | 包内静帧 | `assets/otter/expr/still/270/<key>.webp` |
-| OSS 动图 | `library/latest/expr/anim/{270\|540}/` |
-| 游时徽章 | `library/latest/badges/otter-gametime/`（包内同步一份） |
+| OSS 动图 | `library/expr/anim/{270\|540}/` |
+| 游时徽章 | `library/otter-gametime/badges/`（包内同步一份） |
 
-禁止：`still_270` · `anim_270` · `expr/v3/` · `config/family.json` · 工程内长期堆 `anim/`。
+禁止：`still_270` · `anim_270` · `expr/v3/` · `config/family.json` · 工程内长期堆 `anim/` · `library/latest/`。
 
 ## 发版
 
@@ -92,14 +92,14 @@ cd ../otter-git && ./tool/otter assets && ./tool/otter ship --no-wait --push
 # Win 齐后：./tool/otter mirror otter-git <版本>
 ```
 
-**游时**：App Store / Play；商店图在 `otter-library/latest/media/otter-gametime/store/`，文案在 App 仓 `store/`。
+**游时**：App Store / Play；商店图在 `otter-library/otter-gametime/store/`，文案在 App 仓 `store/`。
 
 **官网**：Pages 读 `family.json`；素材 `data-brand` / `data-media` / `data-expr` 走 `shared/family.js`。
 
 ## 官网 family.js
 
-- `data-media` → `family.media`（`…/latest/media/{app}/`）；`shots/…` → `family.shots`
-- `data-brand` → `family.brand`（`…/latest/brand/`）
+- `data-media` → `family.media`（`…/library/{app}/`）；含 `shots/…`、`promo.mp4` 等
+- `data-brand` → `family.brand`（`…/library/`），值如 `otter-git/icon.png`
 - `data-expr` → `family.expr`
 - 国内下载 OSS，海外 GitHub Release
 
@@ -110,3 +110,4 @@ cd ../otter-git && ./tool/otter assets && ./tool/otter ship --no-wait --push
 - 同内容再拷一份（应用硬链）
 - 只改 App 资源路径不升 kit
 - Windows CI 里 `ci_upload.py git`（必须 `otter-git`）
+- 保留或兼容 `library/latest/` / 旧类型顶栏

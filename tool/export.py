@@ -15,10 +15,10 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from paths import library_latest, library_private  # noqa: E402
+from paths import library_private, library_public  # noqa: E402
 
 PRIVATE = library_private()
-LATEST = library_latest()
+PUBLIC = library_public()
 WEBP = f"{PRIVATE}/expr"  # 全尺寸真相源
 RAW_STILL = f"{PRIVATE}/source/still"
 RAW_VIDEO = f"{PRIVATE}/source/video"
@@ -128,7 +128,7 @@ def write_manifest():
 
 
 def mirror_public_expr():
-    """270/540 硬链到 latest/expr（与 OSS 公开区同构，无内容副本）。"""
+    """270/540 硬链到 expr（与 OSS 公开区同构，无内容副本）。"""
     n = 0
     for kind, dirs in (("still", STILL_DIRS), ("anim", ANIM_DIRS)):
         for size in PUBLIC_SIZES:
@@ -139,7 +139,7 @@ def mirror_public_expr():
                 if not name.endswith(".webp"):
                     continue
                 src = f"{src_dir}/{name}"
-                dst = f"{LATEST}/expr/{kind}/{size}/{name}"
+                dst = f"{PUBLIC}/expr/{kind}/{size}/{name}"
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
                 if os.path.exists(dst) or os.path.islink(dst):
                     if os.path.samefile(src, dst):
@@ -155,11 +155,11 @@ def mirror_public_expr():
         if "/270/" in k or "/540/" in k
     }
     slim = {**full, "files": files, "publicSizes": list(PUBLIC_SIZES)}
-    os.makedirs(f"{LATEST}/expr", exist_ok=True)
-    with open(f"{LATEST}/expr/manifest.json", "w", encoding="utf-8") as fp:
+    os.makedirs(f"{PUBLIC}/expr", exist_ok=True)
+    with open(f"{PUBLIC}/expr/manifest.json", "w", encoding="utf-8") as fp:
         json.dump(slim, ensure_ascii=False, indent=1, fp=fp)
         fp.write("\n")
-    print(f"latest/expr ← hardlink {n} + slim manifest")
+    print(f"expr ← hardlink {n} + slim manifest")
 
 
 def main():
@@ -176,7 +176,7 @@ def main():
                 print("ok", k, flush=True)
     write_manifest()
     mirror_public_expr()
-    print(f"done {len(keys)} keys → private/expr + latest/expr（270/540）")
+    print(f"done {len(keys)} keys → private/expr + expr（270/540）")
 
 
 if __name__ == "__main__":

@@ -1,24 +1,14 @@
 /* 水獭家族官网公共脚本：素材地址、版本号、版本记录与下载链接，都按 family.json 来。
  *
- *   <script src="../shared/family.js" data-app="otter-git" defer></script>   放在页面自己的脚本前面
+ *   <script src="../shared/family.js" data-app="otter-git" defer></script>
  *
- * - `[data-media]`：素材在 OSS。普通路径走 `family.media`（`…/latest/media/{app}/`）；以 `shots/` 开头的
- *   走 `family.shots`（`…/latest/shots/{app}/`）。img/source→src，a→href；
- *   `[data-media-poster]` 填 video poster。`otterMedia(路径)` 同上规则。
- * - `[data-brand]`：品牌表面走 `family.brand`（`…/latest/brand/`），值如 `otter-git/icon.png`。
- * - `[data-expr]`：小獭表情，和 App 用同一份 OSS 表情包（family.json 的 `family.expr`），值如 `anim/270/hi.webp`、
- *   `still/270/hi.webp`；页面脚本用 `otterExpr(路径)` 拼地址
- * - `.v` / `.ver`：能下载到的版本（`download.version`，没有安装包时是 `latest`）；导航「下载 X.Y」同
- * - `.vlist`：版本记录（全部条目，新的在前）
- * - `[data-dl]`：值是 family.json 里 `download.files` 的键（macos / windows / …），空串 = 发布页
+ * - `[data-media]`：走 `family.media`（`…/library/{app}/`），值如 `promo.mp4`、`shots/01.png`
+ * - `[data-brand]`：走 `family.brand`（`…/library/`），值如 `otter-git/icon.png`
+ * - `[data-expr]`：走 `family.expr`（`…/library/expr/`）
+ * - `.v` / `.ver` / `.vlist` / `[data-dl]`：版本与下载
  *
- * 版本字段（勿混）：
- *   family.libraryVersion — 与 App 版本号一致（拼旧模板 {version} 时用）
- *   family.libraryBuild   — 仅 OSS 素材树世代；小改素材只涨它，≠ App pubspec +N
- *   apps.*.latest / download.version — 各 App 安装包版本
- *
- * 下载源：国内走 OSS，海外走 GitHub Release；按访客 IP 判断，查询失败或超时保持 OSS。
- * 页面里写死的版本号与链接只是脚本没跑起来时的兜底。
+ * 版本字段：libraryVersion（与 App 同号）· libraryBuild（仅 OSS 素材世代）
+ * 下载：国内 OSS，海外 GitHub Release。
  */
 (function () {
   var me = document.currentScript;
@@ -26,10 +16,10 @@
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
   var LIB_VER = "3.0.2"; // fallback = libraryVersion（与 App 同号），不是 libraryBuild
-  var MEDIA = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/media/{app}/";
-  var SHOTS = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/shots/{app}/";
-  var EXPR = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/";
-  var BRAND = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/";
+  var MEDIA = "https://otter.oss-cn-beijing.aliyuncs.com/library/{app}/";
+  var SHOTS = "https://otter.oss-cn-beijing.aliyuncs.com/library/{app}/";
+  var EXPR = "https://otter.oss-cn-beijing.aliyuncs.com/library/expr/";
+  var BRAND = "https://otter.oss-cn-beijing.aliyuncs.com/library/";
 
   function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
   function expand(tpl, ver) {
@@ -37,7 +27,6 @@
   }
   function absMedia(path, mediaBase, shotsBase) {
     if (!path) return mediaBase;
-    if (path.indexOf("shots/") === 0) return shotsBase + path.slice(6);
     return mediaBase + path;
   }
 

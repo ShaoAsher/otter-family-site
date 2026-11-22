@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""从 otter-library（优先）或 OSS 公开区 library/latest 拉 **进安装包** 的素材。
+"""从 otter-library（优先）或 OSS 公开区 library/ 拉 **进安装包** 的素材。
 
 默认只拉进包资源，不把 OSS 运行时缓存写进工程目录：
 
@@ -10,7 +10,7 @@
   ./tool/otter assets pull expr full  # 开发预览才拉 anim/270（仍 gitignore）
   ./tool/otter assets check
 
-动图真相源：`otter-library/latest/expr/anim/`（= OSS 同构），App 运行时 otter_kit 拉。
+动图真相源：`otter-library/expr/anim/`（= OSS 同构），App 运行时 otter_kit 拉。
 """
 from __future__ import annotations
 
@@ -28,32 +28,32 @@ CACHE = Path(os.environ.get("OTTER_CACHE") or Path.home() / ".cache" / "otter-fa
 
 BRAND_MAP = {
     "otter-git": [
-        ("brand/otter-git/icon.png", "assets/brand/otter_git_icon.png"),
-        ("brand/otter-git/mark.png", "assets/brand/otter_git_mark.png"),
-        ("brand/otter-git/splash/sys.png", "assets/brand/splash/sys.png"),
-        ("brand/otter-git/splash/dart.png", "assets/brand/splash/dart.png"),
+        ("otter-git/icon.png", "assets/brand/otter_git_icon.png"),
+        ("otter-git/mark.png", "assets/brand/otter_git_mark.png"),
+        ("otter-git/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("otter-git/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
-        ("platform/otter-git/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
-        ("platform/otter-git/windows/tray_icon.ico", "assets/tray/tray_icon.ico"),
+        ("otter-git/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
+        ("otter-git/windows/tray_icon.ico", "assets/tray/tray_icon.ico"),
     ],
     "otter-tools": [
-        ("brand/otter-tools/icon.png", "assets/brand/tools_icon.png"),
-        ("brand/otter-tools/logo_badge.png", "assets/brand/tools_badge.png"),
-        ("brand/otter-tools/splash/sys.png", "assets/brand/splash/sys.png"),
-        ("brand/otter-tools/splash/dart.png", "assets/brand/splash/dart.png"),
+        ("otter-tools/icon.png", "assets/brand/tools_icon.png"),
+        ("otter-tools/logo_badge.png", "assets/brand/tools_badge.png"),
+        ("otter-tools/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("otter-tools/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/logo_otter.png", "assets/brand/tools_otter.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
-        ("platform/otter-tools/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
+        ("otter-tools/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
     ],
     "otter-gametime": [
-        ("brand/otter-gametime/icon.png", "assets/brand/gt_icon.png"),
-        ("brand/otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
-        ("brand/otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
-        ("brand/otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
+        ("otter-gametime/icon.png", "assets/brand/gt_icon.png"),
+        ("otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
+        ("otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
         # 母版 icon；Android12 启动图由 fit_native_splash 缩成带透明边距的 splash_icon.png
-        ("brand/otter-gametime/icon.png", "tool/brand/icon_src.png"),
+        ("otter-gametime/icon.png", "tool/brand/icon_src.png"),
         ("common/logo_otter.png", "assets/brand/gt_logo_otter.png"),
         ("common/otter_white.png", "assets/brand/gt_otter_w.png"),
         ("common/otter_black.png", "assets/brand/gt_otter_k.png"),
@@ -62,37 +62,33 @@ BRAND_MAP = {
 
 BRAND_TREES = {
     "otter-git": [
-        ("platform/otter-git/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
-        ("platform/otter-git/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
+        ("otter-git/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
+        ("otter-git/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
     ],
     "otter-tools": [
-        ("platform/otter-tools/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
-        ("platform/otter-tools/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
+        ("otter-tools/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
+        ("otter-tools/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
     ],
     "otter-gametime": [
-        ("platform/otter-gametime/ios/AppIcon.appiconset", "ios/Runner/Assets.xcassets/AppIcon.appiconset"),
-        ("platform/otter-gametime/android/res", "android/app/src/main/res"),
-        # 成就徽章：OSS latest 公开备份；App 仍打进安装包（离线）
-        ("badges/otter-gametime", "assets/brand/badges"),
+        ("otter-gametime/ios/AppIcon.appiconset", "ios/Runner/Assets.xcassets/AppIcon.appiconset"),
+        ("otter-gametime/android/res", "android/app/src/main/res"),
+        # 成就徽章：OSS 公开备份；App 仍打进安装包（离线）
+        ("otter-gametime/badges", "assets/brand/badges"),
     ],
 }
 
 
 def local_library() -> Path | None:
-    """返回公开交付根（otter-library/latest），与 OSS library/latest 同构。"""
+    """返回公开交付根（otter-library/），与 OSS library/ 同构。"""
     env = os.environ.get("OTTER_LIBRARY")
     roots = [Path(env)] if env else []
     roots.append(ROOT.parent / "otter-library")
     for p in roots:
-        latest = p / "latest"
-        if latest.is_dir() and (
-            (latest / "common").is_dir()
-            or (latest / "expr").is_dir()
-            or (latest / "brand").is_dir()
+        if p.is_dir() and (
+            (p / "common").is_dir()
+            or (p / "expr").is_dir()
+            or (p / "otter-git").is_dir()
         ):
-            return latest
-        # 兼容旧扁平布局
-        if (p / "common").is_dir() or (p / "expr").is_dir() or (p / "brand").is_dir():
             return p
     return None
 
@@ -110,8 +106,8 @@ def expand(tpl: str, version: str, app: str | None = None) -> str:
 
 def library_base(fam: dict | None = None) -> str:
     fam = fam or family()
-    base = fam.get("library") or f"{fam['assets']}library/latest/"
-    # {version} = libraryVersion（与 App 同号）；不用 libraryBuild 拼路径（走 latest/）
+    base = fam.get("library") or f"{fam['assets']}library/"
+    # {version} = libraryVersion（与 App 同号）；不用 libraryBuild 拼路径
     if "{version}" in base:
         base = expand(base, fam.get("libraryVersion") or "1.0.0")
     return base if base.endswith("/") else base + "/"

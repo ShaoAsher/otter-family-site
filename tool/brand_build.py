@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""private/master/brand/{app}/ → latest/{common,brand,platform}/。
+"""private/master/brand/{app}/ → 公开根 common/ + {app}/。
 
 母版唯一源：`private/master/brand/{app}/{icon,dart,anim}`。
 `anim.mp4` 上 OSS，不进 App 安装包；包内只 pull `dart.png` 作兜底。
@@ -15,11 +15,11 @@ import shutil
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-from paths import family_site, library_latest, library_private
+from paths import family_site, library_private, library_public
 
-LATEST = library_latest()
+PUBLIC = library_public()
 PRIVATE = library_private()
-BRAND = LATEST  # 公开交付写出根
+BRAND = PUBLIC  # 公开交付写出根
 MASTER = f"{PRIVATE}/master"
 MASTER_BRAND = f"{MASTER}/brand"
 FAMILY_JSON = f"{family_site()}/family.json"
@@ -457,7 +457,7 @@ def fit_template(im: Image.Image, px: int) -> Image.Image:
 
 
 def desktop(app: str, hero: Image.Image, badge_layer: Image.Image, tray_rgb: tuple[int, int, int]) -> None:
-    base = f"{BRAND}/platform/{app}"
+    base = f"{BRAND}/{app}"
     icons = f"{base}/macos/AppIcon.appiconset"
     big = hero
     for n in (16, 32, 64, 128, 256, 512, 1024):
@@ -502,7 +502,7 @@ ANDROID_DENSITY = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4
 
 def mobile(app: str, hero: Image.Image, mark: Image.Image, edge_rgb: tuple[int, int, int]) -> None:
     # 圆角母版进各尺寸；Marketing 1024 必须不透明。
-    base = f"{BRAND}/platform/{app}"
+    base = f"{BRAND}/{app}"
     hero_r = ensure_rounded(hero)
     mark_r = ensure_rounded(mark)
     ios_store = flatten_opaque(hero_r, edge_rgb)
@@ -585,9 +585,9 @@ def write_splash(out: str, src: dict[str, str], icon: Image.Image) -> None:
 
 
 def write_avatars() -> None:
-    """master/avatars/*.png → media/otter-gametime/avatars/*.webp（对外只留 webp）。"""
+    """master/avatars/*.png → otter-gametime/avatars/*.webp（对外只留 webp）。"""
     src_dir = f"{MASTER}/avatars"
-    dst_dir = f"{BRAND}/media/otter-gametime/avatars"
+    dst_dir = f"{BRAND}/otter-gametime/avatars"
     if not os.path.isdir(src_dir):
         return
     os.makedirs(dst_dir, exist_ok=True)
@@ -601,7 +601,7 @@ def write_avatars() -> None:
     for name in os.listdir(dst_dir):
         if name.endswith(".png") or name == "ROSTER.md":
             os.remove(f"{dst_dir}/{name}")
-    print("avatars → media/otter-gametime/avatars/*.webp")
+    print("avatars → otter-gametime/avatars/*.webp")
 
 
 def main() -> None:
@@ -629,7 +629,7 @@ def main() -> None:
         if app not in GLYPHS:
             raise SystemExit(f"缺少矢量角标 GLYPHS[{app}]")
         src = require_brand_src(app)
-        out = f"{BRAND}/brand/{app}"
+        out = f"{BRAND}/{app}"
         badge = vector_badge(app)
         hero = Image.open(src["icon"]).convert("RGBA")
         if hero.size != (1024, 1024):
@@ -652,7 +652,7 @@ def main() -> None:
             desktop(app, hero, badge, colors[app][0])
         else:
             mobile(app, hero, mark, colors[app][0])
-        print(app, "ok ←", f"master/brand/{app}/ → brand/{app}/ + platform/{app}/")
+        print(app, "ok ←", f"master/brand/{app}/ → {app}/")
 
     write_avatars()
 

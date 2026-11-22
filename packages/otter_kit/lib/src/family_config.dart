@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 /// 不内置：先读上次缓存，再拉远端（OSS 公开 family.json，失败再 GitHub Pages）；都没有时 [current] 为 null。
 /// 远端 `schema` 高于 [FamilyConfig.schema] 说明字段不兼容，忽略，继续用手上那份。
 /// 三端都依赖本包（otter-family-site/packages/otter_kit），改这里、打 kit-v 标签、各 App 升 ref。
-/// 公开资源：library/latest|release|family；母版 library/private 不公开、App 不直链。
+/// 公开资源：library/{expr,otter-*,release,family}；母版 library/private 不公开、App 不直链。
 class FamilyConfig {
   FamilyConfig._(this._raw);
 
@@ -90,14 +90,14 @@ class FamilyConfig {
 
   String get familySite => _str(_family['site']);
 
-  /// 公开表情包根 URL（`…/library/latest/expr/`）。
+  /// 公开表情包根 URL（`…/library/expr/`）。
   String get exprAssetsBase {
     final s = _str(_family['expr']);
     if (s.isEmpty) return '';
     return s.endsWith('/') ? s : '$s/';
   }
 
-  /// 品牌根 URL（`…/library/latest/brand/`，下接 `{app}/splash/…`）。
+  /// 公开库根 URL（`…/library/`，下接 `{app}/splash/…`）。
   String get brandAssetsBase {
     final s = _str(_family['brand']).isNotEmpty
         ? _str(_family['brand'])

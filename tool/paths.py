@@ -1,8 +1,8 @@
 """本地路径约定。
 
-otter-library 与 OSS 同构：
-  otter-library/latest/   ↔  library/latest/
-  otter-library/private/  ↔  library/private/
+otter-library 与 OSS 同构（无 latest/）：
+  otter-library/{expr,common,catalog,otter-*}/  ↔  library/{same}/
+  otter-library/private/                        ↔  library/private/
 """
 from __future__ import annotations
 
@@ -10,6 +10,19 @@ import os
 
 _HUB = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # otter-site
 _CODE = os.path.dirname(_HUB)
+
+# 公开顶栏（与 App id / 公用区并列，在 library 根下）
+PUBLIC_TOPS = frozenset(
+    {
+        "expr",
+        "common",
+        "catalog",
+        "otter-git",
+        "otter-tools",
+        "otter-gametime",
+    }
+)
+APPS = ("otter-git", "otter-tools", "otter-gametime")
 
 
 def library_root() -> str:
@@ -19,8 +32,9 @@ def library_root() -> str:
     return os.path.join(_CODE, "otter-library")
 
 
-def library_latest() -> str:
-    return os.path.join(library_root(), "latest")
+def library_public() -> str:
+    """公开交付根 = library 根（与 private 同级的顶栏）。"""
+    return library_root()
 
 
 def library_private() -> str:

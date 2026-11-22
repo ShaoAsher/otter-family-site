@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "updated": "2026-11-22",
-  "iconBase": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/media/otter-gametime/games/",
+  "iconBase": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-gametime/games/",
   "cats": [
     {
       "id": "all",

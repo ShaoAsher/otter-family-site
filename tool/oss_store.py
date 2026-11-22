@@ -1,4 +1,4 @@
-"""阿里云 OSS 读写（公开 latest/release/family，私有 private）。
+"""阿里云 OSS 读写（公开 library/{expr,common,catalog,otter-*} / release / family，私有 private）。
 
 凭证读 ~/.config/devkeys/config.json 的 oss 段；也可用环境变量
 OSS_AK / OSS_SK / OSS_BUCKET / OSS_ENDPOINT / OSS_REGION。
@@ -17,7 +17,18 @@ mimetypes.add_type("application/json", ".json")
 mimetypes.add_type("video/mp4", ".mp4")
 
 BUCKET_BASE = "https://otter.oss-cn-beijing.aliyuncs.com"
-PUBLIC_PREFIXES = ("library/latest/", "library/release/", "library/keep/")
+PUBLIC_PREFIXES = (
+    "library/expr/",
+    "library/common/",
+    "library/catalog/",
+    "library/otter-git/",
+    "library/otter-tools/",
+    "library/otter-gametime/",
+    "library/release/",
+    "library/keep/",
+    "library/family.json",
+    "library/current.json",
+)
 PRIVATE_PREFIXES = ("library/private/",)
 
 

@@ -7,13 +7,13 @@ import 'package:path_provider/path_provider.dart';
 
 import 'family_config.dart';
 
-/// 启动素材：OSS `library/latest/brand/{app}/splash/`。
+/// 启动素材：OSS `library/{app}/splash/`。
 ///
 /// - `anim.mp4`：仅远端（不进安装包）；**冷启动只用本地缓存**，首次无缓存则静图
 /// - `dart.png`：远端优先，失败回落安装包 asset
 abstract final class OtterSplashStore {
   static const _fallbackBrand =
-      'https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/';
+      'https://otter.oss-cn-beijing.aliyuncs.com/library/';
 
   static final Map<String, Future<File?>> _still = {};
   static final Map<String, Future<File?>> _anim = {};

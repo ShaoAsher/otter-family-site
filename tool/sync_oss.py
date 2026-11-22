@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""OSS 唯一根 library/；本地 otter-library 与之同构。
+"""OSS 唯一根 library/；本地 otter-library 与之同构（无 latest/）。
 
-  otter-library/latest/   ↔  library/latest/
-  otter-library/private/  ↔  library/private/
+  otter-library/{expr,common,catalog,otter-*}/  ↔  library/{same}/
+  otter-library/private/                        ↔  library/private/
 
 另：release/、current.json、family.json
 
@@ -23,12 +23,12 @@ from datetime import datetime, timezone
 from typing import Iterable
 
 import oss_store
-from paths import family_site, library_latest, library_private, library_root  # noqa: E402
+from paths import PUBLIC_TOPS, family_site, library_private, library_public, library_root  # noqa: E402
 
 SITE = family_site()
 FAMILY_JSON = f"{SITE}/family.json"
 LIB = library_root()
-LATEST = library_latest()
+PUBLIC = library_public()
 PRIVATE = library_private()
 BUCKET_BASE = oss_store.BUCKET_BASE
 SKIP = {".DS_Store", "__pycache__"}
@@ -42,17 +42,18 @@ SKIP_DIRS = {
     "_refs",
     "_review",
     "qa",
+    "private",  # walk public tops only at LIB root
 }
 
-# 本地/OSS 公开顶栏（均在 latest/ 下）
-PUBLIC_TOP = {"catalog", "common", "brand", "media", "badges", "platform", "shots", "expr"}
+PUBLIC_TOP = set(PUBLIC_TOPS)
 PRIVATE_TOP = {"master", "source", "expr"}
 PUBLIC_EXPR_SIZES = {"270", "540"}
 
-LATEST_PREFIX = "library/latest/"
+# 公开对象键 = library/{top}/…；旧 library/latest/ 在 extras 中清掉
 PRIVATE_PREFIX = "library/private/"
 KEEP_PREFIX = "library/keep/"
 RELEASE_PREFIX = "library/release/"
+LEGACY_LATEST_PREFIX = "library/latest/"
 
 
 def load_family() -> dict:
@@ -101,10 +102,11 @@ def is_public_expr_delivery(rel: str) -> bool:
 def walk_truth() -> Iterable[tuple[str, str, bool, str]]:
     """(rel_under_zone, abs_path, unused, zone).
 
-    本地 latest/ → OSS library/latest/；private/ → library/private/。
-    不跟软链；硬链会按路径各传一次（内容相同）。
+    公开顶栏 → OSS library/{top}/…；private/ → library/private/。
+    rel 对公开区含顶栏名（如 otter-git/splash/dart.png、expr/still/270/x.webp）。
     """
-    for zone, base in (("latest", LATEST), ("private", PRIVATE)):
+    for top in sorted(PUBLIC_TOP):
+        base = f"{PUBLIC}/{top}"
         if not os.path.isdir(base):
             continue
         for d, dirs, files in os.walk(base):
@@ -119,8 +121,24 @@ def walk_truth() -> Iterable[tuple[str, str, bool, str]]:
                 path = f"{d}/{name}"
                 if os.path.islink(path):
                     continue
-                rel = os.path.relpath(path, base).replace("\\", "/")
-                yield rel, path, zone == "latest", zone
+                under = os.path.relpath(path, base).replace("\\", "/")
+                rel = f"{top}/{under}" if under != "." else top
+                yield rel, path, True, "public"
+    if os.path.isdir(PRIVATE):
+        for d, dirs, files in os.walk(PRIVATE):
+            dirs[:] = [
+                x
+                for x in dirs
+                if x not in SKIP and x not in SKIP_DIRS and not os.path.islink(f"{d}/{x}")
+            ]
+            for name in files:
+                if name in SKIP or name.startswith("."):
+                    continue
+                path = f"{d}/{name}"
+                if os.path.islink(path):
+                    continue
+                rel = os.path.relpath(path, PRIVATE).replace("\\", "/")
+                yield rel, path, False, "private"
 
 
 def delivery_mirrors(rel: str, path: str) -> list[tuple[str, str, bool]]:
@@ -159,10 +177,17 @@ def load_current_json(client, bucket=None) -> dict | None:
 
 def remote_index(client, bucket=None) -> dict[str, str]:
     out = {}
-    for prefix in (LATEST_PREFIX, PRIVATE_PREFIX):
-        for k in list_keys(client, bucket, prefix):
+    for top in sorted(PUBLIC_TOP):
+        for k in list_keys(client, bucket, f"library/{top}/"):
             if not k.endswith("/"):
                 out[k] = k
+    for k in list_keys(client, bucket, PRIVATE_PREFIX):
+        if not k.endswith("/"):
+            out[k] = k
+    # 旧 latest/ 一并纳入，publish 时当 extras 删掉
+    for k in list_keys(client, bucket, LEGACY_LATEST_PREFIX):
+        if not k.endswith("/"):
+            out[k] = k
     return out
 
 
@@ -230,17 +255,16 @@ def ask_keep(candidates: list[tuple[str, str]]) -> list[str]:
 
 
 def apply_family_urls(fam: dict, version: str, build: str) -> None:
-    base = f"{BUCKET_BASE}/library/latest/"
+    base = f"{BUCKET_BASE}/library/"
     # libraryVersion ≡ App 版本号；libraryBuild 仅 OSS 素材世代（≠ App pubspec build）
     fam["family"]["libraryVersion"] = version
     fam["family"]["libraryBuild"] = str(build)
     fam["family"]["library"] = base
-    fam["family"]["brand"] = f"{base}brand/"
-    fam["family"]["expr"] = f"{base}expr/"  # 公开仅 270/540
-    fam["family"]["media"] = f"{base}media/{{app}}/"
-    fam["family"]["shots"] = f"{base}shots/{{app}}/"
-    fam["family"]["badges"] = f"{base}badges/{{app}}/"
-    fam["family"]["platform"] = f"{base}platform/{{app}}/"
+    fam["family"]["brand"] = base  # 值如 otter-git/icon.png
+    fam["family"]["expr"] = f"{base}expr/"
+    fam["family"]["media"] = f"{base}{{app}}/"  # App 根：promo / shots / games…
+    for dead in ("shots", "badges", "platform"):
+        fam["family"].pop(dead, None)
     fam["family"]["config"] = [
         f"{BUCKET_BASE}/library/family.json",
         "https://shaoasher.github.io/otter-family-site/family.json",
@@ -252,7 +276,7 @@ def apply_family_urls(fam: dict, version: str, build: str) -> None:
     }
     fam["family"].pop("libraryManifest", None)
     for app, meta in fam["apps"].items():
-        meta["icon"] = f"{base}brand/{app}/icon.png"
+        meta["icon"] = f"{base}{app}/icon.png"
 
 
 def resolve_library_generation(fam: dict, *, bump: bool, version: str | None, build: str | None) -> tuple[str, str, str, str]:
@@ -311,15 +335,14 @@ def library_publish(argv: list[str]):
 
     for rel, path, _is_pub_top, zone in walk_truth():
         sha = sha256_file(path)
-        public_acl = zone == "latest"
         if zone == "private":
             key = f"{PRIVATE_PREFIX}{rel}"
             uploads[key] = (path, False)
             files_meta[rel] = {"sha256": sha, "bytes": os.path.getsize(path), "zone": "private"}
         else:
-            key = f"{LATEST_PREFIX}{rel}"
+            key = f"library/{rel}"
             uploads[key] = (path, True)
-            files_meta[rel] = {"sha256": sha, "bytes": os.path.getsize(path), "zone": "latest"}
+            files_meta[rel] = {"sha256": sha, "bytes": os.path.getsize(path), "zone": "public"}
 
     prev = load_prev_files(client, bucket)
     remote = remote_index(client, bucket)
@@ -329,7 +352,7 @@ def library_publish(argv: list[str]):
     for key, (path, pub) in uploads.items():
         if not pub:
             continue
-        rel = key[len(LATEST_PREFIX) :]
+        rel = key[len("library/") :]
         public_rels[rel] = sha256_file(path)
 
     candidates = []
@@ -368,14 +391,14 @@ def library_publish(argv: list[str]):
     # 增量
     todo = []
     for key, (path, pub) in uploads.items():
-        rel_for_prev = key[len(LATEST_PREFIX):] if pub else key[len(PRIVATE_PREFIX):]
+        rel_for_prev = key[len(PRIVATE_PREFIX):] if not pub else key[len("library/"):]
         prev_sha = prev.get(rel_for_prev) or prev.get(f"public:{rel_for_prev}")
         if prev_sha == sha256_file(path) and key in remote:
             continue
         todo.append((key, path, pub))
 
     wanted = set(uploads.keys())
-    managed = [k for k in remote if k.startswith(LATEST_PREFIX) or k.startswith(PRIVATE_PREFIX)]
+    managed = list(remote.keys())  # 含旧 library/latest/
     extras = [k for k in managed if k not in wanted]
 
     print(f"  对象 {len(uploads)}（母版+对外），上传 {len(todo)}，删 {len(extras)}，keep {len(keep_rels)}")
@@ -385,14 +408,12 @@ def library_publish(argv: list[str]):
         return
 
     for rel in keep_rels:
-        src = f"{LATEST_PREFIX}{rel}"
-        if src in remote or True:
-            try:
-                data = oss_store.get_bytes(client, src)
-                # keep 目录用完整世代 id（含 libraryBuild），避免与 App 版本目录混淆
-                put_object(client, bucket, f"{KEEP_PREFIX}v{old_id}/{rel}", data, public=True)
-            except Exception as e:
-                print(f"  ! keep 失败 {rel}: {e}")
+        src = f"library/{rel}"
+        try:
+            data = oss_store.get_bytes(client, src)
+            put_object(client, bucket, f"{KEEP_PREFIX}v{old_id}/{rel}", data, public=True)
+        except Exception as e:
+            print(f"  ! keep 失败 {rel}: {e}")
 
     def up(item):
         key, path, pub = item
@@ -413,7 +434,7 @@ def library_publish(argv: list[str]):
         "parent": old_id if old_id != new_id else cur_meta.get("parent"),
         "publishedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "notes": notes,
-        "latest": f"{BUCKET_BASE}/library/latest/",
+        "public": f"{BUCKET_BASE}/library/",
         "private": f"{BUCKET_BASE}/library/private/",
         "keep": keep_list,
         "files": files_meta,
@@ -424,7 +445,7 @@ def library_publish(argv: list[str]):
     )
     # 公开 expr manifest：270（默认）+ 540（高清动图开关）
     try:
-        full = json.loads(open(f"{LATEST}/expr/manifest.json", encoding="utf-8").read())
+        full = json.loads(open(f"{PUBLIC}/expr/manifest.json", encoding="utf-8").read())
         files = {
             k: v
             for k, v in (full.get("files") or {}).items()
@@ -432,7 +453,7 @@ def library_publish(argv: list[str]):
         }
         slim = {**full, "files": files, "publicSizes": [270, 540]}
         put_object(
-            client, bucket, f"{LATEST_PREFIX}expr/manifest.json",
+            client, bucket, "library/expr/manifest.json",
             json.dumps(slim, ensure_ascii=False, indent=1).encode(), public=True, cache="no-cache",
         )
     except Exception as e:
@@ -467,13 +488,20 @@ def library_pull(argv: list[str]):
         return
 
     todo = []
-    for prefix, zone_root in ((LATEST_PREFIX, LATEST), (PRIVATE_PREFIX, PRIVATE)):
+    for top in sorted(PUBLIC_TOP):
+        prefix = f"library/{top}/"
         for k in list_keys(client, None, prefix):
             if k.endswith("/"):
                 continue
-            rel = k[len(prefix) :]
-            path = f"{zone_root}/{rel}"
-            todo.append((k, path, prefix == PRIVATE_PREFIX))
+            rel = k[len("library/") :]
+            path = f"{PUBLIC}/{rel}"
+            todo.append((k, path, False))
+    for k in list_keys(client, None, PRIVATE_PREFIX):
+        if k.endswith("/"):
+            continue
+        rel = k[len(PRIVATE_PREFIX) :]
+        path = f"{PRIVATE}/{rel}"
+        todo.append((k, path, True))
     todo.sort(key=lambda x: (0 if x[2] else 1))
     def get(item):
         key, path, _ = item
@@ -493,7 +521,9 @@ def wipe_legacy(argv: list[str]):
     for k in list_keys(client, None, "library/"):
         if k in ("library/current.json", "library/family.json"):
             continue
-        if k.startswith(LATEST_PREFIX) or k.startswith(PRIVATE_PREFIX) or k.startswith(KEEP_PREFIX) or k.startswith(RELEASE_PREFIX):
+        if k.startswith(PRIVATE_PREFIX) or k.startswith(KEEP_PREFIX) or k.startswith(RELEASE_PREFIX):
+            continue
+        if any(k.startswith(f"library/{t}/") or k == f"library/{t}" for t in PUBLIC_TOP):
             continue
         doomed.append(k)
     doomed = sorted(set(doomed))
