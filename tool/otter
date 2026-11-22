@@ -15,6 +15,7 @@
 #   publish|mirror|status|ci-upload|launch
 # 契约
 #   check [App根]
+# 文档：docs/FAMILY.md
 set -euo pipefail
 T="$(cd "$(dirname "$0")" && pwd)"
 cmd="${1:-}"

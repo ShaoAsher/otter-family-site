@@ -15,10 +15,8 @@ shared/icons/*.webp
 packages/*/build/
 packages/*/.dart_tool/
 
-# 本地/内部文档不进公开仓（发版入口以 tool/RELEASE.md 为准并入库）
+# 本地 Cursor 缓存不进公开仓；家族长文在 docs/FAMILY.md（入库）
 .cursor/
-tool/FLOW.md
-shared/README.md
 .local-serve/
 # 误落在本仓根下的 library 缓存（真相源是并列的 otter-library/）
 library/

@@ -97,7 +97,7 @@ class FamilyConfig {
     return s.endsWith('/') ? s : '$s/';
   }
 
-  /// 品牌 / App 媒体根 URL（`…/library/latest/`，下接 `{app}/splash/…`）。
+  /// 品牌根 URL（`…/library/latest/brand/`，下接 `{app}/splash/…`）。
   String get brandAssetsBase {
     final s = _str(_family['brand']).isNotEmpty
         ? _str(_family['brand'])

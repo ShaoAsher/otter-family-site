@@ -8,7 +8,7 @@
 
 环境：source ~/.config/devkeys/env.sh；gh auth login。App 目录默认与本仓并列：../otter-<id>，可用 OTTER_APPS 覆盖。
 
-命名约定见 tool/FLOW.md、tool/RELEASE.md。
+命名与流程见 docs/FAMILY.md。
 """
 
 from __future__ import annotations

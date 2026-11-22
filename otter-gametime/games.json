@@ -1,0 +1,640 @@
+{
+  "schema": 1,
+  "updated": "2026-11-22",
+  "iconBase": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/media/otter-gametime/games/",
+  "cats": [
+    {
+      "id": "all",
+      "zh": "全部",
+      "en": "All"
+    },
+    {
+      "id": "rpg",
+      "zh": "RPG",
+      "en": "RPG"
+    },
+    {
+      "id": "moba",
+      "zh": "MOBA",
+      "en": "MOBA"
+    },
+    {
+      "id": "shooter",
+      "zh": "射击",
+      "en": "Shooter"
+    },
+    {
+      "id": "strategy",
+      "zh": "策略",
+      "en": "Strategy"
+    },
+    {
+      "id": "casual",
+      "zh": "休闲",
+      "en": "Casual"
+    },
+    {
+      "id": "action",
+      "zh": "动作",
+      "en": "Action"
+    }
+  ],
+  "games": [
+    {
+      "id": "ys_cn",
+      "nameZh": "原神",
+      "nameEn": "Genshin Impact",
+      "color": "#E8C478",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "ys_cn",
+      "androidPackages": [
+        "com.miHoYo.Yuanshen",
+        "com.miHoYo.ys.bilibili"
+      ],
+      "iosScheme": "yuanshengame://"
+    },
+    {
+      "id": "ys_us",
+      "nameZh": "原神",
+      "nameEn": "Genshin Impact",
+      "color": "#E8C478",
+      "markets": "global",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "ys_us",
+      "androidPackages": [
+        "com.miHoYo.GenshinImpact"
+      ]
+    },
+    {
+      "id": "hsr_cn",
+      "nameZh": "崩坏：星穹铁道",
+      "nameEn": "Honkai: Star Rail",
+      "color": "#7C8CFF",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "hsr_cn",
+      "androidPackages": [
+        "com.miHoYo.hkrpg",
+        "com.miHoYo.hkrpg.bilibili"
+      ],
+      "iosScheme": "hkrpg://"
+    },
+    {
+      "id": "hsr_us",
+      "nameZh": "崩坏：星穹铁道",
+      "nameEn": "Honkai: Star Rail",
+      "color": "#7C8CFF",
+      "markets": "global",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "hsr_us",
+      "androidPackages": [
+        "com.HoYoverse.hkrpgoversea"
+      ]
+    },
+    {
+      "id": "zzz_cn",
+      "nameZh": "绝区零",
+      "nameEn": "Zenless Zone Zero",
+      "color": "#C8F03C",
+      "markets": "cn",
+      "cats": [
+        "action"
+      ],
+      "icon": "zzz_cn",
+      "androidPackages": [
+        "com.miHoYo.Nap",
+        "com.mihoyo.nap.bilibili"
+      ]
+    },
+    {
+      "id": "zzz_us",
+      "nameZh": "绝区零",
+      "nameEn": "Zenless Zone Zero",
+      "color": "#C8F03C",
+      "markets": "global",
+      "cats": [
+        "action"
+      ],
+      "icon": "zzz_us",
+      "androidPackages": [
+        "com.HoYoverse.Nap"
+      ]
+    },
+    {
+      "id": "bh3_cn",
+      "nameZh": "崩坏3",
+      "nameEn": "Honkai Impact 3rd",
+      "color": "#FF78AA",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "bh3_cn",
+      "androidPackages": [
+        "com.miHoYo.enterprise.NGHSoD",
+        "com.miHoYo.bh3.bilibili",
+        "com.miHoYo.bh3.mi"
+      ]
+    },
+    {
+      "id": "bh3_us",
+      "nameZh": "崩坏3",
+      "nameEn": "Honkai Impact 3rd",
+      "color": "#FF78AA",
+      "markets": "global",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "bh3_us",
+      "androidPackages": [
+        "com.miHoYo.bh3global"
+      ]
+    },
+    {
+      "id": "ak_cn",
+      "nameZh": "明日方舟",
+      "nameEn": "Arknights",
+      "color": "#78C8E6",
+      "markets": "cn",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "ak_cn",
+      "androidPackages": [
+        "com.hypergryph.arknights"
+      ]
+    },
+    {
+      "id": "ak_us",
+      "nameZh": "明日方舟",
+      "nameEn": "Arknights",
+      "color": "#78C8E6",
+      "markets": "global",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "ak_us",
+      "androidPackages": [
+        "com.YoStarEN.Arknights"
+      ]
+    },
+    {
+      "id": "mc_cn",
+      "nameZh": "我的世界",
+      "nameEn": "Minecraft",
+      "color": "#6EC85A",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "mc_cn",
+      "androidPackages": [
+        "com.netease.x19",
+        "com.tencent.tmgp.wdsj666"
+      ],
+      "iosScheme": "minecraft://"
+    },
+    {
+      "id": "mc_us",
+      "nameZh": "我的世界",
+      "nameEn": "Minecraft",
+      "color": "#6EC85A",
+      "markets": "global",
+      "cats": [
+        "casual"
+      ],
+      "icon": "mc_us",
+      "androidPackages": [
+        "com.mojang.minecraftpe"
+      ],
+      "iosScheme": "minecraft://"
+    },
+    {
+      "id": "sky_cn",
+      "nameZh": "光·遇",
+      "nameEn": "Sky: Children of the Light",
+      "color": "#FFC896",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "sky_cn",
+      "androidPackages": [
+        "com.netease.sky",
+        "com.netease.sky.bilibili"
+      ]
+    },
+    {
+      "id": "sky_us",
+      "nameZh": "光·遇",
+      "nameEn": "Sky: Children of the Light",
+      "color": "#FFC896",
+      "markets": "global",
+      "cats": [
+        "casual"
+      ],
+      "icon": "sky_us",
+      "androidPackages": [
+        "com.tgc.sky.android"
+      ]
+    },
+    {
+      "id": "wos_cn",
+      "nameZh": "无尽冬日",
+      "nameEn": "Whiteout Survival",
+      "color": "#96D2FF",
+      "markets": "cn",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "wos_cn",
+      "androidPackages": [
+        "com.gof.china"
+      ]
+    },
+    {
+      "id": "wos_us",
+      "nameZh": "无尽冬日",
+      "nameEn": "Whiteout Survival",
+      "color": "#96D2FF",
+      "markets": "global",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "wos_us",
+      "androidPackages": [
+        "com.gof.global"
+      ]
+    },
+    {
+      "id": "hok_cn",
+      "nameZh": "王者荣耀",
+      "nameEn": "Honor of Kings",
+      "color": "#5A96FF",
+      "markets": "cn",
+      "cats": [
+        "moba"
+      ],
+      "icon": "hok_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.sgame",
+        "com.tencent.tmgp.sgamece"
+      ],
+      "iosScheme": "tencent1104466820://"
+    },
+    {
+      "id": "hok_us",
+      "nameZh": "王者荣耀国际版",
+      "nameEn": "Honor of Kings",
+      "color": "#5A96FF",
+      "markets": "global",
+      "cats": [
+        "moba"
+      ],
+      "icon": "hok_us",
+      "androidPackages": [
+        "com.levelinfinite.sgameGlobal",
+        "com.levelinfinite.sgameGlobal.midaspay"
+      ]
+    },
+    {
+      "id": "pubg_cn",
+      "nameZh": "和平精英",
+      "nameEn": "Game for Peace",
+      "color": "#F0BE5A",
+      "markets": "cn",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "pubg_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.pubgmhd",
+        "com.tencent.tmgp.pubgmhdce"
+      ]
+    },
+    {
+      "id": "pubg_us",
+      "nameZh": "PUBG Mobile",
+      "nameEn": "PUBG Mobile",
+      "color": "#F2A900",
+      "markets": "global",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "pubg_us",
+      "androidPackages": [
+        "com.tencent.ig",
+        "com.pubg.krmobile",
+        "com.vng.pubgmobile"
+      ]
+    },
+    {
+      "id": "wr_cn",
+      "nameZh": "英雄联盟手游",
+      "nameEn": "Wild Rift",
+      "color": "#5AAAFF",
+      "markets": "cn",
+      "cats": [
+        "moba"
+      ],
+      "icon": "wr_cn",
+      "androidPackages": [
+        "com.tencent.lolm"
+      ]
+    },
+    {
+      "id": "wr_us",
+      "nameZh": "英雄联盟手游",
+      "nameEn": "Wild Rift",
+      "color": "#0AC8B9",
+      "markets": "global",
+      "cats": [
+        "moba"
+      ],
+      "icon": "wr_us",
+      "androidPackages": [
+        "com.riotgames.league.wildrift"
+      ]
+    },
+    {
+      "id": "valo_cn",
+      "nameZh": "无畏契约",
+      "nameEn": "VALORANT Mobile",
+      "color": "#FF4655",
+      "markets": "cn",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "valo_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.codev"
+      ]
+    },
+    {
+      "id": "valo_us",
+      "nameZh": "VALORANT Mobile",
+      "nameEn": "VALORANT Mobile",
+      "color": "#FF4655",
+      "markets": "global",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "valo_us",
+      "androidPackages": [
+        "com.riotgames.valorantmobile"
+      ]
+    },
+    {
+      "id": "ab_cn",
+      "nameZh": "暗区突围",
+      "nameEn": "Arena Breakout",
+      "color": "#96AA78",
+      "markets": "cn",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "ab_cn",
+      "androidPackages": [
+        "com.tencent.mf.uam"
+      ]
+    },
+    {
+      "id": "ab_us",
+      "nameZh": "Arena Breakout",
+      "nameEn": "Arena Breakout",
+      "color": "#6B8F3C",
+      "markets": "global",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "ab_us",
+      "androidPackages": [
+        "com.proximabeta.mf.uamo"
+      ]
+    },
+    {
+      "id": "codm_cn",
+      "nameZh": "使命召唤手游",
+      "nameEn": "Call of Duty: Mobile",
+      "color": "#4A5A3C",
+      "markets": "cn",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "codm_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.cod"
+      ]
+    },
+    {
+      "id": "codm_us",
+      "nameZh": "Call of Duty: Mobile",
+      "nameEn": "Call of Duty: Mobile",
+      "color": "#3D4A2E",
+      "markets": "global",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "codm_us",
+      "androidPackages": [
+        "com.activision.callofduty.shooter"
+      ]
+    },
+    {
+      "id": "tft_cn",
+      "nameZh": "金铲铲之战",
+      "nameEn": "Teamfight Tactics",
+      "color": "#FFC850",
+      "markets": "cn",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "tft_cn",
+      "androidPackages": [
+        "com.tencent.jkchess"
+      ]
+    },
+    {
+      "id": "tft_us",
+      "nameZh": "云顶之弈",
+      "nameEn": "Teamfight Tactics",
+      "color": "#C89B3C",
+      "markets": "global",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "tft_us",
+      "androidPackages": [
+        "com.riotgames.league.teamfighttactics"
+      ]
+    },
+    {
+      "id": "yys_cn",
+      "nameZh": "阴阳师",
+      "nameEn": "Onmyoji",
+      "color": "#C85A5A",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "yys_cn",
+      "androidPackages": [
+        "com.netease.onmyoji",
+        "com.netease.onmyoji.bili"
+      ]
+    },
+    {
+      "id": "dnf_cn",
+      "nameZh": "地下城与勇士：起源",
+      "nameEn": "DNF Mobile",
+      "color": "#FF963C",
+      "markets": "cn",
+      "cats": [
+        "action"
+      ],
+      "icon": "dnf_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.dnf"
+      ]
+    },
+    {
+      "id": "roco_cn",
+      "nameZh": "洛克王国：世界",
+      "nameEn": "Roco Kingdom",
+      "color": "#78C8FF",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "roco_cn",
+      "androidPackages": [
+        "com.tencent.nrc"
+      ]
+    },
+    {
+      "id": "eggy_cn",
+      "nameZh": "蛋仔派对",
+      "nameEn": "Eggy Party",
+      "color": "#FFAAD2",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "eggy_cn",
+      "androidPackages": [
+        "com.netease.party",
+        "com.netease.party.bilibili",
+        "com.tencent.tmgp.party"
+      ]
+    },
+    {
+      "id": "naruto_cn",
+      "nameZh": "火影忍者",
+      "nameEn": "Naruto Mobile",
+      "color": "#FF8C3C",
+      "markets": "cn",
+      "cats": [
+        "action"
+      ],
+      "icon": "naruto_cn",
+      "androidPackages": [
+        "com.tencent.KiHan"
+      ]
+    },
+    {
+      "id": "anipop_cn",
+      "nameZh": "开心消消乐",
+      "nameEn": "Anipop",
+      "color": "#FF78C8",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "anipop_cn",
+      "androidPackages": [
+        "com.happyelements.AndroidAnimal"
+      ]
+    },
+    {
+      "id": "roblox_us",
+      "nameZh": "Roblox",
+      "nameEn": "Roblox",
+      "color": "#E2231A",
+      "markets": "global",
+      "cats": [
+        "casual"
+      ],
+      "icon": "roblox_us",
+      "androidPackages": [
+        "com.roblox.client"
+      ],
+      "iosScheme": "roblox://"
+    },
+    {
+      "id": "mlbb_us",
+      "nameZh": "Mobile Legends",
+      "nameEn": "Mobile Legends: Bang Bang",
+      "color": "#1A6AFF",
+      "markets": "global",
+      "cats": [
+        "moba"
+      ],
+      "icon": "mlbb_us",
+      "androidPackages": [
+        "com.mobile.legends"
+      ]
+    },
+    {
+      "id": "brawl_us",
+      "nameZh": "Brawl Stars",
+      "nameEn": "Brawl Stars",
+      "color": "#FFAA00",
+      "markets": "global",
+      "cats": [
+        "action"
+      ],
+      "icon": "brawl_us",
+      "androidPackages": [
+        "com.supercell.brawlstars"
+      ]
+    },
+    {
+      "id": "cr_us",
+      "nameZh": "Clash Royale",
+      "nameEn": "Clash Royale",
+      "color": "#2B6CFF",
+      "markets": "global",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "cr_us",
+      "androidPackages": [
+        "com.supercell.clashroyale"
+      ]
+    },
+    {
+      "id": "ff_us",
+      "nameZh": "Free Fire",
+      "nameEn": "Free Fire",
+      "color": "#FF8800",
+      "markets": "global",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "ff_us",
+      "androidPackages": [
+        "com.dts.freefiremax",
+        "com.dts.freefireth"
+      ]
+    }
+  ]
+}

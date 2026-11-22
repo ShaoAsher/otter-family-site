@@ -1,4 +1,9 @@
-"""本地路径约定。"""
+"""本地路径约定。
+
+otter-library 与 OSS 同构：
+  otter-library/latest/   ↔  library/latest/
+  otter-library/private/  ↔  library/private/
+"""
 from __future__ import annotations
 
 import os
@@ -12,6 +17,14 @@ def library_root() -> str:
     if env:
         return os.path.abspath(env)
     return os.path.join(_CODE, "otter-library")
+
+
+def library_latest() -> str:
+    return os.path.join(library_root(), "latest")
+
+
+def library_private() -> str:
+    return os.path.join(library_root(), "private")
 
 
 def hub_root() -> str:

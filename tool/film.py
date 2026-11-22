@@ -18,7 +18,10 @@ from paths import code_root, family_site, films_root, library_root
 
 
 def pull(app: str) -> None:
-    lib = Path(library_root())
+    from paths import library_latest, library_private
+
+    latest = Path(library_latest())
+    private = Path(library_private())
     films = Path(films_root()) / app
     hub = Path(family_site())
     dest = films / "shared"
@@ -28,30 +31,28 @@ def pull(app: str) -> None:
     expr = dest / "expr"
     expr.mkdir(parents=True, exist_ok=True)
 
-    app_lib = lib / app
-    if app_lib.is_dir():
+    app_brand = latest / "brand" / app
+    if app_brand.is_dir():
         subprocess.run(
             [
                 "rsync", "-a", "--delete",
-                "--exclude", "shots/", "--exclude", "*.mp4",
-                "--exclude", "poster.jpg", "--exclude", "og.jpg",
-                "--exclude", "build.json", "--exclude", "promo.zh.vtt",
-                f"{app_lib}/", f"{brand}/",
+                "--exclude", "splash/",
+                f"{app_brand}/", f"{brand}/",
             ],
             check=True,
         )
-    still270 = lib / "expr" / "still" / "270"
+    still270 = latest / "expr" / "still" / "270"
     if still270.is_dir():
         subprocess.run(["rsync", "-a", "--delete", f"{still270}/", f"{expr}/"], check=True)
     gsap = hub / "shared" / "vendor" / "gsap.min.js"
     if gsap.is_file():
         shutil.copy2(gsap, brand / "gsap.min.js")
-    # 立绘：一律主立绘 master/ip/main/；特色装扮在 outfits/，片子暂不用
-    ip_dir = lib / "master" / "ip" / "main"
+    # 立绘：一律主立绘 private/master/ip/main/
+    ip_dir = private / "master" / "ip" / "main"
     for kind, out_name in (("full", "ip_full.png"), ("half", "ip_half.png")):
         src = ip_dir / f"{kind}.png"
         if not src.is_file():
-            src = lib / "master" / out_name
+            src = private / "master" / out_name
         if src.is_file():
             shutil.copy2(src, brand / out_name)
     icon = brand / "icon.png"
@@ -65,7 +66,7 @@ def pull(app: str) -> None:
         else:
             still_link.unlink(missing_ok=True)
     still_link.symlink_to("expr")
-    print(f"shared ← {lib} ({app})")
+    print(f"shared ← library latest/private ({app})")
 
 
 def _app_cfg(app: str) -> tuple[Path, dict]:
@@ -80,12 +81,14 @@ def _app_cfg(app: str) -> tuple[Path, dict]:
 
 
 def ingest(app: str) -> None:
+    from paths import library_latest
+
     _, cfg = _app_cfg(app)
     site = cfg.get("site") or {}
     promo = site.get("promo") or {}
     art = site.get("art") or {}
     factory = Path(films_root()) / app
-    dest = Path(library_root()) / app
+    dest = Path(library_latest()) / "media" / app
     dest.mkdir(parents=True, exist_ok=True)
 
     video_rel = promo.get("video")

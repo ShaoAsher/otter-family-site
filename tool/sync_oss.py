@@ -1,21 +1,16 @@
 #!/usr/bin/env python3
-"""OSS 唯一根 library/（公开 latest/release/keep + family；母版 private）
+"""OSS 唯一根 library/；本地 otter-library 与之同构。
 
-母版 library/private/：
-  master/brand/{app}/  master/ip/  master/avatars/  source/  expr/
+  otter-library/latest/   ↔  library/latest/
+  otter-library/private/  ↔  library/private/
 
-对外 library/latest/：
-  common/  otter-*/  shots/  expr/*/270|540/ + manifest.json
-
-另：keep/v{libraryVersion}+{libraryBuild}/、release/、current.json、family.json
+另：release/、current.json、family.json
 
 家族资源世代：
   libraryVersion  — 家族主版本（如 3.2.0），--version 对齐
   libraryBuild    — 仅 OSS 素材树发版；--bump 只涨这一位
-  展示            — 3.2.0+N（加号后是 libraryBuild，不是 pubspec +N）
 
   ./tool/otter lib publish|pull
-  python3 tool/sync_oss.py library publish|pull|wipe-legacy
 """
 from __future__ import annotations
 
@@ -28,21 +23,30 @@ from datetime import datetime, timezone
 from typing import Iterable
 
 import oss_store
-from paths import family_site, library_root  # noqa: E402
+from paths import family_site, library_latest, library_private, library_root  # noqa: E402
 
 SITE = family_site()
 FAMILY_JSON = f"{SITE}/family.json"
 LIB = library_root()
+LATEST = library_latest()
+PRIVATE = library_private()
 BUCKET_BASE = oss_store.BUCKET_BASE
 SKIP = {".DS_Store", "__pycache__"}
-SKIP_DIRS = {"__pycache__", "master._bak", "_keep", "_preview_icon_white", "_preview_splash"}
+SKIP_DIRS = {
+    "__pycache__",
+    "master._bak",
+    "_keep",
+    "_preview_icon_white",
+    "_preview_splash",
+    "_splash_boards",
+    "_refs",
+    "_review",
+    "qa",
+}
 
-# 本地顶层 → OSS 分区
-# shots/ 下再按 app 分子目录，避免各端截图文件名撞车
-# 公开根：公共资源 + 平台套件；表情整树在 private，270/540 再镜像 latest
-PUBLIC_TOP = {"catalog", "common", "brand", "media", "badges", "platform", "shots"}
+# 本地/OSS 公开顶栏（均在 latest/ 下）
+PUBLIC_TOP = {"catalog", "common", "brand", "media", "badges", "platform", "shots", "expr"}
 PRIVATE_TOP = {"master", "source", "expr"}
-# 270=默认；540=设置里「高清动图」；1080 仍只进 private
 PUBLIC_EXPR_SIZES = {"270", "540"}
 
 LATEST_PREFIX = "library/latest/"
@@ -82,30 +86,31 @@ def list_keys(client, bucket, prefix: str) -> list[str]:
     return oss_store.list_keys(client, prefix)
 
 def is_public_expr_delivery(rel: str) -> bool:
-    """expr/still|anim/270/… 与 expr/manifest.json 对外交付。"""
+    """expr/still|anim/270|540/… 与 expr/manifest.json 对外交付。"""
     if rel == "expr/manifest.json":
         return True
     parts = rel.split("/")
-    # expr / still|anim / size / file
-    return len(parts) >= 4 and parts[0] == "expr" and parts[1] in ("still", "anim") and parts[2] in PUBLIC_EXPR_SIZES
+    return (
+        len(parts) >= 4
+        and parts[0] == "expr"
+        and parts[1] in ("still", "anim")
+        and parts[2] in PUBLIC_EXPR_SIZES
+    )
 
 
 def walk_truth() -> Iterable[tuple[str, str, bool, str]]:
-    """(rel, abs_path, public_flag_for_acl_of_primary, primary_key_prefix_kind).
+    """(rel_under_zone, abs_path, unused, zone).
 
-    每条母版文件进 private；其中 270 交付档再镜像进 latest。
-    返回 primary 写入：public=True 表示写 latest，False 写 private。
+    本地 latest/ → OSS library/latest/；private/ → library/private/。
+    不跟软链；硬链会按路径各传一次（内容相同）。
     """
-    if not os.path.isdir(LIB):
-        return
-    for top in sorted(PUBLIC_TOP | PRIVATE_TOP):
-        base = f"{LIB}/{top}"
+    for zone, base in (("latest", LATEST), ("private", PRIVATE)):
         if not os.path.isdir(base):
             continue
         for d, dirs, files in os.walk(base):
-            # 不跟软链：兼容链 ios→platform/ios 等只计 platform/，避免双传
             dirs[:] = [
-                x for x in dirs
+                x
+                for x in dirs
                 if x not in SKIP and x not in SKIP_DIRS and not os.path.islink(f"{d}/{x}")
             ]
             for name in files:
@@ -114,18 +119,12 @@ def walk_truth() -> Iterable[tuple[str, str, bool, str]]:
                 path = f"{d}/{name}"
                 if os.path.islink(path):
                     continue
-                rel = os.path.relpath(path, LIB).replace("\\", "/")
-                if top in PUBLIC_TOP:
-                    yield rel, path, True, "latest"
-                else:
-                    # 母版一律 private
-                    yield rel, path, False, "private"
+                rel = os.path.relpath(path, base).replace("\\", "/")
+                yield rel, path, zone == "latest", zone
 
 
 def delivery_mirrors(rel: str, path: str) -> list[tuple[str, str, bool]]:
-    """母版中的对外交付档，额外写入 latest。"""
-    if is_public_expr_delivery(rel):
-        return [(rel, path, True)]
+    """兼容旧调用：本地已同构，不再从 private 镜像到 latest。"""
     return []
 
 
@@ -317,10 +316,6 @@ def library_publish(argv: list[str]):
             key = f"{PRIVATE_PREFIX}{rel}"
             uploads[key] = (path, False)
             files_meta[rel] = {"sha256": sha, "bytes": os.path.getsize(path), "zone": "private"}
-            for drel, dpath, _ in delivery_mirrors(rel, path):
-                dkey = f"{LATEST_PREFIX}{drel}"
-                uploads[dkey] = (dpath, True)
-                files_meta[f"public:{drel}"] = {"sha256": sha, "bytes": os.path.getsize(dpath), "zone": "latest"}
         else:
             key = f"{LATEST_PREFIX}{rel}"
             uploads[key] = (path, True)
@@ -429,7 +424,7 @@ def library_publish(argv: list[str]):
     )
     # 公开 expr manifest：270（默认）+ 540（高清动图开关）
     try:
-        full = json.loads(open(f"{LIB}/expr/manifest.json", encoding="utf-8").read())
+        full = json.loads(open(f"{LATEST}/expr/manifest.json", encoding="utf-8").read())
         files = {
             k: v
             for k, v in (full.get("files") or {}).items()
@@ -472,12 +467,12 @@ def library_pull(argv: list[str]):
         return
 
     todo = []
-    for prefix in (LATEST_PREFIX, PRIVATE_PREFIX):
+    for prefix, zone_root in ((LATEST_PREFIX, LATEST), (PRIVATE_PREFIX, PRIVATE)):
         for k in list_keys(client, None, prefix):
             if k.endswith("/"):
                 continue
             rel = k[len(prefix) :]
-            path = f"{LIB}/{rel}"
+            path = f"{zone_root}/{rel}"
             todo.append((k, path, prefix == PRIVATE_PREFIX))
     todo.sort(key=lambda x: (0 if x[2] else 1))
     def get(item):

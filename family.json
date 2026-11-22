@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-21",
+  "updated": "2026-11-22",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -23,7 +23,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.1.0",
-    "libraryBuild": "10",
+    "libraryBuild": "12",
     "library": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/"
   },
   "apps": {
@@ -53,6 +53,12 @@
         }
       },
       "changelog": [
+        {
+          "version": "3.2.1",
+          "date": "2026-11-22",
+          "zh": "启动素材回落对齐 OSS library/latest/brand；家族素材库同构整理。",
+          "en": "Splash fallback aligns to OSS library/latest/brand; isomorphic library layout."
+        },
         {
           "version": "3.2.0",
           "date": "2026-11-21",
@@ -244,6 +250,12 @@
       },
       "changelog": [
         {
+          "version": "3.2.1",
+          "date": "2026-11-22",
+          "zh": "启动素材回落对齐 OSS library/latest/brand；家族素材库同构整理。",
+          "en": "Splash fallback aligns to OSS library/latest/brand; isomorphic library layout."
+        },
+        {
           "version": "3.2.0",
           "date": "2026-11-21",
           "zh": "版本号只跟 pubspec；关于页/状态栏不再写死。启动图与静图优先等体验一并发布。",
@@ -414,7 +426,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "1.1.6",
+      "latest": "1.1.8",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -422,6 +434,12 @@
       },
       "download": null,
       "changelog": [
+        {
+          "version": "1.1.8",
+          "date": "2026-11-22",
+          "zh": "games/ai 改走 OSS library/latest/media/otter-gametime/；商店宣传图迁出工程目录。",
+          "en": "games/ai via OSS library/latest/media/otter-gametime/; store promo art moved out of the app tree."
+        },
         {
           "version": "1.1.6",
           "date": "2026-11-21",

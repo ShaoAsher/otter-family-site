@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""从 otter-library（优先）或 OSS 公开区 library/latest 拉 App 运行时素材。
+"""从 otter-library（优先）或 OSS 公开区 library/latest 拉 **进安装包** 的素材。
 
-  ./tool/otter assets [pull]
-  ./tool/otter assets pull bundle   # brand + still/270
+默认只拉进包资源，不把 OSS 运行时缓存写进工程目录：
+
+  ./tool/otter assets [pull]          # = brand + still/270（瘦包）
+  ./tool/otter assets pull bundle     # 同上
   ./tool/otter assets pull brand
-  ./tool/otter assets pull expr [bundle]
+  ./tool/otter assets pull expr       # 仅 still/270；anim 留在 library/OSS
+  ./tool/otter assets pull expr full  # 开发预览才拉 anim/270（仍 gitignore）
   ./tool/otter assets check
+
+动图真相源：`otter-library/latest/expr/anim/`（= OSS 同构），App 运行时 otter_kit 拉。
 """
 from __future__ import annotations
 
@@ -74,11 +79,20 @@ BRAND_TREES = {
 
 
 def local_library() -> Path | None:
+    """返回公开交付根（otter-library/latest），与 OSS library/latest 同构。"""
     env = os.environ.get("OTTER_LIBRARY")
-    candidates = [Path(env)] if env else []
-    candidates.append(ROOT.parent / "otter-library")
-    for p in candidates:
-        if (p / "common").is_dir() or (p / "expr").is_dir() or (p / "master").is_dir():
+    roots = [Path(env)] if env else []
+    roots.append(ROOT.parent / "otter-library")
+    for p in roots:
+        latest = p / "latest"
+        if latest.is_dir() and (
+            (latest / "common").is_dir()
+            or (latest / "expr").is_dir()
+            or (latest / "brand").is_dir()
+        ):
+            return latest
+        # 兼容旧扁平布局
+        if (p / "common").is_dir() or (p / "expr").is_dir() or (p / "brand").is_dir():
             return p
     return None
 
@@ -139,14 +153,14 @@ def download_file(url: str, dest: Path, expect_md5: str | None = None) -> None:
     shutil.copyfile(cache, dest)
 
 
-def expr(app_root: Path, pull: bool, bundle: bool = False) -> bool:
+def expr(app_root: Path, pull: bool, bundle: bool = True) -> bool:
     fam = family()
     cfg = json.loads((app_root / "otter.json").read_text(encoding="utf-8"))["expr"]
     dest = app_root / cfg["dir"]
     local = local_library()
-    # App 运行时只用 270；库内仍保留 1080/540/270 三档
+    # 默认瘦包：只 still/270 进工程/安装包；anim 不进工程目录（OSS 按需）
     prefixes = ["still/270/"] if bundle else ["still/270/", "anim/270/"]
-    label = f"表情 → {cfg['dir']}" + ("（瘦包 still/270）" if bundle else "（still+anim /270）")
+    label = f"表情 → {cfg['dir']}" + ("（进包 still/270）" if bundle else "（开发预览 still+anim/270）")
 
     wanted: dict[str, dict] = {}
     if local and (local / "expr").is_dir():
@@ -202,11 +216,16 @@ def expr(app_root: Path, pull: bool, bundle: bool = False) -> bool:
         list(pool.map(get, wrong))
     for name in extra:
         (dest / name).unlink(missing_ok=True)
-    # 清掉旧 still_270 / anim_270 目录
+    # 清掉旧目录名；瘦包时顺带清掉误落到工程里的 anim/
     for legacy in ("still_270", "anim_270", "still_540", "anim_540", "still_1080", "anim_1080"):
         p = dest / legacy
         if p.is_dir():
             shutil.rmtree(p)
+    if bundle:
+        anim_dir = dest / "anim"
+        if anim_dir.is_dir():
+            shutil.rmtree(anim_dir)
+            print(f"  已清工程内 anim/（不进包，真相源在 otter-library / OSS）")
     print(f"{label}：更新 {len(wrong)}，删多余 {len(extra)}，共 {len(wanted)}")
     return True
 
@@ -290,14 +309,13 @@ def main(argv: list[str]):
         args = args[:-1]
 
     mode = args[0] if args else "all"
-    bundle = "bundle" in args
+    # 默认瘦包；仅 `pull expr full` 才把 anim 拉进工程（开发预览）
+    want_full = "full" in args
     ok = True
-    if mode in ("all", "brand"):
+    if mode in ("all", "brand", "bundle"):
         ok = brand(app_root, pull) and ok
-    if mode in ("all", "expr"):
-        ok = expr(app_root, pull, bundle=bundle or mode == "all" and "bundle" in argv) and ok
-    if mode == "bundle":
-        ok = brand(app_root, pull) and expr(app_root, pull, bundle=True) and ok
+    if mode in ("all", "expr", "bundle"):
+        ok = expr(app_root, pull, bundle=not want_full) and ok
     sys.exit(0 if ok else 1)
 
 

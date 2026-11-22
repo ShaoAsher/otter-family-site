@@ -11,15 +11,26 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-from paths import library_root
+from paths import library_latest, library_private, library_root
 
 LIB = Path(library_root())
+LATEST = Path(library_latest())
+PRIVATE = Path(library_private())
 SKIP = {".DS_Store", "__pycache__"}
-SKIP_DIRS = {"__pycache__", "master._bak", "_keep", "_preview_icon_white", "_preview_splash"}
+SKIP_DIRS = {
+    "__pycache__",
+    "master._bak",
+    "_keep",
+    "_preview_icon_white",
+    "_preview_splash",
+    "_splash_boards",
+    "_refs",
+    "_review",
+    "qa",
+}
 
-# role → 前缀 → acl（先匹配先生效）
+# role → 前缀（相对 latest/ 或 private/）→ acl
 RULES: list[tuple[str, str, str]] = [
-    ("family.docs", "README.md", "private"),
     ("family.catalog", "catalog/", "public"),
     ("family.mark", "common/", "public"),
     ("family.expr.delivery", "expr/still/270/", "public"),
@@ -39,74 +50,98 @@ RULES: list[tuple[str, str, str]] = [
     ("master.source", "source/", "private"),
     ("master.expr.full", "expr/still/1080/", "private"),
     ("master.expr.full", "expr/anim/1080/", "private"),
+    ("master.expr.delivery", "expr/still/270/", "private"),
+    ("master.expr.delivery", "expr/still/540/", "private"),
+    ("master.expr.delivery", "expr/anim/270/", "private"),
+    ("master.expr.delivery", "expr/anim/540/", "private"),
 ]
 
 
-def classify(rel: str) -> tuple[str, str]:
+def classify(rel: str, zone: str) -> tuple[str, str]:
     for role, prefix, acl in RULES:
+        if acl != ("public" if zone == "latest" else "private"):
+            # allow private rules only in private zone and vice versa for clarity
+            if zone == "latest" and acl != "public":
+                continue
+            if zone == "private" and not role.startswith("master"):
+                continue
         if rel == prefix.rstrip("/") or rel.startswith(prefix):
-            return role, acl
-    top = rel.split("/", 1)[0]
-    if top in ("master", "source", "expr"):
+            return role, acl if zone == "latest" else "private"
+    if zone == "private":
         return "master.other", "private"
     return "unknown", "private"
 
 
 def walk() -> list[dict]:
     out: list[dict] = []
-    if not LIB.is_dir():
-        return out
-    for dirpath, dirnames, filenames in os.walk(LIB):
-        dirnames[:] = [
-            d for d in dirnames
-            if d not in SKIP and d not in SKIP_DIRS and not os.path.islink(f"{dirpath}/{d}")
-        ]
-        for name in filenames:
-            if name in SKIP or name.startswith("."):
-                continue
-            path = Path(dirpath) / name
-            if path.is_symlink():
-                continue
-            rel = path.relative_to(LIB).as_posix()
-            role, acl = classify(rel)
-            out.append({"path": rel, "role": role, "acl": acl, "bytes": path.stat().st_size})
+    for zone, root in (("latest", LATEST), ("private", PRIVATE)):
+        if not root.is_dir():
+            continue
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [
+                d
+                for d in dirnames
+                if d not in SKIP and d not in SKIP_DIRS and not os.path.islink(f"{dirpath}/{d}")
+            ]
+            for name in filenames:
+                if name in SKIP or name.startswith("."):
+                    continue
+                path = Path(dirpath) / name
+                if path.is_symlink():
+                    continue
+                rel = path.relative_to(root).as_posix()
+                role, acl = classify(rel, zone)
+                out.append(
+                    {
+                        "path": f"{zone}/{rel}",
+                        "role": role,
+                        "acl": acl,
+                        "bytes": path.stat().st_size,
+                    }
+                )
     out.sort(key=lambda x: x["path"])
     return out
 
 
-LAYOUT = """# 水獭家族公共素材库（OSS）
+LAYOUT = """# 水獭家族公共素材库
 
-唯一根：`library/`
+本地 `otter-library/{latest,private}/` 与 OSS `library/{latest,private}/` **同构**。
+
+唯一根：`library/`（OSS）/ `otter-library/`（本地）
 
 | 区 | OSS 前缀 | 谁能读 |
 |----|----------|--------|
 | 公开交付 | `library/latest/` | App / 官网 / 其它仓直链 |
 | 母版 | `library/private/` | 仅发版机 / 凭证拉取 |
-| 世代快照 | `library/keep/v{ver}+{build}/` | 公开只读归档 |
-| 安装包 | `library/release/{app}/v{ver}/` | 公开下载 |
+| 安装包 | `library/release/{app}/v{ver}/` | 公开下载（只保留当前可下版本） |
 
-## 公开根目录（全部可直链）
+## 公开根：公用 + 按 App
 
 | 顶栏 | 路径 | 说明 |
 |------|------|------|
 | 索引 | `catalog/` | LAYOUT + index.json |
-| 家族标 | `common/` | 黑白獭、logo |
-| 表情 | `expr/{still,anim}/{270,540}/` | 交付档（1080 只 private） |
-| 截图 | `shots/{app}/` | 商店 / 官网截图 |
+| 公用标 | `common/` | 黑白獭、logo |
+| 公用表情 | `expr/{still,anim}/{270,540}/` | 交付档（1080 只 private） |
 | 品牌 | `brand/{app}/` | icon · mark · logo_badge · splash |
-| 媒体 | `media/{app}/` | og / poster / promo / scenes / avatars… |
+| 媒体 | `media/{app}/` | og / promo / scenes / games / ai… |
 | 玩法 | `badges/{app}/` | 成就等（公开备份；游时仍打进包） |
-| 平台套件 | `platform/{app}/{ios,android,macos,windows}/` | 原生图标套件（非图库） |
+| 平台套件 | `platform/{app}/` | 原生图标套件 |
+| 截图 | `shots/{app}/` | 商店 / 官网截图 |
+
+`{app}` = `otter-git` | `otter-tools` | `otter-gametime`。游时 games/ai 挂在 `media/otter-gametime/`。
 
 ## 母版区（private）
 
-`master/brand|ip|avatars` · `source/` · `expr/*/1080/`
+`master/brand/{app}/{icon,dart,anim}` · `master/ip|avatars` · `source/` · `expr/*/1080/`  
+禁止 `_splash_boards` / 旧扁平 `library/games|ai|gametime`。
 
 ## 纪律
 
 1. 进包或官网要直链 → `latest/`；母版 / 1080 → `private/`。
-2. 平台套件只进 `platform/`；其它图片/视频一律走 `common|brand|media|badges|shots|expr`。
-3. 发版：`./tool/otter lib publish --bump`（重写 catalog）。
+2. 公用进 `common|expr|catalog`；App 独有一律 `{kind}/{app}/`。
+3. `release/` 只留当前 download.version。
+4. 发版：`./tool/otter lib publish --bump --keep-none`（重写 catalog）。
+5. 完整流程：`otter-site/docs/FAMILY.md`。
 
 机器可读：同目录 `index.json`。
 """
@@ -120,7 +155,7 @@ def write() -> Path:
         slot["count"] += 1
         slot["bytes"] += e["bytes"]
 
-    catalog_dir = LIB / "catalog"
+    catalog_dir = LATEST / "catalog"
     catalog_dir.mkdir(parents=True, exist_ok=True)
     index = {
         "schema": 2,

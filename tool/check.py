@@ -66,30 +66,31 @@ def check_family(errors: list[str]) -> list[str]:
     # 本地 library（可缺，缺则只警告）
     try:
         sys.path.insert(0, str(ROOT / "tool"))
-        from paths import library_root  # type: ignore
+        from paths import library_latest, library_private  # type: ignore
 
-        lib = Path(library_root())
+        latest = Path(library_latest())
+        private = Path(library_private())
     except Exception:
-        lib = None
-    if lib and lib.is_dir():
+        latest = private = None  # type: ignore
+    if latest and latest.is_dir():
         for kind in ("still", "anim"):
-            d = lib / "expr" / kind / "270"
+            d = latest / "expr" / kind / "270"
             c = count_webp(d)
             if c < 0:
-                fail(f"本地 library 缺 {d.relative_to(lib) if d.is_relative_to(lib) else d}", errors)
+                fail(f"本地 library 缺 latest/expr/{kind}/270", errors)
             elif c != n:
-                fail(f"library expr/{kind}/270 有 {c} 张，清单 {n}（先 lib export）", errors)
+                fail(f"library latest/expr/{kind}/270 有 {c} 张，清单 {n}（先 lib export）", errors)
             else:
                 ok(f"library expr/{kind}/270 = {c}")
-        src = lib / "source" / "still"
-        if src.is_dir():
+        src = (private / "source" / "still") if private else None
+        if src and src.is_dir():
             jpgs = sum(1 for p in src.glob("*.jpg") if p.is_file())
             if jpgs and jpgs != n:
-                fail(f"source/still 有 {jpgs} 张 jpg，清单 {n}", errors)
+                fail(f"private/source/still 有 {jpgs} 张 jpg，清单 {n}", errors)
             elif jpgs:
                 ok(f"source/still = {jpgs}")
     else:
-        print("· 跳过本地 library（未找到 otter-library）")
+        print("· 跳过本地 library（未找到 otter-library/latest）")
 
     if KIT_STORE.is_file():
         store = KIT_STORE.read_text(encoding="utf-8")

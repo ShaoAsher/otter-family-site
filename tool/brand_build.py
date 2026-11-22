@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""master/brand/{app}/ → common/ + brand/{app}/ + platform/{app}/。
+"""private/master/brand/{app}/ → latest/{common,brand,platform}/。
 
-母版唯一源：`master/brand/{app}/{icon,dart,anim}`。
+母版唯一源：`private/master/brand/{app}/{icon,dart,anim}`。
 `anim.mp4` 上 OSS，不进 App 安装包；包内只 pull `dart.png` 作兜底。
+splash 的 dart/anim 对母版硬链，无内容副本。
 
   ./tool/otter lib brand
 """
@@ -14,10 +15,12 @@ import shutil
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
-from paths import family_site, library_root
+from paths import family_site, library_latest, library_private
 
-BRAND = library_root()
-MASTER = f"{BRAND}/master"
+LATEST = library_latest()
+PRIVATE = library_private()
+BRAND = LATEST  # 公开交付写出根
+MASTER = f"{PRIVATE}/master"
 MASTER_BRAND = f"{MASTER}/brand"
 FAMILY_JSON = f"{family_site()}/family.json"
 INK = (11, 10, 20)
