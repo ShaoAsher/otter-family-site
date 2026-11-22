@@ -235,9 +235,9 @@
         "#FA5A1E",
         "#FFB04A"
       ],
-      "latest": "3.2.0",
+      "latest": "3.2.1",
       "download": {
-        "version": "3.2.0",
+        "version": "3.2.1",
         "files": {
           "macos": "OtterTools-macos-arm64.dmg",
           "macos_zip": "OtterTools-macos-arm64.zip",
