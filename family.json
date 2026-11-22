@@ -39,9 +39,9 @@
         "#E89B0C",
         "#FFD66B"
       ],
-      "latest": "3.2.0",
+      "latest": "3.2.1",
       "download": {
-        "version": "3.2.0",
+        "version": "3.2.1",
         "files": {
           "macos": "OtterGit-macos-arm64.dmg",
           "macos_zip": "OtterGit-macos-arm64.zip",
