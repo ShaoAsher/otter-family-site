@@ -23,32 +23,32 @@ CACHE = Path(os.environ.get("OTTER_CACHE") or Path.home() / ".cache" / "otter-fa
 
 BRAND_MAP = {
     "otter-git": [
-        ("otter-git/icon.png", "assets/brand/otter_git_icon.png"),
-        ("otter-git/mark.png", "assets/brand/otter_git_mark.png"),
-        ("otter-git/splash/sys.png", "assets/brand/splash/sys.png"),
-        ("otter-git/splash/dart.png", "assets/brand/splash/dart.png"),
+        ("brand/otter-git/icon.png", "assets/brand/otter_git_icon.png"),
+        ("brand/otter-git/mark.png", "assets/brand/otter_git_mark.png"),
+        ("brand/otter-git/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("brand/otter-git/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
-        ("otter-git/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
-        ("otter-git/windows/tray_icon.ico", "assets/tray/tray_icon.ico"),
+        ("platform/otter-git/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
+        ("platform/otter-git/windows/tray_icon.ico", "assets/tray/tray_icon.ico"),
     ],
     "otter-tools": [
-        ("otter-tools/icon.png", "assets/brand/tools_icon.png"),
-        ("otter-tools/logo_badge.png", "assets/brand/tools_badge.png"),
-        ("otter-tools/splash/sys.png", "assets/brand/splash/sys.png"),
-        ("otter-tools/splash/dart.png", "assets/brand/splash/dart.png"),
+        ("brand/otter-tools/icon.png", "assets/brand/tools_icon.png"),
+        ("brand/otter-tools/logo_badge.png", "assets/brand/tools_badge.png"),
+        ("brand/otter-tools/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("brand/otter-tools/splash/dart.png", "assets/brand/splash/dart.png"),
         ("common/logo_otter.png", "assets/brand/tools_otter.png"),
         ("common/otter_black.png", "assets/brand/otter_black.png"),
         ("common/otter_white.png", "assets/brand/otter_white.png"),
-        ("otter-tools/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
+        ("platform/otter-tools/windows/app_icon.ico", "windows/runner/resources/app_icon.ico"),
     ],
     "otter-gametime": [
-        ("otter-gametime/icon.png", "assets/brand/gt_icon.png"),
-        ("otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
-        ("otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
-        ("otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
+        ("brand/otter-gametime/icon.png", "assets/brand/gt_icon.png"),
+        ("brand/otter-gametime/logo_badge.png", "assets/brand/gt_badge.png"),
+        ("brand/otter-gametime/splash/sys.png", "assets/brand/splash/sys.png"),
+        ("brand/otter-gametime/splash/dart.png", "assets/brand/splash/dart.png"),
         # 母版 icon；Android12 启动图由 fit_native_splash 缩成带透明边距的 splash_icon.png
-        ("otter-gametime/icon.png", "tool/brand/icon_src.png"),
+        ("brand/otter-gametime/icon.png", "tool/brand/icon_src.png"),
         ("common/logo_otter.png", "assets/brand/gt_logo_otter.png"),
         ("common/otter_white.png", "assets/brand/gt_otter_w.png"),
         ("common/otter_black.png", "assets/brand/gt_otter_k.png"),
@@ -57,16 +57,18 @@ BRAND_MAP = {
 
 BRAND_TREES = {
     "otter-git": [
-        ("otter-git/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
-        ("otter-git/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
+        ("platform/otter-git/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
+        ("platform/otter-git/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
     ],
     "otter-tools": [
-        ("otter-tools/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
-        ("otter-tools/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
+        ("platform/otter-tools/macos/AppIcon.appiconset", "macos/Runner/Assets.xcassets/AppIcon.appiconset"),
+        ("platform/otter-tools/macos/MenuBarIcon.imageset", "macos/Runner/Assets.xcassets/MenuBarIcon.imageset"),
     ],
     "otter-gametime": [
-        ("otter-gametime/ios/AppIcon.appiconset", "ios/Runner/Assets.xcassets/AppIcon.appiconset"),
-        ("otter-gametime/android/res", "android/app/src/main/res"),
+        ("platform/otter-gametime/ios/AppIcon.appiconset", "ios/Runner/Assets.xcassets/AppIcon.appiconset"),
+        ("platform/otter-gametime/android/res", "android/app/src/main/res"),
+        # 成就徽章：OSS latest 公开备份；App 仍打进安装包（离线）
+        ("badges/otter-gametime", "assets/brand/badges"),
     ],
 }
 

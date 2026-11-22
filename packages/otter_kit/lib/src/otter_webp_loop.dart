@@ -13,7 +13,7 @@ import 'package:flutter/widgets.dart';
 ///
 /// 排帧按「会话起点 + Σduration」，解码耗时不叠进节奏；同一时刻只持有一帧位图。
 class OtterWebpLoop extends StatefulWidget {
-  /// 已读入的字节（TOS 缓存文件等）。
+  /// 已读入的字节（OSS 缓存文件等）。
   const OtterWebpLoop.memory({
     super.key,
     required this.bytes,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CI 把 Windows 包传到本仓的 GitHub Release（标签 <app>-v<版本>），只需要 gh 与 GH_TOKEN，不碰 TOS。
+"""CI 把 Windows 包传到本仓的 GitHub Release（标签 <app>-v<版本>），只需要 gh 与 GH_TOKEN，不碰 OSS（本脚本只传 GitHub Release）。
 
   python3 tool/release/ci_upload.py <app> <版本> <文件> [文件 ...]
 

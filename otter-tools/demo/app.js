@@ -81,7 +81,7 @@ const NAV = [
 
 function renderShell() {
   $('#side').innerHTML = `
-    <div class="brand"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" alt=""><b>水獭工具</b><span class="fam">水獭家族</span></div>
+    <div class="brand"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-tools/icon.png" alt=""><b>水獭工具</b><span class="fam">水獭家族</span></div>
     <div class="me" data-act="poke"><img id="meImg" alt=""><div style="min-width:0"><div class="n">小獭</div><div class="tone" id="meTone"><i></i><span></span></div><div class="say" id="meSay"></div></div></div>
     <button class="cmdk" data-act="pal">${I('search')}<span class="sp">搜索功能或操作</span><kbd>⌘</kbd><kbd>K</kbd></button>
     <nav class="nav" id="nav">${NAV.map((n) => `<div class="nv${n.id === 'home' ? ' on' : ''}" data-act="go" data-arg="${n.id}" data-nav="${n.id}" style="--c:${n.c}"><span class="b">${I(n.i)}</span><span class="t">${n.t}</span><span class="m num" data-m="${n.id}"></span></div>`).join('')}</nav>

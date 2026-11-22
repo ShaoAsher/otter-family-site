@@ -3,7 +3,7 @@ __pycache__/
 # 本地缓存
 otter_family/library/
 
-# 官网图标走 TOS；旧 shared/icons 二进制不进 git
+# 官网图标走 OSS；旧 shared/icons 二进制不进 git
 shared/icons/*.png
 shared/icons/*.jpg
 shared/icons/*.webp
@@ -15,8 +15,10 @@ shared/icons/*.webp
 packages/*/build/
 packages/*/.dart_tool/
 
-# 本地/内部文档不进公开仓
+# 本地/内部文档不进公开仓（发版入口以 tool/RELEASE.md 为准并入库）
 .cursor/
 tool/FLOW.md
 shared/README.md
 .local-serve/
+# 误落在本仓根下的 library 缓存（真相源是并列的 otter-library/）
+library/

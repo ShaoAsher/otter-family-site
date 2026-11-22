@@ -288,7 +288,7 @@ ACTS.ckAgain = async () => {
 };
 ACTS.share = () => {
   openDlg(`<div class="scard"><div style="display:flex;align-items:center;gap:14px">${ringG(S.score, 92, '#6EE7A8', `<b class="num" style="font-size:26px">${S.score}</b>`, 8)}<div><div style="font-size:12px;color:#A09BB4">我的 Mac 体检分</div><div style="font-size:20px;font-weight:800">${S.label}</div><div style="font-size:12px;color:#A09BB4;margin-top:4px">本周帮我清掉 ${S.week} GB · 石头罐 ${S.pebbles} 颗</div></div>
-      <img src="${ex('proud', true)}" style="width:70px;height:70px;margin-left:auto" alt=""></div><div class="ft"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" alt="">水獭工具 · 小獭帮我看着这台 Mac</div></div>
+      <img src="${ex('proud', true)}" style="width:70px;height:70px;margin-left:auto" alt=""></div><div class="ft"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-tools/icon.png" alt="">水獭工具 · 小獭帮我看着这台 Mac</div></div>
     <div style="display:flex;gap:8px;margin-top:14px"><button class="slab" style="flex:1" data-act="shareGo" data-arg="图片已复制，可以直接粘贴">复制图片</button><button class="ghost lg" data-act="shareGo" data-arg="已保存到「下载」">保存</button><button class="ghost lg" data-act="close">关闭</button></div>`, 'share');
 };
 ACTS.shareGo = (t) => { closeDlg(); flash(t); };
@@ -820,7 +820,7 @@ ACTS.imgGo = async () => {
 
 /* ══ 本机 ═════════════════════════════════════════════ */
 PG['mac:hw'] = () => `<section class="cardp c5" style="padding:22px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px">
-    <div style="width:220px;height:150px;position:relative;margin-bottom:6px"><div style="position:absolute;left:20px;right:20px;top:0;bottom:22px;border-radius:12px 12px 4px 4px;border:3px solid rgba(var(--ink),.25);background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--accent) 30%,#1b1829),#0B0A14);display:grid;place-items:center"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png" style="width:56px;height:56px" alt=""></div><div style="position:absolute;left:0;right:0;bottom:12px;height:10px;border-radius:2px 2px 10px 10px;background:rgba(var(--ink),.22)"></div></div>
+    <div style="width:220px;height:150px;position:relative;margin-bottom:6px"><div style="position:absolute;left:20px;right:20px;top:0;bottom:22px;border-radius:12px 12px 4px 4px;border:3px solid rgba(var(--ink),.25);background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--accent) 30%,#1b1829),#0B0A14);display:grid;place-items:center"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-tools/icon.png" style="width:56px;height:56px" alt=""></div><div style="position:absolute;left:0;right:0;bottom:12px;height:10px;border-radius:2px 2px 10px 10px;background:rgba(var(--ink),.22)"></div></div>
     <b style="font-size:20px">MacBook Pro 14 英寸</b><div class="muted">2024 · 深空黑色</div>
     <div class="chips" style="justify-content:center;margin-top:8px">${tag('Apple M3 Pro', 'acc')}${tag('16 GB', 'calm')}${tag('512 GB SSD', 'calm')}${tag('macOS 26.1', 'ok')}</div></section>
   <section class="cardp c7"><div class="ch"><h3>配置</h3><span class="sp"></span><a data-act="flashMsg" data-arg="配置信息已复制为文字">复制全部</a></div><div class="bd"><div class="kv">

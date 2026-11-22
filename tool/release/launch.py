@@ -8,7 +8,7 @@
 
 环境：source ~/.config/devkeys/env.sh；gh auth login。App 目录默认与本仓并列：../otter-<id>，可用 OTTER_APPS 覆盖。
 
-命名约定见 tool/RELEASE.md。
+命名约定见 tool/FLOW.md、tool/RELEASE.md。
 """
 
 from __future__ import annotations
@@ -24,12 +24,12 @@ ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "family.json"
 RELEASE_PY = ROOT / "tool/release/release.py"
 SHIP_PY = ROOT / "tool/release/ship.py"
-SYNC_BRAND = ROOT / "tool/sync_tos.py"
+SYNC_BRAND = ROOT / "tool/sync_oss.py"
 
 DEFAULT_APP_ROOTS = {
     "otter-git": "otter-git",
     "otter-tools": "otter-tools",
-    "gametime": "otter-gametime/app",
+    "gametime": "otter-gametime",
 }
 
 

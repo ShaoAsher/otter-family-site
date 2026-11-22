@@ -12,7 +12,7 @@ var q=function(s, r){ return (r||document).querySelector(s); };
 /* 圆盘渐变（左下 → 右上），与家族素材库 otter_family/README.md「三端与配色」一致 */
 var DISC={gt:['#1FB6FF','#5CF2DE'], tools:['#FA5A1E','#FFB04A'], git:['#E89B0C','#FFD66B']};
 var FAMILY_SITE='https://shaoasher.github.io/otter-family-site/?from=gametime#members';
-var OSS_BRAND='https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-';
+var OSS_BRAND='https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-';
 /* 三层：圆盘 / 水獭（gt_logo_otter.png）/ 右下手柄徽章（gt_badge.png）；两层画布都是圆盘外接正方形，徽章已在位 */
 var logo=function(k){ var g=DISC[k||'gt']||DISC.gt;
   return '<span class="gtl" style="--g1:'+g[0]+';--g2:'+g[1]+'" role="img" aria-label="水獭游时"><i class="dk"></i><i class="ot"></i><img class="bdg" src="assets/brand/gt_badge.png" alt=""></span>'; };
@@ -59,7 +59,7 @@ pg.innerHTML='<div class="bar3"><button class="ib" data-back aria-label="返回"
   +'<div><img src="assets/brand/gt_otter_w.png" style="width:16px" alt=""><span>16</span></div></div>'
   +'<div class="lb3">家族徽章</div><div class="v3-card dk-bgs">'
   +[['gt','水獭游时 · 手柄'],['tools','水獭工具 · 扳手'],['git','水獭 Git · 分支']].map(function(d){ var src=d[0]==='gt'?'assets/brand/gt_icon.png':OSS_BRAND+d[0]+'/icon.png'; return '<div><img src="'+src+'" alt=""><small>'+d[1]+'</small></div>'; }).join('')+'</div>'
-  +'<div class="lb3">规则</div><div class="v3-card dk-rule"><p>图标 = 深底 + 渐变圆盘 + 挖空的蜷睡水獭，产品之间只换圆盘渐变和徽章：水獭游时 手柄 · 水獭工具 扳手 · 水獭 Git 分支。启动页、新手引导、关于、桌面都用同一枚。</p><p>徽章统一放右下角，压在圆盘边缘：白色圆章 + 深色图形，外圈一道底色缝隔开。</p><p>32px 以下只用透明剪影（白 / 黑），不带徽章。渐变只在圆盘上，不上文字；不加投影光。</p><p>游时标在 docs/mockup/assets/brand；兄弟 App 图标走 OSS library/latest/otter-*/。</p></div></div>';
+  +'<div class="lb3">规则</div><div class="v3-card dk-rule"><p>图标 = 深底 + 渐变圆盘 + 挖空的蜷睡水獭，产品之间只换圆盘渐变和徽章：水獭游时 手柄 · 水獭工具 扳手 · 水獭 Git 分支。启动页、新手引导、关于、桌面都用同一枚。</p><p>徽章统一放右下角，压在圆盘边缘：白色圆章 + 深色图形，外圈一道底色缝隔开。</p><p>32px 以下只用透明剪影（白 / 黑），不带徽章。渐变只在圆盘上，不上文字；不加投影光。</p><p>游时标在 docs/mockup/assets/brand；兄弟 App 图标走 OSS library/latest/brand/otter-*/。</p></div></div>';
 document.body.appendChild(pg);
 
 window.GtBrand=function(ctx){

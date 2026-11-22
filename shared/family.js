@@ -2,10 +2,11 @@
  *
  *   <script src="../shared/family.js" data-app="otter-git" defer></script>   放在页面自己的脚本前面
  *
- * - `[data-media]`：素材在 TOS。普通路径走 `family.media`（`…/latest/{app}/`）；以 `shots/` 开头的
- *   走 `family.shots`（`…/latest/shots/{app}/`，按 app 分组）。img/source→src，a→href；
+ * - `[data-media]`：素材在 OSS。普通路径走 `family.media`（`…/latest/media/{app}/`）；以 `shots/` 开头的
+ *   走 `family.shots`（`…/latest/shots/{app}/`）。img/source→src，a→href；
  *   `[data-media-poster]` 填 video poster。`otterMedia(路径)` 同上规则。
- * - `[data-expr]`：小獭表情，和 App 用同一份 TOS 表情包（family.json 的 `family.expr`），值如 `anim/270/hi.webp`、
+ * - `[data-brand]`：品牌表面走 `family.brand`（`…/latest/brand/`），值如 `otter-git/icon.png`。
+ * - `[data-expr]`：小獭表情，和 App 用同一份 OSS 表情包（family.json 的 `family.expr`），值如 `anim/270/hi.webp`、
  *   `still/270/hi.webp`；页面脚本用 `otterExpr(路径)` 拼地址
  * - `.v` / `.ver`：能下载到的版本（`download.version`，没有安装包时是 `latest`）；导航「下载 X.Y」同
  * - `.vlist`：版本记录（全部条目，新的在前）
@@ -13,10 +14,10 @@
  *
  * 版本字段（勿混）：
  *   family.libraryVersion — 与 App 版本号一致（拼旧模板 {version} 时用）
- *   family.libraryBuild   — 仅 TOS 素材树世代；小改素材只涨它，≠ App pubspec +N
+ *   family.libraryBuild   — 仅 OSS 素材树世代；小改素材只涨它，≠ App pubspec +N
  *   apps.*.latest / download.version — 各 App 安装包版本
  *
- * 下载源：国内走 TOS，海外走 GitHub Release；按访客 IP 判断，查询失败或超时保持 TOS。
+ * 下载源：国内走 OSS，海外走 GitHub Release；按访客 IP 判断，查询失败或超时保持 OSS。
  * 页面里写死的版本号与链接只是脚本没跑起来时的兜底。
  */
 (function () {
@@ -25,10 +26,10 @@
   if (!id) return;
   var root = me.src.replace(/shared\/family\.js.*$/, "");
   var LIB_VER = "3.0.2"; // fallback = libraryVersion（与 App 同号），不是 libraryBuild
-  var MEDIA = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/{app}/";
+  var MEDIA = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/media/{app}/";
   var SHOTS = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/shots/{app}/";
   var EXPR = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/";
-  var BRAND = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/";
+  var BRAND = "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/";
 
   function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
   function expand(tpl, ver) {

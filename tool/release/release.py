@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """水獭家族统一发布安装包：国内 OSS + 海外 GitHub Release（仅官网仓），两处齐了再切换下载版本。
 
-旧火山 TOS 只作存档，本脚本不再读写 TOS。
+安装包发布到阿里云 OSS + GitHub Release；不再使用旧火山对象存储。
 
   ./tool/otter publish <app> <版本> 文件...   # 上传 OSS +（官网仓）GitHub Release；齐了就切换
   ./tool/otter mirror  <app> <版本> [--force] # 把 GitHub 上已有的包补到 OSS，齐了就切换
@@ -234,7 +234,7 @@ def site(app, folder):
     if not folder.is_dir():
         sys.exit(f"找不到目录 {folder}")
     bkt = oss_store.bucket()
-    prefixes = [f"library/latest/{app}/"]
+    prefixes = [f"library/latest/media/{app}/"]
 
     def sync_prefix(prefix):
         remote = {obj.key: obj.etag.strip('"') for obj in __import__("oss2").ObjectIterator(bkt, prefix=prefix)}

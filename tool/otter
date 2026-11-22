@@ -3,7 +3,7 @@
 #
 # 真相
 #   lib export|brand|publish|pull
-#   publish --bump 只涨 libraryBuild（TOS 素材世代，≠ App build）
+#   publish --bump 只涨 libraryBuild（OSS 素材世代，≠ App build）
 #   publish --version X.Y.Z 与 App 版本号对齐 libraryVersion
 # 片子
 #   film pull <app> | film ingest <app>
@@ -26,8 +26,8 @@ case "$cmd" in
     case "$sub" in
       export)  exec python3 "$T/export.py" "$@" ;;
       brand)   exec python3 "$T/brand_build.py" "$@" ;;
-      publish) exec python3 "$T/sync_tos.py" library publish "$@" ;;
-      pull)    exec python3 "$T/sync_tos.py" library pull "$@" ;;
+      publish) exec python3 "$T/sync_oss.py" library publish "$@" ;;
+      pull)    exec python3 "$T/sync_oss.py" library pull "$@" ;;
       *) echo "用法：otter lib export|brand|publish|pull" >&2; exit 1 ;;
     esac
     ;;

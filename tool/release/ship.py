@@ -12,7 +12,7 @@
 5. 官网仓提交 family.json；带 --push 时推 main（Pages 更新）。
 
 需要 gh auth login；OSS 读 ~/.config/devkeys/config.json 的 oss 段。
-旧火山 TOS 仅存档，本流程不再访问。
+本流程只写阿里云 OSS + GitHub Release。
 """
 
 import json

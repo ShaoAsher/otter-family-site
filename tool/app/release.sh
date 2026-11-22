@@ -18,7 +18,7 @@
 # 同版本打了多次时按修改时间取最新那份；上传时改成固定名 <file>-macos-<架构>.dmg 等。
 #
 # 上传、校验与切换下载版本都在 tool/release/release.py：两处都齐了才会把 family.json 的 download.version
-# 切到这一版。Windows 包由 CI 传到 GitHub（标签 <app>-v<版本>），之后 otter mirror 补到 TOS；
+# 切到这一版。Windows 包由 CI 传到 GitHub（标签 <app>-v<版本>），之后 otter mirror 补到 OSS；
 # 一条龙见 ./tool/otter ship。
 
 set -euo pipefail

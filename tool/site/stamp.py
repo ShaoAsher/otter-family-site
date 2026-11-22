@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""记下官网素材是从「哪一版 App 提交」出的：各 App 目录下的 build.json，随素材上 TOS。
+"""记下官网素材是从「哪一版 App 提交」出的：各 App 目录下的 build.json，随素材上 OSS。
 
   python3 tool/site/stamp.py <app> <part> <App 仓库路径> <输出目录> [键=值 ...]
 
-<part> 是 demo / shots / art / promo；优先合并本地已有 build.json，否则读 TOS，只覆盖这一个 part。
+<part> 是 demo / shots / art / promo；优先合并本地已有 build.json，否则读 OSS，只覆盖这一个 part。
 
-字段区分（勿与家族 TOS 世代混淆）：
+字段区分（勿与家族 OSS 世代混淆）：
   parts.*.version   — App 版本号（pubspec 的 x.y.z，与 family.libraryVersion 同号空间）
   parts.*.appBuild  — App 安装包 build（pubspec 的 +N）；≠ family.libraryBuild
-  family.libraryBuild 在 family.json / current.json，标识 TOS 素材树发版，由 lib publish 维护
+  family.libraryBuild 在 family.json / current.json，标识 OSS 素材树发版，由 lib publish 维护
 """
 
 import json
@@ -28,7 +28,7 @@ def git(repo, *args):
 
 
 def app_version_build(repo):
-    """读 pubspec `x.y.z+N` → (version, appBuild)。appBuild 与 TOS libraryBuild 无关。"""
+    """读 pubspec `x.y.z+N` → (version, appBuild)。appBuild 与 OSS libraryBuild 无关。"""
     for pub in (repo / "pubspec.yaml", repo / "app" / "pubspec.yaml"):
         if pub.is_file():
             m = re.search(r"^version:\s*([^\s+#]+)\+?(\d+)?", pub.read_text(), re.M)
@@ -50,7 +50,7 @@ def remote(app):
 
 
 def load_base(app, out: Path):
-    """连续 stamp 时优先合并本地已写出的 build.json，避免每次从 TOS 覆盖丢 part。"""
+    """连续 stamp 时优先合并本地已写出的 build.json，避免每次从 OSS 覆盖丢 part。"""
     if out.is_file():
         try:
             data = json.loads(out.read_text())

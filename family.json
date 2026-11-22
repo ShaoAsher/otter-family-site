@@ -7,10 +7,12 @@
     "site": "https://shaoasher.github.io/otter-family-site/",
     "members": "https://shaoasher.github.io/otter-family-site/?from={from}#members",
     "assets": "https://otter.oss-cn-beijing.aliyuncs.com/",
-    "media": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/{app}/",
+    "media": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/media/{app}/",
     "shots": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/shots/{app}/",
-    "brand": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/",
+    "brand": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/",
     "expr": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/expr/",
+    "badges": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/badges/{app}/",
+    "platform": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/platform/{app}/",
     "config": [
       "https://otter.oss-cn-beijing.aliyuncs.com/library/family.json",
       "https://shaoasher.github.io/otter-family-site/family.json"
@@ -21,7 +23,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.1.0",
-    "libraryBuild": "7",
+    "libraryBuild": "10",
     "library": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/"
   },
   "apps": {
@@ -35,7 +37,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/otter-git/",
       "demo": "https://shaoasher.github.io/otter-family-site/otter-git/demo/",
-      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-git/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-git/icon.png",
       "colors": [
         "#E89B0C",
         "#FFD66B"
@@ -96,8 +98,8 @@
         {
           "version": "3.1.1",
           "date": "2026-11-19",
-          "zh": "设置新增「高清动图」开关：默认拉 TOS 270，开启后改拉更高清 540。",
-          "en": "Settings: HD otter animations toggle—default TOS 270, optional sharper 540."
+          "zh": "设置新增「高清动图」开关：默认拉 OSS 270，开启后改拉更高清 540。",
+          "en": "Settings: HD otter animations toggle—default OSS 270, optional sharper 540."
         },
         {
           "version": "3.1.0",
@@ -225,7 +227,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/otter-tools/",
       "demo": "https://shaoasher.github.io/otter-family-site/otter-tools/#demo",
-      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-tools/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-tools/icon.png",
       "colors": [
         "#FA5A1E",
         "#FFB04A"
@@ -298,8 +300,8 @@
         {
           "version": "3.1.1",
           "date": "2026-11-19",
-          "zh": "设置新增「高清动图」开关：默认拉 TOS 270，开启后改拉更高清 540。",
-          "en": "Settings: HD otter animations toggle—default TOS 270, optional sharper 540."
+          "zh": "设置新增「高清动图」开关：默认拉 OSS 270，开启后改拉更高清 540。",
+          "en": "Settings: HD otter animations toggle—default OSS 270, optional sharper 540."
         },
         {
           "version": "3.1.0",
@@ -407,7 +409,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/otter-gametime/",
       "demo": "https://shaoasher.github.io/otter-family-site/otter-gametime/demo/",
-      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/otter-gametime/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/latest/brand/otter-gametime/icon.png",
       "colors": [
         "#1FB6FF",
         "#5CF2DE"
@@ -453,8 +455,8 @@
         {
           "version": "1.1.1",
           "date": "2026-11-19",
-          "zh": "设置新增「高清动图」开关：默认拉 TOS 270，开启后改拉更高清 540。",
-          "en": "Settings: HD otter animations toggle—default TOS 270, optional sharper 540."
+          "zh": "设置新增「高清动图」开关：默认拉 OSS 270，开启后改拉更高清 540。",
+          "en": "Settings: HD otter animations toggle—default OSS 270, optional sharper 540."
         },
         {
           "version": "1.1.0",

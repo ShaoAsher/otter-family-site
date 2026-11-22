@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""官网媒体：只写本地 otter-library/<app>/，上云用 otter lib publish。
+"""官网媒体：只写本地 otter-library/media/<app>/，上云用 otter lib publish。
 
   ./tool/otter site demo|shots|art|promo|all
 """
@@ -28,43 +28,44 @@ FACTORY = Path(os.environ.get("OTTER_FILMS") or FAMILY.parent / "otter-films") /
 def local_site_root() -> Path:
     env = os.environ.get("OTTER_LIBRARY")
     root = Path(env) if env else FAMILY.parent / "otter-library"
-    return root / APP
+    return root / "media" / APP
 
 
 def _demo_brand_key(app: str, name: str) -> str:
+    """相对 family.brand（…/brand/）的路径；common 走根相对需带 ../ 不再使用——改绝对前缀。"""
     table = {
         "otter-git": {
             "otter_git_icon.png": "otter-git/icon.png",
             "otter_git_mark.png": "otter-git/mark.png",
-            "otter_black.png": "common/otter_black.png",
-            "otter_white.png": "common/otter_white.png",
+            "otter_black.png": "../common/otter_black.png",
+            "otter_white.png": "../common/otter_white.png",
         },
         "otter-tools": {
             "tools_icon.png": "otter-tools/icon.png",
             "tools_badge.png": "otter-tools/logo_badge.png",
-            "tools_otter.png": "common/logo_otter.png",
-            "otter_black.png": "common/otter_black.png",
-            "otter_white.png": "common/otter_white.png",
+            "tools_otter.png": "../common/logo_otter.png",
+            "otter_black.png": "../common/otter_black.png",
+            "otter_white.png": "../common/otter_white.png",
         },
         "otter-gametime": {
             "gt_icon.png": "otter-gametime/icon.png",
             "gt_badge.png": "otter-gametime/logo_badge.png",
-            "gt_logo_otter.png": "common/logo_otter.png",
-            "gt_otter_w.png": "common/otter_white.png",
-            "gt_otter_k.png": "common/otter_black.png",
+            "gt_logo_otter.png": "../common/logo_otter.png",
+            "gt_otter_w.png": "../common/otter_white.png",
+            "gt_otter_k.png": "../common/otter_black.png",
         },
     }
     return table.get(app, {}).get(name, f"{app}/{name}")
 
 
 _FAM = json.loads((FAMILY / "family.json").read_text())["family"]
-# libraryVersion 与 App 版本号一致；libraryBuild 是 TOS 素材世代，这里不用来拼 URL（走 latest/）
+# libraryVersion 与 App 版本号一致；libraryBuild 是 OSS 素材世代，这里不用来拼 URL（走 latest/）
 _LIB_VER = _FAM.get("libraryVersion") or "1.0.0"
 ASSETS = _FAM["assets"]
 EXPR_URL = (_FAM.get("expr") or f"{ASSETS}library/latest/expr/").replace("{version}", _LIB_VER)
 if not EXPR_URL.endswith("/"):
     EXPR_URL += "/"
-BRAND_URL = (_FAM.get("brand") or f"{ASSETS}library/latest/").replace("{version}", _LIB_VER)
+BRAND_URL = (_FAM.get("brand") or f"{ASSETS}library/latest/brand/").replace("{version}", _LIB_VER)
 if not BRAND_URL.endswith("/"):
     BRAND_URL += "/"
 
@@ -94,7 +95,7 @@ def mirror_local(stage):
         if not src.is_file() or src.name.startswith("."):
             continue
         rel = src.relative_to(stage)
-        # 截图单独落到 shots/<app>/，与品牌/宣传片分开，TOS 上按 app 一眼能分清
+        # 截图单独落到 shots/<app>/，与品牌/宣传片分开，OSS 上按 app 一眼能分清
         if rel.parts and rel.parts[0] == "shots":
             out = library_root() / "shots" / APP / Path(*rel.parts[1:])
         else:

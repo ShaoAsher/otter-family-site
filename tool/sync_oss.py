@@ -10,12 +10,12 @@
 另：keep/v{libraryVersion}+{libraryBuild}/、release/、current.json、family.json
 
 家族资源世代：
-  libraryVersion  — 家族主版本（如 3.1.0），--version 对齐
+  libraryVersion  — 家族主版本（如 3.2.0），--version 对齐
   libraryBuild    — 仅 OSS 素材树发版；--bump 只涨这一位
-  展示            — 3.1.0+1（加号后是 libraryBuild，不是 pubspec +N）
+  展示            — 3.2.0+N（加号后是 libraryBuild，不是 pubspec +N）
 
   ./tool/otter lib publish|pull
-  python3 tool/sync_tos.py library publish|pull|wipe-legacy
+  python3 tool/sync_oss.py library publish|pull|wipe-legacy
 """
 from __future__ import annotations
 
@@ -39,8 +39,9 @@ SKIP_DIRS = {"__pycache__", "master._bak", "_keep", "_preview_icon_white", "_pre
 
 # 本地顶层 → OSS 分区
 # shots/ 下再按 app 分子目录，避免各端截图文件名撞车
-PUBLIC_TOP = {"common", "otter-git", "otter-tools", "otter-gametime", "shots"}
-PRIVATE_TOP = {"master", "source", "expr"}  # 三档表情整树属母版
+# 公开根：公共资源 + 平台套件；表情整树在 private，270/540 再镜像 latest
+PUBLIC_TOP = {"catalog", "common", "brand", "media", "badges", "platform", "shots"}
+PRIVATE_TOP = {"master", "source", "expr"}
 # 270=默认；540=设置里「高清动图」；1080 仍只进 private
 PUBLIC_EXPR_SIZES = {"270", "540"}
 
@@ -102,11 +103,17 @@ def walk_truth() -> Iterable[tuple[str, str, bool, str]]:
         if not os.path.isdir(base):
             continue
         for d, dirs, files in os.walk(base):
-            dirs[:] = [x for x in dirs if x not in SKIP and x not in SKIP_DIRS]
+            # 不跟软链：兼容链 ios→platform/ios 等只计 platform/，避免双传
+            dirs[:] = [
+                x for x in dirs
+                if x not in SKIP and x not in SKIP_DIRS and not os.path.islink(f"{d}/{x}")
+            ]
             for name in files:
                 if name in SKIP or name.startswith("."):
                     continue
                 path = f"{d}/{name}"
+                if os.path.islink(path):
+                    continue
                 rel = os.path.relpath(path, LIB).replace("\\", "/")
                 if top in PUBLIC_TOP:
                     yield rel, path, True, "latest"
@@ -190,7 +197,7 @@ def parse_publish_argv(argv: list[str]):
             i += 2
             continue
         if a == "--build" and i + 1 < len(argv):
-            # 仅设 libraryBuild（TOS 资源世代），与 App pubspec +N 无关
+            # 仅设 libraryBuild（OSS 资源世代），与 App pubspec +N 无关
             build, i = argv[i + 1].lstrip("+"), i + 2
             continue
         if a == "--keep" and i + 1 < len(argv):
@@ -225,14 +232,16 @@ def ask_keep(candidates: list[tuple[str, str]]) -> list[str]:
 
 def apply_family_urls(fam: dict, version: str, build: str) -> None:
     base = f"{BUCKET_BASE}/library/latest/"
-    # libraryVersion ≡ App 版本号；libraryBuild 仅 TOS 素材世代（≠ App pubspec build）
+    # libraryVersion ≡ App 版本号；libraryBuild 仅 OSS 素材世代（≠ App pubspec build）
     fam["family"]["libraryVersion"] = version
     fam["family"]["libraryBuild"] = str(build)
     fam["family"]["library"] = base
-    fam["family"]["brand"] = base
-    fam["family"]["expr"] = f"{base}expr/"  # 公开仅 270
-    fam["family"]["media"] = f"{base}{{app}}/"
+    fam["family"]["brand"] = f"{base}brand/"
+    fam["family"]["expr"] = f"{base}expr/"  # 公开仅 270/540
+    fam["family"]["media"] = f"{base}media/{{app}}/"
     fam["family"]["shots"] = f"{base}shots/{{app}}/"
+    fam["family"]["badges"] = f"{base}badges/{{app}}/"
+    fam["family"]["platform"] = f"{base}platform/{{app}}/"
     fam["family"]["config"] = [
         f"{BUCKET_BASE}/library/family.json",
         "https://shaoasher.github.io/otter-family-site/family.json",
@@ -244,7 +253,7 @@ def apply_family_urls(fam: dict, version: str, build: str) -> None:
     }
     fam["family"].pop("libraryManifest", None)
     for app, meta in fam["apps"].items():
-        meta["icon"] = f"{base}{app}/icon.png"
+        meta["icon"] = f"{base}brand/{app}/icon.png"
 
 
 def resolve_library_generation(fam: dict, *, bump: bool, version: str | None, build: str | None) -> tuple[str, str, str, str]:
@@ -282,6 +291,13 @@ def library_publish(argv: list[str]):
     version, build, old_id, new_id = resolve_library_generation(fam, bump=bump, version=version, build=build)
     if not os.path.isdir(LIB):
         sys.exit(f"缺少 {LIB}")
+
+    try:
+        from library_catalog import write as write_catalog
+
+        write_catalog()
+    except Exception as e:
+        print(f"  ! catalog: {e}")
 
     client, env = client_env()
     bucket = env.get("OSS_BUCKET", "otter")

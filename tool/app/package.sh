@@ -102,7 +102,7 @@ if [[ "$NOTARIZE" -eq 1 ]]; then
 fi
 
 if [[ "$SKIP_BUILD" -eq 0 ]]; then
-  echo "==> 品牌 + 表情包（TOS library；瘦包仅 still）"
+  echo "==> 品牌 + 表情包（OSS library；瘦包仅 still）"
   python3 "$FAMILY/tool/app/assets.py" pull brand "$ROOT"
   python3 "$FAMILY/tool/app/assets.py" pull expr bundle "$ROOT"
   echo "==> flutter pub get"
@@ -250,7 +250,7 @@ else
   echo ""
   echo "发给别人：优先发 DMG；对方拖到「应用程序」即可。"
   echo "若无法打开：xattr -cr \"/Applications/${APP_NAME}.app\""
-  echo "正式分发：./tool/otter release   （打包+公证+上传到 TOS 与 GitHub）"
+  echo "正式分发：./tool/otter release   （打包+公证+上传到 OSS 与 GitHub）"
 fi
 
 # 公证成功后清理 dist：只保留本次最新的 DMG/ZIP，旧版本产物清掉（Windows 包不动）。
