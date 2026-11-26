@@ -96,16 +96,18 @@ cd ../otter-git && ./tool/otter assets && ./tool/otter ship --no-wait --push
 
 - iOS：App Store（Apple ID 见 `family.json` → `apps.otter-gametime.stores.ios`）
 - Android **上架 / 官网 APK：只打 `android-arm64`（64 位）**，禁止默认三 ABI 胖包；`android/app/build.gradle.kts` 须 `ndk.abiFilters = arm64-v8a`，避免插件残留其它 ABI；`android/app/build.gradle.kts` 须 `ndk.abiFilters = arm64-v8a`，避免插件残留其它 ABI
-- 产物：`OtterGameTime-android.apk`（arm64-only）  
-  - 官网 / `family.download.files.android` 用 **`.apk`**，下载链走 **GitHub Release**（阿里云默认 OSS 域名禁止公开分发裸 `.apk`）  
-  - apk 上传 `library/release/otter-gametime/v{version}/` 与 GitHub Release（OSS 可作备份，官网不直链）
+- 产物：`OtterGameTime-android.apk`（arm64-only）再打成 `OtterGameTime-android.zip`  
+  - 国内：`files.android` = **zip** → OSS  
+  - 海外：`files.android_apk` = **apk** → GitHub Release（OSS 默认域禁裸 `.apk`）  
+  - zip + apk 都上传 `library/release/otter-gametime/v{version}/` 与 GitHub Release
 - 命令：
 
 ```bash
 cd ../otter-gametime
 fvm flutter build apk --release --target-platform android-arm64
 cp build/app/outputs/flutter-apk/app-release.apk dist/OtterGameTime-android.apk
-# 在 otter-site：./tool/otter publish otter-gametime <version> dist路径/OtterGameTime-android.apk
+cd dist && zip -j OtterGameTime-android.zip OtterGameTime-android.apk
+# 在 otter-site：./tool/otter publish otter-gametime <version> dist路径/{zip,apk}
 ```
 
 - 商店图：`otter-library/otter-gametime/store/`；文案：App 仓 `store/`

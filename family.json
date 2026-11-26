@@ -435,15 +435,16 @@
       "download": {
         "version": "1.2.0",
         "files": {
-          "android": "OtterGameTime-android.apk"
+          "android": "OtterGameTime-android.zip",
+          "android_apk": "OtterGameTime-android.apk"
         }
       },
       "changelog": [
         {
           "version": "1.2.0",
           "date": "2026-11-26",
-          "zh": "佩戴徽章显示在主页/我/资料/分享卡；商店宣传图更新；官网 Android 改为直接下载 APK（GitHub Release）。",
-          "en": "Worn badge on home / me / profile / share card; refreshed store promo art; Android download is a direct APK via GitHub Release."
+          "zh": "佩戴徽章显示在主页/我/资料/分享卡；商店宣传图更新；国内 Android 下 zip（内含 apk），海外直链 APK。",
+          "en": "Worn badge on home / me / profile / share card; refreshed store promo art; CN Android zip (apk inside), overseas direct APK."
         },
         {
           "version": "1.1.8",

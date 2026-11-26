@@ -99,8 +99,11 @@
       if (!key) { a.href = fill(rel.page, v); return; }
       var file = dl.files && dl.files[key];
       if (!file) return;
+      // Android：国内 zip（OSS），海外裸 apk（GitHub）；OSS 默认域禁裸 .apk
+      if (key === "android" && where === "global" && dl.files.android_apk) {
+        file = dl.files.android_apk;
+      }
       v.file = file;
-      // 阿里云默认 OSS 域名禁止公开分发裸 .apk；.apk 一律走 GitHub Release
       var mirror = /\.apk$/i.test(file) ? "global" : where;
       a.href = fill(rel[mirror], v);
     });
