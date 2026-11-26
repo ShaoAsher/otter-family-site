@@ -315,29 +315,12 @@
     syncDemoUI(page, th);
   });
 
+  // 商店 / 下载 / changelog 由 shared/family.js 按 family.json 注水。
   $$("[data-store]").forEach((a) => {
     a.addEventListener("click", (e) => {
       if (!a.dataset.hrefReady) e.preventDefault();
     });
   });
-
-  const list = $("#changelog");
-  if (list) {
-    fetch("../family.json")
-      .then((r) => r.json())
-      .then((d) => {
-        const rows = d?.apps?.["otter-gametime"]?.changelog;
-        if (!Array.isArray(rows) || !rows.length) return;
-        list.innerHTML = rows
-          .slice(0, 5)
-          .map(
-            (c) => `
-          <li><b>v${c.version}</b><time datetime="${c.date}">${String(c.date).slice(5)}</time><span>${c.zh}</span></li>`
-          )
-          .join("");
-      })
-      .catch(() => {});
-  }
 
   // scroll: nav + parallax + peek hide near footer
   const heroArt = $("#heroArt");
