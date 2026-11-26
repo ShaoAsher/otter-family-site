@@ -423,7 +423,7 @@
         "#1FB6FF",
         "#5CF2DE"
       ],
-      "latest": "1.1.8",
+      "latest": "1.2.0",
       "legal": {
         "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
@@ -433,12 +433,18 @@
         "ios": "https://apps.apple.com/cn/app/id6835758249"
       },
       "download": {
-        "version": "1.1.8",
+        "version": "1.2.0",
         "files": {
-          "android": "OtterGameTime-android.zip"
+          "android": "OtterGameTime-android.apk"
         }
       },
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-11-26",
+          "zh": "佩戴徽章显示在主页/我/资料/分享卡；商店宣传图更新；官网 Android 改为直接下载 APK（GitHub Release）。",
+          "en": "Worn badge on home / me / profile / share card; refreshed store promo art; Android download is a direct APK via GitHub Release."
+        },
         {
           "version": "1.1.8",
           "date": "2026-11-26",
