@@ -133,6 +133,8 @@
 
     /* ── 成员卡 ── */
     .members { display: grid; gap: 20px; }
+    /* display:grid 会盖掉原生 [hidden]；成员卡隐藏必须显式 none */
+    .member[hidden] { display: none !important; }
     .member {
       position: relative; display: grid; grid-template-columns: 200px 1fr; gap: 32px; align-items: center;
       padding: 32px; border-radius: var(--r-lg); background: var(--card); border: 1px solid var(--line);
@@ -392,34 +394,7 @@
             </div>
           </article>
 
-          <!-- 水獭Days：尚未上架，暂时隐藏；恢复时去掉 hidden 即可 -->
-          <article class="member m-days rise" id="otterdays" data-app="otterdays" hidden>
-            <div class="face">
-              <img src="otter-days/icon.png" alt="水獭Days 图标" width="152" height="152" loading="lazy" />
-              <span class="tag-from">你从这里来</span>
-            </div>
-            <div class="body">
-              <h3>水獭Days<small>OtterDays</small></h3>
-              <p class="slogan">日子被点亮，才算真正过过。</p>
-              <ul class="meta">
-                <li class="st">原型中</li>
-                <li>iOS</li>
-                <li>Android</li>
-                <li>免费</li>
-              </ul>
-              <p class="desc">把美食、旅行、打卡和计划写成有情绪的日子。记忆轴与地图是主脊，每个分区都做垂直专精；「家」是本地空间，数据只在你自己的手机。</p>
-              <ul class="pts">
-                <li>日子轴：一条有情绪的日子卡片</li>
-                <li>打卡地图：地点被点亮，旅行有轨迹</li>
-                <li>美食味道档案 · 旅行章节 · 点亮计划</li>
-                <li>本地「家」空间，不用注册</li>
-              </ul>
-              <p class="say"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/expr/still/270/cheer.webp" data-face="cheer" alt="" width="40" height="40" loading="lazy" />这一天，被你认真点亮了。</p>
-              <div class="acts">
-                <span class="btn" aria-disabled="true">即将上架</span>
-              </div>
-            </div>
-          </article>
+          <!-- 水獭Days 尚未上架：整卡先不挂；要上架时从 git 历史加回 -->
         </div>
       </div>
     </section>
