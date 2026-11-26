@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-22",
+  "updated": "2026-11-26",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -429,13 +429,21 @@
         "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
         "support": "mailto:11034191@qq.com"
       },
-      "download": null,
+      "stores": {
+        "ios": "https://apps.apple.com/app/id6835758249"
+      },
+      "download": {
+        "version": "1.1.8",
+        "files": {
+          "android": "OtterGameTime-android.zip"
+        }
+      },
       "changelog": [
         {
           "version": "1.1.8",
-          "date": "2026-11-22",
-          "zh": "素材改走扁平 OSS library/otter-gametime/；商店宣传图迁出工程。",
-          "en": "Assets via flat OSS library/otter-gametime/; store promo art moved out of the app tree."
+          "date": "2026-11-26",
+          "zh": "App Store 上架（Apple ID 6835758249）；Android 提供安装包（zip 内 apk）；游戏目录补炉石传说。",
+          "en": "Live on the App Store (Apple ID 6835758249); Android install zip (apk inside); Hearthstone added to the game catalog."
         },
         {
           "version": "1.1.6",
@@ -484,6 +492,32 @@
           "date": "2026-11-19",
           "zh": "首发准备：图标改为白色剪影；接入家族表情与公共配置。App 版本仍为 1.0.0。",
           "en": "Prep for first release: white silhouette icon; family expressions and shared config. App remains 1.0.0."
+        }
+      ]
+    },
+    "otter-days": {
+      "name": "水獭Days",
+      "en": "OtterDays",
+      "from": "otterdays",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "site": "https://shaoasher.github.io/otter-family-site/#otterdays",
+      "demo": null,
+      "icon": "https://shaoasher.github.io/otter-family-site/otter-days/icon.png",
+      "colors": [
+        "#F472B6",
+        "#FDBA74"
+      ],
+      "latest": "0.1.0",
+      "download": null,
+      "changelog": [
+        {
+          "version": "0.1.0",
+          "date": "2026-11-24",
+          "zh": "立项：生活记忆轴 + 打卡地图主脊；美食 / 旅行 / 计划垂直分区；本地「家」空间。交互原型与 Flutter 壳就绪。",
+          "en": "Kickoff: life memory axis + check-in map spine; food / travel / plans verticals; local Home space. Interactive mockup and Flutter shell ready."
         }
       ]
     }

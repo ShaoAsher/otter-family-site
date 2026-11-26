@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>水獭家族 · 同一只小獭，在不同的地方陪你</title>
   <meta name="description"
-    content="水獭家族：水獭游时（游戏时间记录）、水獭工具（电脑管家）、水獭 Git（Git 客户端）。专业功能用它们本来的名字，情绪交给同一只小獭：120 个表情跟着真实的场景走。免费，不用注册，数据只在你自己的设备上。" />
+    content="水獭家族：水獭游时（游戏时间记录）、水獭工具（电脑管家）、水獭 Git（Git 客户端）、水獭Days（生活记忆与点亮）。专业功能用它们本来的名字，情绪交给同一只小獭：120 个表情跟着真实的场景走。免费，不用注册，数据只在你自己的设备上。" />
   <meta name="theme-color" content="#0E0C16" />
   <meta property="og:title" content="水獭家族 · 同一只小獭，在不同的地方陪你" />
-  <meta property="og:description" content="水獭游时 · 水獭工具 · 水獭 Git。免费，不用注册，数据只在你自己的设备上。" />
+  <meta property="og:description" content="水獭游时 · 水獭工具 · 水獭 Git · 水獭Days。免费，不用注册，数据只在你自己的设备上。" />
   <meta property="og:image" content="https://otter.oss-cn-beijing.aliyuncs.com/library/otter-git/icon.png" />
   <meta property="og:url" content="https://shaoasher.github.io/otter-family-site/" />
   <meta property="og:type" content="website" />
@@ -41,6 +41,8 @@
       --tl-2: #fa5a1e;
       --git: #ffc23d;
       --git-2: #e89b0c;
+      --days: #ff8ab8;
+      --days-2: #f472b6;
       --r: 14px;
       --r-lg: 22px;
       --wrap: 1120px;
@@ -72,9 +74,11 @@
     .sky i:nth-child(1) { background: var(--gt); left: -22vmax; top: -18vmax; }
     .sky i:nth-child(2) { background: var(--tl); right: -26vmax; top: 18vh; opacity: .12; }
     .sky i:nth-child(3) { background: var(--git); left: 18vw; bottom: -40vmax; opacity: .11; }
+    .sky i:nth-child(4) { background: var(--days); right: 8vw; bottom: 10vh; opacity: .1; width: 48vmax; height: 48vmax; }
     .motion .sky i { animation: drift 26s ease-in-out infinite alternate; }
     .motion .sky i:nth-child(2) { animation-duration: 32s; animation-delay: -8s; }
     .motion .sky i:nth-child(3) { animation-duration: 38s; animation-delay: -16s; }
+    .motion .sky i:nth-child(4) { animation-duration: 34s; animation-delay: -12s; }
     @keyframes drift { to { transform: translate(6vmax, 4vmax) scale(1.08); } }
 
     /* ── 导航 ── */
@@ -158,6 +162,7 @@
     .m-gt { --c: var(--gt); --c2: var(--gt-2); }
     .m-tl { --c: var(--tl); --c2: var(--tl-2); }
     .m-git { --c: var(--git); --c2: var(--git-2); }
+    .m-days { --c: var(--days); --c2: var(--days-2); }
 
     /* ── 小獭的一天：三个 App 里的真实时刻 ── */
     .moments { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
@@ -204,7 +209,7 @@
 </head>
 
 <body>
-  <div class="sky" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="sky" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
   <header class="nav" id="nav">
     <div class="wrap nav-in">
@@ -308,7 +313,7 @@
               <h3>水獭游时<small>GameTime</small></h3>
               <p class="slogan">时间花在哪里，是看得见的。</p>
               <ul class="meta">
-                <li class="st">开发中</li>
+                <li class="st">1.1.8</li>
                 <li>iOS</li>
                 <li>Android</li>
                 <li>免费</li>
@@ -322,7 +327,9 @@
               </ul>
               <p class="say"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/expr/still/270/grind.webp" data-face="grind" alt="" width="40" height="40" loading="lazy" />这局打完就歇会儿吧，我帮你看着时间。</p>
               <div class="acts">
-                <span class="btn" aria-disabled="true">即将上架</span>
+                <a class="btn btn-solid" href="otter-gametime/">打开官网</a>
+                <a class="btn" href="https://apps.apple.com/app/id6835758249" target="_blank" rel="noopener">App Store</a>
+                <a class="btn" href="https://otter.oss-cn-beijing.aliyuncs.com/library/release/otter-gametime/v1.1.8/OtterGameTime-android.zip">Android 安装包</a>
               </div>
             </div>
           </article>
@@ -381,6 +388,34 @@
               <div class="acts">
                 <a class="btn btn-solid" href="otter-git/">访问官网</a>
                 <a class="btn" href="otter-git/demo/">在线试用</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="member m-days rise" id="otterdays" data-app="otterdays">
+            <div class="face">
+              <img src="otter-days/icon.png" alt="水獭Days 图标" width="152" height="152" loading="lazy" />
+              <span class="tag-from">你从这里来</span>
+            </div>
+            <div class="body">
+              <h3>水獭Days<small>OtterDays</small></h3>
+              <p class="slogan">日子被点亮，才算真正过过。</p>
+              <ul class="meta">
+                <li class="st">原型中</li>
+                <li>iOS</li>
+                <li>Android</li>
+                <li>免费</li>
+              </ul>
+              <p class="desc">把美食、旅行、打卡和计划写成有情绪的日子。记忆轴与地图是主脊，每个分区都做垂直专精；「家」是本地空间，数据只在你自己的手机。</p>
+              <ul class="pts">
+                <li>日子轴：一条有情绪的日子卡片</li>
+                <li>打卡地图：地点被点亮，旅行有轨迹</li>
+                <li>美食味道档案 · 旅行章节 · 点亮计划</li>
+                <li>本地「家」空间，不用注册</li>
+              </ul>
+              <p class="say"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/expr/still/270/cheer.webp" data-face="cheer" alt="" width="40" height="40" loading="lazy" />这一天，被你认真点亮了。</p>
+              <div class="acts">
+                <span class="btn" aria-disabled="true">即将上架</span>
               </div>
             </div>
           </article>

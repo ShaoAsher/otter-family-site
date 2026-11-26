@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-22",
+  "updated": "2026-11-26",
   "iconBase": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-gametime/games/",
   "cats": [
     {
@@ -448,6 +448,37 @@
       "androidPackages": [
         "com.activision.callofduty.shooter"
       ]
+    },
+    {
+      "id": "hs_cn",
+      "nameZh": "炉石传说",
+      "nameEn": "Hearthstone",
+      "color": "#C9A227",
+      "markets": "cn",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "hs_cn",
+      "androidPackages": [
+        "com.blizzard.wtcg.cn.hearthstone",
+        "com.blizzard.wtcg.hearthstone"
+      ],
+      "iosScheme": "hearthstone://"
+    },
+    {
+      "id": "hs_us",
+      "nameZh": "炉石传说",
+      "nameEn": "Hearthstone",
+      "color": "#C9A227",
+      "markets": "global",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "hs_us",
+      "androidPackages": [
+        "com.blizzard.wtcg.hearthstone"
+      ],
+      "iosScheme": "hearthstone://"
     },
     {
       "id": "tft_cn",

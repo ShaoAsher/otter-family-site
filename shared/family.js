@@ -100,6 +100,7 @@
       var file = dl.files && dl.files[key];
       if (!file) return;
       v.file = file;
+      // 阿里云默认 OSS 域名禁止公开分发裸 .apk；官网 Android 用 .zip（内含 apk）走 cn OSS
       a.href = fill(rel[where], v);
     });
   }
