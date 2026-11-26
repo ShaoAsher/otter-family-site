@@ -666,6 +666,366 @@
         "com.dts.freefiremax",
         "com.dts.freefireth"
       ]
+    },
+    {
+      "id": "ww_cn",
+      "nameZh": "鸣潮",
+      "nameEn": "Wuthering Waves",
+      "color": "#4EC5F1",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "ww_cn",
+      "androidPackages": [
+        "com.kurogame.mingchao"
+      ],
+      "iosScheme": "wutheringwaves://"
+    },
+    {
+      "id": "ww_us",
+      "nameZh": "鸣潮",
+      "nameEn": "Wuthering Waves",
+      "color": "#4EC5F1",
+      "markets": "us",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "ww_us",
+      "androidPackages": [
+        "com.kurogame.wutheringwaves.global"
+      ],
+      "iosScheme": "wutheringwaves://"
+    },
+    {
+      "id": "df_cn",
+      "nameZh": "三角洲行动",
+      "nameEn": "Delta Force",
+      "color": "#C4A35A",
+      "markets": "cn",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "df_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.dfm"
+      ]
+    },
+    {
+      "id": "df_us",
+      "nameZh": "三角洲行动",
+      "nameEn": "Delta Force",
+      "color": "#C4A35A",
+      "markets": "us",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "df_us",
+      "androidPackages": [
+        "com.proxima.dfm"
+      ]
+    },
+    {
+      "id": "idv_cn",
+      "nameZh": "第五人格",
+      "nameEn": "Identity V",
+      "color": "#8B6B4A",
+      "markets": "cn",
+      "cats": [
+        "action"
+      ],
+      "icon": "idv_cn",
+      "androidPackages": [
+        "com.netease.id5",
+        "com.netease.dwrg",
+        "com.netease.dwrg.bilibili"
+      ]
+    },
+    {
+      "id": "idv_us",
+      "nameZh": "第五人格",
+      "nameEn": "Identity V",
+      "color": "#8B6B4A",
+      "markets": "us",
+      "cats": [
+        "action"
+      ],
+      "icon": "idv_us",
+      "androidPackages": [
+        "com.netease.idv",
+        "com.netease.idv.googleplay"
+      ]
+    },
+    {
+      "id": "ym_cn",
+      "nameZh": "元梦之星",
+      "nameEn": "Yuan Meng Star",
+      "color": "#FF8DC7",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "ym_cn",
+      "androidPackages": [
+        "com.tencent.letsgo"
+      ]
+    },
+    {
+      "id": "ba_cn",
+      "nameZh": "蔚蓝档案",
+      "nameEn": "Blue Archive",
+      "color": "#6EC8FF",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "ba_cn",
+      "androidPackages": [
+        "com.RoamingStar.BlueArchive",
+        "com.nexon.bluearchive.cn"
+      ]
+    },
+    {
+      "id": "ba_us",
+      "nameZh": "蔚蓝档案",
+      "nameEn": "Blue Archive",
+      "color": "#6EC8FF",
+      "markets": "us",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "ba_us",
+      "androidPackages": [
+        "com.nexon.bluearchive"
+      ]
+    },
+    {
+      "id": "r1999_cn",
+      "nameZh": "重返未来：1999",
+      "nameEn": "Reverse: 1999",
+      "color": "#5B4DB5",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "r1999_cn",
+      "androidPackages": [
+        "com.bluepoch.m.reverse1999",
+        "com.shenlan.m.reverse1999"
+      ]
+    },
+    {
+      "id": "nsh_cn",
+      "nameZh": "逆水寒",
+      "nameEn": "Justice Mobile",
+      "color": "#3AA0C8",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "nsh_cn",
+      "androidPackages": [
+        "com.netease.nshm"
+      ]
+    },
+    {
+      "id": "cf_cn",
+      "nameZh": "穿越火线：枪战王者",
+      "nameEn": "CrossFire Mobile",
+      "color": "#E85D04",
+      "markets": "cn",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "cf_cn",
+      "androidPackages": [
+        "com.tencent.tmgp.cf"
+      ]
+    },
+    {
+      "id": "nikki_cn",
+      "nameZh": "无限暖暖",
+      "nameEn": "Infinity Nikki",
+      "color": "#F7B6D2",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "nikki_cn",
+      "androidPackages": [
+        "com.papegames.infinitynikki.cn"
+      ]
+    },
+    {
+      "id": "nikki_us",
+      "nameZh": "无限暖暖",
+      "nameEn": "Infinity Nikki",
+      "color": "#F7B6D2",
+      "markets": "us",
+      "cats": [
+        "casual"
+      ],
+      "icon": "nikki_us",
+      "androidPackages": [
+        "com.papegames.infinitynikki"
+      ]
+    },
+    {
+      "id": "fgo_cn",
+      "nameZh": "命运-冠位指定",
+      "nameEn": "Fate/Grand Order",
+      "color": "#1A1A2E",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "fgo_cn",
+      "androidPackages": [
+        "com.bilibili.fatego",
+        "com.bilibili.fgo.bili"
+      ]
+    },
+    {
+      "id": "fgo_us",
+      "nameZh": "命运-冠位指定",
+      "nameEn": "Fate/Grand Order",
+      "color": "#1A1A2E",
+      "markets": "us",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "fgo_us",
+      "androidPackages": [
+        "com.aniplex.fategrandorder"
+      ]
+    },
+    {
+      "id": "al_cn",
+      "nameZh": "碧蓝航线",
+      "nameEn": "Azur Lane",
+      "color": "#3D7EA6",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "al_cn",
+      "androidPackages": [
+        "com.bilibili.blhx",
+        "com.bilibili.blhx.bili"
+      ]
+    },
+    {
+      "id": "al_us",
+      "nameZh": "碧蓝航线",
+      "nameEn": "Azur Lane",
+      "color": "#3D7EA6",
+      "markets": "us",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "al_us",
+      "androidPackages": [
+        "com.YoStarEN.AzurLane"
+      ]
+    },
+    {
+      "id": "coc_us",
+      "nameZh": "部落冲突",
+      "nameEn": "Clash of Clans",
+      "color": "#6BBF59",
+      "markets": "us",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "coc_us",
+      "androidPackages": [
+        "com.supercell.clashofclans"
+      ]
+    },
+    {
+      "id": "pogo_us",
+      "nameZh": "Pokémon GO",
+      "nameEn": "Pokémon GO",
+      "color": "#4A90D9",
+      "markets": "us",
+      "cats": [
+        "casual"
+      ],
+      "icon": "pogo_us",
+      "androidPackages": [
+        "com.nianticlabs.pokemongo"
+      ]
+    },
+    {
+      "id": "nikke_us",
+      "nameZh": "胜利女神：妮姬",
+      "nameEn": "Goddess of Victory: NIKKE",
+      "color": "#E11D48",
+      "markets": "us",
+      "cats": [
+        "shooter"
+      ],
+      "icon": "nikke_us",
+      "androidPackages": [
+        "com.proximabeta.nikke"
+      ]
+    },
+    {
+      "id": "aq_cn",
+      "nameZh": "球球大作战",
+      "nameEn": "Battle of Balls",
+      "color": "#FF6B35",
+      "markets": "cn",
+      "cats": [
+        "casual"
+      ],
+      "icon": "aq_cn",
+      "androidPackages": [
+        "com.juzi.balls",
+        "com.ztgame.bob"
+      ]
+    },
+    {
+      "id": "mhxy_cn",
+      "nameZh": "梦幻西游",
+      "nameEn": "Fantasy Westward Journey",
+      "color": "#E8B84A",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "mhxy_cn",
+      "androidPackages": [
+        "com.netease.my"
+      ]
+    },
+    {
+      "id": "rok_cn",
+      "nameZh": "万国觉醒",
+      "nameEn": "Rise of Kingdoms",
+      "color": "#C9A227",
+      "markets": "cn",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "rok_cn",
+      "androidPackages": [
+        "com.lilithgames.rok.android.cn"
+      ]
+    },
+    {
+      "id": "rok_us",
+      "nameZh": "万国觉醒",
+      "nameEn": "Rise of Kingdoms",
+      "color": "#C9A227",
+      "markets": "us",
+      "cats": [
+        "strategy"
+      ],
+      "icon": "rok_us",
+      "androidPackages": [
+        "com.lilithgame.roc.gp"
+      ]
     }
   ]
 }
