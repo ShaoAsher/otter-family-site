@@ -1026,6 +1026,20 @@
       "androidPackages": [
         "com.lilithgame.roc.gp"
       ]
+    },
+    {
+      "id": "asp_cn",
+      "nameZh": "蓝色星原：旅谣",
+      "nameEn": "Azur Promilia",
+      "color": "#5B8DEF",
+      "markets": "cn",
+      "cats": [
+        "rpg"
+      ],
+      "icon": "asp_cn",
+      "androidPackages": [
+        "com.manjuu.promilia"
+      ]
     }
   ]
 }
