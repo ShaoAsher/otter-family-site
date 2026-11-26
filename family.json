@@ -499,6 +499,7 @@
       "name": "水獭Days",
       "en": "OtterDays",
       "from": "otterdays",
+      "hidden": true,
       "platforms": [
         "ios",
         "android"
