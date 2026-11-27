@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updated": "2026-11-26",
+  "updated": "2026-11-27",
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
@@ -20,7 +20,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.1.0",
-    "libraryBuild": "13",
+    "libraryBuild": "14",
     "library": "https://otter.oss-cn-beijing.aliyuncs.com/library/"
   },
   "apps": {
@@ -513,7 +513,7 @@
       ],
       "site": "https://shaoasher.github.io/otter-family-site/#otterdays",
       "demo": null,
-      "icon": "https://shaoasher.github.io/otter-family-site/otter-days/icon.png",
+      "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-days/icon.png",
       "colors": [
         "#F472B6",
         "#FDBA74"
