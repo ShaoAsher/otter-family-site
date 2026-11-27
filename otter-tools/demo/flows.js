@@ -200,7 +200,7 @@ const SPANE = {
 };
 const familyHtml = () => `<button class="famlink" data-act="familySite"><span class="ics"><i></i></span><span class="tx"><b>水獭家族</b><span>看看小獭的其他作品</span></span><svg class="go" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button>`;
 const aboutIntro = '<div class="tg" style="margin-top:12px;line-height:1.6">水位是磁盘、浑浊是垃圾、波速是 CPU、水温是内存，看一眼水面就懂电脑。清理都进废纸篓，小獭动手之前先问你。免费，不用注册。</div>';
-ACTS.familySite = () => window.open('https://shaoasher.github.io/otter-family-site/?from=ottertools#members', '_blank', 'noopener');
+ACTS.familySite = () => window.open('https://otter.appshaw.cn/?from=ottertools#members', '_blank', 'noopener');
 function sMain() {
   const p = SPANES.find((x) => x[0] === sPane);
   return `<button class="ibs xbtn" data-act="close" data-tip="关闭 esc">${I('x')}</button><div class="shead"><img src="${ex(p[4])}" alt=""><div><h2>${p[1]}</h2><p>${p[5]}</p></div></div><div class="sbody"><div class="in2">${SPANE[sPane]()}</div></div>`;

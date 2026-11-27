@@ -11,7 +11,7 @@
   <meta property="og:title" content="水獭家族 · 同一只小獭，在不同的地方陪你" />
   <meta property="og:description" content="水獭游时 · 水獭工具 · 水獭 Git。免费，不用注册，数据只在你自己的设备上。" />
   <meta property="og:image" content="https://otter.oss-cn-beijing.aliyuncs.com/library/otter-git/icon.png" />
-  <meta property="og:url" content="https://shaoasher.github.io/otter-family-site/" />
+  <meta property="og:url" content="https://otter.appshaw.cn/" />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/png" href="https://otter.oss-cn-beijing.aliyuncs.com/library/common/otter_white.png" />
   <script>
@@ -190,8 +190,12 @@
 
     footer { padding: 40px 0 56px; border-top: 1px solid var(--line); margin-top: 32px; }
     .foot { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; font-size: 13.5px; color: var(--mute); }
+    .foot .beian { color: var(--mute); }
     .foot nav { display: flex; gap: 16px; margin-left: auto; }
-    @media (hover: hover) { .foot nav a:hover { color: var(--ink); } }
+    @media (hover: hover) {
+      .foot nav a:hover { color: var(--ink); }
+      .foot .beian:hover { color: var(--ink); }
+    }
 
     /* ── 滚动进场：上移 16 + 淡入，错峰 70ms ── */
     .motion .rise { opacity: 0; transform: translateY(16px); transition: opacity .62s var(--ease), transform .62s var(--ease); transition-delay: calc(var(--i, 0) * 70ms); }
@@ -421,6 +425,7 @@
     <div class="wrap foot">
       <a class="brand" href="#top"><img src="https://otter.oss-cn-beijing.aliyuncs.com/library/common/otter_white.png" alt="" width="28" height="28" />水獭家族</a>
       <span>© 2026 水獭家族 · Asher_Shao</span>
+      <a class="beian" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">浙ICP备2026105226号-1</a>
       <nav aria-label="页面导航">
         <a href="#day">小獭的一天</a>
         <a href="#members">成员</a>

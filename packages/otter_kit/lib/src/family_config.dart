@@ -21,7 +21,7 @@ class FamilyConfig {
   static const schema = 1;
   static const remotes = [
     'https://otter.oss-cn-beijing.aliyuncs.com/library/family.json',
-    'https://shaoasher.github.io/otter-family-site/family.json',
+    'https://otter.appshaw.cn/family.json',
   ];
 
   /// 当前生效的配置；远端拉到新的会替换并通知。

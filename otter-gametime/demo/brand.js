@@ -11,7 +11,7 @@
 var q=function(s, r){ return (r||document).querySelector(s); };
 /* 圆盘渐变（左下 → 右上），与家族素材库 otter_family/README.md「三端与配色」一致 */
 var DISC={gt:['#1FB6FF','#5CF2DE'], tools:['#FA5A1E','#FFB04A'], git:['#E89B0C','#FFD66B']};
-var FAMILY_SITE='https://shaoasher.github.io/otter-family-site/?from=gametime#members';
+var FAMILY_SITE='https://otter.appshaw.cn/?from=gametime#members';
 var OSS_BRAND='https://otter.oss-cn-beijing.aliyuncs.com/library/otter-';
 /* 三层：圆盘 / 水獭（gt_logo_otter.png）/ 右下手柄徽章（gt_badge.png）；两层画布都是圆盘外接正方形，徽章已在位 */
 var logo=function(k){ var g=DISC[k||'gt']||DISC.gt;

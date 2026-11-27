@@ -256,6 +256,7 @@ def ask_keep(candidates: list[tuple[str, str]]) -> list[str]:
 
 def apply_family_urls(fam: dict, version: str, build: str) -> None:
     base = f"{BUCKET_BASE}/library/"
+    site = "https://otter.appshaw.cn"
     # libraryVersion ≡ App 版本号；libraryBuild 仅 OSS 素材世代（≠ App pubspec build）
     fam["family"]["libraryVersion"] = version
     fam["family"]["libraryBuild"] = str(build)
@@ -263,11 +264,13 @@ def apply_family_urls(fam: dict, version: str, build: str) -> None:
     fam["family"]["brand"] = base  # 值如 otter-git/icon.png
     fam["family"]["expr"] = f"{base}expr/"
     fam["family"]["media"] = f"{base}{{app}}/"  # App 根：promo / shots / games…
+    fam["family"]["site"] = f"{site}/"
+    fam["family"]["members"] = f"{site}/?from={{from}}#members"
     for dead in ("shots", "badges", "platform"):
         fam["family"].pop(dead, None)
     fam["family"]["config"] = [
         f"{BUCKET_BASE}/library/family.json",
-        "https://shaoasher.github.io/otter-family-site/family.json",
+        f"{site}/family.json",
     ]
     fam["family"]["releases"] = {
         "cn": f"{BUCKET_BASE}/library/release/{{app}}/v{{version}}/{{file}}",

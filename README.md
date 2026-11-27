@@ -2,7 +2,9 @@
 
 水獭游时 · 水獭工具 · 水獭 Git
 
-官网：https://shaoasher.github.io/otter-family-site/
+官网：https://otter.appshaw.cn/  
+OSS：官网桶 `ottersite` · App 资源桶 `otter`（`library/`）  
+发布官网：`./tool/otter site publish`
 
 ## 文档
 

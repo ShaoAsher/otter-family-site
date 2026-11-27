@@ -4,15 +4,15 @@
   "family": {
     "name": "水獭家族",
     "en": "Otter Family",
-    "site": "https://shaoasher.github.io/otter-family-site/",
-    "members": "https://shaoasher.github.io/otter-family-site/?from={from}#members",
+    "site": "https://otter.appshaw.cn/",
+    "members": "https://otter.appshaw.cn/?from={from}#members",
     "assets": "https://otter.oss-cn-beijing.aliyuncs.com/",
     "media": "https://otter.oss-cn-beijing.aliyuncs.com/library/{app}/",
     "brand": "https://otter.oss-cn-beijing.aliyuncs.com/library/",
     "expr": "https://otter.oss-cn-beijing.aliyuncs.com/library/expr/",
     "config": [
       "https://otter.oss-cn-beijing.aliyuncs.com/library/family.json",
-      "https://shaoasher.github.io/otter-family-site/family.json"
+      "https://otter.appshaw.cn/family.json"
     ],
     "releases": {
       "cn": "https://otter.oss-cn-beijing.aliyuncs.com/library/release/{app}/v{version}/{file}",
@@ -32,8 +32,8 @@
         "macos",
         "windows"
       ],
-      "site": "https://shaoasher.github.io/otter-family-site/otter-git/",
-      "demo": "https://shaoasher.github.io/otter-family-site/otter-git/demo/",
+      "site": "https://otter.appshaw.cn/otter-git/",
+      "demo": "https://otter.appshaw.cn/otter-git/demo/",
       "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-git/icon.png",
       "colors": [
         "#E89B0C",
@@ -228,8 +228,8 @@
         "macos",
         "windows"
       ],
-      "site": "https://shaoasher.github.io/otter-family-site/otter-tools/",
-      "demo": "https://shaoasher.github.io/otter-family-site/otter-tools/#demo",
+      "site": "https://otter.appshaw.cn/otter-tools/",
+      "demo": "https://otter.appshaw.cn/otter-tools/#demo",
       "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-tools/icon.png",
       "colors": [
         "#FA5A1E",
@@ -416,8 +416,8 @@
         "ios",
         "android"
       ],
-      "site": "https://shaoasher.github.io/otter-family-site/otter-gametime/",
-      "demo": "https://shaoasher.github.io/otter-family-site/otter-gametime/demo/",
+      "site": "https://otter.appshaw.cn/otter-gametime/",
+      "demo": "https://otter.appshaw.cn/otter-gametime/demo/",
       "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-gametime/icon.png",
       "colors": [
         "#1FB6FF",
@@ -425,8 +425,8 @@
       ],
       "latest": "1.2.0",
       "legal": {
-        "privacy": "https://shaoasher.github.io/otter-family-site/otter-gametime/privacy.html",
-        "terms": "https://shaoasher.github.io/otter-family-site/otter-gametime/terms.html",
+        "privacy": "https://otter.appshaw.cn/otter-gametime/privacy.html",
+        "terms": "https://otter.appshaw.cn/otter-gametime/terms.html",
         "support": "mailto:11034191@qq.com"
       },
       "stores": {
@@ -511,7 +511,7 @@
         "ios",
         "android"
       ],
-      "site": "https://shaoasher.github.io/otter-family-site/#otterdays",
+      "site": "https://otter.appshaw.cn/#otterdays",
       "demo": null,
       "icon": "https://otter.oss-cn-beijing.aliyuncs.com/library/otter-days/icon.png",
       "colors": [

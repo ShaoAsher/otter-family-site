@@ -1090,7 +1090,7 @@ const DLG={
   },
   about:()=>{openDlg(`<div class="logo play" id="aboutLogo"><div class="tile"></div><div class="ring"></div><div class="ring r2"></div><div class="disc"></div><div class="otter"></div><div class="badge"><svg viewBox="0 0 24 24"><path d="M8 5v14M8 12h6"/><circle cx="8" cy="5" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16.5" cy="12" r="1.9"/></svg></div></div><h2>水獭 Git</h2><div class="tg">本地优先的 Git 客户端 · v3.0</div><div class="tg" style="margin-top:12px;line-height:1.6">分支、历史、改动和冲突在同一个窗口里看清楚。小獭 AI 助手先说明、再确认、后执行。免费，不用注册。</div><button class="famlink rp" id="famLink"><span class="ics"><i></i></span><span class="tx"><b>水獭家族</b><span>看看小獭的其他作品</span></span><svg class="go" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button><div style="margin-top:20px;position:relative"><button class="ghost rp" data-close>好的</button></div><button class="ib" data-close style="position:absolute;top:14px;right:14px">${svg('x')}</button>`,'about');
     const lg=document.getElementById('aboutLogo');lg.onclick=()=>{lg.classList.remove('play');void lg.offsetWidth;lg.classList.add('play')};
-    document.getElementById('famLink').onclick=()=>window.open('https://shaoasher.github.io/otter-family-site/?from=ottergit#members','_blank','noopener')},
+    document.getElementById('famLink').onclick=()=>window.open('https://otter.appshaw.cn/?from=ottergit#members','_blank','noopener')},
   settings:()=>openSettings()
 };
 
