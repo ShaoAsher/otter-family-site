@@ -80,7 +80,8 @@ def cache_for(key: str) -> str:
     return "public, max-age=86400"
 
 
-def upload(dry: bool) -> int:
+def upload(dry: bool, full: bool = False) -> int:
+    import hashlib
     files = iter_files()
     if dry:
         for key, path in files:
@@ -89,9 +90,19 @@ def upload(dry: bool) -> int:
         return 0
 
     bkt = site_bucket()
+    remote_etags: dict[str, str] = {}
+    if not full:
+        for obj in oss2.ObjectIterator(bkt):
+            remote_etags[obj.key] = (obj.etag or "").strip('"').lower()
+
     n = 0
+    skipped = 0
     for key, path in files:
         data = path.read_bytes()
+        md5 = hashlib.md5(data).hexdigest().lower()
+        if not full and remote_etags.get(key) == md5:
+            skipped += 1
+            continue
         headers = {
             "Content-Type": content_type(key),
             "x-oss-object-acl": "public-read",
@@ -100,7 +111,7 @@ def upload(dry: bool) -> int:
         bkt.put_object(key, data, headers=headers)
         n += 1
         print(f"put {key}")
-    print(f"# uploaded {n} files → oss://{bkt.bucket_name}/")
+    print(f"# uploaded {n} files (skipped {skipped} unchanged) → oss://{bkt.bucket_name}/")
     print(f"# site {SITE_URL}")
     return 0
 
@@ -108,9 +119,10 @@ def upload(dry: bool) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--full", action="store_true", help="强制全量覆盖上传")
     args = ap.parse_args()
     os.chdir(SITE)
-    return upload(args.dry)
+    return upload(args.dry, full=args.full)
 
 
 if __name__ == "__main__":

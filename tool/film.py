@@ -109,8 +109,10 @@ def ingest(app: str) -> None:
         subprocess.run(
             [
                 "ffmpeg", "-loglevel", "error", "-y", "-i", str(video),
-                "-c:v", "libx264", "-preset", "slow", "-crf", "26",
-                "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k",
+                "-vf", "scale=in_range=full:out_range=tv,format=yuv420p",
+                "-c:v", "libx264", "-preset", "slow", "-crf", "18",
+                "-pix_fmt", "yuv420p", "-color_range", "tv",
+                "-c:a", "aac", "-b:a", "192k",
                 "-movflags", "+faststart", str(out_mp4),
             ],
             check=True,
