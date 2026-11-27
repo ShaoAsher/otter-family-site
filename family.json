@@ -20,7 +20,7 @@
       "page": "https://github.com/ShaoAsher/otter-family-site/releases/tag/{app}-v{version}"
     },
     "libraryVersion": "3.1.0",
-    "libraryBuild": "14",
+    "libraryBuild": "15",
     "library": "https://otter.oss-cn-beijing.aliyuncs.com/library/"
   },
   "apps": {
