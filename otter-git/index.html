@@ -1068,6 +1068,7 @@
 
     /* Film */
     .film {
+      position: relative;
       aspect-ratio: 16 / 9;
       background: #000;
     }
@@ -1075,6 +1076,35 @@
     .film video {
       width: 100%;
       height: 100%;
+    }
+
+    .film-cover {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      background: #000;
+      cursor: pointer;
+    }
+
+    .film-cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .film-cover .btn {
+      position: relative;
+      pointer-events: none;
+    }
+
+    .film.is-playing .film-cover {
+      display: none;
     }
 
     .chapters {
@@ -1896,23 +1926,26 @@
           <h2 id="film-title">三分钟，跟着小獭上手。</h2>
           <p class="lede">提交、分支、冲突、AI，一段一个操作。中文配音，画面内带字幕。</p>
         </div>
-        <div class="frame film rise">
-          <video id="promo" controls playsinline preload="none" data-media-poster="poster.jpg" width="1920" height="1080"
+        <div class="frame film rise" id="promo-wrap">
+          <button type="button" class="film-cover" id="promo-cover" aria-label="播放短片">
+            <img data-media="poster.jpg" width="1920" height="1080" alt="" />
+            <span class="btn">播放短片</span>
+          </button>
+          <video id="promo" controls playsinline preload="metadata" data-media="promo.mp4" data-media-poster="poster.jpg" width="1920" height="1080"
             aria-label="水獭 Git 上手短片">
-            <source data-media="promo.mp4" type="video/mp4" />
             <track kind="captions" srclang="zh" label="中文" src="promo.zh.vtt" />
             你的浏览器无法播放内嵌视频，可以<a data-media="promo.mp4">直接下载</a>观看。
           </video>
         </div>
         <ol class="chapters rise" aria-label="短片章节">
           <li><a href="#film" data-t="0"><span>00:00</span>开场</a></li>
-          <li><a href="#film" data-t="12.7"><span>00:12</span>首页与仓库</a></li>
-          <li><a href="#film" data-t="33.29"><span>00:33</span>对比与提交</a></li>
-          <li><a href="#film" data-t="57.53"><span>00:57</span>拉取与推送</a></li>
-          <li><a href="#film" data-t="73"><span>01:13</span>分支与历史</a></li>
-          <li><a href="#film" data-t="92.27"><span>01:32</span>合并冲突</a></li>
-          <li><a href="#film" data-t="108.42"><span>01:48</span>小獭 AI</a></li>
-          <li><a href="#film" data-t="167.71"><span>02:47</span>下载与结尾</a></li>
+          <li><a href="#film" data-t="14"><span>00:14</span>首页与仓库</a></li>
+          <li><a href="#film" data-t="22"><span>00:22</span>对比与暂存</a></li>
+          <li><a href="#film" data-t="34"><span>00:34</span>提交图谱</a></li>
+          <li><a href="#film" data-t="52"><span>00:52</span>小獭 AI</a></li>
+          <li><a href="#film" data-t="82"><span>01:22</span>高危确认与昼夜</a></li>
+          <li><a href="#film" data-t="94.5"><span>01:34</span>菜单栏与细节</a></li>
+          <li><a href="#film" data-t="109.5"><span>01:49</span>下载与结尾</a></li>
         </ol>
       </div>
     </section>
